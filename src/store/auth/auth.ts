@@ -1,6 +1,7 @@
 import { Module, VuexModule, MutationAction, Mutation, Action} from 'vuex-module-decorators';
-import { UserInterface, initUser } from '@/models/user/user'
+import { UserInterface, initUser, AuthStatus } from '@/models/user/user'
 import firebase from 'firebase';
+import { ErrorCodes } from '@/models/enums/errors/errors';
 
 
 @Module
@@ -27,17 +28,37 @@ export default class AuthModule extends VuexModule {
     this.user = user;
   }
 
-  @Action({rawError:true, commit:'setUser'}) registerUser(newUser: UserInterface){
-    console.log("In action")
-    firebase.auth().createUserWithEmailAndPassword(newUser.email, newUser.password)
-      .then(data => {
-        console.log("data", data)
-        
-      })
-      .catch(err => {
-        console.log(err)
-      })
+  @Action({rawError:true, commit:'setUser'}) registerUser(newUser: UserInterface):Promise<AuthStatus> {
+    let authStatus: AuthStatus
+    return new Promise((resolve, reject) => {
+      firebase.auth().createUserWithEmailAndPassword(newUser.email, newUser.password)
+        .then(data => {
+            
+           authStatus = {
+            isSuccess: true,
+            errorCode: ErrorCodes.NotSet,
+          }
+          resolve(authStatus);
+        })
+        .catch(err => {
+          console.log(err);
+          authStatus = {
+            isSuccess: false,
+            errorCode: ErrorCodes.RegistrationFailed
+          }
 
+          reject(authStatus);
+        })
+
+    })
+
+  }
+
+  @Action({rawError: true, commit:'setUser'}) login(user: UserInterface) {
+    firebase.auth().signInWithEmailAndPassword(user.email, user.password)
+    .then (data => {
+
+    })
   }
 
 }

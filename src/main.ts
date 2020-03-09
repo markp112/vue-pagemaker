@@ -11,7 +11,29 @@ import Firebase from 'firebase/app'
 import { secrets } from '@/firebase/secrets'
 
 export const firebaseApp = Firebase.initializeApp(secrets.google);
+// The default cache size threshold is 40 MB. Configure "cacheSizeBytes"
+// for a different threshold (minimum 1 MB) or set to "CACHE_SIZE_UNLIMITED"
+// to disable clean-up.
+firebaseApp.firestore().settings({
+  cacheSizeBytes: 4000000,
+});
 
+firebaseApp.firestore().enablePersistence()
+  .catch(function(err) {
+      if (err.code == 'failed-precondition') {
+          // Multiple tabs open, persistence can only be enabled
+          // in one tab at a a time.
+          // ...
+      } else if (err.code == 'unimplemented') {
+          // The current browser does not support all of the
+          // features required to enable persistence
+          // ...
+      }
+  });
+// Subsequent queries will use persistence, if it was enabled successfully
+  
+
+  
 
 
 Vue.config.productionTip = false;

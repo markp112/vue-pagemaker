@@ -79,8 +79,6 @@ export default class Register extends Vue {
     if( this.password !== this.confirmPassword ) { 
       this.formErrors.push("Password and confirmation password are not the same");
     }
-
-
     return this.formErrors.length === 0
   }
 
