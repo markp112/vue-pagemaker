@@ -1,8 +1,8 @@
 
 
 <template>
-<div class="w-screen">
-  <nav class="py-3 bg-purple-100 bg-primary text-accent flex items-center justify-between">
+<div class="w-screen shadow shadow-xl">
+  <nav class="py-3  bg-primary text-accent flex items-center justify-between">
       <div class="ml-8">
         <font-awesome-icon icon='language' prefix="fas" class="text-accent1 icon-size" />
       </div>
@@ -11,14 +11,14 @@
         <font-awesome-icon 
           icon='bars' 
           prefix="fas" 
-          class="ml-2 text-accent cursor-pointer hamburger hover:text-accent2 " 
+          class="ml-2 text-accent2 cursor-pointer hamburger hover:text-accent " 
           @click="isShowMenu = !isShowMenu"
         />
       </div>
   </nav>
-  <div class="flex justify-end toggleable  " v-if="isShowMenu">
+  <div class="flex justify-end toggleable z-10" v-if="isShowMenu">
     <ul  class=" w-20 mt-1 mr-1 border bg-gray-200 z-10 rounded-lg shadow-lg">
-      <li v-for="menuItem in menuItems" :key="menuItem.id" @click="menuItemClick(menuItem.id)" class="block p-1 cursor-pointer text-left hover:bg-accent2 hover:text-white ">
+      <li v-for="menuItem in menuItems" :key="menuItem.id" @click="menuItemClick(menuItem.id)" class="block p-1 cursor-pointer text-left hover:bg-accent hover:text-white rounded-lg ">
       {{ menuItem.navText }}
       </li>
     </ul>
@@ -67,8 +67,9 @@ export default class NavMenuComponent extends Vue {
     content: "\25BC";
     font-size: 0.9em;
     padding-left: 6px;
-    position: relative;
-    top: -1px;
+    position: absolute;
+    right: 7px;
+    top: 60px;
     z-index: 5;
   }
 </style>

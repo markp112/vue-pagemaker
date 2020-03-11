@@ -1,6 +1,6 @@
 <template>
-<div class="container h-screen ">
-  <div class="flex justify-center items-center w-screen flex-row h-screen">
+<div class="container h-full ">
+  <div class="flex justify-center items-center w-screen flex-row h-auto mt-32">
     <form @submit.prevent="submitClick" class="flex-2 border-2 rounded-md p-5 text-left mb-64 w-1/3" >
       <p class="text-center text-lg font-bold ">Page Maker Registration</p>
       <label for="email" class="text-sm">E-Mail</label>
@@ -26,7 +26,7 @@
             placeholder="Confirm password"
       >
       <div class="flex justify-between flex-row mt-4">
-        <button type="button" class="bg-gray-600 py-1 px-3 rounded-md text-white">Cancel</button>
+        <button type="button" class="bg-gray-600 py-1 px-3 rounded-md text-white" click="cancelClick()" >Cancel</button>
         <button type="submit" class="bg-blue-600 py-1 px-3 rounded-md text-white" click="submitClick()">Submit</button>
       </div>
       <div class="bg-red-600 text-white w-full mt-2 rounded-md p-2 text-sm" v-if="formErrors.length > 0">
@@ -59,13 +59,14 @@ export default class Register extends Vue {
         this.$store.dispatch("registerUser", user)
         .then(user => {
           console.log("registered");
-
         })
-
-
       }
     }
-
+  
+    cancelClick() {
+      this.$router.push("/");
+    }
+    
   formIsValid(): boolean {
     this.formErrors = [];
     if ( this.email.length === 0 ) {
@@ -90,7 +91,8 @@ export default class Register extends Vue {
 }
 </script>
 
-<style  scoped>
+<style lang="postcss">
+
   .input-control {
      @apply block border-2 rounded-md w-full p-1;
   }

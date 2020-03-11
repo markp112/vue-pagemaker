@@ -5,6 +5,7 @@ export  interface  UserInterface {
   signedIn: boolean;
   id: string;
   password: string;
+  refreshToken?: string;
 }
 
 export interface AuthStatus {

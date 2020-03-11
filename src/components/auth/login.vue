@@ -1,6 +1,5 @@
 <template>
-    <div class="container h-screen ">
-  <div class="flex justify-center items-center w-screen flex-row h-screen">
+  <div class="flex justify-center items-center flex-row h-auto mt-32">
     <form @submit.prevent="submitClick" class="flex-2 border-2 rounded-md p-5 text-left mb-64 w-1/3" >
       <p class="text-center text-lg font-bold ">Login</p>
       <label for="email" class="text-sm">E-Mail</label>
@@ -20,33 +19,58 @@
             required
       >
       <div class="flex justify-between flex-row mt-4">
-        <button type="button" class="bg-gray-600 py-1 px-3 rounded-md text-white">Cancel</button>
+        <button type="button" class="bg-gray-600 py-1 px-3 rounded-md text-white" click="cancelClick()">Cancel</button>
         <button type="submit" class="bg-blue-600 py-1 px-3 rounded-md text-white" click="submitClick()">Submit</button>
       </div>
-      <div class="bg-red-600 text-white w-full mt-2 rounded-md p-2 text-sm" v-if="formErrors.length > 0">
+      <div class="error" v-if="formErrors.length > 0">
         <p v-for="error in formErrors" :key="error"> {{ error }} </p>
+      </div>
+      <div v-if="loginFailed" class="error">
+        Invalid user name or password
       </div>
       </form>
   </div>
-</div>
 
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import { UserInterface, initUser } from '@/models/user/user'
+import { ErrorCodes } from '../../models/enums/errors/errors';
 
 @Component
 export default class Login extends Vue {
     email = '';
     password ='';
     formErrors: string[] = [];
+    loginFailed = false;
 
     submitClick(): void {
-        if (this.validateForm()) {
-            console.log("logging in")
-        }
+      this.loginFailed = false;
+      if (this.validateForm()) {
+          console.log("logging in")
+          const user: UserInterface = initUser ;
+        user.email = this.email;
+        user.password = this.password;
+        this.$store.dispatch('login',user)
+        .then (() =>{
+          console.log("logged in");
+          this.$router.push("/sites");
+        })
+        .catch(err =>{
+          if (err === ErrorCodes.LoginFailed) {
+            this.loginFailed = true;
+          } else {
+            this.formErrors = [];
+            this.formErrors.push(err);
+          }
+        })
+      }
+    }
 
+    cancelClick() {
+      this.$router.push("/");
     }
     
     private validateForm(): boolean {
@@ -56,10 +80,15 @@ export default class Login extends Vue {
 
 </script>
 
-<style scoped>
+<style lang="postcss" scoped>
+
 
   .input-control {
      @apply block border-2 rounded-md w-full p-1;
+  }
+
+  .error {
+    @apply bg-red-600 text-white w-full mt-2 rounded-md p-2 text-sm;
   }
 </style>>
 

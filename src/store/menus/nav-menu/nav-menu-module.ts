@@ -20,7 +20,6 @@ export default class NavMenuItems extends VuexModule {
     this.context.commit('add',menuItem);
     menuItem = new NavMenuItem(1, 'register', '/register');
     this.context.commit('add',menuItem);
-    console.log('%c%s', 'color: #00a3cc', this.menuItems, "Store -> createMenu");
   }
 
   @Action ({commit: 'clear'}) clearNavMenu(){

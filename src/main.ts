@@ -4,7 +4,7 @@ import router from "./router";
 import store from "./store";
 import "@/assets/css/tailwind.css";
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faLanguage, faBars } from '@fortawesome/free-solid-svg-icons'
+import { faLanguage, faBars, faChevronCircleLeft, faChevronCircleRight, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { firestorePlugin } from 'vuefire'
 import Firebase from 'firebase/app'
@@ -38,7 +38,7 @@ firebaseApp.firestore().enablePersistence()
 
 Vue.config.productionTip = false;
 
-library.add(faLanguage, faBars);
+library.add(faLanguage, faBars, faChevronCircleLeft, faChevronCircleRight, faPlusCircle);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.use(firestorePlugin);
 
