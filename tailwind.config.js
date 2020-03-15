@@ -233,6 +233,7 @@ module.exports = {
     },
     fontFamily: {
       sans: [
+        'Dosis',
         'system-ui',
         '-apple-system',
         'BlinkMacSystemFont',

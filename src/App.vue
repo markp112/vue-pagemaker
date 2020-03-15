@@ -5,7 +5,7 @@
       <div class="self-start h-full  w-1/12" v-if="isLoggedIn()">
         <side-bar></side-bar>
       </div>
-      <div class="self-center w-5/6">
+      <div class="w-screen font-Dosis">
         <router-view />
       </div>
     </div>
@@ -15,13 +15,25 @@
 
 import nav from '@/components/core/nav/nav';
 import sidebar from '@/components/core/sidebar/sidebar'
+
+
 export default {
   components:{
     'nav-bar': nav,
     'side-bar': sidebar,
   },
+   created() {
+    
+    if(this.$store.getters.isExistingUser)  {
+      this.$store.dispatch('getUserFromLocalStorage');
+      this.$store.dispatch('createNavMenuSignedIn');
+      this.$router.push("/sites");
+    } else {
+      this.$store.dispatch("createNavMenuSignedOut");
+      this.$router.push("/");
+    }
+  },
 methods: {
-  
   isLoggedIn() {
     return this.$store.getters.isUserLoggedIn;
   }

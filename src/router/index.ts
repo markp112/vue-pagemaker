@@ -1,13 +1,18 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import home from '@/components/core/home/home.vue'
 import register from '@/components/auth/register.vue';
 import login from '@/components/auth/login.vue';
-import SitesList from '@/components/sites/sites-list.vue'
+import siteslist from '@/components/sites/sites-list.vue'
 
 Vue.use(VueRouter);
 
 const routes = [
- 
+  {
+    path: "/",
+    name: "/home",
+    component: home,
+  },
   {
     path: "/register",
     name: "/register",
@@ -21,7 +26,7 @@ const routes = [
   {
     path: "/sites",
     name: "/sites",
-    component: SitesList,
+    component: siteslist,
   }
 
 ];

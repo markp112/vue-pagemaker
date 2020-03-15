@@ -34,9 +34,9 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
-import { UserInterface, initUser } from '@/models/user/user'
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import { UserInterface, initUser } from '@/models/user/user';
 import { ErrorCodes } from '../../models/enums/errors/errors';
 
 @Component
@@ -49,24 +49,25 @@ export default class Login extends Vue {
     submitClick(): void {
       this.loginFailed = false;
       if (this.validateForm()) {
-          console.log("logging in")
-          const user: UserInterface = initUser ;
+        const user: UserInterface = initUser ;
         user.email = this.email;
         user.password = this.password;
-        this.$store.dispatch('login',user)
-        .then (() =>{
-          console.log("logged in");
+        this.$store.dispatch('login', user)
+        .then (() => {
           this.$router.push("/sites");
         })
         .catch(err =>{
           if (err === ErrorCodes.LoginFailed) {
-            this.loginFailed = true;
+            this.formErrors =[];
+            this.formErrors.push("Invalid user name or password")
           } else {
             this.formErrors = [];
             this.formErrors.push(err);
           }
         })
       }
+      console.log("Exiting login", this.$store.getters.isUserLoggedIn)
+
     }
 
     cancelClick() {
@@ -90,5 +91,5 @@ export default class Login extends Vue {
   .error {
     @apply bg-red-600 text-white w-full mt-2 rounded-md p-2 text-sm;
   }
-</style>>
+</style>
 

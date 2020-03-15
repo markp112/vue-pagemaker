@@ -9,3 +9,8 @@ export interface Site {
   hostRepo?: string
 }
 
+export const  siteInit: Site = {
+  siteId: '',
+  name: '',
+  created: new Date(),
+}

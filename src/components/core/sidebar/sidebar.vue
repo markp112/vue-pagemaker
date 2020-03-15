@@ -7,13 +7,13 @@
         icon='chevron-circle-left' 
         prefix="fas" 
         class="text-accent2 icon-size mr-2 mt-2 cursor-pointer hover:text-accent" 
-        @click="chevronClicked" />
+        @click="chevronClicked()" />
       <font-awesome-icon 
         v-if="!isShowSideBar"
         icon='chevron-circle-right' 
         prefix="fas" 
         class="text-accent2 icon-size mr-2 mt-2 cursor-pointer hover:text-accent" 
-        @click="chevronClicked" />
+        @click="chevronClicked()" />
     </div>
   </div>
 </template>

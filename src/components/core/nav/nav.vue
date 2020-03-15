@@ -12,11 +12,11 @@
           icon='bars' 
           prefix="fas" 
           class="ml-2 text-accent2 cursor-pointer hamburger hover:text-accent " 
-          @click="isShowMenu = !isShowMenu"
+          @click="toggleMenu = !toggleMenu"
         />
       </div>
   </nav>
-  <div class="flex justify-end toggleable z-10" v-if="isShowMenu">
+  <div class="flex justify-end toggleable z-10" v-if="toggleMenu">
     <ul  class=" w-20 mt-1 mr-1 border bg-gray-200 z-10 rounded-lg shadow-lg">
       <li v-for="menuItem in menuItems" :key="menuItem.id" @click="menuItemClick(menuItem.id)" class="block p-1 cursor-pointer text-left hover:bg-accent hover:text-white rounded-lg ">
       {{ menuItem.navText }}
@@ -35,19 +35,16 @@ import Component from 'vue-class-component';
 @Component
 export default class NavMenuComponent extends Vue {
       name = 'NavMenuComponent'
-      menuItems: NavMenuItem[] = [];
-      isShowMenu = false;
-
-  created():void  {
-    this.$store.dispatch("clearNavMenu");
-    this.$store.dispatch("createNavMenu");
-    this.menuItems = this.$store.getters.navMenuItems;
-    console.log('%c%s', 'color: #aa00ff', this.menuItems, "MenuItems ")
-  }
+      // menuItems: NavMenuItem[] = [];
+      toggleMenu = false;
 
   menuItemClick(id: number) {
     this.$router.push(this.menuItems[id].navLink);
-    this.isShowMenu = !this.isShowMenu;
+    this.toggleMenu = !this.toggleMenu;
+  }
+
+  get menuItems () {
+    return  this.$store.getters.navMenuItems;
   }
 
 }
