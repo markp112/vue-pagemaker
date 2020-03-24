@@ -1,26 +1,13 @@
 <template>
-  <div class="bg-secondary h-full shadow shadow-lg" v-bind:class="{'side-bar-show': isShowSideBar, 'side-bar-hidden': !isShowSideBar }">
-    <div class="flex flex-row justify-end">
 
-      <font-awesome-icon 
-        v-if="isShowSideBar"
-        icon='chevron-circle-left' 
-        prefix="fas" 
-        class="text-accent2 icon-size mr-2 mt-2 cursor-pointer hover:text-accent" 
-        @click="chevronClicked()" />
-      <font-awesome-icon 
-        v-if="!isShowSideBar"
-        icon='chevron-circle-right' 
-        prefix="fas" 
-        class="text-accent2 icon-size mr-2 mt-2 cursor-pointer hover:text-accent" 
-        @click="chevronClicked()" />
-    </div>
+    <div class="border-2 border-secondary rounded-md p-0 fixed bottom-0 md:left-0 md:h-sidebar w-1/5 ml-2 mb-2 mt-2">
+    
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
 import Component from 'vue-class-component'
+import { Emit, Vue } from 'vue-property-decorator';
 
 @Component
 export default class SideBar extends Vue {
@@ -28,20 +15,29 @@ export default class SideBar extends Vue {
 
   chevronClicked() {
     this.isShowSideBar = !this.isShowSideBar;
+    this.resizeEvent(this.isShowSideBar);
   }
+
+ @Emit('resize')
+ resizeEvent(isShowSideBar: boolean) {
+   return this.isShowSideBar
+ }
+
 }
 </script>
 
 <style lang="postcss">
-   .icon-size {
+  .icon-size {
     font-size: 1.5em;
   }
 
-  .side-bar-show {
-    @apply w-full;
+@screen md {
+.side-bar-show {
+    @apply w-1/5;
   }
 
   .side-bar-hidden {
-    @apply w-3/12;
+    @apply w-1/12;
   }
+}
 </style>

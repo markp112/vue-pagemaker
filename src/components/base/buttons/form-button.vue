@@ -16,7 +16,6 @@ import { Prop, Vue, Emit } from 'vue-property-decorator';
 })
 export default class FormButton extends Vue {
 
-
   @Emit('onClick') onClick() {
     console.log("button clicked")
   }

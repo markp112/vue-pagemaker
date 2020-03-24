@@ -1,9 +1,10 @@
 <template>
-  <div class=" w-100">
-      <p class=" text-xl font-bold ml-10 mb-4 mt-10">
+  <div class="w-100">
+      <p class="text-2xl font-bold ml-10 mb-4 mt-10">
           Create New Site
       </p>
-      <form @submit.prevent="submitClick"  class="mt-36 ml-20 w-4/12 flex flex-col justify-evenly border border-solid p-5">
+      <div class="mt-16 flex flex-row justify-center">
+      <form @submit.prevent="saveClicked"  class="ml-20 flex flex-col justify-evenly border-2 rounded-md shadow-lg shadow p-5 w-6/12">
       
         <label for="name">Site Name:</label>
         <input type="text" name="name" id="name" v-model="site.name"  placeholder="The name of your site" required/>
@@ -23,7 +24,7 @@
         </div>
         <invalid-form :formErrors="formErrors"></invalid-form>
     </form>
-    
+    </div>
   </div>
 </template>
 
@@ -31,32 +32,39 @@
 import Vue from 'vue';
 import Component from "vue-class-component";
 import { Emit } from 'vue-property-decorator';
-import { Site, siteInit } from '../../models/sites/site';
+import { Site, initSite } from '../../models/sites/site';
 
 import FormButton  from '@/components/base/buttons/form-button.vue';
 import InvalidForm from '@/components/base/notifications/invalid-form.vue';
+import { SnackbarMessage, SnackbarTypes, SnackBarGenerator } from '@/models/notifications/snackbar';
+
 @Component({
   components: {
     FormButton,
-    "invalid-form": InvalidForm
+    'invalid-form': InvalidForm,
   }
 
 })
 export default class NewSite extends Vue {
-
-  site: Site = siteInit;
+  name = "NewSite";
+  site: Site = initSite;
   formErrors: string[] = [];
 
-@Emit('cancelClicked')
   cancelClicked() {
-    console.log("cancel Clicked");
+    this.$router.push("/sites");
   }
 
   saveClicked() {
     this.formErrors = [];
     const errors: string[] = this.validateForm();
     if (errors.length === 0) {
-      console.log("savuibg")
+      this.$store.dispatch("saveSite", this.site)
+      .then((result: Notification) => {
+        console.log("Notification", result)
+        const snackbarMessage: SnackbarMessage = SnackBarGenerator.snackbarSuccess(`The site ${this.site.name} has been created`,'Site Record Saved')
+      
+        this.$store.dispatch('showSnackbar',snackbarMessage);
+      })
     } else {
       this.formErrors = errors;
     }
@@ -82,7 +90,7 @@ label {
 }
 
 input, textarea {
-  @apply w-64 border-solid border bg-accent2 block;
+  @apply w-full border-solid border bg-accent2 block;
 }
 
 

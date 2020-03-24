@@ -1,8 +1,8 @@
 <template>
   <section>
-    <div class="flex flex-row justify-between ml-12 mt-16 text-accent1">
+    <div class="flex flex-row justify-between ml-12 mt-8 text-accent1">
       <h2 class="text-3xl font-bold ">My Sites</h2>
-      <p class="mr-12 mt-2 font-medium" v-if="isNeworList !== 'NewSite'">Create New
+      <p class="mr-12 mt-2 font-medium">Create New
           <font-awesome-icon v-
             icon='plus-circle' 
             prefix="fas" 
@@ -10,38 +10,58 @@
             @click="createNewSite()" />
       </p>
     </div>
-    
-    <component :is="isNeworList" v-on:cancelClicked="cancelClicked()"></component>
+
+    <div class="ml-20 w-100 mt-20 text-lg">
+      <ul class="flex flex-col justify-start">
+        <p>
+          <span class="list-heading">Site</span>
+          <span class="list-heading">Created</span>
+          <span class="list-heading">Last Published</span>
+        </p>
+        <li class="w-100 " v-for="site in sites" :key="site.siteId">
+          <span class="list-item">{{ site.name }}</span>
+          <span class="list-item">{{ site.created | dateParse('YYYYMMDD') | dateFormat('DD MMMM YYYY') }}</span>
+          <span class="list-item">{{ site.published }}</span>
+        </li>
+      </ul>
+    </div>
   </section>
 </template>
     
-   
 
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import NewSite from './new-site.vue';
+import { Site } from '../../models/sites/site';
 
-@Component({
-  components: {
-    NewSite
-  }
-})
+@Component
 export default class SitesList extends Vue {
   name = "SitesList" ;
-  isNeworList = "";
+  
+  created() {
+    console.log("created")
+    this.$store.dispatch('getSites');
+  }
 
   createNewSite(): void {
-    this.isNeworList = "NewSite"
+    this.$router.push('/newSite');
   }
 
-  cancelClicked() {
-    this.isNeworList = '';
+  get sites(): Site[] {
+    return this.$store.getters.getListofSites;
   }
+
 
 }
 </script>
 
 <style lang="postcss" scoped>
-  
+  .list-heading {
+    @apply font-bold  mr-20 mb-5 inline-block w-1/6;
+  }
+
+  .list-item {
+    @apply mr-20 mb-2 w-1/6 inline-block;
+  }
 </style>

@@ -12,21 +12,20 @@
     // props:{
     //   formErrors: { default :[] },
     //   }
-  })
-  export default class InvalidForm extends Vue{
-    @Prop({default: []})
-    formErrors: string[] = []
+    })
+
+    export default class InvalidForm extends Vue{
+      @Prop({default: []})
+      formErrors: string[] = [];
 
 
-  created(){
-   this.formErrors = [];
-  }
+      created(){
+      this.formErrors = [];
+      }
 
-  get hasErrors (): boolean {
-    console.log("formErrors", this.formErrors.length)
-    return this.formErrors.length > 0 ? true : false
-
-  }
+      get hasErrors (): boolean {
+        return this.formErrors.length > 0 ? true : false
+      }
 
   }
 

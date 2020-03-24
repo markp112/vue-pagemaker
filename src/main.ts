@@ -3,12 +3,15 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import "@/assets/css/tailwind.css";
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faLanguage, faBars, faChevronCircleLeft, faChevronCircleRight, faPlusCircle } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { firestorePlugin } from 'vuefire'
-import Firebase from 'firebase/app'
-import { secrets } from '@/firebase/secrets'
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faLanguage, faBars, faChevronCircleLeft, faChevronCircleRight, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { firestorePlugin } from 'vuefire';
+import Firebase from 'firebase/app';
+import  'firebase/firestore';
+import { secrets } from '@/firebase/secrets';
+// import VueFilterDateFormat from 'vue-filter-date-format';
+// import dateConfig from './config/date-config/date-config';
 
 export const firebaseApp = Firebase.initializeApp(secrets.google);
 // The default cache size threshold is 40 MB. Configure "cacheSizeBytes"
@@ -19,7 +22,7 @@ firebaseApp.firestore().settings({
 });
 
 firebaseApp.firestore().enablePersistence()
-  .catch(function(err) {
+  .catch(err => {
       if (err.code == 'failed-precondition') {
           // Multiple tabs open, persistence can only be enabled
           // in one tab at a a time.
@@ -41,7 +44,7 @@ Vue.config.productionTip = false;
 library.add(faLanguage, faBars, faChevronCircleLeft, faChevronCircleRight, faPlusCircle);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.use(firestorePlugin);
-
+// Vue.use(VueFilterDateFormat, dateConfig);
 
 new Vue({
   router,

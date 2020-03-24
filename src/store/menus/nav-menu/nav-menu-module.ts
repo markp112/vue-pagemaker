@@ -2,8 +2,8 @@
 import {Module, VuexModule, MutationAction, Mutation, Action} from 'vuex-module-decorators'
 import { NavMenuItem } from '@/models/menus/nav-menu';
 
-@Module
-export default class NavMenuItems extends VuexModule {
+@Module({name: 'navMenu' })
+export default class NavMenuItemsModule extends VuexModule {
   menuItems: NavMenuItem[] = [];
   
 

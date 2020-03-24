@@ -4,7 +4,7 @@ import firebase from 'firebase';
 import { ErrorCodes } from '@/models/enums/errors/errors';
 
 
-@Module
+@Module({ name: 'Auth' })
 export default class AuthModule extends VuexModule {
   user: UserInterface = initUser;
 
@@ -62,9 +62,9 @@ export default class AuthModule extends VuexModule {
       firebase.auth().signInWithEmailAndPassword(user.email, user.password)
       .then (data => {
         if (data.user) {
-          user.id = data.user.uid
+            user.id = data.user.uid
             user.signedIn = true;
-            user.refreshToken = data.user.refreshToken;
+            user.refreshToken = data.user.refreshToken === undefined ? '' : data.user.refreshToken;
             window.localStorage.setItem("pmToken", user.refreshToken);
             window.localStorage.setItem("pmEmail", user.email);
             window.localStorage.setItem("id", user.id);
@@ -105,6 +105,10 @@ getUserFromLocalStorage() {
   get isExistingUser(): boolean {
     const refreshToken = window.localStorage.getItem("pmToken");
     return refreshToken === null ? false : true;
+  }
+
+  get currentUser(): UserInterface {
+    return this.user;
   }
 
   
