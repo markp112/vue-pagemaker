@@ -10,8 +10,9 @@ import { firestorePlugin } from 'vuefire';
 import Firebase from 'firebase/app';
 import  'firebase/firestore';
 import { secrets } from '@/firebase/secrets';
-// import VueFilterDateFormat from 'vue-filter-date-format';
-// import dateConfig from './config/date-config/date-config';
+import VueFilterDateFormat from 'vue-filter-date-format';
+import VueFilterDateParse from 'vue-filter-date-parse'
+import dateConfig from './config/date-config/date-config';
 
 export const firebaseApp = Firebase.initializeApp(secrets.google);
 // The default cache size threshold is 40 MB. Configure "cacheSizeBytes"
@@ -44,7 +45,8 @@ Vue.config.productionTip = false;
 library.add(faLanguage, faBars, faChevronCircleLeft, faChevronCircleRight, faPlusCircle);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.use(firestorePlugin);
-// Vue.use(VueFilterDateFormat, dateConfig);
+Vue.use(VueFilterDateFormat);
+Vue.use(VueFilterDateParse);
 
 new Vue({
   router,

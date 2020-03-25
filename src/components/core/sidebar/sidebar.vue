@@ -1,6 +1,6 @@
 <template>
 
-    <div class="border-2 border-secondary rounded-md p-0 fixed bottom-0 md:left-0 md:h-sidebar w-1/5 ml-2 mb-2 mt-2">
+    <div class="border-r-4 p-0 fixed bottom-0 md:left-0 md:h-sidebar w-1/6 ml-2 mb-2 mt-2">
     
   </div>
 </template>

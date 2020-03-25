@@ -1,8 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import home from '@/components/core/home/home.vue'
-import register from '@/components/auth/register.vue';
-import login from '@/components/auth/login.vue';
+import register from '@/components/auth/register/register.vue';
+import login from '@/components/auth/login/login.vue';
 import siteslist from '@/components/sites/sites-list.vue';
 import newSite from '@/components/sites/new-site.vue';
 

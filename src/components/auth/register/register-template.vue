@@ -1,8 +1,8 @@
 <template>
-<div class="container h-full ">
-  <div class="flex justify-center items-center w-screen flex-row h-auto mt-32">
-    <form @submit.prevent="submitClick" class="flex-2 border-2 rounded-md p-5 text-left mb-64 w-1/3" >
-      <p class="text-center text-lg font-bold ">Page Maker Registration</p>
+  <div>
+    <p class="text-center text-2xl font-bold">Page Maker Registration</p>
+    <form @submit.prevent="submitClick" class="mt-20 w-4/6 ml-8" >
+    
       <label for="email" class="text-sm">E-Mail</label>
       <input type="email"
             id="email"
@@ -33,9 +33,10 @@
         <p v-for="error in formErrors" :key="error"> {{ error }} </p>
       </div>
       </form>
+    
   </div>
-</div>
 </template>
+
 
 <script lang="ts">
 import Vue from 'vue'
@@ -43,7 +44,8 @@ import Component from 'vue-class-component'
 import { UserInterface, initUser } from '@/models/user/user'
 
 @Component
-export default class Register extends Vue {
+export default class RegisterForm extends Vue {
+  name="register-form";
     email = "";
     password = "";
     confirmPassword = "";
@@ -53,7 +55,6 @@ export default class Register extends Vue {
       if(this.formIsValid()) {
         console.log("verfifed")
         const user: UserInterface = initUser ;
-        
         user.email = this.email;
         user.password = this.password;
         this.$store.dispatch("registerUser", user)
@@ -94,6 +95,6 @@ export default class Register extends Vue {
 <style lang="postcss">
 
   .input-control {
-     @apply block border-2 rounded-md w-full p-1;
+    @apply block border-2 rounded-md w-full p-1;
   }
 </style>
