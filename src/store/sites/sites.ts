@@ -3,7 +3,6 @@ import { Module, VuexModule, MutationAction, Mutation, Action } from 'vuex-modul
 import {  Site } from '@/models/sites/site.ts';
 import { Notification, notificationDefault } from '@/models/notifications/notifications';
 import firebase from 'firebase';
-import { ErrorCodes } from '@/models/enums/errors/errors';
  import { authStore } from '../store-accessors';
 import Guid from '@/utils/guid';
 
@@ -54,10 +53,9 @@ export default class SiteModule extends VuexModule {
   }
 
   @Action({rawError: true})
-  getSites(): Promise<Notification>
-  {
+  getSites(): Promise<Notification>  {
     const notification: Notification = notificationDefault;
-    return new Promise((resolve, reject)=> {
+    return new Promise((resolve, reject) => {
       const collectionId = this.getCollectionId;
       const firestore = firebase.firestore();
       this.context.commit('clearSites')
@@ -65,7 +63,7 @@ export default class SiteModule extends VuexModule {
       .then (result => {
         result.forEach(doc =>{
           const site: Site = doc.data() as Site;
-          this.context.commit('addSiteToSites', site )
+          this.context.commit('addSiteToSites', site)
         })
         resolve(notification);
       })
