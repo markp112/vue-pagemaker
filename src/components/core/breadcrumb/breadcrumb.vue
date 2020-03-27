@@ -20,33 +20,31 @@
     private breadcrumbList: BreadcrumbLink[] = [{name:''}];
 
     created(){
-     
       this.breadcrumbList = this.$route.meta.breadcrumb;
     }
 
     @Watch('$route', {immediate: true, deep: true})
     onUrlChange(value: string) {
-      console.log("wathcing route", value)
       this.updateList();
     }
 
     routeTo(index: number) {
+
       const link = this.breadcrumbList[index].link === undefined ? '' : `/${this.breadcrumbList[index].link}`;
+      console.log('%c⧭', 'color: #00e600', link)
+      console.log('%c%s', 'color: #f2ceb6', link)
       if (link != undefined) {
         this.$router.push(link);
       }
-
     }
 
     updateList() {
-      console.log("update list called",this.$route.meta.breadcrumb)
       if (this.$route !== undefined ) {
         this.breadcrumbList = this.$route.meta.breadcrumb;
       }
     }
 
     get getbreadCrumbList(): BreadcrumbLink[] {
-      console.log('%c%s', 'color: #f2ceb6', this.breadcrumbList ,'getbreadCrumbList called')
       return this.breadcrumbList;
     }
   }

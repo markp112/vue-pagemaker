@@ -25,9 +25,7 @@ export default class AuthModule extends VuexModule {
 
   @Mutation
   setUser(user: UserInterface): void {
-    console.log("user set", user);
     this.user = user;
-    console.log("This.user", this.user);
   }
 
   @Action({rawError: true, commit: 'setUser'}) 
@@ -84,7 +82,6 @@ getUserFromLocalStorage() {
   
   const user: UserInterface = initUser;
   const refreshToken = window.localStorage.getItem("pmToken");
-  console.log('%c%s', 'color: #9c501d', refreshToken, ':Token');
   if(refreshToken !== null){
     console.log("came here")
     const email  = window.localStorage.getItem("pmEmail");
@@ -93,7 +90,6 @@ getUserFromLocalStorage() {
     user.signedIn = true;
     user.id = id === null ? '' : id;
     user.refreshToken = refreshToken;
-    console.log('%c%s', 'color: #00e600', user);
   }
   return user;
 }

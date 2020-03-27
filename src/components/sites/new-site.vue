@@ -33,7 +33,6 @@ import Vue from 'vue';
 import Component from "vue-class-component";
 import { Emit } from 'vue-property-decorator';
 import { Site, initSite } from '../../models/sites/site';
-
 import FormButton  from '@/components/base/buttons/form-button.vue';
 import InvalidForm from '@/components/base/notifications/invalid-form.vue';
 import { SnackbarMessage, SnackbarTypes, SnackBarGenerator } from '@/models/notifications/snackbar';
@@ -60,7 +59,6 @@ export default class NewSite extends Vue {
     if (errors.length === 0) {
       this.$store.dispatch("saveSite", this.site)
       .then((result: Notification) => {
-        console.log("Notification", result)
         const snackbarMessage: SnackbarMessage = SnackBarGenerator.snackbarSuccess(`The site ${this.site.name} has been created`,'Site Record Saved')
       
         this.$store.dispatch('showSnackbar',snackbarMessage);
@@ -92,6 +90,5 @@ label {
 input, textarea {
   @apply w-full border-solid border bg-accent2 block;
 }
-
 
 </style>

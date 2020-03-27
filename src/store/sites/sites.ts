@@ -11,11 +11,7 @@ export default class SiteModule extends VuexModule {
 
   sites: Site[] = [];
 
-
-  @Mutation
-  // setSite(newSite: ASite): void {
-  //   this.site = newSite;
-  // }
+  _currentSiteId!: string;
 
   @Mutation addSiteToSites(site: Site): void {
     this.sites.push(site);
@@ -25,6 +21,9 @@ export default class SiteModule extends VuexModule {
     this.sites = [];
   }
 
+  @Mutation setCurrentSiteId(siteId: string) {
+    this._currentSiteId = siteId
+  }
 
   @Action({rawError: true})
   saveSite(newSite: Site): Promise<Notification>
@@ -63,11 +62,16 @@ export default class SiteModule extends VuexModule {
       .then (result => {
         result.forEach(doc =>{
           const site: Site = doc.data() as Site;
-          this.context.commit('addSiteToSites', site)
+          this.context.commit('addSiteToSites', site);
         })
         resolve(notification);
       })
     })
+  }
+
+  @Action({rawError: true})
+  updateCurrentSiteId(siteId: string) {
+    this.context.commit('setCurrentSiteId', siteId)
   }
 
   get getListofSites(): Site[] {
@@ -78,6 +82,10 @@ export default class SiteModule extends VuexModule {
     if(authStore.currentUser.id) {
     return  authStore.currentUser.id + '::sites';
     } else {return ''}
+  }
+
+  get getCurrentSiteId() {
+    return this._currentSiteId
   }
 
 }

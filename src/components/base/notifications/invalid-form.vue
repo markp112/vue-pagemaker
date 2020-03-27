@@ -16,20 +16,16 @@
 
     export default class InvalidForm extends Vue{
       @Prop({default: []})
-      formErrors: string[] = [];
+      formErrors!: string[];
 
-
-      created(){
-      this.formErrors = [];
+      created() {
+        this.formErrors = [];
       }
 
-      get hasErrors (): boolean {
+      get hasErrors(): boolean {
         return this.formErrors.length > 0 ? true : false
       }
-
   }
-
-
 </script>
 
 <style lang="postcss" scoped>
