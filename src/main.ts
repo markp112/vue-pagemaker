@@ -3,9 +3,7 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import "@/assets/css/tailwind.css";
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faLanguage, faBars, faChevronCircleLeft, faChevronCircleRight, faPlusCircle, faImage, faAlignJustify, faHome, faQuestion, faQuestionCircle, faBlog, faPhotoVideo, faCamera, faImages, faIdCard, faPhone, faEnvelope  } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import {library, FontAwesomeIcon} from '@/fontawesome/fontawesome-config';
 import { firestorePlugin } from 'vuefire';
 import Firebase from 'firebase/app';
 import  'firebase/firestore';
@@ -36,14 +34,9 @@ firebaseApp.firestore().enablePersistence()
       }
   });
 // Subsequent queries will use persistence, if it was enabled successfully
-  
-
-
 
 
 Vue.config.productionTip = false;
-
-library.add(faLanguage, faBars, faChevronCircleLeft, faChevronCircleRight, faPlusCircle, faImage, faAlignJustify, faHome, faQuestion, faQuestionCircle, faBlog, faPhotoVideo, faCamera, faImages, faIdCard, faPhone, faEnvelope);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.use(firestorePlugin);
 Vue.use(VueFilterDateFormat);

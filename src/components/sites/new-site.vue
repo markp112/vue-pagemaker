@@ -10,6 +10,9 @@
         <input type="text" name="name" id="name" v-model="site.name"  placeholder="The name of your site" required/>
         <label for="description" >Description</label>
         <textarea rows="4" name="name" id="name" v-model="site.description" placeholder="Description of your site"></textarea>
+        <label for="image">Site Image</label>
+        <image-upload v-on:image-url="setImageUrl"></image-upload>
+        <img :src="image" class="border object-contain w-full h-64" ref="imagePlaceholder"/>
         <label for="created">Created:</label>
         <input type="date" name="created" id="created" v-model="site.created" />
         <label for="Url">Url:</label>
@@ -36,18 +39,52 @@ import { Site, initSite } from '../../models/sites/site';
 import FormButton  from '@/components/base/buttons/form-button.vue';
 import InvalidForm from '@/components/base/notifications/invalid-form.vue';
 import { SnackbarMessage, SnackbarTypes, SnackBarGenerator } from '@/models/notifications/snackbar';
+import UploadImage from '@/components/base/pickers/upload-image/upload-image.vue';
 
 @Component({
   components: {
     FormButton,
     'invalid-form': InvalidForm,
+    'image-upload': UploadImage,
   }
 
 })
 export default class NewSite extends Vue {
   name = "NewSite";
   site: Site = initSite;
-  formErrors: string[] = [];
+  formErrors!: string[];
+  image!: string | ArrayBuffer | null;
+
+  created() {
+    this.formErrors = [];
+    this.image = null;
+    if(this.$store.getters.getCurrentSiteId !== '') {
+      this.site = this.$store.getters.getCurrentSite;
+      console.log(this.site,"site =")
+    }
+  }
+
+  setImageUrl(imageData:{formData:FormData, imageurl:string, file: File}):void {
+    console.log("setImage alled", imageData)
+    this.readFile(imageData.file)
+    // this.$store.dispatch('storeImage', imageData.imageurl)
+    
+  }
+
+  readFile(file: File) {
+    console.log("read file called")
+    const reader = new FileReader();
+    let that:HTMLImageElement =this.$refs.imagePlaceholder;
+
+    reader.onload = (e) => {
+      console.log("returning file",e)
+      if(e.target != null){
+        console.log("returning file",e.target.result)
+        that.src = e.target.result as string;
+      }
+      reader.readAsDataURL(file)
+    }
+  }
 
   cancelClicked() {
     this.$router.push("/sites");
@@ -60,7 +97,6 @@ export default class NewSite extends Vue {
       this.$store.dispatch("saveSite", this.site)
       .then((result: Notification) => {
         const snackbarMessage: SnackbarMessage = SnackBarGenerator.snackbarSuccess(`The site ${this.site.name} has been created`,'Site Record Saved')
-      
         this.$store.dispatch('showSnackbar',snackbarMessage);
       })
     } else {

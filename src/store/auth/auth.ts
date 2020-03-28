@@ -34,7 +34,6 @@ export default class AuthModule extends VuexModule {
     return new Promise((resolve, reject) => {
       firebase.auth().createUserWithEmailAndPassword(newUser.email, newUser.password)
         .then(data => {
-            
             authStatus = {
             isSuccess: true,
             errorCode: ErrorCodes.NotSet,
@@ -83,7 +82,6 @@ getUserFromLocalStorage() {
   const user: UserInterface = initUser;
   const refreshToken = window.localStorage.getItem("pmToken");
   if(refreshToken !== null){
-    console.log("came here")
     const email  = window.localStorage.getItem("pmEmail");
     const id = window.localStorage.getItem("id");
     user.email = email === null ? '' : email;

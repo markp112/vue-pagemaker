@@ -18,10 +18,6 @@
       @Prop({default: []})
       formErrors!: string[];
 
-      created() {
-        this.formErrors = [];
-      }
-
       get hasErrors(): boolean {
         return this.formErrors.length > 0 ? true : false
       }

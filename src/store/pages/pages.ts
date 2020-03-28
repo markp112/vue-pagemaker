@@ -48,12 +48,11 @@ export default class PageModule extends VuexModule {
   }
 
   @Action({rawError: true})
-  loadPages(siteId: string): Promise<Notification> {
+  loadPages(): Promise<Notification> {
     const notification: Notification = notificationDefault;
     return new Promise((resolve, reject) => {
       const firestore = firebase.firestore();
       const collectionId = this.getPageCollectionId;
-      console.log('%c%s', 'color: #00bf00', collectionId);
       this.context.commit('clear');
       firestore.collection(collectionId).get()
       .then (collection => {

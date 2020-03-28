@@ -1,8 +1,8 @@
 
 import { Module, VuexModule, MutationAction, Mutation, Action } from 'vuex-module-decorators'
-import {  Site } from '@/models/sites/site.ts';
+import {  Site,initSite } from '@/models/sites/site.ts';
 import { Notification, notificationDefault } from '@/models/notifications/notifications';
-import firebase from 'firebase';
+import firebase, { firestore } from 'firebase';
  import { authStore } from '../store-accessors';
 import Guid from '@/utils/guid';
 
@@ -12,6 +12,7 @@ export default class SiteModule extends VuexModule {
   sites: Site[] = [];
 
   _currentSiteId!: string;
+  _currentSite: Site = initSite;
 
   @Mutation addSiteToSites(site: Site): void {
     this.sites.push(site);
@@ -39,6 +40,7 @@ export default class SiteModule extends VuexModule {
       const firestore = firebase.firestore();
       firestore.collection(collectionId).doc(documentId).set(newSite)
       .then ( () => {
+      
         this.context.commit('setSite', newSite)
         resolve(notification);
       })
@@ -49,6 +51,20 @@ export default class SiteModule extends VuexModule {
       })
       resolve(notification)
     })
+  }
+
+  @Action({rawError: true}) 
+  storeImage(image:File) {
+    const userId = authStore.currentUser.id;
+    firebase.storage().ref(`${userId}::images`).put(image)
+    .then(result => {
+      console.log("result", result)
+    })
+    .catch(err => {
+      console.log("err=", err);
+    })
+
+    
   }
 
   @Action({rawError: true})
@@ -84,8 +100,12 @@ export default class SiteModule extends VuexModule {
     } else {return ''}
   }
 
-  get getCurrentSiteId() {
+  get getCurrentSiteId():string {
     return this._currentSiteId
+  }
+
+  get getCurrentSite():Site {
+    return this._currentSiteId !=='' ? this.sites.filter(site => site.siteId === this._currentSiteId)[0] : initSite;
   }
 
 }
