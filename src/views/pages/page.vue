@@ -60,13 +60,14 @@ import SubmitCancel from '@/components/base/buttons/submit-cancel/submit-cancel.
   }
 })
 export default class PageEditor extends Vue {
-  pageTitle = '';
-  page: Page = new Page();
-  formErrors: string[] = [];
+  pageTitle!: string;
+  page!: Page;
+  formErrors!: string[];
 
   created() {
     this.pageTitle = this.$route.params.title;
-    this.page.created = new Date()
+    this.page = this.$store.getters.getCurrentPage;
+    this.formErrors = [];
   }
 
   iconPickerClicked() {
@@ -79,15 +80,14 @@ export default class PageEditor extends Vue {
 
   cancelClick() {
     const siteId = this.$store.getters.getCurrentSiteId;
-    console.log('%c%s', 'color: #00a3cc', siteId )
-    this.$router.push({ name:"pageList", params: { id: siteId }});
-    // this.$router.back();
+    this.$router.push({ name:"pageList" });
   }
 
   saveClick(){
     this.formErrors = [];
     const errors: string[] = this.validateForm();
     if(errors.length === 0){
+      this.page.edited = new Date();
       this.savePage();
     } else {
       this.formErrors = errors;

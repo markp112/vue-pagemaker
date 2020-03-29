@@ -26,6 +26,13 @@ export default class PageModule extends VuexModule {
   }
   
   @Action({rawError: true})
+  updateCurrentPage(name: string) {
+    const page:Page = this.pageList.filter(pg => pg.name === name)[0];
+    console.log('%c⧭', 'color: #0088cc',  this.pageList);
+    this.context.commit('setCurrentPage', page);
+  }
+
+  @Action({rawError: true})
   saveThePage(page: Page): Promise<Notification> {
     const notification: Notification = notificationDefault;
     return new Promise((resolve, reject) => {

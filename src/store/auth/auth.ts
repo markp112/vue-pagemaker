@@ -78,7 +78,6 @@ export default class AuthModule extends VuexModule {
 
 @Action({commit: 'setUser'}, )
 getUserFromLocalStorage() {
-  
   const user: UserInterface = initUser;
   const refreshToken = window.localStorage.getItem("pmToken");
   if(refreshToken !== null){

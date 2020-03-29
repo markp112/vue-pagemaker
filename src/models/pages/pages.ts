@@ -1,11 +1,12 @@
 import { IconInterface, initIcon } from '../font-awesome/icon';
+import { dateFormat } from 'vue-filter-date-format';
 
 export interface PageInterface {
-  name: string
-  icon: IconInterface
-  created: Date
-  edited: Date
-  active: boolean
+  name: string;
+  icon: IconInterface;
+  created: Date;
+  edited: Date;
+  active: boolean;
 
 }
 
@@ -60,6 +61,11 @@ export class Page implements PageInterface {
     this._active = active;
   }
 
+  get createdFormatted():string {
+    console.log(dateFormat(this._created,'DD MMM YYYY'))
+    return dateFormat(this._created,'DD mmm YYYY');
+  }
+  
   getPageDataAsObject():PageInterface {
     const page = {
       name: this._name,
