@@ -1,17 +1,24 @@
 <template>
-  <div class="flex flex-row justify-between ml-12 mt-8">
-    <h2 class="page-heading">My Pages</h2>
-    <create-new-button @onClick="createNewPage()"></create-new-button>
-    <ul>
-      <li v-for="page in pageList" :key="page.name">
-        <font-awesome-icon v-if="page.icon.icon !== ''" :icon="page.icon.icon" :prefix="page.icon.prefix"></font-awesome-icon>
-        <span>{{page.name}}</span>
-        <span>{{ page.created }}</span>
-        <span>{{ page.edited}}</span>
-        <span><input type="checkbox" value="page.active" readonly /> </span>
-      </li>
-    </ul>
-  </div>
+  <section>
+    <div class="flex flex-row justify-between ml-12 mt-8">
+      <h2 class="page-heading">My Pages</h2>
+      <create-new-button @onClick="createNewPage()"></create-new-button>
+    </div>
+      <ul class="flex flex-col justify-start">
+        <div>
+          <span>Name</span>
+          <span>Date Created</span>
+          <span>Last Edited</span>
+        </div>
+        <li v-for="page in pageList" :key="page.name" class="flex flex-row justify-evenly">
+          <font-awesome-icon v-if="page.icon.icon !== ''" :icon="page.icon.icon" :prefix="page.icon.prefix"></font-awesome-icon>
+          <span>{{page.name}}</span>
+          <span>{{ page.created) }}</span>
+          <span>{{ page.edited}}</span>
+          <span><input type="checkbox" value="page.active" readonly /> </span>
+        </li>
+      </ul>
+  </section>
 </template>
 
 <script lang="ts">
@@ -31,7 +38,6 @@ export default class PageList extends Vue {
 
   created() {
     this.siteId = this.$store.getters.getCurrentSiteId;
-    console.log("Created called")
     this.$store.dispatch('loadPages');
   }
 

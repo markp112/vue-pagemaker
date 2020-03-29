@@ -26,6 +26,16 @@ export default class SiteModule extends VuexModule {
     this._currentSiteId = siteId
   }
 
+  @Mutation setSite(site: Site) {
+    const siteExists = this.sites.filter(s => s.name === site.name);
+    if (siteExists.length > 0) {
+      siteExists[0] = site;
+    } else {
+      this.sites.push(site);
+    }
+    this._currentSite = site;
+  }
+
   @Action({rawError: true})
   saveSite(newSite: Site): Promise<Notification>
   {
@@ -35,12 +45,12 @@ export default class SiteModule extends VuexModule {
       if (newSite.siteId === '') {
         newSite.siteId = Guid.newGuid();
       }
+      console.log("site", newSite)
       const documentId = `site::${newSite.siteId}`;
       const collectionId = this.getCollectionId;
       const firestore = firebase.firestore();
       firestore.collection(collectionId).doc(documentId).set(newSite)
       .then ( () => {
-      
         this.context.commit('setSite', newSite)
         resolve(notification);
       })
@@ -51,20 +61,6 @@ export default class SiteModule extends VuexModule {
       })
       resolve(notification)
     })
-  }
-
-  @Action({rawError: true}) 
-  storeImage(image:File) {
-    const userId = authStore.currentUser.id;
-    firebase.storage().ref(`${userId}::images`).put(image)
-    .then(result => {
-      console.log("result", result)
-    })
-    .catch(err => {
-      console.log("err=", err);
-    })
-
-    
   }
 
   @Action({rawError: true})

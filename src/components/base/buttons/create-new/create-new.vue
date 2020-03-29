@@ -1,9 +1,9 @@
 <template>
   <p class="mr-12 mt-2 font-medium">Create New
-    <font-awesome-icon v-
+    <font-awesome-icon 
       icon='plus-circle' 
       prefix="fas" 
-      class="text-accent icon-size ml-3 mr-12 cursor-pointer hover:text-secondary" 
+      class="text-accent ml-3 cursor-pointer hover:text-secondary-100" 
       @click="onClick()" />
   </p>
 </template>
@@ -18,7 +18,7 @@
     name = "CreateNewButton";
     
     @Emit('onClick') onClick() {
-      console.log("button clicked")
+      return
     }
   }
 </script>

@@ -37,7 +37,7 @@ export default class SitesList extends Vue {
   }
 
   createNewSite(): void {
-    this.$router.push('/newSite');
+    this.$router.push({name:'newSite', params:{title: 'New Site'}});
   }
 
   siteClicked(siteId: string) {

@@ -56,7 +56,7 @@ const routes = [
   },
   {
     path: "/newSite",
-    name: "/newsite",
+    name: "newSite",
     component: newSite,
     meta: {
       breadcrumb: [
@@ -67,7 +67,7 @@ const routes = [
     },
   },
   {
-    path: "/pages/:id",
+    path: "/pages",
     name: "pageList",
     component: PageList,
     meta: {

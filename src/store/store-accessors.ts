@@ -7,7 +7,7 @@ import  SnackbarModule from './snackbar/snackbar';
 import SidebarModule from './sidebar/sidebar';
 import ComponentProps from './component-props/component-props';
 import PageModule from './pages/pages';
-
+import ServicesModule from './services/services';
 
 export let authStore:  AuthModule;
 export let siteStore: SiteModule;
@@ -16,6 +16,7 @@ export let snackbarStore: SnackbarModule;
 export let sidebarStore: SidebarModule;
 export let componentProps: ComponentProps;
 export let pageStore: PageModule;
+export let servicesStore: ServicesModule;
 
 export function initialiseStore(store: Store<any>): void {
   authStore = getModule(AuthModule, store);
@@ -25,6 +26,7 @@ export function initialiseStore(store: Store<any>): void {
   sidebarStore = getModule(SidebarModule, store);
   componentProps = getModule(ComponentProps, store);
   pageStore = getModule(PageModule, store);
+  servicesStore = getModule(ServicesModule, store);
 }
 
 export const modules = { 
@@ -35,4 +37,5 @@ export const modules = {
   'sidebar': SidebarModule,
   'componentprops': ComponentProps,
   'pages': PageModule,
+  'services': ServicesModule,
 }
