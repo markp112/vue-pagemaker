@@ -5,13 +5,15 @@ import register from '@/components/auth/register/register.vue';
 import login from '@/components/auth/login/login.vue';
 import siteslist from '@/components/sites/sites-list.vue';
 import newSite from '@/components/sites/new-site.vue';
-
+import PageList from '@/views/pages/page-list.vue'
+import PageEditor from '@/views/pages/page.vue'
+import PageBuilder from '@/views/page-builders/page-builder-raw.vue'
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
-    name: "/home",
+    name: "home",
     component: home,
     meta: {
       breadcrumb: [
@@ -21,7 +23,7 @@ const routes = [
   },
   {
     path: "/register",
-    name: "/register",
+    name: "register",
     component: register,
     meta: {
       breadcrumb: [
@@ -32,7 +34,7 @@ const routes = [
   },
   {
     path: "/login",
-    name: "/login",
+    name: "login",
     component: login,
     meta: {
       breadcrumb: [
@@ -43,7 +45,7 @@ const routes = [
   },
   {
     path: "/sites",
-    name: "/sites",
+    name: "sites",
     component: siteslist,
     meta: {
       breadcrumb: [
@@ -54,7 +56,7 @@ const routes = [
   },
   {
     path: "/newSite",
-    name: "/newsite",
+    name: "newSite",
     component: newSite,
     meta: {
       breadcrumb: [
@@ -63,8 +65,45 @@ const routes = [
         { name: 'new site' }
       ]
     },
-  }
-
+  },
+  {
+    path: "/pages",
+    name: "pageList",
+    component: PageList,
+    meta: {
+      breadcrumb: [
+        { name: 'home', link: 'home' },
+        { name: 'sites', link: 'sites' },
+        { name: 'page list' }
+      ]
+    },
+  },
+  {
+    path: "/pageEditor/:title",
+    name: "page-editor",
+    component: PageEditor,
+    meta: {
+      breadcrumb: [
+        { name: 'home', link: 'home' },
+        { name: 'sites', link: 'sites' },
+        { name: 'page list', link: 'pageList' },
+        { name: 'page-editor' }
+      ]
+    },
+  },
+  {
+    path: "/pagebuilder/:title",
+    name: "page-builder",
+    component: PageBuilder,
+    meta: {
+      breadcrumb: [
+        { name: 'home', link: 'home' },
+        { name: 'sites', link: 'sites' },
+        { name: 'page list', link: 'pageList' },
+        { name: 'page-Builder' }
+      ]
+    },
+  },
 ];
 
 const router = new VueRouter({

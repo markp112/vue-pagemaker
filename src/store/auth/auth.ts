@@ -25,9 +25,7 @@ export default class AuthModule extends VuexModule {
 
   @Mutation
   setUser(user: UserInterface): void {
-    console.log("user set", user);
     this.user = user;
-    console.log("This.user", this.user);
   }
 
   @Action({rawError: true, commit: 'setUser'}) 
@@ -36,7 +34,6 @@ export default class AuthModule extends VuexModule {
     return new Promise((resolve, reject) => {
       firebase.auth().createUserWithEmailAndPassword(newUser.email, newUser.password)
         .then(data => {
-            
             authStatus = {
             isSuccess: true,
             errorCode: ErrorCodes.NotSet,
@@ -81,19 +78,15 @@ export default class AuthModule extends VuexModule {
 
 @Action({commit: 'setUser'}, )
 getUserFromLocalStorage() {
-  
   const user: UserInterface = initUser;
   const refreshToken = window.localStorage.getItem("pmToken");
-  console.log('%c%s', 'color: #9c501d', refreshToken, ':Token');
   if(refreshToken !== null){
-    console.log("came here")
     const email  = window.localStorage.getItem("pmEmail");
     const id = window.localStorage.getItem("id");
     user.email = email === null ? '' : email;
     user.signedIn = true;
     user.id = id === null ? '' : id;
     user.refreshToken = refreshToken;
-    console.log('%c%s', 'color: #00e600', user);
   }
   return user;
 }
