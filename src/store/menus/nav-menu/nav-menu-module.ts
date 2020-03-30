@@ -14,24 +14,25 @@ export default class NavMenuItemsModule extends VuexModule {
   }
 
   @Mutation clearNav() {
-    console.log("nav clear called")
     this.menuItems = [];
   }
 
-  @Action ({commit:'add'}) createNavMenuSignedOut(){
+  @Action ({commit:'addNav'}) createNavMenuSignedOut(){
     this.context.commit('clear');
     let menuItem: NavMenuItem = new NavMenuItem(0, 'Login', '/login');
-    this.context.commit('add',menuItem);
+    this.context.commit('addNav',menuItem);
     menuItem = new NavMenuItem(1, 'Register', '/register');
-    this.context.commit('add',menuItem);
+    this.context.commit('addNav',menuItem);
   }
 
   @Action ({commit:'addNav'}) createNavMenuSignedIn(){
     this.context.commit('clearNav');
     let menuItem: NavMenuItem = new NavMenuItem(0, 'Profile', '/profile');
-    this.context.commit('add',menuItem);
+    this.context.commit('addNav',menuItem);
     menuItem = new NavMenuItem(1, 'Settings', '/settings');
-    this.context.commit('add',menuItem);
+    this.context.commit('addNav',menuItem);
+    menuItem = new NavMenuItem(1, 'Admin', '/iconeditor');
+    this.context.commit('addNav', menuItem);
   }
 
   get navMenuItems():NavMenuItem[] {

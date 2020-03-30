@@ -1,6 +1,6 @@
 
 import { Module,  Mutation, Action, VuexModule } from 'vuex-module-decorators'
-import {   EditorComponents, EditorComponentInterface } from '@/models/editor-components/editor-components'
+import {  EditorComponents, EditorComponentInterface } from '@/models/editor-components/editor-components'
 import { Notification, notificationDefault } from '@/models/notifications/notifications';
 import firebase from 'firebase';
 
@@ -25,8 +25,6 @@ import firebase from 'firebase';
 
   @Action({rawError: true}) 
   loadSideBarElements(): Promise<Notification> {
-    
-    console.log('%c%s', 'color: #f2ceb6', '==>this.loadSideBarElements');
     const firestore = firebase.firestore();
     const notification: Notification = notificationDefault;
     const sidebarCollection = 'sidebar-page-layout'

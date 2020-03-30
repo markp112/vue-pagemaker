@@ -8,6 +8,8 @@ import newSite from '@/components/sites/new-site.vue';
 import PageList from '@/views/pages/page-list.vue'
 import PageEditor from '@/views/pages/page.vue'
 import PageBuilder from '@/views/page-builders/page-builder-raw.vue'
+import SideBarIconEditor from '@/views/admin/sidebar-icon-editor/sidebar-icon-editor.vue'
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -21,6 +23,7 @@ const routes = [
       ]
     },
   },
+ 
   {
     path: "/register",
     name: "register",
@@ -101,6 +104,17 @@ const routes = [
         { name: 'sites', link: 'sites' },
         { name: 'page list', link: 'pageList' },
         { name: 'page-Builder' }
+      ]
+    },
+  },
+  {
+    path: "/iconeditor",
+    name: "icon-editor",
+    component: SideBarIconEditor,
+    meta: {
+      breadcrumb: [
+        { name: 'home', link: 'home' },
+        { name: 'icon editor' }
       ]
     },
   },

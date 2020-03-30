@@ -1,7 +1,8 @@
+import { IconInterface, initIcon } from '../font-awesome/icon';
+
 export interface EditorComponentInterface {
   name: string,
-  icon: string,
-  iconPrefix: string,
+  icon: IconInterface
   type: EditorComponentTypes,
 }
  interface EditorComponentsInterface {
@@ -18,8 +19,7 @@ export enum EditorComponentTypes {
 
 export const initEditorComponents: EditorComponentInterface = {
   name: '',
-  icon: '',
-  iconPrefix: '',
+  icon: initIcon,
   type: EditorComponentTypes.Image,
 }
 

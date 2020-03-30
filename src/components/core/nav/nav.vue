@@ -17,7 +17,7 @@
   </nav>
   <div class="flex justify-end toggleable z-10" v-if="toggleMenu">
     <ul  class=" w-20 mt-1 mr-1 border bg-gray-200 z-10 rounded-lg shadow-lg">
-      <li v-for="menuItem in menuItems" :key="menuItem.id" @click="menuItemClick(menuItem.id)" class="block p-1 cursor-pointer text-left hover:bg-accent hover:text-white rounded-lg ">
+      <li v-for="(menuItem, idx) in menuItems" :key="idx" @click="menuItemClick(idx)" class="block p-1 cursor-pointer text-left hover:bg-accent hover:text-white rounded-lg ">
       {{ menuItem.navText }}
       </li>
     </ul>
@@ -38,6 +38,8 @@ export default class NavMenuComponent extends Vue {
       toggleMenu = false;
 
   menuItemClick(id: number) {
+    console.log("id", id, this.menuItems[id])
+
     this.$router.push(this.menuItems[id].navLink);
     this.toggleMenu = !this.toggleMenu;
   }

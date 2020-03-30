@@ -5,8 +5,8 @@
       <ul class='icon-list-sidebar'>
         <li v-for="element in sidebarElements" :key="element.name">
           <draggable-icon draggable="true" :id="element.name">
-          <font-awesome-icon :icon='element.icon' 
-            :prefix='element.iconPrefix' 
+          <font-awesome-icon :icon='element.icon.icon' 
+            :prefix='element.icon.prefix' 
             class="icon" 
             />
 
@@ -30,12 +30,10 @@ export default class SideBar extends Vue {
   isShowSideBar = true;
 
   created() {
-    console.log("snakbar created")
     this.$store.dispatch('loadSideBarElements');
   }
 
   iconDrag(event: DragEvent) {
-    console.log(event)
   if(event.dataTransfer ) {
     event.dataTransfer.setData("text", '1');
   }
@@ -71,6 +69,4 @@ export default class SideBar extends Vue {
     @apply w-1/12;
   }
 }
-
-
 </style>
