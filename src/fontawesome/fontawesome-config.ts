@@ -19,7 +19,9 @@ import {
   faPhone, 
   faEnvelope,
   faPencilAlt,
-  faUpload,  } from '@fortawesome/free-solid-svg-icons';
+  faUpload, 
+  faColumns,
+  } from '@fortawesome/free-solid-svg-icons';
 
   library.add(  
     faLanguage, 
@@ -40,7 +42,8 @@ import {
     faPhone, 
     faEnvelope,
     faPencilAlt,
-    faUpload, );
+    faUpload, 
+    faColumns,);
 
     export {
       library,

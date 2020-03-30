@@ -13,28 +13,33 @@ import firebase from 'firebase';
 
 
   @Mutation
-  addComponent(editorComponent: EditorComponentInterface) {
-    this._sidebarElements.Add(editorComponent);
+  addComponent(editorComponent: EditorComponents) {
+    this._sidebarElements = editorComponent
   }
 
   @Mutation
-  clear() {
-    this._sidebarElements.clear();
+  clearSidebar() {
+    console.log("Clear called")
+    this._sidebarElements = new EditorComponents()
   }
 
   @Action({rawError: true}) 
   loadSideBarElements(): Promise<Notification> {
+    
+    console.log('%c%s', 'color: #f2ceb6', '==>this.loadSideBarElements');
     const firestore = firebase.firestore();
     const notification: Notification = notificationDefault;
     const sidebarCollection = 'sidebar-page-layout'
     return new Promise((resolve, reject) => {
-      this.context.commit('clear')
+      this.context.commit('clearSidebar')
       firestore.collection(sidebarCollection).get()
       .then (collection => {
+        const editorComponent = new EditorComponents();
         collection.forEach(sidebarElements => {
           const component: EditorComponentInterface = sidebarElements.data() as EditorComponentInterface;
-          this.context.commit('addComponent', component);
+          editorComponent.Add(component);
         });
+        this.context.commit('addComponent', editorComponent);
         resolve(notification);
       })
     })

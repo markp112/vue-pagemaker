@@ -19,8 +19,8 @@
               <font-awesome-icon v-if="page.icon.icon !== ''" :icon="page.icon.icon" :prefix="page.icon.prefix"></font-awesome-icon>
             </span>
             <span class="w-2/12">{{ page.name }}</span>
-            <span class="w-2/12">{{ formatdate(page.created)  }}</span>
-            <span class="w-2/12">{{ formatdate(page.edited) }}</span>
+            <span class="w-2/12">{{ page.created | dateFormat('DD MMM YYYY')  }}</span>
+            <span class="w-2/12">{{ page.edited | dateFormat('DD MMM YYYY') }}</span>
             <span class="w-2/12 self-start"><input type="checkbox" value="page.active" readonly /> </span>
             
           </span>
@@ -37,7 +37,7 @@ import Component from 'vue-class-component';
 import CreateNewButton from '@/components/base/buttons/create-new/create-new.vue'
 import { Page } from '@/models/pages/pages';
 import { dateFormat } from 'vue-filter-date-format';
-import {TimeStamp } from '@/models/Types/generic-types';
+
 @Component({
   components: {
     'create-new-button' : CreateNewButton,
@@ -47,13 +47,7 @@ export default class PageList extends Vue {
   name = "pageList"
   siteId ='';
 
-  formatdate(date: TimeStamp):string {
-    const actualDate = new Date(date.seconds * 1000)
-    return dateFormat(actualDate,'DD MMM YYYY');
-  }
-
   editPencilClick(pageName: string ) {
-    console.log('%c%s', 'color: #00bf00', pageName)
     this.$store.dispatch('updateCurrentPage',pageName);
     this.$router.push({name:'page-editor', params:{title:'Edit Page'}});
   }
@@ -65,6 +59,10 @@ export default class PageList extends Vue {
 
   createNewPage() {
     this.$router.push({ name:"page-editor", params:{ title: 'Create New Page' }});
+  }
+
+  pageRowClick(pageName: string){
+    this.$router.push({name:'page-builder', params:{title: pageName}})
   }
 
   get pageList(): Page[] {

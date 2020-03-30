@@ -7,13 +7,14 @@ export default class NavMenuItemsModule extends VuexModule {
   menuItems: NavMenuItem[] = [];
   
 
-  @Mutation add(menuItem: NavMenuItem) {
+  @Mutation addNav(menuItem: NavMenuItem) {
     if(menuItem !== undefined){
       this.menuItems.push(menuItem);
     }
   }
 
-  @Mutation clear() {
+  @Mutation clearNav() {
+    console.log("nav clear called")
     this.menuItems = [];
   }
 
@@ -25,8 +26,8 @@ export default class NavMenuItemsModule extends VuexModule {
     this.context.commit('add',menuItem);
   }
 
-  @Action ({commit:'add'}) createNavMenuSignedIn(){
-    this.context.commit('clear');
+  @Action ({commit:'addNav'}) createNavMenuSignedIn(){
+    this.context.commit('clearNav');
     let menuItem: NavMenuItem = new NavMenuItem(0, 'Profile', '/profile');
     this.context.commit('add',menuItem);
     menuItem = new NavMenuItem(1, 'Settings', '/settings');

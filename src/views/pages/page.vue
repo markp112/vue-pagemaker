@@ -21,12 +21,12 @@
               :prefix="page.icon.prefix" name="icon">
               </font-awesome-icon>
             </span>
-          <icon-picker  @icon-clicked="iconClick" id="icon"></icon-picker>
+          <icon-picker @icon-clicked="iconClick" id="icon"></icon-picker>
         </div>
       <label for="created">Created:</label>
-      <datepicker :value="page.created"   id="created" name="created"></datepicker>  
+      <datepicker :value="page.created"   id="created" name="created"></datepicker> 
       <label for="edited">edited:</label>
-      <p class="block border-2 rounded-md w-full p-1" id="edited">{{page.edited}}</p>
+      <p class="block border-2 rounded-md w-full p-1" id="edited">{{ page.edited }}</p>
       <div class="flex flex-row justify-start h-8">
         <label for="active">Active:</label>
         <input type="checkbox" name="active" id="active" :value="page.active" class="mt-5 w-1/12">
@@ -48,7 +48,8 @@ import InvalidForm from '@/components/base/notifications/invalid-form.vue';
 import { Notification } from '@/models/notifications/notifications';
 import { SnackbarMessage, SnackbarTypes, SnackBarGenerator } from '@/models/notifications/snackbar';
 import SubmitCancel from '@/components/base/buttons/submit-cancel/submit-cancel.vue';
- import FormButton  from '@/components/base/buttons/form-button.vue';
+import FormButton  from '@/components/base/buttons/form-button.vue';
+import {TimeStamp, formatDate, formatTimeStampAsDate } from '@/models/Types/generic-types';
 
 @Component({
   components:{
@@ -63,10 +64,13 @@ export default class PageEditor extends Vue {
   pageTitle!: string;
   page!: Page;
   formErrors!: string[];
+  dateCreated!: Date;
 
   created() {
     this.pageTitle = this.$route.params.title;
     this.page = this.$store.getters.getCurrentPage;
+    const DateTimeStamp:TimeStamp = {seconds: this.page.created.getSeconds(), nanoseconds:0};
+    this.dateCreated = formatTimeStampAsDate(DateTimeStamp)
     this.formErrors = [];
   }
 

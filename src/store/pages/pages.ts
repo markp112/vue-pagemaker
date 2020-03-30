@@ -3,6 +3,7 @@ import {  Page } from '@/models/pages/pages.ts';
 import { Notification, notificationDefault } from '@/models/notifications/notifications';
 import firebase from 'firebase';
 import { authStore, siteStore } from '../store-accessors';
+import { TimeStamp, convertTimeStampDate } from '@/models/Types/generic-types';
 
 
 
@@ -28,7 +29,6 @@ export default class PageModule extends VuexModule {
   @Action({rawError: true})
   updateCurrentPage(name: string) {
     const page:Page = this.pageList.filter(pg => pg.name === name)[0];
-    console.log('%c⧭', 'color: #0088cc',  this.pageList);
     this.context.commit('setCurrentPage', page);
   }
 
@@ -41,7 +41,6 @@ export default class PageModule extends VuexModule {
       const data = page.getPageDataAsObject();
       firestore.collection(collectionId).doc(page.name).set(data)
       .then(() => {
-        console.log('saved to firebase', notification)
         this.context.commit('setCurrentPage', page);
         this.context.commit('addPage', page);
         resolve(notification);
@@ -65,6 +64,8 @@ export default class PageModule extends VuexModule {
       .then (collection => {
         collection.forEach(doc => {
           const page:Page = doc.data() as Page;
+          page.created = convertTimeStampDate(page.created);
+          page.edited = convertTimeStampDate(page.edited);
           this.context.commit('addPage', page);
         })
         resolve(notification);
@@ -75,6 +76,8 @@ export default class PageModule extends VuexModule {
       })
     })
   }
+
+
 
   get pageList(): Page[] {
     return this.pages

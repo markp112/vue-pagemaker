@@ -7,7 +7,7 @@ import siteslist from '@/components/sites/sites-list.vue';
 import newSite from '@/components/sites/new-site.vue';
 import PageList from '@/views/pages/page-list.vue'
 import PageEditor from '@/views/pages/page.vue'
-
+import PageBuilder from '@/views/page-builders/page-builder-raw.vue'
 Vue.use(VueRouter);
 
 const routes = [
@@ -88,6 +88,19 @@ const routes = [
         { name: 'sites', link: 'sites' },
         { name: 'page list', link: 'pageList' },
         { name: 'page-editor' }
+      ]
+    },
+  },
+  {
+    path: "/pagebuilder/:title",
+    name: "page-builder",
+    component: PageBuilder,
+    meta: {
+      breadcrumb: [
+        { name: 'home', link: 'home' },
+        { name: 'sites', link: 'sites' },
+        { name: 'page list', link: 'pageList' },
+        { name: 'page-Builder' }
       ]
     },
   },

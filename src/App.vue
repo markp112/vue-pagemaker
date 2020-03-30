@@ -37,10 +37,10 @@ export default {
     if(this.$store.getters.isExistingUser)  {
       this.$store.dispatch('getUserFromLocalStorage');
       this.$store.dispatch('createNavMenuSignedIn');
-      // this.$router.push("/sites");
+      this.$router.push("/sites");
     } else {
       this.$store.dispatch("createNavMenuSignedOut");
-      // this.$router.push("/");
+      this.$router.push("/");
     }
   },
 
