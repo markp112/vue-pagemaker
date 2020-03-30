@@ -1,7 +1,7 @@
 <template>
 
   <div class="snackbar-wrapper  w-full" v-if="snackbarContent.show" :class="{'snackbar-show': snackbarContent.show, 'snackbar-hide': !snackbarContent.show }" >
-    <div class= "flex flex-row w-3/12 shadow-xl border-gray-500 border" >
+    <div class= "flex flex-row w-4/12 shadow-xl border-gray-500 border" >
       <div class="w-2/12" :class="getIndicatorColour">.</div>
       <div class="w-8/12 p-2 flex flex-col">
         <div class="self-center font-semibold">
@@ -31,16 +31,13 @@ export default class Snackbar extends Vue {
   }
 
   get getIndicatorColour(): string {
-    console.log(this.$store.getters.snackbarMessage.type)
     return this.$store.getters.snackbarMessage.type;
   }
 
  
 
  updated(){
-    console.log("updated called",this.$store.getters.snackbarMessage.duration);
     setTimeout(() => {
-      console.log("timeout called");
       this.$store.dispatch('hide');
     },this.$store.getters.snackbarMessage.duration);
   }

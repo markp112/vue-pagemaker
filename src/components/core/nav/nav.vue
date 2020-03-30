@@ -4,7 +4,7 @@
 <div class="w-screen py-3 bg-primary shadow shadow-lg">
   <nav class=" text-accent flex items-center justify-between">
       <div class="ml-8">
-        <font-awesome-icon icon='language' prefix="fas" class="text-accent1 icon-size" />
+        <font-awesome-icon icon='language' prefix='fas' class="text-accent1 icon-size" />
       </div>
       <div class="mr-2 flex justify-between ">
         <font-awesome-icon 

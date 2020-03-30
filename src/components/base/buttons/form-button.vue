@@ -21,7 +21,6 @@ export default class FormButton extends Vue {
   }
 }
 
-
 </script>
 
 <style lang="postcss" scoped>
