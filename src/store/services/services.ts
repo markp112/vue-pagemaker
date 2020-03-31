@@ -10,10 +10,16 @@ const notification: Notification = notificationDefault;
 export default class ServicesModule extends VuexModule {
 
   _percentComplete!: number;
+  _dragDropEventHandled= false;
 
   @Mutation 
   updatePercentComplete(snapshot: firebase.storage.UploadTaskSnapshot) {
     this._percentComplete = (snapshot.bytesTransferred / snapshot.totalBytes) *100
+  }
+
+  @Mutation 
+  setDragDropEventHandled(toggle: boolean) {
+    this._dragDropEventHandled = toggle;
   }
 
   @Action({rawError: true})
@@ -43,7 +49,16 @@ export default class ServicesModule extends VuexModule {
     })
   }
 
+  @Action({rawError: true}) 
+  toggleDragDropEventHandled(toggle: boolean) {
+    this.context.commit('setDragDropEventHandled', toggle)
+  }
+
   get percentComplete (): number {
     return this._percentComplete;
+  }
+
+  get dragDropEventHandled(): boolean {
+    return this._dragDropEventHandled
   }
 }

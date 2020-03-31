@@ -1,16 +1,16 @@
 <template>
-<section>
-  <p>Side Bar Icon Editor</p>
-  <div class="flex flex-row justify-start">
-    
-    <div class="flex flex-col justify-start align-top w-3/12 border-gray-500 h-full">
-      <ul>
-        <li v-for="(element,idx) in icons" :key="idx">
+<section class="h-screen overflow-hidden">
+  <p class="mt-2 text-center">Side Bar Icon Editor</p>
+  <div class="flex flex-row justify-start h-full overflow-hidden">
+    <div class=" w-2/12 border-r-2 border-gray-500  flex-wrap mt-8 ml-2">
+      <create-new  @onClick="createNew"></create-new>
+      <ul class="flex flex-row justify-start align-top mt-4">
+        <li v-for="(element,idx) in icons" :key="idx" class="text-2xl w-4/12 cursor-pointer">
           <font-awesome-icon :icon="element.icon.icon" :prefix="element.icon.prefix" @click="iconClicked(idx)"/>
         </li>
       </ul>
-    </div>  
-    <div class="flex flex-col justify-evenly w-9/12">
+    </div>
+    <div class="flex flex-col justify-start ml-5 mt-5 w-9/12">
       <form submit.prevent>
         <label for="page-name">Name:</label>
         <input type="text"
@@ -21,20 +21,20 @@
         >
         <label for="icon">Select Icon</label>
         <div>
-          <span class="h-8 w-8 bg-accent1 text-center font-bold align-middle border cursor-pointer relative inline-block" @click="iconPickerClicked()">...</span>
+          <span class="h-8 w-8 bg-accent1 text-center font-bold align-middle border cursor-pointer relative inline-block" @click="showIconPicker()">...</span>
             <span>
-              <font-awesome-icon v-if="editorComponent.icon !==''" class="ml-2 inline-block text-lg align-middle"
+              <font-awesome-icon v-if="editorComponent.icon !==''" class="ml-2 inline-block text-2xl align-middle"
               :icon="editorComponent.icon.icon" 
-              :prefix="editorComponent.icon.prefix" name="icon">
+              :prefix="editorComponent.icon.prefix" name="icon" ref="icon">
               </font-awesome-icon>
             </span>
-          <icon-picker @icon-clicked="iconPickerClick" id="icon"></icon-picker>
+          <icon-picker @icon-clicked="iconPickerClick" id="icon-picker" ref="icon-picker"></icon-picker>
         </div>
         <label for="type">Type</label>
-        <select name="type" id="type" v-model="editorComponent.type">
-          <option v-for="item in componentType" :key="item" value="item">{{ item }}</option>
+        <select name="type" id="type" v-model="editorComponent.type" class="input-control">
+          <option v-for="item in componentType" :key="item"  :selected="item == editorComponent.type">{{ item }}</option>
         </select>
-
+        <submit-cancel v-on:cancelClicked="cancelClick()"  v-on:saveClicked="saveClick()" ></submit-cancel>
       </form>
     </div>
   </div>
@@ -49,18 +49,28 @@ import SubmitCancel from '@/components/base/buttons/submit-cancel/submit-cancel.
 import InvalidForm from '@/components/base/notifications/invalid-form.vue';
 import { EditorComponentInterface, initEditorComponents, EditorComponentTypes } from '../../../models/editor-components/editor-components'
 import { SnackbarMessage, SnackbarTypes, SnackBarGenerator } from '@/models/notifications/snackbar';
-import { IconInterface } from '@/models/font-awesome/icon';
+import { IconInterface, initIcon } from '@/models/font-awesome/icon';
+import { initAuthStatus } from '../../../models/user/user';
+import { Notification, notificationDefault } from '../../../models/notifications/notifications';
+import CreateNew from '@/components/base/buttons/create-new/create-new.vue'
+
 
 @Component({
   components:{
     'icon-picker': IconPicker,
     'submit-cancel': SubmitCancel,
     'invalid-form': InvalidForm,
+    'create-new': CreateNew,
   }
 })
 export default class SidebarIconEditor extends Vue {
   name="Sidebar Icon Editor"
-  editorComponent!: EditorComponentInterface;
+  editorComponent = {
+    name: '',
+    icon: initIcon,
+    type: EditorComponentTypes.Image,
+
+  }
   componentType: string[] = [
     'Image',
     'Text',
@@ -69,20 +79,54 @@ export default class SidebarIconEditor extends Vue {
     'Links Menu',
     'Button', 
     ]
+  
 
-  created() {
+  created(): void {
     this.$store.dispatch('loadSideBarElements');
     this.editorComponent = initEditorComponents;
+    this.$store.dispatch('toggleSidebar', false);
   }
   
-  iconPickerClick(icon: IconInterface) {
-    this.editorComponent.icon = icon
+  iconPickerClick(icon: IconInterface): void {
+    this.editorComponent.icon = icon;
+  
+  }
+
+  showIconPicker(): void {
+    this.$store.dispatch('toggleIconPicker', true)
+  }
+  
+  iconClicked(idx: number){
+    const tempElement =  this.$store.getters.sidebarElements.editorComponents[idx];
+    this.editorComponent = this.$store.getters.sidebarElements.editorComponents[idx];
+    this.editorComponent.icon = tempElement.icon;
+  }
+  createNew():void {
+    this.editorComponent = initEditorComponents;
+  }
+  saveClick(): void {
+    this.$store.dispatch('saveEditorElement', this.editorComponent)
+    .then(result  => {
+        const notification = result as Notification;
+        if(notification.status === "ok") {
+          const snackbarMessage: SnackbarMessage = SnackBarGenerator.snackbarSuccess(`The ${this.editorComponent.name} has been created`,'Page Saved')
+          this.$store.dispatch('showSnackbar', snackbarMessage)
+          this.$router.push('/iconeditor')
+        } else {
+          this.showErrorsnackbar(notification.message, "Error on Save")
+        }
+      })
+  }
+  
+  showErrorsnackbar(message: string, title: string ) {
+      const snackbarMessage = SnackBarGenerator.snackbarError(message ,title)
+      this.$store.dispatch('showSnackbar', snackbarMessage)
   }
 
   get icons(): EditorComponentInterface[] {
-    console.log("this.$store.getters.sidebarElements.sidebarElements", this.$store.getters.sidebarElements.editorComponents)
     return this.$store.getters.sidebarElements.editorComponents
   }
+
 }
 
 </script>

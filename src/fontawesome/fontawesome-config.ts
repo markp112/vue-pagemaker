@@ -21,6 +21,7 @@ import {
   faPencilAlt,
   faUpload, 
   faColumns,
+  faClone,
   } from '@fortawesome/free-solid-svg-icons';
 
   library.add(  
@@ -43,7 +44,8 @@ import {
     faEnvelope,
     faPencilAlt,
     faUpload, 
-    faColumns,);
+    faColumns,
+    faClone,);
 
     export {
       library,

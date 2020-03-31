@@ -2,36 +2,40 @@
   <div class="font-dosis">
     <div class="flex flex-row flex-wrap py-0 m-0 w-screen" >
       <nav-bar></nav-bar>
-      <div class="flex flex-col justify-start w-1/5">
+      <div class="flex flex-col justify-start w-full h-4">
         <bread-crumb></bread-crumb>
-        <div class="shadow shadow-xl">
-        <side-bar></side-bar>
-        </div>
       </div>
-      
-      <div class="container mt-0 px-6 w-4/5" >
-        <router-view />
+      <div class="flex flex-row justify-start w-full">
+        <div v-if="showSidebar" class=" mt-0 px-6 w-1/5" >
+          <side-bar></side-bar>
+        </div>
+        <div class=" mt-0 px-6 w-4/5" >
+          <router-view />
+        </div>
       </div>
     </div>
     <snack-bar></snack-bar>
   </div>
-
 </template>
 <script>
 
+import Vue from 'vue';
 import nav from './components/core/nav/nav';
 import sidebar from './components/core/sidebar/sidebar'
 import Snackbar from './components/base/notifications/snackbar/snackbar.vue';
 import Breadcrumb from './components/core/breadcrumb/breadcrumb';
+import Component from 'vue-class-component';
 
-
-export default {
+@Component({
   components:{
     'nav-bar': nav,
     'side-bar': sidebar,
     'snack-bar': Snackbar,
     'bread-crumb': Breadcrumb,
   },
+})
+export default class extends Vue{
+ 
   
   created() {
     if(this.$store.getters.isExistingUser)  {
@@ -42,16 +46,23 @@ export default {
       this.$store.dispatch("createNavMenuSignedOut");
       this.$router.push("/");
     }
-  },
+  }
 
 
-methods: {
+
   isLoggedIn() {
     return this.$store.getters.isUserLoggedIn;
-  },
+  }
 
-},
+
+  get showSidebar(){
+    console.log("App.showsidebar")
+    return this.$store.getters.showSidebar;
+  }
 }
+
+
+
 </script>
 <style lang="postcss">
 #app {

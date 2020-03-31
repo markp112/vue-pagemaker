@@ -12,54 +12,62 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import Vue, { VueConstructor } from 'vue'
 import Component from 'vue-class-component'
-import FormButton from '@/components/base/buttons/form-button.vue'
+import FormButton from '@/components/base/buttons/form-button.vue';
+import NavbarEditor from '@/components/page-builder-elements/nav-bars/nav-bar/nav-bar.vue'
+import { EditorComponents, EditorComponentInterface, EditorComponentTypes } from '../../models/editor-components/editor-components';
+import { ComponentBuilder } from '@/classes/component-builder/component-builder'
 @Component({
   props:{
     id: {default: ''}
   },
   components:{
     'form-button': FormButton,
+    'nav-bar-editor': NavbarEditor,
   }
 
 })
 export default class PageBuilder extends Vue {
-
+  name="pageBuilder"
   title!: string;
 
   created() {
     this.title = this.$route.params.title;
+    this.$store.dispatch("toggleSidebar", true);
   }
 
-  onDrop(e: DragEvent) {
-    const dt = e.dataTransfer;
-    console.log('%c⧭', 'color: #00a3cc', dt)
-
-    if(e){
-      (e.currentTarget as HTMLDivElement).style.border ='dashed'
-    if(dt){
-      const componentId = dt.getData('text')
-
-      const component = document.getElementById(componentId);
-      (component as HTMLDivElement).style.border = 'none';
-      const componentClass = Vue.extend(FormButton)
-      const instance =  new componentClass({
-        propsData: { label: 'primary' }
-      });
-      instance.$mount();
-
-      if(component){
-        component.style.display = "block";
-        if(e.target){
-          (e.target as HTMLDivElement).style.border ='none';
-          (this.$refs.mainDiv as HTMLDivElement).appendChild(instance.$el)
-          } 
-
+  onDrop(event: DragEvent) {
+    const componentBuilder = new ComponentBuilder();
+    console.log("event=", event)
+    if(this.$store.getters.dragDropEventHandled) { return }
+    if(event) {
+      const componentId = componentBuilder.getComponentID(event);
+      const instance = componentBuilder.buildComponent(componentId);
+      if(instance){
+        if(event.target) {
+          (this.$refs.mainDiv as HTMLDivElement).appendChild(instance.$el);
+          this.$store.dispatch('toggleDragDropEventHandled', true);
+        }
       }
     }
+  }
+    
+  getComponent(componentId: string){
+    const component:EditorComponentInterface = this.$store.getters.sidebarElements.get(componentId);
+    const componentType = component.type;
+    console.log('%c%s', 'color: #00e600', componentId, EditorComponentTypes.navBar)
+    switch(componentId) {
+      case 'Navbar': {
+        const componentClass = Vue.extend(NavbarEditor);
+        const instance:NavbarEditor  = new componentClass({
+          propsData: {$store: this.$store}
+        });
+        instance.$mount();
+        return instance;
+      }
     }
   }
-
 }
+
 </script>

@@ -3,6 +3,8 @@
         :draggable="draggable"
         @dragstart="onDragStart"
         @dragover.stop
+        @dragleave="onDragLeave"
+        class="p-1 m-0"
       >
   <slot />
   </div>
@@ -22,19 +24,25 @@ export default class DraggableIcon extends Vue {
   
   id!:string;
 
-  created() {
+  created(): void {
     this.id = this.$props.id;
   }
 
-  onDragStart(e: DragEvent) {
+  onDragStart(e: DragEvent): void {
     const target = e.target;
-    if(e.currentTarget)    (e.currentTarget as HTMLDivElement).style.border ='dashed'; 
+    if(e.currentTarget)    (e.currentTarget as HTMLDivElement).style.border ='dashed 0.5px'; 
     if(e.dataTransfer) {
       if(e.target) {
-        e.dataTransfer.setData('text/plain', (e.target as HTMLDivElement).id)
+        e.dataTransfer.setData('text/plain', (e.target as HTMLDivElement).id);
+        this.$store.dispatch('toggleDragDropEventHandled', false);
       }
       
     }
+  }
+
+  onDragLeave(e: DragEvent): void {
+    const target = e.target;
+    if(e.currentTarget)    (e.currentTarget as HTMLDivElement).style.border ='none'; 
   }
 
 }

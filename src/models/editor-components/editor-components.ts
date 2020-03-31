@@ -5,7 +5,7 @@ export interface EditorComponentInterface {
   icon: IconInterface
   type: EditorComponentTypes,
 }
- interface EditorComponentsInterface {
+interface EditorComponentsInterface {
   editorComponents: EditorComponentInterface [];
 }
 export enum EditorComponentTypes {
@@ -32,6 +32,7 @@ export class EditorComponents implements EditorComponentsInterface {
   }
 
   get editorComponents(): EditorComponentInterface[] {
+    console.log("this._editorComponents", this._editorComponents)
     return this._editorComponents;
   }
 
@@ -41,6 +42,15 @@ export class EditorComponents implements EditorComponentsInterface {
 
   Add(editorComponent: EditorComponentInterface) {
     this._editorComponents.push(editorComponent);
+  }
+
+  AddorUpdate(editorComponent: EditorComponentInterface) {
+    let existingElement = this.get(editorComponent.name)
+    if(existingElement){
+      existingElement =  editorComponent;
+    } else {
+      this.Add(editorComponent);
+    }
   }
 
   get(name: string): EditorComponentInterface {

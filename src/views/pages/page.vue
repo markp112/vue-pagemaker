@@ -113,7 +113,6 @@ export default class PageEditor extends Vue {
   }
 
   savePage(): void {
-    console.log("save page called")
     this.$store.dispatch("saveThePage", this.page)
     .then(result  => {
         const notification = result as Notification;

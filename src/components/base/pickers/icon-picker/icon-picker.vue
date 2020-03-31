@@ -20,7 +20,7 @@ import { Vue,  Emit, Prop } from 'vue-property-decorator'
 @Component({
 })
 export default class IconPicker extends Vue{
-  name = "Icon Picker"
+  name = "IconPicker"
 
   icons: IconInterface [] = [{ icon: 'home', prefix: 'fas' },
       { icon: 'question', prefix: 'fas' },
@@ -32,6 +32,9 @@ export default class IconPicker extends Vue{
       { icon: 'id-card', prefix: 'fas' },
       { icon: 'phone', prefix: 'fas' },
       { icon: 'envelope', prefix: 'fas' },
+      { icon: 'align-justify', prefix: 'fas'},
+      { icon: 'columns', prefix: 'fas'},
+      { icon: 'clone', prefix: 'fas'}
 ];
 
   @Emit('icon-clicked')

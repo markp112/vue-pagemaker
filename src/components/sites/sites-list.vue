@@ -34,6 +34,7 @@ export default class SitesList extends Vue {
   
   created() {
     this.$store.dispatch('getSites');
+    this.$store.dispatch('toggleSidebar', false);
   }
 
   createNewSite(): void {
