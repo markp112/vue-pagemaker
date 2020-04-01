@@ -14,6 +14,7 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import FormButton from '@/components/base/buttons/form-button.vue';
+import { ComponentBuilder } from '@/classes/component-builder/component-builder'
 @Component({
  
   props:{
@@ -38,20 +39,15 @@ onClick() {
 }
 
 onDrop(event: DragEvent) {
-  console.log("this =", this)
-  console.log("Store  = ", this.$store)
-  console.log("Navbar event", event, this.$store.getters.dragDropEventHandled)
-  
-  if(this.$store.getters.dragDropEventHandled) { return }
-  if(event) {
-      const dataTransfer = event.dataTransfer;
-      const componentId = dataTransfer ? dataTransfer.getData('text') : '';
+  const componentBuilder = new ComponentBuilder();
+    console.log("event=", event)
+    if(this.$store.getters.dragDropEventHandled) { return }
+    if(event) {
+      const componentId = componentBuilder.getComponentID(event);
       console.log("componentId", componentId)
-      const instance: FormButton | undefined = this.getComponent(componentId);
+      const instance = componentBuilder.buildComponent(componentId);
       console.log('%c⧭', 'color: #f2ceb6', instance)
       if(instance){
-        instance.$mount();
-        console.log("got here")
         if(event.target) {
           (this.$refs['nav-bar'] as HTMLDivElement).appendChild(instance.$el);
           this.$store.dispatch('toggleDragDropEventHandled', true);

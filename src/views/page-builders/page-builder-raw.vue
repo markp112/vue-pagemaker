@@ -43,7 +43,9 @@ export default class PageBuilder extends Vue {
     if(this.$store.getters.dragDropEventHandled) { return }
     if(event) {
       const componentId = componentBuilder.getComponentID(event);
+      console.log("componentId", componentId)
       const instance = componentBuilder.buildComponent(componentId);
+      console.log('%c⧭', 'color: #f2ceb6', instance)
       if(instance){
         if(event.target) {
           (this.$refs.mainDiv as HTMLDivElement).appendChild(instance.$el);
