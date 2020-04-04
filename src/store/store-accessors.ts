@@ -6,8 +6,10 @@ import  NavMenuItemsModule  from './menus/nav-menu/nav-menu-module';
 import  SnackbarModule from './snackbar/snackbar';
 import SidebarModule from './sidebar/sidebar';
 import ComponentProps from './component-props/component-props';
-import PageModule from './pages/pages';
+import PagesModule from './pages/pages';
 import ServicesModule from './services/services';
+import pageModule from './page/page';
+import PageModule from './page/page';
 
 export let authStore:  AuthModule;
 export let siteStore: SiteModule;
@@ -15,8 +17,9 @@ export let navMenuStore: NavMenuItemsModule;
 export let snackbarStore: SnackbarModule;
 export let sidebarStore: SidebarModule;
 export let componentProps: ComponentProps;
-export let pageStore: PageModule;
+export let pagesStore: PagesModule;
 export let servicesStore: ServicesModule;
+export let pageStore: PageModule;
 
 export function initialiseStore(store: Store<any>): void {
   authStore = getModule(AuthModule, store);
@@ -25,8 +28,9 @@ export function initialiseStore(store: Store<any>): void {
   snackbarStore = getModule(SnackbarModule, store);
   sidebarStore = getModule(SidebarModule, store);
   componentProps = getModule(ComponentProps, store);
-  pageStore = getModule(PageModule, store);
+  pagesStore = getModule(PagesModule, store);
   servicesStore = getModule(ServicesModule, store);
+  pageStore = getModule(PageModule,store);
 }
 
 export const modules = { 
@@ -36,6 +40,7 @@ export const modules = {
   'snackbar' : SnackbarModule,
   'sidebar': SidebarModule,
   'componentprops': ComponentProps,
-  'pages': PageModule,
+  'pages': PagesModule,
   'services': ServicesModule,
+  'page': PageModule,
 }

@@ -7,8 +7,8 @@ import { TimeStamp, convertTimeStampDate } from '@/models/Types/generic-types';
 
 
 
-@Module({name: 'pageModule' })
-export default class PageModule extends VuexModule {
+@Module({name: 'pagesModule' })
+export default class PagesModule extends VuexModule {
 
   pages: Page[] = [];
   _currentPage: Page = new Page();

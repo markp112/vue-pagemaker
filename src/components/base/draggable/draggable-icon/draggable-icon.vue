@@ -21,7 +21,6 @@ import Component from 'vue-class-component';
   }
 })
 export default class DraggableIcon extends Vue {
-  
   id!:string;
 
   created(): void {
@@ -36,7 +35,6 @@ export default class DraggableIcon extends Vue {
         e.dataTransfer.setData('text/plain', (e.target as HTMLDivElement).id);
         this.$store.dispatch('toggleDragDropEventHandled', false);
       }
-      
     }
   }
 
