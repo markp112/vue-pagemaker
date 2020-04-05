@@ -1,7 +1,7 @@
 <template>
   <div
-    class="inline-block w-auto p-2 h-8  cursor-pointer" 
-    :class="getClasses"
+    class="inline-block  p-2 cursor-pointer" 
+    :class="getClasses()"
     @click="onClick($event)"
     :style="getStyles()"
     :id="$props.thisComponent.ref"
@@ -20,9 +20,15 @@ import { Style, ComponentRef, PageData, PageContainer } from '@/models/page/page
 })
 export default class GenericComponent extends Vue {
   showBorder = false;
+  classes ="component"
+
+created() {
+  this.classes ="border-red-4";
+}
 
   getClasses(): string {
-    let componentClassSpec = "inline-block w-auto p-2 h-8  cursor-pointer"
+    console.log("getClasses called")
+    let componentClassSpec = "shadow shadow-xl hover:bg-red-200"
     if(this.showBorder) {
       componentClassSpec += ' border'
     }
@@ -54,4 +60,5 @@ export default class GenericComponent extends Vue {
   .border {
     @apply border-red-600 border border-dashed;
   }
+  
 </style>

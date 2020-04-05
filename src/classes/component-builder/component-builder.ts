@@ -59,7 +59,7 @@ export class ComponentBuilder {
     genericButton.addStyle( {style:'background-color', value:'#772255' } ); 
     genericButton.addStyle( {style:'width', value: '100px' } ); 
     genericButton.addStyle( {style:'height', value:'40px' } );
-    genericButton.component = 'base-button';
+    genericButton.component = 'generic-button';
     genericButton.parent = parent,
     console.log('genericButton==>',genericButton)
     return genericButton

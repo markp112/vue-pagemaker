@@ -33,6 +33,7 @@ import GenericComponent from '@/components/page-builder-elements/generic/generic
   },
   components: {
     'base-button': BaseButton,
+    'generic-button': GenericComponent,
   }
 
 })
