@@ -1,87 +1,73 @@
 <template>
-<div class="relative">
-  <div class="w-full bg-blue-500 h-24 "   :class="{'border': showBorder}"
-      :ref="$props.reference"
-      :id="$props.reference"
-      @dragover.prevent
-      @drop.prevent="onDrop"
-      @click="onClick()">
-    <slot />
-
+  <div class="w-full bg-blue-500 h-24 flex flex-row justify-start"   :id="$props.thisComponent.ref" 
+    :class="{'border': showBorder}"
+    :ref="$props.thisComponent.ref"
+    @dragover.prevent
+    @drop.prevent="onDrop"
+    @click.prevent="onClick()">
+    <component :is="layout.component" v-for="(layout,i) in $props.thisComponent.elements"
+        :key="i"
+        :index="i" 
+        :thisComponent="layout"
+        @onClick="componentClick"
+        z-index = "1"
+        @dragover.prevent
+        @drop.prevent="onDrop"
+        >
+    </component>
   </div>
-</div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import FormButton from '@/components/base/buttons/form-button.vue';
 import { ComponentBuilder } from '@/classes/component-builder/component-builder';
-import EditDeleteOption from '@/components/page-builder-elements/utility/edit-delete-options/edit-delete-options.vue';
 import { Emit } from 'vue-property-decorator';
+import { PageData, Style, PageContainer } from '@/models/page/page';
+import  BaseButton  from '@/components/page-builder-elements/buttons/base-button.vue'
+import GenericComponent from '@/components/page-builder-elements/generic/generic.vue';
 
 @Component({
   props:{
-    // $store:{ default:null },
-    reference:{ default:'nav-bar1' }
+    thisComponent:{default: (): PageData => { return new PageContainer()}},
   },
   components: {
-    'edit-delete-option': EditDeleteOption,
+    'base-button': BaseButton,
   }
 
 })
 
 export default class NavBarEditor extends Vue {
 
-showBorder= false;
+showBorder = false;
 
 created() {
   this.showBorder = false;
-  console.log("Store  = ", this.$props.$store)
 }
 
 @Emit('componentClicked')
 onClick() {
-  this.$store.dispatch('updateEditedComponentRef', this.$props.ref)
+  this.$store.dispatch('updateEditedComponentRef', this.$props.thisComponent)
   this.$store.dispatch('updateShowEditDelete', true)
   this.showBorder = !this.showBorder;
   return
 }
 
-onDrop(event: DragEvent) {
-  // const componentBuilder = new ComponentBuilder();
-  //   console.log("event=", event)
-  //   if(this.$store.getters.dragDropEventHandled) { return }
-  //   if(event) {
-  //     const componentId = componentBuilder.getComponentID(event);
-  //     console.log("componentId", componentId)
-  //     const instance = componentBuilder.buildComponent(componentId);
-  //     console.log('%c⧭', 'color: #f2ceb6', instance)
-  //     if(instance){
-  //       if(event.target) {
-  //         (this.$refs[this.$props.reference] as HTMLDivElement).appendChild(instance.$el);
-  //         this.$store.dispatch('toggleDragDropEventHandled', true);
-          
-  //       }
-  //     }
-  //   }
-  }
-
-get editComponentRef() {
-  console.log("this.Soter", this.$store.getters.editedComponentRef)
-  return this.$store.getters.editedComponentRef;
+componentClick(event: Event) {
+  event.stopPropagation();
 }
 
-getComponent(componentId: string){
-    switch(componentId) {
-      case 'Navbutton': {
-        const componentClass = Vue.extend(FormButton);
-        const instance:FormButton  = new componentClass();
-        instance.$mount();
-        return instance;
-      }
-    }
+onDrop(event: DragEvent) {
+  const componentBuilder = new ComponentBuilder();
+  if(this.$store.getters.dragDropEventHandled) { return }
+  if(event) {
+    const componentId = componentBuilder.getComponentID(event);
+    const ref = `${componentId}::${this.$store.getters.nextComponentId}`;
+    const newComponent: PageData = componentBuilder.buildComponent(componentId, ref, this.$props.thisComponent.ref);
+    this.$store.dispatch('addNewPageElement', newComponent);
+    this.$store.dispatch('toggleDragDropEventHandled', true);
   }
+}
 
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div
     class="inline-block w-auto p-2 h-8  cursor-pointer" 
-    :class="{'border': showBorder}"
+    :class="getClasses"
     @click="onClick($event)"
     :style="getStyles()"
     :id="$props.thisComponent.ref"
@@ -18,8 +18,16 @@ import { Style, ComponentRef, PageData, PageContainer } from '@/models/page/page
     thisComponent:{ default: (): PageData => { return new PageContainer()}},
   }
 })
-export default class BaseButton extends Vue {
+export default class GenericComponent extends Vue {
   showBorder = false;
+
+  getClasses(): string {
+    let componentClassSpec = "inline-block w-auto p-2 h-8  cursor-pointer"
+    if(this.showBorder) {
+      componentClassSpec += ' border'
+    }
+    return componentClassSpec
+  }
 
   getStyles(): string {
     let style: string;

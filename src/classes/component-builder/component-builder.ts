@@ -2,66 +2,68 @@ import Vue from 'vue';
 import NavbarEditor from '@/components/page-builder-elements/nav-bars/nav-bar/nav-bar.vue';
 import BaseButton from '@/components/page-builder-elements/buttons/base-button.vue';
 import store from "@/store/";
-import { PageData, PageContainer } from '@/models/page/page';
+import { PageData, PageContainer, PageElement, ComponentRef } from '@/models/page/page';
 
 export type ComponentTypes = NavbarEditor | BaseButton | null
 export class ComponentBuilder {
 
-  getComponentID (event: DragEvent): string | undefined {
+  getComponentID (event: DragEvent): string {
     const dataTransfer = event.dataTransfer;
-    return dataTransfer ? dataTransfer.getData('text') : undefined;
+    return dataTransfer ? dataTransfer.getData('text') : '';
   }
 
-  buildComponent(componentId: string | undefined, ref: string): PageData {
+  buildComponent(componentId: string | undefined, ref: ComponentRef, parent: ComponentRef): PageData {
+    console.log('%c%s', 'color: #00a3cc', parent, "Parent ===>");
     switch(componentId) {
       case 'NavBar':
-        return this.buildNavBar(ref);
+        return this.buildNavBar(ref, parent);
+      case 'BaseButton':
+        return this.buildBaseButton(ref, parent);
+      case 'genericButton':
+        return this.buildGenericButton(ref, parent);
       default:
-        return this.buildNavBar(ref);
+        return this.buildNavBar(ref,parent);
     }
 
   }
 
-  // buildComponent(componentId: string | undefined): ComponentTypes {
-  //   switch (componentId) {
-  //     case 'Navbar':
-  //       return this.buildNavBar();
-  //     case 'BaseButton':
-  //       return this.buildBaseButton();
-  //   }
-  //   return null
-  // }
-
-  private buildNavBar(ref: string ): PageContainer {
-    const navBar:PageContainer ={
-      name: "navBar",
-      ref: ref,
-      isContainer: true,
-      elements: [],
-      styles: [],
-      component:'nav-bar-editor'
-
-    }
+  private buildNavBar(ref: string, parent: ComponentRef ): PageContainer {
+    const navBar: PageContainer = new PageContainer();
+    navBar.name = "navBar";
+    navBar.ref = ref;
+    navBar.isContainer = true;
+    navBar.component = 'nav-bar-editor';
+    navBar.parent = parent;
     return navBar;
   }
 
+  private buildBaseButton(ref: string, parent: ComponentRef): PageElement {
+    const baseButton = new PageElement();
+    baseButton.name = 'baseButton';
+    baseButton.ref = ref;
+    baseButton.isContainer = false;
+    baseButton.addStyle( {style:'background-color', value:'#004455' } ); 
+    baseButton.addStyle( {style:'width', value: '150px' } ); 
+    baseButton.addStyle( {style:'height', value:'40px' } );
+    baseButton.component = 'base-button';
+    baseButton.parent = parent,
+    console.log('baseButton==>',baseButton)
+    return baseButton
+  }
 
-  // private buildNavBar():NavbarEditor {
-  //   const componentClass = Vue.extend(NavbarEditor)
-  //   const instance:NavbarEditor = new componentClass({
-  //     propsData:{ $store: store}
-  //   })
-  //   instance.$mount();
-  //   return instance;
-  // }
+  private buildGenericButton(ref: string, parent: ComponentRef): PageElement {
+    const genericButton = new PageElement();
+    genericButton.ref = ref;
+    genericButton.ref = ref;
+    genericButton.isContainer = false;
+    genericButton.addStyle( {style:'background-color', value:'#772255' } ); 
+    genericButton.addStyle( {style:'width', value: '100px' } ); 
+    genericButton.addStyle( {style:'height', value:'40px' } );
+    genericButton.component = 'base-button';
+    genericButton.parent = parent,
+    console.log('genericButton==>',genericButton)
+    return genericButton
 
-  private buildBaseButton(): BaseButton {
-    const componentClass = Vue.extend(BaseButton);
-    const instance:BaseButton = new componentClass({
-      propsData: {buttonLabel:"label"}
-    })
-    instance.$mount();
-    return instance;
   }
 
 }

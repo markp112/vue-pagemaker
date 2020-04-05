@@ -1,33 +1,44 @@
-import { Module, VuexModule, MutationAction, Mutation, Action } from 'vuex-module-decorators'
-import {  Page } from '@/models/pages/pages.ts';
-import { Notification, notificationDefault } from '@/models/notifications/notifications';
+import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
 import { PageElement, PageContainer, PageData } from '@/models/page/page';
-
-
-
 
 @Module({name: 'PageModule' })
 export default class PageModule extends VuexModule {
 
-  _pageElements: PageData [] = [];
-
-  _editedComponentRef!: string;
+  ROOT = 'ROOT'
+  //stores all the elements that make up a page
+  _pageElements: PageData [] = [];  
+  // reference to the component currently being edited
+  _editedComponentRef!: PageData;
+  // show the toolbar for selecting edit // delete
   _showEditDelete = false;
+  // unique number for each component always incremented and set to the max ref of the last component when loading
+  _componentId = 0;
 
-  @Mutation pushPageElement(element: PageData){
-    this._pageElements.push(element)
+  @Mutation pushPageElement(element: PageData) {
+    console.log('pushPageElement',element)
+    if(element.parent === this.ROOT ) {
+      this._pageElements.push(element);
+    } else { // component is nested within another
+      const childElement: PageContainer = this._pageElements.filter(elem => elem.ref === element.parent)[0] as PageContainer;
+      childElement.addNewElement (element);
+    }
+    this._componentId++;
   }
 
-  @Mutation deleteAPageElement(ref: string) {
-    const temp = this._pageElements.filter(element => element.ref !== ref);
-    this._pageElements = temp;
+  @Mutation deleteAPageElement() {
+    if (this._editedComponentRef.parent === this.ROOT) {
+      this._pageElements = this._pageElements.filter(element => element.ref !== this._editedComponentRef.ref)
+    } else {
+      const parentComponent = this._pageElements.filter(element => element.ref === this._editedComponentRef.parent)[0];
+      (parentComponent as PageContainer).deleteElement(this._editedComponentRef.ref)
+    }
   }
 
   @Mutation clearPageElements() {
     this._pageElements = []
   }
 
-  @Mutation setEditedComponentRef(ref: string) {
+  @Mutation setEditedComponentRef(ref: PageData) {
     this._editedComponentRef = ref
   }
 
@@ -36,8 +47,8 @@ export default class PageModule extends VuexModule {
   }
 
   @Action
-  updateEditedComponentRef(ref: string){
-    this.context.commit('setEditedComponentRef', ref)
+  updateEditedComponentRef(element: PageData){
+    this.context.commit('setEditedComponentRef', element)
   }
 
   @Action
@@ -50,7 +61,12 @@ export default class PageModule extends VuexModule {
     this.context.commit("pushPageElement", element)
   }
 
-  get editedComponentRef(): string {
+  @Action 
+  deletePageElement(){
+    this.context.commit('deleteAPageElement');
+  }
+
+  get editedComponentRef(): PageData {
     return this._editedComponentRef
   }
 
@@ -62,5 +78,8 @@ export default class PageModule extends VuexModule {
     return this._pageElements
   }
 
+  get nextComponentId():number {
+    return this._componentId
+  }
 
 }
