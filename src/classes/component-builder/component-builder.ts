@@ -1,10 +1,13 @@
-import Vue from 'vue';
-import NavbarEditor from '@/components/page-builder-elements/nav-bars/nav-bar/nav-bar.vue';
-import BaseButton from '@/components/page-builder-elements/buttons/base-button.vue';
-import store from "@/store/";
-import { PageData, PageContainer, PageElement, ComponentRef } from '@/models/page/page';
+import { PageData, PageContainer, PageElement, ComponentRef, ComponentDefinition } from '@/models/page/page';
 
-export type ComponentTypes = NavbarEditor | BaseButton | null
+export const componentClasses: ComponentDefinition[] = [{
+    componentName: 'genericButton',
+    class: 'inline-block h-10 w-auto p-2 bg-gray-600 cursor-pointer shadow shadow-xl text-red-500 hover:bg-gray-200 ',
+    componentRef:'generic-button'
+  },
+]
+
+
 export class ComponentBuilder {
 
   getComponentID (event: DragEvent): string {
@@ -20,7 +23,7 @@ export class ComponentBuilder {
       case 'BaseButton':
         return this.buildBaseButton(ref, parent);
       case 'genericButton':
-        return this.buildGenericButton(ref, parent);
+        return this.buildGenericButton(ref, parent, componentId);
       default:
         return this.buildNavBar(ref,parent);
     }
@@ -51,15 +54,16 @@ export class ComponentBuilder {
     return baseButton
   }
 
-  private buildGenericButton(ref: string, parent: ComponentRef): PageElement {
+  private buildGenericButton(ref: string, parent: ComponentRef, componentId: string): PageElement {
+    console.log("buildGenericCalled")
     const genericButton = new PageElement();
     genericButton.ref = ref;
     genericButton.ref = ref;
     genericButton.isContainer = false;
-    genericButton.addStyle( {style:'background-color', value:'#772255' } ); 
-    genericButton.addStyle( {style:'width', value: '100px' } ); 
-    genericButton.addStyle( {style:'height', value:'40px' } );
-    genericButton.component = 'generic-button';
+    const componentDef:ComponentDefinition = componentClasses.filter(component => component.componentName = componentId)[0];
+    console.log('%c⧭', 'color: #f2ceb6', componentDef);
+    genericButton.classDefinition = componentDef.class;
+    genericButton.component =  componentDef.componentRef;
     genericButton.parent = parent,
     console.log('genericButton==>',genericButton)
     return genericButton

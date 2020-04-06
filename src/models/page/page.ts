@@ -3,6 +3,12 @@ export interface Style {
   value: string;
 }
 
+export interface ComponentDefinition {
+  componentName: string;
+  class: string;
+  componentRef: string;
+}
+
 export type ComponentRef = string;
 
 export interface PageElementInterface {
@@ -12,6 +18,7 @@ export interface PageElementInterface {
   isContainer: boolean;
   styles: Style [];
   parent: ComponentRef;
+  classDefinition: string;
 }
 
 export interface PageContainerInterface extends PageElementInterface {
@@ -27,6 +34,7 @@ export class PageElement implements PageElementInterface {
   private _isContainer: boolean; // can contain  other elements
   private _styles: Style[]; // css styles
   private _parent: ComponentRef; // ref to parent element
+  private _classDefinition: string;
 
   constructor() {
     this._name = '';
@@ -35,6 +43,7 @@ export class PageElement implements PageElementInterface {
     this._isContainer = false;
     this._styles = [];
     this._parent = ''
+    this._classDefinition = '';
   }
 
   get name(): string {
@@ -71,6 +80,14 @@ export class PageElement implements PageElementInterface {
 
   get styles(): Style[] {
     return this._styles
+  }
+  
+  get classDefinition(): string {
+    return this._classDefinition
+  }
+
+  set classDefinition(definition: string) {
+    this._classDefinition = definition
   }
 
   addStyle(newStyle: Style) {

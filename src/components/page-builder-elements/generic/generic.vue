@@ -1,6 +1,6 @@
 <template>
   <div
-    class="inline-block  p-2 cursor-pointer" 
+    class="" 
     :class="getClasses()"
     @click="onClick($event)"
     :style="getStyles()"
@@ -16,21 +16,16 @@ import { Style, ComponentRef, PageData, PageContainer } from '@/models/page/page
 @Component({
   props:{
     thisComponent:{ default: (): PageData => { return new PageContainer()}},
+    buttonLabel:{default: 'test button'}
   }
 })
 export default class GenericComponent extends Vue {
   showBorder = false;
-  classes ="component"
-
-created() {
-  this.classes ="border-red-4";
-}
-
   getClasses(): string {
     console.log("getClasses called")
-    let componentClassSpec = "shadow shadow-xl hover:bg-red-200"
+    let componentClassSpec = this.$props.thisComponent.classDefinition;
     if(this.showBorder) {
-      componentClassSpec += ' border'
+      componentClassSpec += ' border1'
     }
     return componentClassSpec
   }
@@ -57,8 +52,15 @@ created() {
 }
 </script>
 <style lang="postcss" scoped>
-  .border {
-    @apply border-red-600 border border-dashed;
+  .border1 {
+    @apply border-indigo-800 border border-dashed;
   }
   
+  .component {
+    @apply shadow shadow-xl;
+  }
+
+  .component:hover {
+     @apply bg-gray-200 bg-gray-600 ;
+  }
 </style>
