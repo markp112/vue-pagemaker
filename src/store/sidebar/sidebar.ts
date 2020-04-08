@@ -1,30 +1,27 @@
 
 import { Module,  Mutation, Action, VuexModule } from 'vuex-module-decorators'
-import {  EditorComponents, EditorComponentInterface } from '@/models/editor-components/editor-components'
+// import {  EditorComponents, EditorComponentInterface } from '@/models/editor-components/editor-components'
+import { ComponentDefinitions, ComponentDefinitionInterface } from '@/models/page/page';
 import { Notification, notificationDefault } from '@/models/notifications/notifications';
 import firebase from 'firebase';
 
-const SIDEBARCOLLECTION = 'sidebar-page-layout';
+const SIDEBARCOLLECTION = 'component-definitions';
 
 @Module({name: 'SidebarElements' })
  export default class SidebarModule extends VuexModule {
 
-  _sidebarElements: EditorComponents = new EditorComponents();
+  _sidebarElements: ComponentDefinitions = new ComponentDefinitions();
   _showSidebar = false;
   
 
   @Mutation
-  addComponent(editorComponent: EditorComponents) {
-    this._sidebarElements = editorComponent
+  addComponent(editorComponent: ComponentDefinitionInterface) {
+    this._sidebarElements.add(editorComponent)
   }
   
-  @Mutation addUpdateElement(element:EditorComponentInterface) {
-    this._sidebarElements.AddorUpdate(element);
-  }
-
   @Mutation
-  clearSidebar() {
-    this._sidebarElements = new EditorComponents()
+  clearComponents() {
+    this._sidebarElements = new ComponentDefinitions()
   }
 
   @Mutation
@@ -41,31 +38,29 @@ const SIDEBARCOLLECTION = 'sidebar-page-layout';
   loadSideBarElements(): Promise<Notification> {
     const firestore = firebase.firestore();
     const notification: Notification = notificationDefault;
-    
     return new Promise((resolve, reject) => {
-      this.context.commit('clearSidebar')
+      this.context.commit('clearComponents')
       firestore.collection(SIDEBARCOLLECTION).get()
       .then (collection => {
-        const editorComponent = new EditorComponents();
+        this.context.commit('clearComponents')
         collection.forEach(sidebarElements => {
-          const component: EditorComponentInterface = sidebarElements.data() as EditorComponentInterface;
-          editorComponent.Add(component);
+          const component: ComponentDefinitionInterface = sidebarElements.data() as ComponentDefinitionInterface;
+          this.context.commit('addComponent', component);
         });
-        this.context.commit('addComponent', editorComponent);
         resolve(notification);
       })
     })
   }
 
   @Action({rawError: true})
-  saveEditorElement(editorComponent: EditorComponentInterface): Promise<Notification> {
+  saveEditorElement(editorComponent: ComponentDefinitionInterface): Promise<Notification> {
     const notification: Notification = notificationDefault;
     return new Promise((resolve, reject) => {
       const firestore = firebase.firestore();
       const data = editorComponent;
-      firestore.collection(SIDEBARCOLLECTION).doc(data.name).set(data)
+      firestore.collection(SIDEBARCOLLECTION).doc(data.componentName).set(data)
       .then(() => {
-        this.context.commit('addUpdateElement',editorComponent);
+        this.context.commit('addComponent',editorComponent);
         resolve(notification);
       })
       .catch(err => {
@@ -76,9 +71,14 @@ const SIDEBARCOLLECTION = 'sidebar-page-layout';
     })
   }
 
-  get sidebarElements(): EditorComponents {
-    return this._sidebarElements;
+  get sidebarElements(): ComponentDefinitionInterface[] {
+    return this._sidebarElements.componentDefinitions();
   }
+  
+  get componentDefinition(): ComponentDefinitionInterface | undefined  {
+    return ((componentName: string) =>  this._sidebarElements.getComponent(componentName));
+    }
+  
 
   get showSidebar(): boolean {
     return this._showSidebar

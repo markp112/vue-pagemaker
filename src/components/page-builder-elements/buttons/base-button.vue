@@ -1,6 +1,6 @@
 <template>
   <div
-    class="inline-block w-auto p-2 h-8  cursor-pointer" 
+    class="inline-block w-auto p-2 h-8 cursor-pointer" 
     :class="{'border': showBorder}"
     @click="onClick($event)"
     :style="getStyles()"

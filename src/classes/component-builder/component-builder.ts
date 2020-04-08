@@ -1,11 +1,6 @@
-import { PageData, PageContainer, PageElement, ComponentRef, ComponentDefinition } from '@/models/page/page';
+import { PageData, PageContainer, PageElement, ComponentRef, ComponentDefinitionInterface } from '@/models/page/page';
 
-export const componentClasses: ComponentDefinition[] = [{
-    componentName: 'genericButton',
-    class: 'inline-block h-10 w-auto p-2 bg-gray-600 cursor-pointer shadow shadow-xl text-red-500 hover:bg-gray-200 ',
-    componentRef:'generic-button'
-  },
-]
+export const componentClasses: ComponentDefinitionInterface[] = []
 
 
 export class ComponentBuilder {
@@ -16,17 +11,16 @@ export class ComponentBuilder {
   }
 
   buildComponent(componentId: string | undefined, ref: ComponentRef, parent: ComponentRef): PageData {
-    console.log('%c%s', 'color: #00a3cc', parent, "Parent ===>");
-    switch(componentId) {
-      case 'NavBar':
-        return this.buildNavBar(ref, parent);
-      case 'BaseButton':
-        return this.buildBaseButton(ref, parent);
-      case 'genericButton':
-        return this.buildGenericButton(ref, parent, componentId);
-      default:
-        return this.buildNavBar(ref,parent);
-    }
+
+
+    // switch(componentId) {
+    //   case 'NavBar':
+    //     return this.buildNavBar(ref, parent);
+    //   case 'genericButton':
+    //     return this.buildGenericButton(ref, parent, componentId);
+    //   default:
+    //     return this.buildNavBar(ref,parent);
+    // }
 
   }
 
@@ -39,33 +33,27 @@ export class ComponentBuilder {
     navBar.parent = parent;
     return navBar;
   }
-
-  private buildBaseButton(ref: string, parent: ComponentRef): PageElement {
-    const baseButton = new PageElement();
-    baseButton.name = 'baseButton';
-    baseButton.ref = ref;
-    baseButton.isContainer = false;
-    baseButton.addStyle( {style:'background-color', value:'#004455' } ); 
-    baseButton.addStyle( {style:'width', value: '150px' } ); 
-    baseButton.addStyle( {style:'height', value:'40px' } );
-    baseButton.component = 'base-button';
-    baseButton.parent = parent,
-    console.log('baseButton==>',baseButton)
-    return baseButton
+  
+  private buildContainer(ref: string, parent: ComponentRef, componentId: string ) {
+    const container: PageContainer = new PageContainer();
+    container.name = componentId;
+    container.ref = ref;
+    const componentDef: ComponentDefinitionInterface = componentClasses.filter(component => component.componentName = componentId)[0];
+    container.classDefinition = componentDef.class;
+    container.component =  componentDef.componentRef;
+    container.parent = parent;
+    return container
   }
 
-  private buildGenericButton(ref: string, parent: ComponentRef, componentId: string): PageElement {
-    console.log("buildGenericCalled")
+
+  private buildComponent(ref: string, parent: ComponentRef, componentId: string): PageElement {
     const genericButton = new PageElement();
     genericButton.ref = ref;
-    genericButton.ref = ref;
     genericButton.isContainer = false;
-    const componentDef:ComponentDefinition = componentClasses.filter(component => component.componentName = componentId)[0];
-    console.log('%c⧭', 'color: #f2ceb6', componentDef);
+    const componentDef:ComponentDefinitionInterface = componentClasses.filter(component => component.componentName = componentId)[0];
     genericButton.classDefinition = componentDef.class;
     genericButton.component =  componentDef.componentRef;
-    genericButton.parent = parent,
-    console.log('genericButton==>',genericButton)
+    genericButton.parent = parent;
     return genericButton
 
   }

@@ -6,7 +6,7 @@
       <create-new  @onClick="createNew"></create-new>
       <ul class="flex flex-row justify-start align-top mt-4">
         <li v-for="(element,idx) in icons" :key="idx" class="text-2xl w-4/12 cursor-pointer">
-          <font-awesome-icon :icon="element.icon.icon" :prefix="element.icon.prefix" @click="iconClicked(idx)"/>
+          <font-awesome-icon :icon="element.sidebarIcon.icon" :prefix="element.sidebarIcon.prefix" @click="iconClicked(idx)"/>
         </li>
       </ul>
     </div>
@@ -15,7 +15,7 @@
         <label for="page-name">Name:</label>
         <input type="text"
           id="icon-name"
-          v-model="editorComponent.name"
+          v-model="editorComponent.componentName"
           class="input-control"
           placeholder="name of the editor component"
         >
@@ -23,9 +23,9 @@
         <div>
           <span class="h-8 w-8 bg-accent1 text-center font-bold align-middle border cursor-pointer relative inline-block" @click="showIconPicker()">...</span>
             <span>
-              <font-awesome-icon v-if="editorComponent.icon !==''" class="ml-2 inline-block text-2xl align-middle"
-              :icon="editorComponent.icon.icon" 
-              :prefix="editorComponent.icon.prefix" name="icon" ref="icon">
+              <font-awesome-icon v-if="editorComponent.sidebarIcon.icon !==''" class="ml-2 inline-block text-2xl align-middle"
+              :icon="iconLocal.icon" 
+              :prefix="iconLocal.prefix" name="icon" ref="icon">
               </font-awesome-icon>
             </span>
           <icon-picker @icon-clicked="iconPickerClick" id="icon-picker" ref="icon-picker"></icon-picker>
@@ -34,8 +34,19 @@
         <select name="type" id="type" v-model="editorComponent.type" class="input-control">
           <option v-for="item in componentType" :key="item"  :selected="item == editorComponent.type">{{ item }}</option>
         </select>
+        <label for="classDefinition">Class:</label>
+        <input type="text"
+          id="classDefinition"
+          v-model="classDef"
+          class="input-control"
+          placeholder="css classes to define the component"
+        >
+        <label for="isContainer">Container:</label>
+        <input type="checkbox" name="isContainer" id="active" :value="editorComponent.isContainer" class="mt-5 w-1/12">
         <submit-cancel v-on:cancelClicked="cancelClick()"  v-on:saveClicked="saveClick()" ></submit-cancel>
       </form>
+      
+      <div class="mt-2" :class="classDef">Component</div>
     </div>
   </div>
   </section>
@@ -47,12 +58,12 @@ import Component from 'vue-class-component'
 import IconPicker from '@/components/base/pickers/icon-picker/icon-picker.vue';
 import SubmitCancel from '@/components/base/buttons/submit-cancel/submit-cancel.vue';
 import InvalidForm from '@/components/base/notifications/invalid-form.vue';
-import { EditorComponentInterface, initEditorComponents, EditorComponentTypes } from '../../../models/editor-components/editor-components'
 import { SnackbarMessage, SnackbarTypes, SnackBarGenerator } from '@/models/notifications/snackbar';
 import { IconInterface, initIcon } from '@/models/font-awesome/icon';
 import { initAuthStatus } from '../../../models/user/user';
 import { Notification, notificationDefault } from '../../../models/notifications/notifications';
 import CreateNew from '@/components/base/buttons/create-new/create-new.vue'
+import { ComponentDefinitionInterface, initComponentDefinition } from '../../../models/page/page';
 
 
 @Component({
@@ -65,12 +76,10 @@ import CreateNew from '@/components/base/buttons/create-new/create-new.vue'
 })
 export default class SidebarIconEditor extends Vue {
   name="Sidebar Icon Editor"
-  editorComponent = {
-    name: '',
-    icon: initIcon,
-    type: EditorComponentTypes.Image,
+  classDef = '';
+  iconLocal: IconInterface = initIcon;
+  editorComponent!: ComponentDefinitionInterface;
 
-  }
   componentType: string[] = [
     'Image',
     'Text',
@@ -82,13 +91,15 @@ export default class SidebarIconEditor extends Vue {
   
 
   created(): void {
+    this.iconLocal = initIcon;
     this.$store.dispatch('loadSideBarElements');
-    this.editorComponent = initEditorComponents;
+    this.editorComponent = initComponentDefinition;
     this.$store.dispatch('toggleSidebar', false);
   }
   
   iconPickerClick(icon: IconInterface): void {
-    this.editorComponent.icon = icon;
+    this.iconLocal = icon;
+    this.editorComponent.sidebarIcon = icon;
   
   }
 
@@ -97,19 +108,21 @@ export default class SidebarIconEditor extends Vue {
   }
   
   iconClicked(idx: number){
-    const tempElement =  this.$store.getters.sidebarElements.editorComponents[idx];
-    this.editorComponent = this.$store.getters.sidebarElements.editorComponents[idx];
-    this.editorComponent.icon = tempElement.icon;
+    const tempElement =  this.$store.getters.sidebarElements[idx];
+    this.editorComponent = this.$store.getters.sidebarElements[idx];
+    this.editorComponent.sidebarIcon = tempElement.icon;
   }
   createNew():void {
-    this.editorComponent = initEditorComponents;
+    this.editorComponent = initComponentDefinition;
   }
   saveClick(): void {
+    this.editorComponent.componentRef = this.editorComponent.componentName;
+    this.editorComponent.class = this.classDef;
     this.$store.dispatch('saveEditorElement', this.editorComponent)
     .then(result  => {
         const notification = result as Notification;
         if(notification.status === "ok") {
-          const snackbarMessage: SnackbarMessage = SnackBarGenerator.snackbarSuccess(`The ${this.editorComponent.name} has been created`,'Page Saved')
+          const snackbarMessage: SnackbarMessage = SnackBarGenerator.snackbarSuccess(`The ${this.editorComponent.componentName} has been created`,'Page Saved')
           this.$store.dispatch('showSnackbar', snackbarMessage)
           this.$router.push('/iconeditor')
         } else {
@@ -123,7 +136,7 @@ export default class SidebarIconEditor extends Vue {
       this.$store.dispatch('showSnackbar', snackbarMessage)
   }
 
-  get icons(): EditorComponentInterface[] {
+  get icons(): ComponentDefinitionInterface[] {
     return this.$store.getters.sidebarElements.editorComponents
   }
 

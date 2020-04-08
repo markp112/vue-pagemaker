@@ -1,16 +1,67 @@
+import { IconInterface } from '../font-awesome/icon';
+
 export interface Style {
   style: string;
   value: string;
 }
 
-export interface ComponentDefinition {
+export interface ComponentDefinitionInterface {
   componentName: string;
   class: string;
-  componentRef: string;
+  componentRef: ComponentRef;
+  isContainer: boolean;
+  sidebarIcon: IconInterface;
+  type: string;
 }
 
-export type ComponentRef = string;
+export class ComponentDefinitions  {
 
+  _componentDefinitions: ComponentDefinitionInterface[];
+
+  constructor() {
+    this._componentDefinitions = [];
+  }
+
+  add( newComponent: ComponentDefinitionInterface): void {
+    const component: ComponentDefinitionInterface | undefined = this.getComponent(newComponent.componentName)
+    if (component !== undefined ) {
+      this.delete(component.componentName)
+    }
+    this._componentDefinitions.push(newComponent)
+  }
+
+  delete(componentName: string): void {
+      this._componentDefinitions = this._componentDefinitions.filter((component: ComponentDefinitionInterface) => component.componentName !== componentName);
+  }
+
+  getComponent(componentName = '', componentRef = ''): ComponentDefinitionInterface | undefined {
+    if (componentName === '' && componentRef === '') return
+    if (componentRef !== '') {
+      return this._componentDefinitions.filter(comp => comp.componentRef === componentRef)[0];
+    } else {
+      return this._componentDefinitions.filter(comp => comp.componentName === componentName)[0];
+    }
+  }
+
+  componentDefinitions(): ComponentDefinitionInterface[] {
+    return this._componentDefinitions;
+  }
+
+  }
+  
+
+
+export const initComponentDefinition =  {
+  componentName: '',
+  class: '',
+  componentRef: '',
+  isContainer: false,
+  sidebarIcon: { icon: '' , prefix: ''},
+  type:'',
+  }
+
+export type ComponentRef = string;
+ 1    
 export interface PageElementInterface {
   name: string;
   ref: ComponentRef;

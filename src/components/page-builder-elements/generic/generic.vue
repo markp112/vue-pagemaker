@@ -1,6 +1,5 @@
 <template>
   <div
-    class="" 
     :class="getClasses()"
     @click="onClick($event)"
     :style="getStyles()"
@@ -16,13 +15,13 @@ import { Style, ComponentRef, PageData, PageContainer } from '@/models/page/page
 @Component({
   props:{
     thisComponent:{ default: (): PageData => { return new PageContainer()}},
-    buttonLabel:{default: 'test button'}
+    buttonLabel: { default: 'test button' }
   }
 })
 export default class GenericComponent extends Vue {
   showBorder = false;
+
   getClasses(): string {
-    console.log("getClasses called")
     let componentClassSpec = this.$props.thisComponent.classDefinition;
     if(this.showBorder) {
       componentClassSpec += ' border1'
@@ -48,7 +47,6 @@ export default class GenericComponent extends Vue {
     this.showBorder = !this.showBorder;
     event.stopPropagation();
   }
-
 }
 </script>
 <style lang="postcss" scoped>
