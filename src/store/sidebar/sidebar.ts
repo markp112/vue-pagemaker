@@ -75,9 +75,11 @@ const SIDEBARCOLLECTION = 'component-definitions';
     return this._sidebarElements.componentDefinitions();
   }
   
-  get componentDefinition(): ComponentDefinitionInterface | undefined  {
-    return ((componentName: string) =>  this._sidebarElements.getComponent(componentName));
-    }
+  get componentDefinition():(componentName: string) => ComponentDefinitionInterface | undefined {
+    return (componentName: string) =>
+      this._sidebarElements.getComponent(componentName)
+    } ;
+    
   
 
   get showSidebar(): boolean {

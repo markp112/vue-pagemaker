@@ -44,13 +44,12 @@ export class ComponentDefinitions  {
   }
 
   componentDefinitions(): ComponentDefinitionInterface[] {
+    console.log("this._componentDefinitions", this._componentDefinitions)
     return this._componentDefinitions;
   }
 
   }
   
-
-
 export const initComponentDefinition =  {
   componentName: '',
   class: '',
@@ -61,11 +60,11 @@ export const initComponentDefinition =  {
   }
 
 export type ComponentRef = string;
- 1    
+
 export interface PageElementInterface {
   name: string;
   ref: ComponentRef;
-  component: string;
+  componentHTMLTag: string;
   isContainer: boolean;
   styles: Style [];
   parent: ComponentRef;
@@ -81,7 +80,7 @@ export type PageData = PageElement | PageContainer;
 export class PageElement implements PageElementInterface {
   private _name: string;  //name of the component
   private _ref: ComponentRef; // unique ref of this component in the Dom
-  private _component: string; // component tag
+  private _componentHTMLTag: string; // component tag
   private _isContainer: boolean; // can contain  other elements
   private _styles: Style[]; // css styles
   private _parent: ComponentRef; // ref to parent element
@@ -90,7 +89,7 @@ export class PageElement implements PageElementInterface {
   constructor() {
     this._name = '';
     this._ref = '';
-    this._component = '';
+    this._componentHTMLTag = '';
     this._isContainer = false;
     this._styles = [];
     this._parent = ''
@@ -113,12 +112,12 @@ export class PageElement implements PageElementInterface {
     this._ref = newRef
   }
 
-  get component(): string {
-    return this._component
+  get componentHTMLTag(): string {
+    return this._componentHTMLTag
   }
 
-  set component(newComponent: string) {
-    this._component = newComponent
+  set componentHTMLTag(newComponent: string) {
+    this._componentHTMLTag = newComponent
   }
 
   get isContainer(): boolean {

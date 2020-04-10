@@ -34,7 +34,8 @@ export default class IconPicker extends Vue{
       { icon: 'envelope', prefix: 'fas' },
       { icon: 'align-justify', prefix: 'fas'},
       { icon: 'columns', prefix: 'fas'},
-      { icon: 'clone', prefix: 'fas'}
+      { icon: 'clone', prefix: 'fas'},
+      { icon: 'bahai', prefix: 'fas'},
 ];
 
   @Emit('icon-clicked')

@@ -23,6 +23,7 @@ import {
   faColumns,
   faClone,
   faTrashAlt,
+  faBahai,
   } from '@fortawesome/free-solid-svg-icons';
 
   library.add(  
@@ -48,6 +49,7 @@ import {
     faColumns,
     faClone,
     faTrashAlt,
+    faBahai,
     );
 
     export {

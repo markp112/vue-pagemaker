@@ -1,12 +1,12 @@
 <template>
-  <div class="w-full bg-blue-500 h-24 flex flex-row justify-start"   
+  <div  
     :id="$props.thisComponent.ref" 
     :class="getClasses()"
     :ref="$props.thisComponent.ref"
     @dragover.prevent
     @drop.prevent="onDrop"
     @click.prevent="onClick()">
-    <component :is="layout.component" v-for="(layout,i) in $props.thisComponent.elements"
+    <component :is="layout.componentHTMLTag" v-for="(layout,i) in $props.thisComponent.elements"
         :key="i"
         :index="i" 
         :thisComponent="layout"
@@ -82,9 +82,11 @@ onDrop(event: DragEvent) {
   const componentBuilder = new ComponentBuilder();
   if(this.$store.getters.dragDropEventHandled) { return }
   if(event) {
-    const componentId = componentBuilder.getComponentID(event);
-    const ref = `${componentId}::${this.$store.getters.nextComponentId}`;
-    const newComponent: PageData = componentBuilder.buildComponent(componentId, ref, this.$props.thisComponent.ref);
+    const componentName = componentBuilder.getComponentName(event);
+    const ref = `${componentName}::${this.$store.getters.nextComponentId}`;
+    const component = this.$store.getters.componentDefinition(componentName);
+    const parent = this.$props.thisComponent.ref; // when dropping a component this componet will be its parent
+    const newComponent: PageData = componentBuilder.buildComponent(component, ref, parent );
     this.$store.dispatch('addNewPageElement', newComponent);
     this.$store.dispatch('toggleDragDropEventHandled', true);
   }
@@ -94,7 +96,7 @@ onDrop(event: DragEvent) {
 </script>
 
 <style lang="postcss">
-  .border {
+  .border-outline {
     @apply border-red-600 border-8 border-dashed;
   }
 </style>

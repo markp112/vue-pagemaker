@@ -19,6 +19,13 @@
           class="input-control"
           placeholder="name of the editor component"
         >
+        <label for="htmlTag">Name:</label>
+        <input type="text"
+          id="htmlTag"
+          v-model="editorComponent.componentRef"
+          class="input-control"
+          placeholder="HtmlTag for component on page"
+        >
         <label for="icon">Select Icon</label>
         <div>
           <span class="h-8 w-8 bg-accent1 text-center font-bold align-middle border cursor-pointer relative inline-block" @click="showIconPicker()">...</span>
@@ -45,7 +52,7 @@
         <input type="checkbox" name="isContainer" id="active" :value="editorComponent.isContainer" class="mt-5 w-1/12">
         <submit-cancel v-on:cancelClicked="cancelClick()"  v-on:saveClicked="saveClick()" ></submit-cancel>
       </form>
-      
+        <p class="w-full bg-gray-400 mt-2 p-2 text-accent text-center font-bold">Component Preview</p>
       <div class="mt-2" :class="classDef">Component</div>
     </div>
   </div>
@@ -78,7 +85,7 @@ export default class SidebarIconEditor extends Vue {
   name="Sidebar Icon Editor"
   classDef = '';
   iconLocal: IconInterface = initIcon;
-  editorComponent!: ComponentDefinitionInterface;
+  editorComponent: ComponentDefinitionInterface =  initComponentDefinition;
 
   componentType: string[] = [
     'Image',
@@ -108,15 +115,15 @@ export default class SidebarIconEditor extends Vue {
   }
   
   iconClicked(idx: number){
-    const tempElement =  this.$store.getters.sidebarElements[idx];
     this.editorComponent = this.$store.getters.sidebarElements[idx];
-    this.editorComponent.sidebarIcon = tempElement.icon;
+    this.iconLocal = this.editorComponent.sidebarIcon;
+    this.classDef = this.editorComponent.class;
   }
   createNew():void {
     this.editorComponent = initComponentDefinition;
   }
   saveClick(): void {
-    this.editorComponent.componentRef = this.editorComponent.componentName;
+    
     this.editorComponent.class = this.classDef;
     this.$store.dispatch('saveEditorElement', this.editorComponent)
     .then(result  => {
@@ -137,7 +144,8 @@ export default class SidebarIconEditor extends Vue {
   }
 
   get icons(): ComponentDefinitionInterface[] {
-    return this.$store.getters.sidebarElements.editorComponents
+    console.log("get components", this.$store.getters.sidebarElements)
+    return this.$store.getters.sidebarElements
   }
 
 }
