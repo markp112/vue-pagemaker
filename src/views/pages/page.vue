@@ -1,28 +1,36 @@
 <template>
   <div class="form-page-wrapper mt-24 w-full flex-wrap">
     <div class="w-7/12 bg-secondary-100 text-accent1 text-3xl flex flex-row">
-      <img src="@/assets/images/page-icon.png" alt="picture of lined paper" >
+      <img src="@/assets/images/page-icon.png" alt="picture of lined paper" />
       <p class="mt-4">{{ pageTitle }}</p>
     </div>  
-    <form  @submit.prevent="saveClick"  class="w-7/12 border-2 p-5 bg-secondary-900">
+    <form 
+      @submit.prevent="saveClick"
+      class="w-7/12 border-2 p-5 bg-secondary-900">
       <label for="page-name">Name:</label>
-      <input type="text"
+      <input 
+        type="text"
         id="page-name"
         v-model="page.name"
         class="input-control"
         placeholder="e.g Home, Blog Home and must be unique"
-      >
+      />
       <label for="icon">Select Icon</label>
-        <div>
-          <span class="h-8 w-8 bg-accent1 text-center font-bold align-middle border cursor-pointer relative inline-block" @click="iconPickerClicked()">...</span>
-            <span>
-              <font-awesome-icon v-if="page.icon !==''" class="ml-2 inline-block text-lg align-middle"
-              :icon="page.icon.icon" 
-              :prefix="page.icon.prefix" name="icon">
-              </font-awesome-icon>
-            </span>
-          <icon-picker @icon-clicked="iconClick" id="icon"></icon-picker>
-        </div>
+      <div>
+        <span 
+          class="h-8 w-8 bg-accent1 text-center font-bold align-middle border cursor-pointer relative inline-block" 
+          @click="iconPickerClicked()">...
+        </span>
+        <span>
+          <font-awesome-icon
+            v-if="page.icon!==''" 
+            class="ml-2 inline-block text-lg align-middle"
+            :icon="page.icon.icon" 
+            :prefix="page.icon.prefix" name="icon">
+          </font-awesome-icon>
+        </span>
+        <icon-picker @icon-clicked="iconClick" id="icon"></icon-picker>
+      </div>
       <label for="created">Created:</label>
       <datepicker :value="page.created"   id="created" name="created"></datepicker> 
       <label for="edited">edited:</label>
@@ -35,7 +43,6 @@
       <invalid-form :formErrors="formErrors"></invalid-form>
     </form>
   </div>
-
 </template>
 
 <script lang="ts">
@@ -46,10 +53,10 @@ import IconPicker from '@/components/base/pickers/icon-picker/icon-picker.vue';
 import { IconInterface } from '../../models/font-awesome/icon';
 import InvalidForm from '@/components/base/notifications/invalid-form.vue';
 import { Notification } from '@/models/notifications/notifications';
-import { SnackbarMessage, SnackbarTypes, SnackBarGenerator } from '@/models/notifications/snackbar';
+import { SnackbarMessage, SnackBarGenerator } from '@/models/notifications/snackbar';
 import SubmitCancel from '@/components/base/buttons/submit-cancel/submit-cancel.vue';
 import FormButton  from '@/components/base/buttons/form-button.vue';
-import {TimeStamp, formatDate, formatTimeStampAsDate } from '@/models/Types/generic-types';
+import { TimeStamp, formatTimeStampAsDate } from '@/models/Types/generic-types';
 
 @Component({
   components:{

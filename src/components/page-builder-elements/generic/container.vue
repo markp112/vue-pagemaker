@@ -28,8 +28,10 @@ import { PageData, Style, ComponentContainer } from '@/models/page/page';
 import GenericComponent from '@/components/page-builder-elements/generic/generic.vue';
 
 @Component({
-  props:{
-    thisComponent:{default: (): PageData => { return new ComponentContainer()}},
+  props: {
+    thisComponent: {
+        default: (): PageData => { return new ComponentContainer() }
+        },
   },
   components: {
     'generic-component': GenericComponent,

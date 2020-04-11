@@ -22,8 +22,8 @@ export default class EditDeleteOption extends Vue{
   }
 
   editClick(): void {
-   this.$store.dispatch("updateShowEditDelete", false)
-    console.log("edit Click")
+    this.$store.dispatch("updateShowEditDelete", false);
+    this.$store.dispatch("updateSidebarEditor");
   }
 
 

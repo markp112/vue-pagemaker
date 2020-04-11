@@ -1,50 +1,30 @@
 <template>
-  <div class="border-r-4 p-0 fixed bottom-0 md:left-0 md:h-sidebar ml-2 mb-2 mt-2 w-2/12">
-      <ul class='icon-list-sidebar'>
-        <li v-for="element in sidebarElements" :key="element.componentName" >
-          <draggable-icon draggable="true" :id="element.componentName">
-            <font-awesome-icon :icon='element.sidebarIcon.icon' 
-              :prefix='element.sidebarIcon.prefix' 
-              class="icon" 
-              />
-          </draggable-icon>
-        </li>
-      </ul>
+  <div class="border-r-4 p-0  md:h-sidebar ml-2">
+     <component :is="sidebarContent"></component>
   </div>
 </template>
 
 <script lang="ts">
+
 import Component from 'vue-class-component';
 import { Emit, Vue } from 'vue-property-decorator';
-// import { EditorComponentInterface, EditorComponents } from '../../../models/editor-components/editor-components';
-import { ComponentDefinitionInterface, ComponentDefinitions} from '@/models/page/page'
-import  DraggableIcon from '@/components/base/draggable/draggable-icon/draggable-icon.vue';
+import sidebarComponentIcons from './sidebar-component-icons.vue';
+import ImageEditorSidebar from '@/components//core/sidebar/image-editor/image-editor.vue'
 @Component({
   components:{
-    'draggable-icon': DraggableIcon,
+    'sidebar-components' : sidebarComponentIcons,
+    'image-editor' : ImageEditorSidebar,
   }
 })
 export default class SideBar extends Vue {
   isShowSideBar = true;
 
-  created() {
-    this.$store.dispatch('loadSideBarElements');
-  }
-
-  // iconDrag(event: DragEvent) {
-  // if(event.dataTransfer ) {
-  //   event.dataTransfer.setData("text", '1');
-  // }
-  //   // event.dataTransfer.setData("text", event.target.id)
-  // }
-
-  get sidebarElements(): ComponentDefinitionInterface[] {
-    return  this.$store.getters.sidebarElements;
-  }
-
   get showSidebar(): boolean {
-    console.log("this.$store.getters.showSidebar",this.$store.getters.showSidebar)
     return this.$store.getters.showSidebar;
+  }
+
+  get sidebarContent(): string {
+    return this.$store.getters.sidebarComponentType;
   }
 }
 </script>

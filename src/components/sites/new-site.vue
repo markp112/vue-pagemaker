@@ -71,9 +71,9 @@ export default class NewSite extends Vue {
   created() {
     this.formErrors = [];
     this.pageTitle = this.$route.params.title;
-    if(this.$store.getters.getCurrentSiteId !== '') {
+    const siteId = this.$store.getters.getCurrentSiteId;
+    if(siteId !== undefined  && siteId !== '' ) {
       this.site = this.$store.getters.getCurrentSite;
-      console.log(this.site,"site =")
     }
   }
 
@@ -106,7 +106,6 @@ export default class NewSite extends Vue {
     if(this.site.name.length < 5) {
       errors.push("Site name must be more than 5 characters");
     }
-
     return errors;
   }
 

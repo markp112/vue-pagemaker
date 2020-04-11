@@ -8,7 +8,6 @@ import SidebarModule from './sidebar/sidebar';
 import ComponentProps from './component-props/component-props';
 import PagesModule from './pages/pages';
 import ServicesModule from './services/services';
-import pageModule from './page/page';
 import PageModule from './page/page';
 
 export let authStore:  AuthModule;

@@ -1,18 +1,22 @@
+// Controls the sidebar
 
+import store from '@/store/'
 import { Module,  Mutation, Action, VuexModule } from 'vuex-module-decorators'
-// import {  EditorComponents, EditorComponentInterface } from '@/models/editor-components/editor-components'
 import { ComponentDefinitions, ComponentDefinitionInterface } from '@/models/page/page';
 import { Notification, notificationDefault } from '@/models/notifications/notifications';
 import firebase from 'firebase';
 
 const SIDEBARCOLLECTION = 'component-definitions';
+type sidebarComponents = 'image-editor' | 'sidebar-components'
 
-@Module({name: 'SidebarElements' })
+@Module({name:'sidebar' })
  export default class SidebarModule extends VuexModule {
 
   _sidebarElements: ComponentDefinitions = new ComponentDefinitions();
   _showSidebar = false;
-  
+  _sidebarComponent: sidebarComponents = 'sidebar-components';
+  // _store = sto
+  // _pageStore:PageModule = getModule(PageModule, store);
 
   @Mutation
   addComponent(editorComponent: ComponentDefinitionInterface) {
@@ -27,6 +31,11 @@ const SIDEBARCOLLECTION = 'component-definitions';
   @Mutation
   setSidebarVisibility(toggle: boolean) {
     this._showSidebar = toggle
+  }
+
+  @Mutation
+  setSidebarEditor(component: sidebarComponents) {
+    this._sidebarComponent = component;
   }
 
   @Action ({rawError: true})
@@ -71,6 +80,16 @@ const SIDEBARCOLLECTION = 'component-definitions';
     })
   }
 
+  @Action({rawError: true})
+  updateSidebarEditor() {
+    console.log(store.getters)
+    const whichComponentType = 'Image'
+    switch (whichComponentType){
+      case 'Image':
+        this.context.commit('setSidebarEditor', 'image-editor' as sidebarComponents);
+    }
+  }
+
   get sidebarElements(): ComponentDefinitionInterface[] {
     return this._sidebarElements.componentDefinitions();
   }
@@ -78,12 +97,14 @@ const SIDEBARCOLLECTION = 'component-definitions';
   get componentDefinition():(componentName: string) => ComponentDefinitionInterface | undefined {
     return (componentName: string) =>
       this._sidebarElements.getComponent(componentName)
-    } ;
-    
-  
+  }
 
   get showSidebar(): boolean {
     return this._showSidebar
+  }
+
+  get sidebarComponentType(): string {
+    return this._sidebarComponent
   }
 
 }

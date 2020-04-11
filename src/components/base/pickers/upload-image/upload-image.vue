@@ -7,6 +7,14 @@
           @change="setImage( $event.target.name, $event.target.files)"
           accept="image/png, image/jpeg"
           />
+        <input
+            class="w-full"
+            type="text"
+            @change="getImageFromUrl"
+            placeholder="or paste URL"
+            name="url"
+            v-model="url"
+        />
     <div class="image-drop flex flex-col justify-start" 
       :class="{'is-dragging': isDragging}"
       @dragstart.prevent="dragOver()"
@@ -36,7 +44,7 @@ export default class UploadImage extends Vue {
   url = '';
   isDragging!: boolean;
   wrongFile!: boolean;
-  hasFile!: boolean;
+  hasFile = false;
 
   created() {
     this.isDragging = false;
@@ -85,7 +93,13 @@ export default class UploadImage extends Vue {
     })
   }
 
-  get getImage() {
+  @Emit('image-url')
+  getImageFromUrl() {
+    this.hasFile = this.url !=='';
+    return this.url;
+  }
+
+get getImage() {
     if(this.url === '') {
       return require('@/assets/images/imageplaceholder.png')
     } else { return this.url }
