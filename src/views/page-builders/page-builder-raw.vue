@@ -1,16 +1,17 @@
 <template>
   <section>
     <p class="page-heading">Editing: {{title}} Page</p>
-    <div :id="id" class="w-full bg-accent2 h-full relative p-2 border border-gray-400"
+    <div :id="id" class="w-full  h-full relative p-2 border border-gray-400"
+      :class="getClass()"
       ref="mainDiv"
-      @dragover.prevent
+      @dragover.prevent="bgColour = 'bg-gray-600'"
+      @dragleave.prevent="bgColour = 'bg-gray-200'"
       @drop.prevent="onDrop"
     >
     <component :is="layout.componentHTMLTag" v-for="(layout,i) in layoutElements"
       :key="i"
       :index="i" 
       :thisComponent="layout"
-    
       z-index = "0"
       @dragover.prevent
       @drop.prevent="onDrop"
@@ -25,11 +26,8 @@
 <script lang="ts">
 import Vue, { VueConstructor } from 'vue'
 import Component from 'vue-class-component'
-import FormButton from '@/components/base/buttons/form-button.vue';
-// import NavbarEditor from '@/components/page-builder-elements/nav-bars/nav-bar/nav-bar.vue'
 import Container from '@/components/page-builder-elements/generic/container.vue'
 import { PageData } from '@/models/page/page';
-import { EditorComponents, EditorComponentInterface, EditorComponentTypes } from '../../models/editor-components/editor-components';
 import { ComponentBuilder } from '@/classes/component-builder/component-builder';
 import EditDeleteOption from '@/components/page-builder-elements/utility/edit-delete-options/edit-delete-options.vue';
 
@@ -40,16 +38,15 @@ const PARENT = 'ROOT';
     id: {default: ''}
   },
   components:{
-    'form-button': FormButton,
-    // 'NavBar': NavbarEditor,
     'edit-delete-option': EditDeleteOption,
     'container': Container
   }
 
 })
 export default class PageBuilder extends Vue {
-  name="pageBuilder"
+  name = "pageBuilder"
   title!: string;
+  bgColour = 'bg-gray-200'
 
   created() {
     this.title = this.$route.params.title;
@@ -60,7 +57,7 @@ export default class PageBuilder extends Vue {
     return this.$store.getters.pageElements
   }
 
-  onDrop(event: DragEvent) {
+  onDrop(event: DragEvent):void {
     const componentBuilder = new ComponentBuilder();
     if(this.$store.getters.dragDropEventHandled) { return }
     if(event) {
@@ -72,8 +69,12 @@ export default class PageBuilder extends Vue {
     }
   }
   
-  deleteClicked() {
+  deleteClicked():void {
     this.$store.dispatch('deletePageElement')
+  }
+
+  getClass(): string {
+    return this.bgColour
   }
 }
 

@@ -24,15 +24,15 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import { ComponentBuilder } from '@/classes/component-builder/component-builder';
 import { Emit } from 'vue-property-decorator';
-import { PageData, Style, PageContainer } from '@/models/page/page';
+import { PageData, Style, ComponentContainer } from '@/models/page/page';
 import GenericComponent from '@/components/page-builder-elements/generic/generic.vue';
 
 @Component({
   props:{
-    thisComponent:{default: (): PageData => { return new PageContainer()}},
+    thisComponent:{default: (): PageData => { return new ComponentContainer()}},
   },
   components: {
-    'generic-button': GenericComponent,
+    'generic-component': GenericComponent,
   }
 
 })

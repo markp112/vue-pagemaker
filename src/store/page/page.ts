@@ -1,5 +1,5 @@
 import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
-import { PageElement, PageContainer, PageData } from '@/models/page/page';
+import { PageElement, ComponentContainer, PageData } from '@/models/page/page';
 
 @Module({name: 'PageModule' })
 export default class PageModule extends VuexModule {
@@ -19,7 +19,7 @@ export default class PageModule extends VuexModule {
     if(element.parent === this.ROOT ) {
       this._pageElements.push(element);
     } else { // component is nested within another
-      const childElement: PageContainer = this._pageElements.filter(elem => elem.ref === element.parent)[0] as PageContainer;
+      const childElement: ComponentContainer = this._pageElements.filter(elem => elem.ref === element.parent)[0] as ComponentContainer;
       childElement.addNewElement (element);
     }
     this._componentId++;
@@ -30,7 +30,7 @@ export default class PageModule extends VuexModule {
       this._pageElements = this._pageElements.filter(element => element.ref !== this._editedComponentRef.ref)
     } else {
       const parentComponent = this._pageElements.filter(element => element.ref === this._editedComponentRef.parent)[0];
-      (parentComponent as PageContainer).deleteElement(this._editedComponentRef.ref)
+      (parentComponent as ComponentContainer).deleteElement(this._editedComponentRef.ref)
     }
   }
 

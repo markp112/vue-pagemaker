@@ -1,4 +1,5 @@
-import { PageData, PageContainer, PageElement, ComponentRef, ComponentDefinitionInterface } from '@/models/page/page';
+import { PageData, ComponentContainer, PageElement, ComponentRef, ComponentDefinitionInterface } from '@/models/page/page';
+import { Button, Text, LOREMIPSUM, Image } from '@/models/components/components';
 export const _componentClasses: ComponentDefinitionInterface[] = []
 
 
@@ -15,7 +16,7 @@ export class ComponentBuilder {
   }
   
   private buildContainer(component: ComponentDefinitionInterface ,ref: string, parent: ComponentRef) {
-    const container: PageContainer = new PageContainer();
+    const container: ComponentContainer = new ComponentContainer();
     container.name = component.componentName
     container.ref = ref;
     container.classDefinition = component.class;
@@ -25,13 +26,29 @@ export class ComponentBuilder {
   }
 
   private buildTheComponent(component: ComponentDefinitionInterface, ref: string, parent: ComponentRef): PageElement {
-    const genericButton = new PageElement();
-    genericButton.ref = ref;
-    genericButton.isContainer = false;
-    genericButton.classDefinition = component.class;
-    genericButton.componentHTMLTag =  component.componentRef;
-    genericButton.parent = parent;
-    return genericButton
+    const genericComponent = new PageElement();
+    genericComponent.ref = ref;
+    genericComponent.isContainer = false;
+    genericComponent.classDefinition = component.class;
+    genericComponent.componentHTMLTag =  component.componentRef;
+    genericComponent.parent = parent;
+    genericComponent.type = component.type;
+    genericComponent.name = component.componentName;
+    switch (component.type) {
+      case 'Button': 
+        genericComponent.data = new Button();
+        genericComponent.data.content ='Click Me'
+        break;
+      case 'Text':
+        genericComponent.data = new Text();
+        genericComponent.data.content = LOREMIPSUM;
+        break;
+      case 'Image':
+        genericComponent.data = new Image();
+        break;
+
+    }
+    return genericComponent
 
   }
 

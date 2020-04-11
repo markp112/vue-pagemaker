@@ -6,10 +6,10 @@
         <bread-crumb></bread-crumb>
       </div>
       <div class="flex flex-row justify-start w-full">
-        <div v-if="showSidebar" class=" mt-0 px-6 w-1/5" >
+        <div v-if="showSidebar" class="mt-0 px-6 w-2/12" >
           <side-bar></side-bar>
         </div>
-        <div class=" mt-0 px-6 w-4/5" >
+        <div class=" mt-0 px-6 w-10/12" >
           <router-view />
         </div>
       </div>

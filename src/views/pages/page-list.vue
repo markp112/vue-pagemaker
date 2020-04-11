@@ -14,7 +14,7 @@
         </div>
         <li v-for="page in pageList" :key="page.name" class="">
           <div class="flex flex-row justify-start">
-          <span class="hover:bg-secondary-100 hover:text-accent w-11/12 p-2 flex flex-row justify-evenly cursor-pointer rounded-md" @click="pageRowClick(page.name)">
+          <span class="hover:bg-secondary-100 hover:text-accent w-11/12 p-1 mt-1 flex flex-row justify-evenly cursor-pointer rounded-md" @click="pageRowClick(page.name)">
             <span class="w-1/12">
               <font-awesome-icon v-if="page.icon.icon !== ''" :icon="page.icon.icon" :prefix="page.icon.prefix"></font-awesome-icon>
             </span>

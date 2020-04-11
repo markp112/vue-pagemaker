@@ -1,5 +1,5 @@
 <template>
-  <div class="border-r-4 p-0 fixed bottom-0 md:left-0 md:h-sidebar ml-2 mb-2 mt-2 w-1/5">
+  <div class="border-r-4 p-0 fixed bottom-0 md:left-0 md:h-sidebar ml-2 mb-2 mt-2 w-2/12">
       <ul class='icon-list-sidebar'>
         <li v-for="element in sidebarElements" :key="element.componentName" >
           <draggable-icon draggable="true" :id="element.componentName">
