@@ -9,13 +9,13 @@
         </font-awesome-icon>
       </li>
     </ul>
-    
 </template>
 
 <script lang="ts">
-import { IconInterface } from '../../../../models/font-awesome/icon'
+import { IconInterface } from '@/models/font-awesome/icon';
 import Component from 'vue-class-component';
-import { Vue,  Emit, Prop } from 'vue-property-decorator'
+import { Vue,  Emit, Prop } from 'vue-property-decorator';
+import { ComponentPropsModule } from '@/store/component-props/component-props';
 
 @Component({
 })
@@ -40,12 +40,12 @@ export default class IconPicker extends Vue{
 
   @Emit('icon-clicked')
   iconClicked(idx: number) {
-    this.$store.dispatch('toggleIconPicker', false)
+    ComponentPropsModule.toggleIconPicker(false);
     return this.icons[idx];
   }
 
   get isShowMe(): boolean {
-    return this.$store.getters.showIconPicker
+    return ComponentPropsModule.showIconPicker;
   }
 }
 

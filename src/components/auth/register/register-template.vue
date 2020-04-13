@@ -39,35 +39,35 @@
 
 
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
-import { UserInterface, initUser } from '@/models/user/user'
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import { UserInterface, initUser } from '@/models/user/user';
+import { AuthModule } from '@/store/auth/auth';
 
 @Component
 export default class RegisterForm extends Vue {
-  name="register-form";
-    email = "";
-    password = "";
-    confirmPassword = "";
-    formErrors: string[] = [];
+  name = 'register-form';
+  email = '';
+  password = '';
+  confirmPassword = '';
+  formErrors: string[] = [];
 
     submitClick() {
       if(this.formIsValid()) {
-        console.log("verfifed")
         const user: UserInterface = initUser ;
         user.email = this.email;
         user.password = this.password;
-        this.$store.dispatch("registerUser", user)
+        AuthModule.registerUser(user)
         .then(user => {
           console.log("registered");
         })
       }
     }
-  
+
     cancelClick() {
       this.$router.push("/");
     }
-    
+
   formIsValid(): boolean {
     this.formErrors = [];
     if ( this.email.length === 0 ) {

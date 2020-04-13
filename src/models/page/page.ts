@@ -209,6 +209,59 @@ export class PageElement implements Partial<PageElementInterface> {
     }
     else return '';
   }
+  
+  addClass(classDef: string): void {
+    console.log('%c%s', 'color: #e50000', classDef);
+    if (classDef.indexOf('flex') >= 0) {
+      this.processFlex(classDef);
+    }
+    if(classDef.indexOf('w-') >= 0) {
+      this.processWidths(classDef);
+    }
+  }
+
+  private cutString(stringToCutFrom: string, wordToCut: string): string {
+    const index =  stringToCutFrom.indexOf(wordToCut);
+    if (index >= 0) {
+      return  stringToCutFrom.split(' ').filter(word => word !== wordToCut).join(' ');
+    } else return stringToCutFrom;
+  }
+
+  private processWidths(classDef: string) {
+    const index = this.classDefinition.indexOf('w-');
+    console.log('%c%s', 'color: #733d00', index);
+    if (index >= 0) {
+      let tempclass = this.classDefinition;
+      tempclass = this.cutString(tempclass, 'w-2/12');
+      tempclass = this.cutString(tempclass, 'w-4/12');
+      tempclass = this.cutString(tempclass, 'w-6/12');
+      tempclass = this.cutString(tempclass, 'w-8/12');
+      tempclass = this.cutString(tempclass, 'w-10/12');
+      tempclass = this.cutString(tempclass, 'w-full');
+      tempclass += ` ${classDef}`;
+      this.classDefinition = tempclass;
+    } else {
+      this.classDefinition += ` ${classDef}`;
+    }
+  }
+
+  private processFlex(classDef: string): void {
+    const index = this.classDefinition.indexOf('flex');
+    if (index >= 0) {
+      let tempclass = this.classDefinition;
+      tempclass = this.cutString(tempclass, 'flex');
+      tempclass = this.cutString(tempclass, 'flex-row');
+      tempclass = this.cutString(tempclass, 'justify-center');
+      tempclass = this.cutString(tempclass, 'justify-between');
+      tempclass = this.cutString(tempclass, 'justify-around');
+      tempclass = this.cutString(tempclass, 'justify-end');
+      tempclass = this.cutString(tempclass, 'justify-start');
+      tempclass += ` ${classDef}`;
+      this.classDefinition = tempclass;
+    } else {
+      this.classDefinition += ` ${classDef}`;
+    }
+  }
 }
 
 export class ComponentContainer extends PageElement {
@@ -223,36 +276,6 @@ export class ComponentContainer extends PageElement {
     return this._elements;
   }
 
-  addClass(classDef: string): void {
-    if (classDef.indexOf('flex') >= 0) {
-      this.processFlex(classDef);
-    }
-  }
-
-  private cutString(stringToCutFrom: string, wordToCut: string): string {
-    const index =  stringToCutFrom.indexOf(wordToCut);
-    if (index >= 0) {
-      return  stringToCutFrom.split(' ').filter(word => word !== wordToCut).join(' ');
-    } else return stringToCutFrom;
-  }
-
-  private processFlex(classDef: string): void {
-    const index = this.classDefinition.indexOf('flex');
-    if (index >= 0) {
-      let tempclass = this.classDefinition;
-      tempclass = this.cutString(tempclass, 'flex');
-      tempclass = this.cutString(tempclass, 'flex-row');
-      tempclass = this.cutString(tempclass, 'justify-center');
-      tempclass = this.cutString(tempclass, 'justify-evenly');
-      tempclass = this.cutString(tempclass, 'justify-between');
-      tempclass = this.cutString(tempclass, 'justify-end');
-      tempclass = this.cutString(tempclass, 'justify-start');
-      tempclass += ` ${classDef}`;
-      this.classDefinition = tempclass;
-    } else {
-      this.classDefinition += ` ${classDef}`;
-    }
-  }
 
   addNewElement(newElement: PageData) {
     const existingElement = this._elements.filter((element: PageData) => element.ref === newElement.ref)[0];

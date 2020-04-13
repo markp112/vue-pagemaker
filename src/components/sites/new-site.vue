@@ -53,6 +53,8 @@ import FormButton  from '@/components/base/buttons/form-button.vue';
 import InvalidForm from '@/components/base/notifications/invalid-form.vue';
 import { SnackbarMessage, SnackbarTypes, SnackBarGenerator } from '@/models/notifications/snackbar';
 import UploadImage from '@/components/base/pickers/upload-image/upload-image.vue';
+import { SitesModule } from '@/store/sites/sites';
+import { SnackbarModule } from '@/store/snackbar/snackbar';
 
 @Component({
   components: {
@@ -63,7 +65,7 @@ import UploadImage from '@/components/base/pickers/upload-image/upload-image.vue
 
 })
 export default class NewSite extends Vue {
-  name = "NewSite";
+  name = 'NewSite';
   site: Site = initSite;
   formErrors!: string[];
   pageTitle!:  string;
@@ -71,30 +73,28 @@ export default class NewSite extends Vue {
   created() {
     this.formErrors = [];
     this.pageTitle = this.$route.params.title;
-    const siteId = this.$store.getters.getCurrentSiteId;
+    const siteId = SitesModule.getCurrentSiteId;
     if(siteId !== undefined  && siteId !== '' ) {
-      this.site = this.$store.getters.getCurrentSite;
+      this.site = SitesModule.getCurrentSite;
     }
   }
 
   updateImageUrl(url: string):void {
-    console.log("Update Image called", url)
     this.site.image = url;
   }
 
-
   cancelClicked() {
-    this.$router.push("/sites");
+    this.$router.push('/sites');
   }
 
   saveClicked() {
     this.formErrors = [];
     const errors: string[] = this.validateForm();
     if (errors.length === 0) {
-      this.$store.dispatch("saveSite", this.site)
-      .then((result: Notification) => {
+      SitesModule.saveSite(this.site)
+      .then((result) => {
         const snackbarMessage: SnackbarMessage = SnackBarGenerator.snackbarSuccess(`The site ${this.site.name} has been created`,'Site Record Saved')
-        this.$store.dispatch('showSnackbar',snackbarMessage);
+        SnackbarModule.showSnackbar(snackbarMessage);
       })
     } else {
       this.formErrors = errors;
@@ -104,11 +104,10 @@ export default class NewSite extends Vue {
   validateForm(): string[] {
     const errors:string[] = [];
     if(this.site.name.length < 5) {
-      errors.push("Site name must be more than 5 characters");
+      errors.push('Site name must be more than 5 characters');
     }
     return errors;
   }
-
 }
 
 </script >

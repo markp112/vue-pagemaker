@@ -1,19 +1,28 @@
-import {Module, VuexModule, MutationAction, Mutation, Action} from 'vuex-module-decorators'
+import store from '@/store';
+import { Module, Mutation, Action, VuexModule, getModule } from 'vuex-module-decorators';
+import { ComponentDefinitionInterface } from '@/models/page/page';
 // manages properties for components used by PageMaker as part of the pagemaker functionality
-@Module({name: 'component-props' })
-export default class ComponentPropsModule extends VuexModule {
+
+export interface ComponentPropsStateInterface {
+  _showIconPicker: boolean;
+}
+@Module({ name: 'component-props', dynamic: true, store })
+export class ComponentPropsStore extends VuexModule implements ComponentPropsStateInterface {
   _showIconPicker = false;
 
-  @Mutation setIconPicker(state: boolean) {
+  @Mutation 
+  private setIconPicker(state: boolean) {
     this._showIconPicker = state;
   }
 
   @Action
-  toggleIconPicker(value: boolean) {
-    this.context.commit('setIconPicker', value)
+  public toggleIconPicker(value: boolean) {
+    this.context.commit('setIconPicker', value);
   }
 
-  get showIconPicker(): boolean {
-    return this._showIconPicker
+  public get showIconPicker(): boolean {
+    return this._showIconPicker;
   }
 }
+
+export const ComponentPropsModule = getModule(ComponentPropsStore);

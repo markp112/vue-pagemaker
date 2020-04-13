@@ -1,21 +1,33 @@
-import { Module, VuexModule, Mutation, Action } from 'vuex-module-decorators'
-import { PageElement, ComponentContainer, PageData } from '@/models/page/page';
-import { Image } from '@/models/components/components';
+import store from '@/store';
+import { Module, Mutation, Action, VuexModule, getModule } from 'vuex-module-decorators';
+import {
+  ComponentContainer,
+  PageElement,
+  PageData,
+} from '@/models/page/page';
 
-@Module({name: 'PageModule' })
-export default class PageModule extends VuexModule {
+export interface PageStateInterface {
+  _pageElements: PageData [],
+  _editedComponentRef: ComponentContainer | PageElement | undefined ,
+  _showEditDelete: boolean,
+  _componentId: number,
+}
+
+@Module({ name: 'pagestore', store, dynamic: true })
+class PageStore extends VuexModule implements PageStateInterface {
 
   ROOT = 'ROOT'
   //stores all the elements that make up a page
-  _pageElements: PageData [] = [];  
+  public _pageElements: PageData [] = [];  
   // reference to the component currently being edited
-  _editedComponentRef!: PageData;
+  public _editedComponentRef: ComponentContainer | PageElement | undefined = undefined;
   // show the toolbar for selecting edit // delete
-  _showEditDelete = false;
+  public _showEditDelete = false;
   // unique number for each component always incremented and set to the max ref of the last component when loading
-  _componentId = 0;
+  public _componentId = 0;
 
-  @Mutation pushPageElement(element: PageData): void {
+  @Mutation 
+  private pushPageElement(element: PageData): void {
     if(element){
       if(element.parentRef === this.ROOT ) {
         this._pageElements.push(element);
@@ -30,31 +42,45 @@ export default class PageModule extends VuexModule {
     }
   }
 
-  @Mutation deleteAPageElement(): void {
+  @Mutation 
+  private deleteAPageElement(): void {
+    if (this._editedComponentRef) {
     if (this._editedComponentRef.parentRef === this.ROOT) {
-      this._pageElements = this._pageElements.filter(element => element.ref !== this._editedComponentRef.ref)
+      this._pageElements = this._pageElements.filter(element =>{
+        if (this._editedComponentRef)
+          return element.ref !== this._editedComponentRef.ref 
+        })
     } else {
-      const parentComponent = this._pageElements.filter(element => element.ref === this._editedComponentRef.parentRef)[0];
+      const parentComponent = this._pageElements.filter(element => {
+        if (this._editedComponentRef) {
+        return element.ref === this._editedComponentRef.parentRef}
+      }
+        )[0];
       (parentComponent as ComponentContainer).deleteElement(this._editedComponentRef.ref)
     }
   }
+  }
 
-  @Mutation clearPageElements(): void {
+  @Mutation 
+  private clearPageElements(): void {
     this._pageElements = [];
   }
 
-  @Mutation setEditedComponentRef(ref: PageData): void {
+  @Mutation 
+  private setEditedComponentRef(ref: PageData): void {
     this._editedComponentRef = ref;
   }
 
-  @Mutation setShowEditDelete(show: boolean): void {
+  @Mutation 
+  private setShowEditDelete(show: boolean): void {
     this._showEditDelete = show;
   }
 
-  @Mutation setComponentImage(url: string): void {
+  @Mutation 
+  private setComponentImage(url: string): void {
     if (this._editedComponentRef) {
       if (this._editedComponentRef.data) {
-        if (this._editedComponentRef.type === "Image") {
+        if (this._editedComponentRef.type === 'Image') {
             this._editedComponentRef.data.content  = url;
           }
         }
@@ -64,33 +90,32 @@ export default class PageModule extends VuexModule {
   //#endregion Mutations
   //#region  Actions
   @Action
-  updateEditedComponentRef(element: PageData){
+  public updateEditedComponentRef(element: PageData){
     this.context.commit('setEditedComponentRef', element);
   }
 
-
   @Action
-  updateShowEditDelete(show: boolean) {
+  public updateShowEditDelete(show: boolean) {
     this.context.commit("setShowEditDelete", show);
   }
 
   @Action
-  addNewPageElement(element: PageData) {
+  public addNewPageElement(element: PageData) {
     this.context.commit("pushPageElement", element);
   }
 
   @Action 
-  deletePageElement(){
+  public deletePageElement(){
     this.context.commit('deleteAPageElement');
   }
 
   @Action
-  updateComponentImage(url: string) {
+  public updateComponentImage(url: string) {
     this.context.commit('setComponentImage', url);
   }
 
   @Action
-  updateParentClassProperties(classDef: string): void {
+  public updateParentClassProperties(classDef: string): void {
     if (this.editedComponentRef) {
       const parent = this.editedComponentRef.parent;
       if (parent) {
@@ -100,32 +125,40 @@ export default class PageModule extends VuexModule {
   }
 
   @Action
-  updateComponentClassProperties(classDef: string): void {
+  public updateComponentClassProperties(classDef: string): void {
+    console.log('%c⧭', 'color: #0088cc', this.editedComponentRef);
     if (this.editedComponentRef) {
-      const component: ComponentContainer = this.editedComponentRef as ComponentContainer;
+      
+      const component: PageData = this.editedComponentRef as PageData;
       if (component) {
-        console.log('%c⧭', 'color: #f2ceb6', component);
         component.addClass(classDef);
       }
     }
   }
   
+  @Action getTheEditedComponentRef(): Promise<PageData> {
+    return new Promise((resolve) => {
+      resolve(this._editedComponentRef);
+      
+    });
+  }
 
-  get editedComponentRef(): PageData {
+  public get editedComponentRef(): PageData | undefined {
     console.log("editedComponentRef called",  this._editedComponentRef)
     return this._editedComponentRef;
   }
 
-  get showEditDelete(): boolean {
+  public get showEditDelete(): boolean {
     return this._showEditDelete;
   }
 
-  get pageElements(): PageData[] {
+  public get pageElements(): PageData[] {
     return this._pageElements;
   }
 
-  get nextComponentId():number {
+  public get nextComponentId():number {
     return this._componentId;
   }
-
 }
+
+export const PageModule = getModule(PageStore);

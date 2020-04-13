@@ -11,47 +11,75 @@
         @alignRightClick="alignRightClick"
       >
       </align-buttons>
+      <widths-buttons @setWidthClick="setWidthClick"></widths-buttons>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
+import Vue from 'vue';
+import Component from 'vue-class-component';
 import CloseButton from '@/components/base/buttons/close-button/close-button.vue';
 import UploadImage from '@/components/base/pickers/upload-image/upload-image.vue';
 import AlignmentButtons from '@/components/base/buttons/alignment/alignment.vue';
+import WidthsButtons from '@/components/base/buttons/widths/widths.vue';
+import { PageModule } from '@/store/page/page';
+import { SidebarModule } from '@/store//sidebar/sidebar';
 
 @Component({
   components: {
     'upload-image': UploadImage,
     'close-button': CloseButton,
     'align-buttons': AlignmentButtons,
+    'widths-buttons': WidthsButtons,
   }
 })
 export default class ImageEditorSidebar extends Vue {
 
   urlChanged(url: string ) {
-    this.$store.dispatch('updateComponentImage', url);
+    PageModule.updateComponentImage(url);
   }
 
   closeButtonClick(): void {
-    this.$store.dispatch("closeEditor");
+    SidebarModule.closeEditor();
   }
 
   alignRightClick(): void {
     const classDef = 'flex flex-row justify-end';
-    this.$store.dispatch('updateParentClassProperties', classDef);
+    this.updateParentClassProperties(classDef);
   }
 
   alignLeftClick(): void {
     const classDef = 'flex flex-row justify-start';
-    this.$store.dispatch('updateParentClassProperties', classDef);
+    this.updateParentClassProperties(classDef);
   }
 
   alignCenterClick(): void {
     const classDef = 'flex flex-row justify-center';
-    this.$store.dispatch('updateParentClassProperties', classDef);
+    this.updateParentClassProperties(classDef);
+  }
+  
+  setWidthClick(width: number) {
+    console.log('%c%s', 'color: #aa00ff', width)
+    interface Widths {
+      [key: string]: string;
+    }
+    const widths: Widths = {
+      '20': 'w-2/12',
+      '40': 'w-4/12',
+      '50': 'w-6/12',
+      '60': 'w-8/12',
+      '80': 'w-10/12',
+      '100': 'w-full',
+    }
+  const classDef = widths[width.toString()];
+  console.log('%c%s', 'color: #00bf00', classDef)
+  PageModule.updateComponentClassProperties(classDef);
+
+  }
+
+  private updateParentClassProperties(classDef: string) {
+    PageModule.updateParentClassProperties(classDef);
   }
 }
 </script>

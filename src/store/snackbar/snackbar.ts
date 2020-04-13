@@ -1,32 +1,40 @@
-import { Module, VuexModule, MutationAction, Mutation, Action } from 'vuex-module-decorators'
+import store from '@/store';
+import { Module, Mutation, Action, VuexModule, getModule } from 'vuex-module-decorators';
 import { SnackbarMessage, initSnackbarMessage } from '@/models/notifications/snackbar.ts'
 
-@Module({name: 'snackbar' })
-export default class SnackbarModule extends VuexModule {
+
+export interface SnackbarStateInterface {
+  snackbar: SnackbarMessage,
+}
+
+@Module({ name: 'snackbar', store, dynamic: true })
+class SnackbarStore extends VuexModule implements SnackbarStateInterface{
   snackbar = initSnackbarMessage;
 
   @Mutation
-  setSnackbar (snackbar: SnackbarMessage) {
+  private setSnackbar (snackbar: SnackbarMessage) {
     this.snackbar = snackbar;
   }
 
   @Mutation
-  hideSnackbar() {
+  private hideSnackbar() {
     this.snackbar.show = false;
   }
 
-  @Action({commit: 'setSnackbar'})
-  showSnackbar(snackbar: SnackbarMessage){
+  @Action({ commit: 'setSnackbar' })
+  public showSnackbar(snackbar: SnackbarMessage){
     return snackbar;
   }
 
-  @Action({commit: 'hideSnackbar'})
-  hide(){
+  @Action({ commit: 'hideSnackbar' })
+  public hide(){
     return false;
   }
 
-  get snackbarMessage(): SnackbarMessage {
+  public get snackbarMessage(): SnackbarMessage {
     console.log("SnackbarMessage Called")
     return this.snackbar === undefined ? initSnackbarMessage : this.snackbar;
   }
 }
+
+export const SnackbarModule = getModule(SnackbarStore);

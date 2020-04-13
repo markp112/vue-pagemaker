@@ -30,7 +30,8 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component';
-import { Emit } from 'vue-property-decorator'
+import { Emit } from 'vue-property-decorator';
+import { ServicesModule } from '@/store/services/services';
 
 
 @Component ({
@@ -65,7 +66,7 @@ export default class UploadImage extends Vue {
         if (files.length === 1) {
           const file = files[0]
           return new Promise((resolve, reject) => {
-            this.$store.dispatch('firestoreSaveFile',file)
+            ServicesModule.firestoreSaveFile(file)
             .then(result => {
               this.hasFile = true;
               this.url = result.message;
@@ -80,12 +81,12 @@ export default class UploadImage extends Vue {
   setImage(targetName:string, file: File[]) {
     const url = file[0];
     return new Promise((resolve, reject) => {
-      this.$store.dispatch('firestoreSaveFile', file[0])
-      .then(result => {
-        this.url = result.message;
-        resolve(result.message);
-      })
-      .catch(err => reject(err))
+      ServicesModule.firestoreSaveFile(file[0])
+        .then(result => {
+          this.url = result.message;
+          resolve(result.message);
+        })
+        .catch(err => reject(err))
     })
   }
 
@@ -95,14 +96,14 @@ export default class UploadImage extends Vue {
     return this.url;
   }
 
-get getImage() {
-    if(this.url === '') {
-      return require('@/assets/images/imageplaceholder.png')
-    } else { return this.url }
-  }
+  get getImage() {
+      if(this.url === '') {
+        return require('@/assets/images/imageplaceholder.png');
+      } else { return this.url };
+    }
 
   get getClasses(){
-      return {isDragging: this.isDragging}
+      return {isDragging: this.isDragging};
     }
 }
 </script>

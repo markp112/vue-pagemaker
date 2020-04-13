@@ -20,12 +20,15 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
+import Vue from 'vue';
+import Component from 'vue-class-component';
 import { ComponentBuilder } from '@/classes/component-builder/component-builder';
 import { Emit } from 'vue-property-decorator';
 import { PageData, Style, ComponentContainer } from '@/models/page/page';
 import GenericComponent from '@/components/page-builder-elements/generic/generic.vue';
+import { PageModule } from '@/store/page/page';
+import { ServicesModule } from '@/store/services/services';
+import { SidebarModule } from '@/store/sidebar/sidebar';
 
 @Component({
   props: {
@@ -35,8 +38,7 @@ import GenericComponent from '@/components/page-builder-elements/generic/generic
   },
   components: {
     'generic-component': GenericComponent,
-  }
-
+  },
 })
 
 export default class Container extends Vue {
@@ -70,8 +72,8 @@ export default class Container extends Vue {
 
   @Emit('componentClicked')
   onClick() {
-    this.$store.dispatch('updateEditedComponentRef', this.$props.thisComponent)
-    this.$store.dispatch('updateShowEditDelete', true)
+    PageModule.updateEditedComponentRef(this.$props.thisComponent);
+    PageModule.updateShowEditDelete(true);
     this.showBorder = !this.showBorder;
     return
   }
@@ -82,18 +84,19 @@ export default class Container extends Vue {
 
   onDrop(event: DragEvent) {
     const componentBuilder = new ComponentBuilder();
-    if(this.$store.getters.dragDropEventHandled) { return }
-    if(event) {
+    if (ServicesModule.dragDropEventHandled) { return }
+    if (event) {
       const componentName = componentBuilder.getComponentName(event);
-      const ref = `${componentName}::${this.$store.getters.nextComponentId}`;
-      const component = this.$store.getters.componentDefinition(componentName);
+      const ref = `${componentName}::${PageModule.nextComponentId}`;
+      const component = SidebarModule.getComponentDefinition(componentName);
       const parent = this.$props.thisComponent; // when dropping a component this componet will be its parent
-      const newComponent: PageData = componentBuilder.buildComponent(component, ref, parent );
-      this.$store.dispatch('addNewPageElement', newComponent);
-      this.$store.dispatch('toggleDragDropEventHandled', true);
+      if(component) {
+        const newComponent: PageData = componentBuilder.buildComponent(component, ref, parent );
+        PageModule.addNewPageElement(newComponent);
+        ServicesModule.toggleDragDropEventHandled(true);
+      }
     }
   }
-
 }
 </script>
 

@@ -14,8 +14,9 @@
 
 <script lang="ts">
 import Component from 'vue-class-component';
-import { Vue,  Emit, Prop } from 'vue-property-decorator'
-import { Site, initSite} from '@/models/sites/site'
+import { Vue,  Emit, Prop } from 'vue-property-decorator';
+import { Site, initSite} from '@/models/sites/site';
+import { SitesModule } from '@/store/sites/sites';
 
 @Component({
     props: {
@@ -28,12 +29,12 @@ export default class SiteCard extends Vue{
   name = "Site Card";
 
   editSiteClick() {
-    this.$store.dispatch("updateCurrentSiteId", this.$props.site.siteId);
+    SitesModule.updateCurrentSiteId(this.$props.site.siteId);
     this.$router.push({name:"newSite", params:{title:'Edit Site'}});
   }
 
   goClick() {
-    this.$store.dispatch("updateCurrentSiteId", this.$props.site.siteId);
+    SitesModule.updateCurrentSiteId(this.$props.site.siteId);
     this.$router.push({name:"pageList"});
   }
 

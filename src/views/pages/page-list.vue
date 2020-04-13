@@ -22,7 +22,6 @@
             <span class="w-2/12">{{ page.created | dateFormat('DD MMM YYYY')  }}</span>
             <span class="w-2/12">{{ page.edited | dateFormat('DD MMM YYYY') }}</span>
             <span class="w-2/12 self-start"><input type="checkbox" value="page.active" readonly /> </span>
-            
           </span>
           <font-awesome-icon icon="pencil-alt" prefix="fas" class="w-1/12 ml-2 hover:text-accent cursor-pointer" @click="editPencilClick(page.name)"></font-awesome-icon>
           </div>
@@ -34,9 +33,11 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import CreateNewButton from '@/components/base/buttons/create-new/create-new.vue'
+import CreateNewButton from '@/components/base/buttons/create-new/create-new.vue';
 import { Page } from '@/models/pages/pages';
 import { dateFormat } from 'vue-filter-date-format';
+import { PagesModule } from '@/store/pages/pages';
+import { SitesModule } from '@/store/sites/sites';
 
 @Component({
   components: {
@@ -48,13 +49,13 @@ export default class PageList extends Vue {
   siteId ='';
 
   editPencilClick(pageName: string ) {
-    this.$store.dispatch('updateCurrentPage',pageName);
+    PagesModule.updateCurrentPage(pageName);
     this.$router.push({name:'page-editor', params:{title:'Edit Page'}});
   }
 
   created() {
-    this.siteId = this.$store.getters.getCurrentSiteId;
-    this.$store.dispatch('loadPages');
+    this.siteId = SitesModule.getCurrentSiteId;
+    PagesModule.loadPages();
   }
 
   createNewPage() {
@@ -66,7 +67,7 @@ export default class PageList extends Vue {
   }
 
   get pageList(): Page[] {
-    return this.$store.getters.pageList;
+    return PagesModule.pageList;
   }
 }
 </script>

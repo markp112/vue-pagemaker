@@ -1,5 +1,5 @@
 <template>
-  <div class="font-dosis h-screen">
+  <div class="font-body h-screen">
     <div class="flex flex-row flex-wrap py-0 m-0 w-screen" >
       <nav-bar></nav-bar>
       <div class="flex flex-col justify-start w-full h-4 mb-2">
@@ -25,7 +25,9 @@ import sidebar from './components/core/sidebar/sidebar'
 import Snackbar from './components/base/notifications/snackbar/snackbar.vue';
 import Breadcrumb from './components/core/breadcrumb/breadcrumb';
 import Component from 'vue-class-component';
-
+import { AuthModule } from '@/store/auth/auth';
+import { NavMenuItemsModule } from '@/store/menus/nav-menu/nav-menu-module';
+import { SidebarModule } from '@/store/sidebar/sidebar';
 @Component({
   components:{
     'nav-bar': nav,
@@ -36,34 +38,28 @@ import Component from 'vue-class-component';
 })
 export default class extends Vue{
  
-  
   created() {
-    if(this.$store.getters.isExistingUser)  {
-      this.$store.dispatch('getUserFromLocalStorage');
-      this.$store.dispatch('createNavMenuSignedIn');
-      this.$router.push("/sites");
+    if(AuthModule.isExistingUser)  {
+      AuthModule.getUserFromLocalStorage();
+      NavMenuItemsModule.createNavMenuSignedIn();
+      this.$router.push('/sites');
     } else {
-      this.$store.dispatch("createNavMenuSignedOut");
-      this.$router.push("/");
+      NavMenuItemsModule.createNavMenuSignedOut();
+      this.$router.push('/');
     }
   }
 
-
-
   isLoggedIn() {
-    return this.$store.getters.isUserLoggedIn;
+    return AuthModule.isUserLoggedIn;
   }
-
 
   get showSidebar(){
-    console.log("App.showsidebar")
-    return this.$store.getters.showSidebar;
-  }
+      console.log("App.showsidebar")
+      return SidebarModule.showSidebar;
+    }
 }
-
-
-
 </script>
+
 <style lang="postcss">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

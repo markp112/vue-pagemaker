@@ -27,27 +27,24 @@
 
 <script lang='ts'>
 
-import { NavMenuItem } from '../../../models/menus/nav-menu';
 import Vue from 'vue';
+import { NavMenuItem } from '../../../models/menus/nav-menu';
 import Component from 'vue-class-component';
+import { NavMenuItemsModule } from '@/store/menus/nav-menu/nav-menu-module';
 
 @Component
 export default class NavMenuComponent extends Vue {
       name = 'NavMenuComponent'
-      // menuItems: NavMenuItem[] = [];
       toggleMenu = false;
 
   menuItemClick(id: number) {
-    console.log("id", id, this.menuItems[id])
-
     this.$router.push(this.menuItems[id].navLink);
     this.toggleMenu = !this.toggleMenu;
   }
 
   get menuItems () {
-    return  this.$store.getters.navMenuItems;
+    return  NavMenuItemsModule.navMenuItems;
   }
-
 }
 
 </script>

@@ -1,6 +1,6 @@
 // Controls the sidebar
-
-import { Module, Mutation, Action, VuexModule } from 'vuex-module-decorators';
+import store from '@/store';
+import { Module, Mutation, Action, VuexModule, getModule } from 'vuex-module-decorators';
 import {
   ComponentDefinitions,
   ComponentDefinitionInterface,
@@ -10,48 +10,56 @@ import {
   Notification,
   notificationDefault,
 } from '@/models/notifications/notifications';
-import  PageModule from '@/store/page/page'
+import  { PageModule } from '@/store/page/page';
 import firebase from 'firebase';
-import store from '@/store';
+
 
 const SIDEBARCOLLECTION = 'component-definitions';
-type sidebarComponents = 'image-editor'
+
+export type sidebarComponents =
+  'image-editor'
   | 'sidebar-components'
   | 'container-editor';
 
-@Module({ name: 'sidebar', store })
-export default class SidebarModule extends VuexModule {
+export interface SidebarStateInterface {
+  _sidebarElements: ComponentDefinitions,
+  _showSidebar: boolean,
+  _sidebarComponent: sidebarComponents,
+}
+
+@Module({ dynamic: true, name: 'sidebar', store })
+class SidebarStore extends VuexModule implements SidebarStateInterface {
   _sidebarElements: ComponentDefinitions = new ComponentDefinitions();
   _showSidebar = false;
   _sidebarComponent: sidebarComponents = 'sidebar-components';
 
   @Mutation
-  addComponent(editorComponent: ComponentDefinitionInterface) {
+  private addComponent(editorComponent: ComponentDefinitionInterface) {
     this._sidebarElements.add(editorComponent);
   }
 
   @Mutation
-  clearComponents() {
+  private clearComponents() {
     this._sidebarElements = new ComponentDefinitions();
   }
 
   @Mutation
-  setSidebarVisibility(toggle: boolean) {
+  private setSidebarVisibility(toggle: boolean) {
     this._showSidebar = toggle;
   }
 
   @Mutation
-  setSidebarEditor(component: sidebarComponents) {
+  private setSidebarEditor(component: sidebarComponents) {
     this._sidebarComponent = component;
   }
 
   @Action({ rawError: true })
-  toggleSidebar(toggle: boolean) {
+  public toggleSidebar(toggle: boolean) {
     this.context.commit('setSidebarVisibility', toggle);
   }
 
   @Action({ rawError: true })
-  loadSideBarElements(): Promise<Notification> {
+  public loadSideBarElements(): Promise<Notification> {
     const firestore = firebase.firestore();
     const notification: Notification = notificationDefault;
     return new Promise((resolve, reject) => {
@@ -75,7 +83,7 @@ export default class SidebarModule extends VuexModule {
   }
 
   @Action({ rawError: true })
-  saveEditorElement(editorComponent: ComponentDefinitionInterface): Promise<Notification> {
+  public saveEditorElement(editorComponent: ComponentDefinitionInterface): Promise<Notification> {
     const notification: Notification = notificationDefault;
     return new Promise((resolve, reject) => {
       const firestore = firebase.firestore();
@@ -96,46 +104,45 @@ export default class SidebarModule extends VuexModule {
   }
 
   @Action({ rawError: true })
-  updateSidebarEditor() {
-    const componentType: PageData = this.context.rootGetters.editedComponentRef;
-    console.log("Store = ", store.getters.editedComponentRef)
-    console.log('%c⧭', 'color: #733d00', this.context.rootGetters.editedComponentRef);
-    console.log('%c⧭', 'color: #e50000', componentType);
-    let whichComponentType = '';
-    if (componentType.isContainer) {
-      whichComponentType = 'container'; 
-    } else {
-      whichComponentType = componentType.type;
-    }
-      console.log('%c%s', 'color: #aa00ff', whichComponentType);
+  public updateSidebarEditor() {
+    const componentType: PageData | undefined = PageModule.editedComponentRef;
+    if (componentType) {
+      let whichComponentType = '';
+      if (componentType.isContainer) {
+        whichComponentType = 'container'; 
+      } else {
+        whichComponentType = componentType.type;
+      }
+        console.log('%c%s', 'color: #aa00ff', whichComponentType);
 
-    switch (whichComponentType) {
-      case 'Image':
-        this.context.commit('setSidebarEditor', 'image-editor' as sidebarComponents);
-        break;
-      case 'container':
-        this.context.commit('setSidebarEditor', 'container-editor' as sidebarComponents);
-        break;
+      switch (whichComponentType) {
+        case 'Image':
+          this.context.commit('setSidebarEditor', 'image-editor' as sidebarComponents);
+          break;
+        case 'container':
+          this.context.commit('setSidebarEditor', 'container-editor' as sidebarComponents);
+          break;
+      }
     }
   }
 
   @Action
-  closeEditor() {
+  public closeEditor() {
     const sidebarComponent: sidebarComponents = 'sidebar-components';
     this.context.commit('setSidebarEditor', sidebarComponent);
   }
 
-  get sidebarElements(): ComponentDefinitionInterface[] {
+ get getSidebarElements(): ComponentDefinitionInterface[] {
     return this._sidebarElements.componentDefinitions();
   }
 
-  get componentDefinition(): (componentName: string)
+   get getComponentDefinition(): (componentName: string)
     => ComponentDefinitionInterface | undefined {
     return (componentName: string) =>
       this._sidebarElements.getComponent(componentName);
   }
 
-  get showSidebar(): boolean {
+  public get showSidebar(): boolean {
     return this._showSidebar;
   }
 
@@ -143,3 +150,5 @@ export default class SidebarModule extends VuexModule {
     return this._sidebarComponent;
   }
 }
+
+export const SidebarModule = getModule(SidebarStore);

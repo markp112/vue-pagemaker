@@ -13,10 +13,11 @@
 
 <script lang="ts">
 
-import Vue from 'vue'
+import Vue from 'vue';
 import  DraggableIcon from '@/components/base/draggable/draggable-icon/draggable-icon.vue';
-import { ComponentDefinitionInterface, ComponentDefinitions} from '@/models/page/page'
+import { ComponentDefinitionInterface, ComponentDefinitions} from '@/models/page/page';
 import Component from 'vue-class-component';
+import { SidebarModule } from '@/store//sidebar/sidebar';
 
 @Component({
   components:{
@@ -26,11 +27,11 @@ import Component from 'vue-class-component';
 export default class SidebarComponentIcons extends Vue {
 
   created() {
-    this.$store.dispatch('loadSideBarElements')
+    SidebarModule.loadSideBarElements();
   }
 
   get sidebarElements(): ComponentDefinitionInterface[] {
-    return  this.$store.getters.sidebarElements;
+    return  SidebarModule.getSidebarElements;
   }
 }
 </script>
