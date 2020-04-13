@@ -60,8 +60,8 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
+import Vue from 'vue';
+import Component from 'vue-class-component';
 import IconPicker from '@/components/base/pickers/icon-picker/icon-picker.vue';
 import SubmitCancel from '@/components/base/buttons/submit-cancel/submit-cancel.vue';
 import InvalidForm from '@/components/base/notifications/invalid-form.vue';
@@ -69,9 +69,11 @@ import { SnackbarMessage, SnackbarTypes, SnackBarGenerator } from '@/models/noti
 import { IconInterface, initIcon } from '@/models/font-awesome/icon';
 import { initAuthStatus } from '../../../models/user/user';
 import { Notification, notificationDefault } from '../../../models/notifications/notifications';
-import CreateNew from '@/components/base/buttons/create-new/create-new.vue'
+import CreateNew from '@/components/base/buttons/create-new/create-new.vue';
 import { ComponentDefinitionInterface, initComponentDefinition } from '../../../models/page/page';
-
+import { SidebarModule } from '@/store//sidebar/sidebar';
+import { ComponentPropsModule } from '@/store/component-props/component-props';
+import { SnackbarModule } from '@/store/snackbar/snackbar';
 
 @Component({
   components:{
@@ -82,11 +84,10 @@ import { ComponentDefinitionInterface, initComponentDefinition } from '../../../
   }
 })
 export default class SidebarIconEditor extends Vue {
-  name="Sidebar Icon Editor"
+  name = 'Sidebar Icon Editor';
   classDef = '';
   iconLocal: IconInterface = initIcon;
   editorComponent: ComponentDefinitionInterface =  initComponentDefinition;
-
   componentType: string[] = [
     'Image',
     'Text',
@@ -94,60 +95,57 @@ export default class SidebarIconEditor extends Vue {
     'Nav Bar',
     'Links Menu',
     'Button', 
-    ]
-  
+    ];
 
   created(): void {
     this.iconLocal = initIcon;
-    this.$store.dispatch('loadSideBarElements');
+    SidebarModule.loadSideBarElements();
     this.editorComponent = initComponentDefinition;
-    this.$store.dispatch('toggleSidebar', false);
+    SidebarModule.toggleSidebar(false);
   }
-  
+
   iconPickerClick(icon: IconInterface): void {
     this.iconLocal = icon;
     this.editorComponent.sidebarIcon = icon;
-  
   }
 
   showIconPicker(): void {
-    this.$store.dispatch('toggleIconPicker', true)
+    ComponentPropsModule.toggleIconPicker(true);
   }
-  
+
   iconClicked(idx: number){
-    this.editorComponent = this.$store.getters.sidebarElements[idx];
+    this.editorComponent = SidebarModule.getSidebarElements[idx];
     this.iconLocal = this.editorComponent.sidebarIcon;
     this.classDef = this.editorComponent.class;
   }
+
   createNew():void {
     this.editorComponent = initComponentDefinition;
   }
+
   saveClick(): void {
-    
     this.editorComponent.class = this.classDef;
-    this.$store.dispatch('saveEditorElement', this.editorComponent)
+    SidebarModule.saveEditorElement(this.editorComponent)
     .then(result  => {
         const notification = result as Notification;
         if(notification.status === "ok") {
-          const snackbarMessage: SnackbarMessage = SnackBarGenerator.snackbarSuccess(`The ${this.editorComponent.componentName} has been created`,'Page Saved')
-          this.$store.dispatch('showSnackbar', snackbarMessage)
-          this.$router.push('/iconeditor')
+          const snackbarMessage: SnackbarMessage = SnackBarGenerator.snackbarSuccess(`The ${this.editorComponent.componentName} has been created`,'Page Saved');
+          SnackbarModule.showSnackbar(snackbarMessage);
+          this.$router.push('/iconeditor');
         } else {
-          this.showErrorsnackbar(notification.message, "Error on Save")
+          this.showErrorsnackbar(notification.message, "Error on Save");
         }
       })
   }
-  
+
   showErrorsnackbar(message: string, title: string ) {
-      const snackbarMessage = SnackBarGenerator.snackbarError(message ,title)
-      this.$store.dispatch('showSnackbar', snackbarMessage)
+      const snackbarMessage = SnackBarGenerator.snackbarError(message ,title);
+      SnackbarModule.showSnackbar(snackbarMessage);
   }
 
   get icons(): ComponentDefinitionInterface[] {
-    console.log("get components", this.$store.getters.sidebarElements)
-    return this.$store.getters.sidebarElements
+    return SidebarModule.getSidebarElements;
   }
-
 }
 
 </script>

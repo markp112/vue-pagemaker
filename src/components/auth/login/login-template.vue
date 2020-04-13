@@ -39,7 +39,7 @@ import Component from 'vue-class-component';
 import { UserInterface, initUser } from '@/models/user/user';
 import { ErrorCodes } from '@/models/enums/errors/errors';
 import  HorizontalImageText  from '@/components/base/layouts/app-templates/horizontal-image-text/horizontal-image-text.vue';
-
+import { AuthModule } from '@/store/auth/auth';
 
 @Component({
   components: {
@@ -59,21 +59,20 @@ export default class LoginForm extends Vue {
         const user: UserInterface = initUser ;
         user.email = this.email;
         user.password = this.password;
-        this.$store.dispatch('login', user)
-        .then (() => {
-          this.$router.push("/sites");
-        })
-        .catch(err =>{
-          if (err === ErrorCodes.LoginFailed) {
-            this.formErrors =[];
-            this.formErrors.push("Invalid user name or password")
-          } else {
-            this.formErrors = [];
-            this.formErrors.push(err);
-          }
-        })
+        AuthModule.login(user)
+          .then (() => {
+            this.$router.push("/sites");
+          })
+          .catch(err =>{
+            if (err === ErrorCodes.LoginFailed) {
+              this.formErrors =[];
+              this.formErrors.push("Invalid user name or password")
+            } else {
+              this.formErrors = [];
+              this.formErrors.push(err);
+            }
+          })
       }
-
     }
 
     cancelClick() {
@@ -84,7 +83,6 @@ export default class LoginForm extends Vue {
         return true;
     }
 }
-
 </script>
 
 <style lang="postcss" scoped>

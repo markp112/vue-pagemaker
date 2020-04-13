@@ -28,6 +28,7 @@ import {
 } from '@/models/page/page';
 import { Content, ComponentTypes } from '@/models//components/components';
 import UploadImage from '@/components/base/pickers/upload-image/upload-image.vue';
+import { PageModule } from '@/store//page/page';
 
 @Component({
   props: {
@@ -55,7 +56,6 @@ export default class GenericComponent extends Vue {
       const component = (this.$props.thisComponent as PageElement)
       component.classDefinition += ` ${component.parent.height()} `;
     }
-      
   }
 
   getClasses(): string {
@@ -79,8 +79,8 @@ export default class GenericComponent extends Vue {
   }
 
   onClick(event: Event) {
-    this.$store.dispatch('updateEditedComponentRef', this.$props.thisComponent);
-    this.$store.dispatch('updateShowEditDelete', true);
+    PageModule.updateEditedComponentRef(this.$props.thisComponent);
+    PageModule.updateShowEditDelete(true);
     this.showBorder = !this.showBorder;
     event.stopPropagation();
   }

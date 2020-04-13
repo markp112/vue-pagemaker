@@ -33,6 +33,9 @@ import Container from '@/components/page-builder-elements/generic/container.vue'
 import { PageData, ComponentContainer } from '@/models/page/page';
 import { ComponentBuilder } from '@/classes/component-builder/component-builder';
 import EditDeleteOption from '@/components/page-builder-elements/utility/edit-delete-options/edit-delete-options.vue';
+import { PageModule } from '@/store/page/page';
+import { SidebarModule } from '@/store/sidebar/sidebar';
+import { ServicesModule } from '@/store/services/services';
 
 const PARENT = 'ROOT';
 const PARENTCOMPONENT = new ComponentContainer();
@@ -55,30 +58,32 @@ export default class PageBuilder extends Vue {
 
   created() {
     this.title = this.$route.params.title;
-    this.$store.dispatch('toggleSidebar', true);
+    SidebarModule.toggleSidebar(true);
   }
 
   get layoutElements(): PageData[] {
-    return this.$store.getters.pageElements;
+    return PageModule.pageElements;
   }
 
   onDrop(event: DragEvent): void {
     const componentBuilder = new ComponentBuilder();
-    if (this.$store.getters.dragDropEventHandled) {
+    if (ServicesModule.dragDropEventHandled) {
       return;
     }
     if (event) {
       const componentName = componentBuilder.getComponentName(event);
-      const component = this.$store.getters.componentDefinition(componentName);
+      const component = SidebarModule.getComponentDefinition(componentName);
       console.log('%c⧭', 'color: #00a3cc', component)
-      const ref = `${componentName}::${this.$store.getters.nextComponentId}`;
-      const newComponent: PageData = componentBuilder.buildComponent(component, ref, PARENTCOMPONENT);
-      this.$store.dispatch('addNewPageElement', newComponent);
+      const ref = `${componentName}::${PageModule.nextComponentId}`;
+      if (component){
+        const newComponent: PageData = componentBuilder.buildComponent(component, ref, PARENTCOMPONENT);
+        PageModule.addNewPageElement(newComponent);
+      }
     }
   }
 
   deleteClicked(): void {
-    this.$store.dispatch('deletePageElement');
+    PageModule.deletePageElement;
   }
 
   getClass(): string {

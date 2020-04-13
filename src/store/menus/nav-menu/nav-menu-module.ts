@@ -1,23 +1,28 @@
-
-import {Module, VuexModule, MutationAction, Mutation, Action} from 'vuex-module-decorators'
+import store from '@/store';
+import { Module, Mutation, Action, VuexModule, getModule } from 'vuex-module-decorators';
 import { NavMenuItem } from '@/models/menus/nav-menu';
 
-@Module({name: 'navMenu' })
-export default class NavMenuItemsModule extends VuexModule {
+export interface NavMenuStateInterface {
+  menuItems: NavMenuItem[],
+}
+@Module({ name: 'navMenu', dynamic: true, store })
+class NavMenuItemsStore extends VuexModule implements NavMenuStateInterface {
   menuItems: NavMenuItem[] = [];
-  
 
-  @Mutation addNav(menuItem: NavMenuItem) {
+  @Mutation
+  private addNav(menuItem: NavMenuItem) {
     if(menuItem !== undefined){
       this.menuItems.push(menuItem);
     }
   }
 
-  @Mutation clearNav() {
+  @Mutation
+  private clearNav() {
     this.menuItems = [];
   }
 
-  @Action ({commit:'addNav'}) createNavMenuSignedOut(){
+  @Action
+  public createNavMenuSignedOut(){
     this.context.commit('clear');
     let menuItem: NavMenuItem = new NavMenuItem(0, 'Login', '/login');
     this.context.commit('addNav',menuItem);
@@ -25,7 +30,8 @@ export default class NavMenuItemsModule extends VuexModule {
     this.context.commit('addNav',menuItem);
   }
 
-  @Action ({commit:'addNav'}) createNavMenuSignedIn(){
+  @Action
+  public createNavMenuSignedIn(){
     this.context.commit('clearNav');
     let menuItem: NavMenuItem = new NavMenuItem(0, 'Profile', '/profile');
     this.context.commit('addNav',menuItem);
@@ -35,7 +41,9 @@ export default class NavMenuItemsModule extends VuexModule {
     this.context.commit('addNav', menuItem);
   }
 
-  get navMenuItems():NavMenuItem[] {
+  public get navMenuItems():NavMenuItem[] {
     return this.menuItems;
   }
 }
+
+export const NavMenuItemsModule = getModule(NavMenuItemsStore);

@@ -9,16 +9,16 @@
         <site-card :site="site"></site-card>
       </li>
     </ul>
-    
   </section>
 </template>
-    
 
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import NewSite from './new-site.vue';
 import { Site } from '../../models/sites/site';
+import { SitesModule } from '@/store/sites/sites';
+import { SidebarModule } from '@/store/sidebar//sidebar';
 import { dateParse } from 'vue-filter-date-parse';
 import CreateNewButton from '@/components/base/buttons/create-new/create-new.vue';
 import SiteCard from '@/components/base/cards/site-card/site-card.vue';
@@ -30,20 +30,20 @@ import SiteCard from '@/components/base/cards/site-card/site-card.vue';
   }
 })
 export default class SitesList extends Vue {
-  name = "SitesList" ;
+  name = 'SitesList' ;
   
   created() {
-    this.$store.dispatch('getSites');
-    this.$store.dispatch('toggleSidebar', false);
+    SitesModule.getSites();
+    SidebarModule.toggleSidebar(false);
   }
 
   createNewSite(): void {
-    this.$router.push({name:'newSite', params:{title: 'New Site'}});
+    this.$router.push({ name:'newSite', params: { title: 'New Site' }});
   }
 
   siteClicked(siteId: string) {
-    this.$store.dispatch('updateCurrentSiteId', siteId);
-    this.$router.push({name:"pageList", params: { id: siteId }});
+    SitesModule.updateCurrentSiteId(siteId);
+    this.$router.push({name: 'pageList' , params: { id: siteId }});
   }
 
   isPublished(datePublished: string): string {
@@ -55,7 +55,7 @@ export default class SitesList extends Vue {
   }
 
   get sites(): Site[] {
-    return this.$store.getters.getListofSites;
+    return SitesModule.getListofSites;
   }
 }
 </script>

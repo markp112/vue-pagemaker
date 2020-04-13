@@ -1,39 +1,49 @@
-import { Module, VuexModule, MutationAction, Mutation, Action } from 'vuex-module-decorators'
+
+import store from '@/store';
+import { Module, Mutation, Action, VuexModule, getModule } from 'vuex-module-decorators';
 import {  Page } from '@/models/pages/pages.ts';
 import { Notification, notificationDefault } from '@/models/notifications/notifications';
 import firebase from 'firebase';
-import { authStore, siteStore } from '../store-accessors';
-import { TimeStamp, convertTimeStampDate } from '@/models/Types/generic-types';
+// import { authStore, siteStore } from '../store-accessors';
+import { AuthModule } from '../auth/auth'
+import { SitesModule } from '../sites/sites'
+import { convertTimeStampDate } from '@/models/Types/generic-types';
+import { PageStateInterface } from '../page/page';
 
+export interface PagesStateInterface {
+  pages: Page[],
+  _currentPage: Page,
+}
 
-
-@Module({name: 'pagesModule' })
-export default class PagesModule extends VuexModule {
+@Module({ name: 'pages-store', store, dynamic: true })
+class PagesStore extends VuexModule implements PagesStateInterface {
 
   pages: Page[] = [];
   _currentPage: Page = new Page();
- 
   
-  @Mutation addPage(page: Page){
+  @Mutation
+  private addPage(page: Page){
     this.pages.push(page)
   }
 
-  @Mutation clear(){
+  @Mutation
+  private clear(){
     this.pages = []
   }
 
-  @Mutation setCurrentPage(page: Page) {
+  @Mutation
+  private setCurrentPage(page: Page) {
     this._currentPage = page
   }
   
-  @Action({rawError: true})
-  updateCurrentPage(name: string) {
+  @Action({ rawError: true })
+  public updateCurrentPage(name: string) {
     const page:Page = this.pageList.filter(pg => pg.name === name)[0];
     this.context.commit('setCurrentPage', page);
   }
 
-  @Action({rawError: true})
-  saveThePage(page: Page): Promise<Notification> {
+  @Action({ rawError: true })
+  public saveThePage(page: Page): Promise<Notification> {
     const notification: Notification = notificationDefault;
     return new Promise((resolve, reject) => {
       const firestore = firebase.firestore();
@@ -53,8 +63,8 @@ export default class PagesModule extends VuexModule {
     })
   }
 
-  @Action({rawError: true})
-  loadPages(): Promise<Notification> {
+  @Action({ rawError: true })
+  public loadPages(): Promise<Notification> {
     const notification: Notification = notificationDefault;
     return new Promise((resolve, reject) => {
       const firestore = firebase.firestore();
@@ -79,19 +89,19 @@ export default class PagesModule extends VuexModule {
 
 
 
-  get pageList(): Page[] {
+  public get pageList(): Page[] {
     return this.pages
   }
 
-  get getCurrentPage(): Page {
+  public get getCurrentPage(): Page {
     return this._currentPage
   }
 
-  get getPageCollectionId(): string {
-    if(authStore.currentUser.id) {
-      return  authStore.currentUser.id + siteStore.getCurrentSiteId + '::pages';
+  public get getPageCollectionId(): string {
+    if(AuthModule.currentUser.id) {
+      return  AuthModule.currentUser.id + SitesModule.getCurrentSiteId + '::pages';
       } else {return ''}
   }
-
-  
 }
+
+export const PagesModule = getModule(PagesStore);

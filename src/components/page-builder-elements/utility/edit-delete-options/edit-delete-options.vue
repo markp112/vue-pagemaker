@@ -6,9 +6,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
+import Vue from 'vue';
+import Component from 'vue-class-component';
 import { Emit } from 'vue-property-decorator';
+import { PageModule } from '@/store/page/page';
+import { PageData } from '@/models/page/page';
+import { SidebarModule } from '@/store/sidebar/sidebar';
 
 @Component({
   props: {
@@ -22,21 +25,19 @@ export default class EditDeleteOption extends Vue{
   }
 
   editClick(): void {
-    this.$store.dispatch("updateShowEditDelete", false);
-    this.$store.dispatch("updateSidebarEditor");
+    PageModule.updateShowEditDelete(false);
+    SidebarModule.updateSidebarEditor();
   }
-
 
   @Emit('deleteClicked')
   trashClick(): void {
-    this.$store.dispatch("updateShowEditDelete", false)
+    PageModule.updateShowEditDelete(false);
     return
   }
 
   get isVisible(): boolean {
-    this.localShowMe = this.$store.getters.showEditDelete;
+    this.localShowMe = PageModule.showEditDelete;
     return this.localShowMe;
   }
-  
 }
 </script>

@@ -1,8 +1,8 @@
-import Vue from "vue";
-import App from "./App.vue";
-import router from "./router";
-import store from "./store";
-import "@/assets/css/tailwind.css";
+import Vue from 'vue';
+import App from './App.vue';
+import router from './router';
+import store from './store';
+import '@/assets/css/tailwind.css';
 import {library, FontAwesomeIcon} from '@/fontawesome/fontawesome-config';
 import { firestorePlugin } from 'vuefire';
 import Firebase from 'firebase/app';
@@ -10,12 +10,12 @@ import  'firebase/firestore';
 import { secrets } from '@/firebase/secrets';
 import VueFilterDateFormat from 'vue-filter-date-format';
 import VueFilterDateParse from 'vue-filter-date-parse';
-import Datepicker from "vuejs-datepicker";
-Vue.component("datepicker", Datepicker);
+import Datepicker from 'vuejs-datepicker';
+Vue.component('datepicker', Datepicker);
 
 export const firebaseApp = Firebase.initializeApp(secrets.google);
-// The default cache size threshold is 40 MB. Configure "cacheSizeBytes"
-// for a different threshold (minimum 1 MB) or set to "CACHE_SIZE_UNLIMITED"
+// The default cache size threshold is 40 MB. Configure 'cacheSizeBytes'
+// for a different threshold (minimum 1 MB) or set to 'CACHE_SIZE_UNLIMITED'
 // to disable clean-up.
 firebaseApp.firestore().settings({
   cacheSizeBytes: 4000000,
@@ -46,4 +46,4 @@ new Vue({
   router,
   store,
   render: h => h(App)
-}).$mount("#app");
+}).$mount('#app');

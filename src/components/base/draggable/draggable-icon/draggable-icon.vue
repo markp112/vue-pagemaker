@@ -13,7 +13,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-
+import { ServicesModule } from '@/store/services/services';
 @Component({
   props: {
     id: { default:'' },
@@ -33,7 +33,7 @@ export default class DraggableIcon extends Vue {
     if(e.dataTransfer) {
       if(e.target) {
         e.dataTransfer.setData('text/plain', (e.target as HTMLDivElement).id);
-        this.$store.dispatch('toggleDragDropEventHandled', false);
+        ServicesModule.toggleDragDropEventHandled(false);
       }
     }
   }

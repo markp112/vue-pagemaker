@@ -11,6 +11,8 @@ import { Emit, Vue } from 'vue-property-decorator';
 import sidebarComponentIcons from './sidebar-component-icons.vue';
 import ImageEditorSidebar from '@/components/core/sidebar/image-editor/image-editor.vue';
 import ContainerEditorSidebar from '@/components/core/sidebar/container-editor/container-editor.vue';
+import { SidebarModule } from '@/store//sidebar/sidebar';
+
 @Component({
   components:{
     'sidebar-components' : sidebarComponentIcons,
@@ -22,11 +24,11 @@ export default class SideBar extends Vue {
   isShowSideBar = true;
 
   get showSidebar(): boolean {
-    return this.$store.getters.showSidebar;
+    return SidebarModule.showSidebar;
   }
 
   get sidebarContent(): string {
-    return this.$store.getters.sidebarComponentType;
+    return SidebarModule.sidebarComponentType;
   }
 }
 </script>

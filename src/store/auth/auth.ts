@@ -1,35 +1,41 @@
-import { Module, VuexModule,  Mutation, Action} from 'vuex-module-decorators';
+
+import store from '@/store';
+import { Module, Mutation, Action, VuexModule, getModule } from 'vuex-module-decorators';
 import { UserInterface, initUser, AuthStatus } from '@/models/user/user'
 import firebase from 'firebase';
 import { ErrorCodes } from '@/models/enums/errors/errors';
 
+export interface UserStateInterface {
+  user: UserInterface,
+}
 
-@Module({ name: 'Auth' })
-export default class AuthModule extends VuexModule {
+@Module({ name: 'authstore', store, dynamic: true })
+class AuthStore extends VuexModule implements UserStateInterface {
   user: UserInterface = initUser;
 
   @Mutation 
-  setEmail(email: string): void {
+  private setEmail(email: string): void {
     this.user.email = email;
   }
 
   @Mutation
-  setSignedIn(signedIn: boolean): void {
+  private setSignedIn(signedIn: boolean): void {
     this.user.signedIn = signedIn;
   }
 
   @Mutation
-  setId(id: string): void {
+  private setId(id: string): void {
     this.user.id = id;
   }
 
   @Mutation
-  setUser(user: UserInterface): void {
+  private setUser(user: UserInterface): void {
+    console.log("setUSer called");
     this.user = user;
   }
 
-  @Action({rawError: true, commit: 'setUser'}) 
-  registerUser(newUser: UserInterface):Promise<AuthStatus> {
+  @Action({ rawError: true, commit: 'setUser' }) 
+  public registerUser(newUser: UserInterface):Promise<AuthStatus> {
     let authStatus: AuthStatus
     return new Promise((resolve, reject) => {
       firebase.auth().createUserWithEmailAndPassword(newUser.email, newUser.password)
@@ -51,8 +57,8 @@ export default class AuthModule extends VuexModule {
     })
   }
 
-  @Action({ commit: 'setUser'}) 
-  login(user: UserInterface) {
+  @Action({ commit: 'setUser' }) 
+  public login(user: UserInterface) {
     const invalidPassword = "auth/wrong-password";
     const userNotFound = "auth/user-not-found";
     return new Promise((resolve, reject) => {
@@ -76,35 +82,33 @@ export default class AuthModule extends VuexModule {
     })
   }
 
-@Action({commit: 'setUser'}, )
-getUserFromLocalStorage() {
-  const user: UserInterface = initUser;
-  const refreshToken = window.localStorage.getItem("pmToken");
-  if(refreshToken !== null){
-    const email  = window.localStorage.getItem("pmEmail");
-    const id = window.localStorage.getItem("id");
-    user.email = email === null ? '' : email;
-    user.signedIn = true;
-    user.id = id === null ? '' : id;
-    user.refreshToken = refreshToken;
-  }
-  return user;
-}
-
-  get isUserLoggedIn(): boolean {
-    return this.user.signedIn;
-  }
-
-  get isExistingUser(): boolean {
+  @Action({ commit: 'setUser' }, )
+  public getUserFromLocalStorage() {
+    const user: UserInterface = initUser;
     const refreshToken = window.localStorage.getItem("pmToken");
-    return refreshToken === null ? false : true;
+    if(refreshToken !== null){
+      const email  = window.localStorage.getItem("pmEmail");
+      const id = window.localStorage.getItem("id");
+      user.email = email === null ? '' : email;
+      user.signedIn = true;
+      user.id = id === null ? '' : id;
+      user.refreshToken = refreshToken;
+    }
+    return user;
   }
 
-  get currentUser(): UserInterface {
-    return this.user;
-  }
+  public get isUserLoggedIn(): boolean {
+      return this.user.signedIn;
+    }
 
-  
+  public get isExistingUser(): boolean {
+      const refreshToken = window.localStorage.getItem("pmToken");
+      return refreshToken === null ? false : true;
+    }
+
+  public get currentUser(): UserInterface {
+      return this.user;
+    }
 }
 
-
+export const AuthModule = getModule(AuthStore);

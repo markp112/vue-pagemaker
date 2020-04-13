@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Page } from '@/models/pages/pages';
 import IconPicker from '@/components/base/pickers/icon-picker/icon-picker.vue';
@@ -57,6 +57,11 @@ import { SnackbarMessage, SnackBarGenerator } from '@/models/notifications/snack
 import SubmitCancel from '@/components/base/buttons/submit-cancel/submit-cancel.vue';
 import FormButton  from '@/components/base/buttons/form-button.vue';
 import { TimeStamp, formatTimeStampAsDate } from '@/models/Types/generic-types';
+import { SnackbarModule } from '@/store/snackbar/snackbar';
+import { PageModule } from '@/store/page/page';
+import { PagesModule } from '@/store/pages/pages';
+import { ComponentPropsModule } from '@/store/component-props/component-props';
+import { SitesModule } from '@/store/sites/sites';
 
 @Component({
   components:{
@@ -75,14 +80,14 @@ export default class PageEditor extends Vue {
 
   created() {
     this.pageTitle = this.$route.params.title;
-    this.page = this.$store.getters.getCurrentPage;
+    this.page = PagesModule.getCurrentPage;
     const DateTimeStamp:TimeStamp = {seconds: this.page.created.getSeconds(), nanoseconds:0};
     this.dateCreated = formatTimeStampAsDate(DateTimeStamp)
     this.formErrors = [];
   }
 
   iconPickerClicked() {
-    this.$store.dispatch('toggleIconPicker', true)
+    ComponentPropsModule.toggleIconPicker(true);
   }
 
   iconClick(icon: IconInterface) {
@@ -90,8 +95,8 @@ export default class PageEditor extends Vue {
   }
 
   cancelClick() {
-    const siteId = this.$store.getters.getCurrentSiteId;
-    this.$router.push({ name:"pageList" });
+    const siteId = SitesModule.getCurrentSiteId;
+    this.$router.push({ name: 'pageList' });
   }
 
   saveClick(){
@@ -110,7 +115,7 @@ export default class PageEditor extends Vue {
     if(this.page.name.length === 0) {
       errors.push("page name is required");
     }
-    const pageList:Page[] = this.$store.getters.getPageList;
+    const pageList: Page[] = PagesModule.pageList;
     if(pageList !== undefined) {
       if(pageList.filter(page => page.name === this.page.name )) {
         errors.push("Page name must be unique");
@@ -120,12 +125,12 @@ export default class PageEditor extends Vue {
   }
 
   savePage(): void {
-    this.$store.dispatch("saveThePage", this.page)
+    PagesModule.saveThePage(this.page)
     .then(result  => {
         const notification = result as Notification;
         if(notification.status === "ok") {
           const snackbarMessage: SnackbarMessage = SnackBarGenerator.snackbarSuccess(`The ${this.page.name} page has been created`,'Page Saved')
-          this.$store.dispatch('showSnackbar', snackbarMessage)
+          SnackbarModule.showSnackbar(snackbarMessage);
         } else {
           this.showErrorsnackbar(notification.message, "Error on Save")
         }
@@ -137,9 +142,8 @@ export default class PageEditor extends Vue {
 
   showErrorsnackbar(message: string, title: string ) {
       const snackbarMessage = SnackBarGenerator.snackbarError(message ,title)
-      this.$store.dispatch('showSnackbar', snackbarMessage)
+      SnackbarModule.showSnackbar(snackbarMessage);
   }
-
 }
 </script>
 

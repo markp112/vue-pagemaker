@@ -9,9 +9,6 @@
   import { Prop, Vue, Emit } from 'vue-property-decorator';
 
   @Component({
-    // props:{
-    //   formErrors: { default :[] },
-    //   }
     })
 
     export default class InvalidForm extends Vue{
