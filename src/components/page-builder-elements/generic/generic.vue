@@ -1,12 +1,17 @@
 <template>
-    <div
-      :class="getClasses()"
-      @click="onClick($event)"
-      :style="getStyles()"
-      :id="$props.thisComponent.ref"
-    >
-      <span v-if="!isImage">{{ data.content }}</span>
-      <img v-if="isImage" :src="data.content" />
+    <div :id="$props.thisComponent.ref">
+      <span
+        v-if="!isImage"
+        :class="getClasses()"
+        :style="getStyles()"
+        @click="onClick($event)"
+      >{{ data.content }}</span>
+      <img 
+        v-if="isImage" 
+        :src="data.content" 
+        :class="getClasses()"
+        @click="onClick($event)"
+      />
     </div>
 </template>
 
@@ -45,7 +50,12 @@ export default class GenericComponent extends Vue {
 
   created() {
     this.data = this.$props.thisComponent.data;
-    if (this.$props.thisComponent.type === 'Image') this.isImage = true;
+    if (this.$props.thisComponent.type === 'Image') { 
+      this.isImage = true;
+      const component = (this.$props.thisComponent as PageElement)
+      component.classDefinition += ` ${component.parent.height()} `;
+    }
+      
   }
 
   getClasses(): string {
@@ -74,9 +84,9 @@ export default class GenericComponent extends Vue {
     this.showBorder = !this.showBorder;
     event.stopPropagation();
   }
-
 }
 </script>
+
 <style lang="postcss" scoped>
 .border1 {
   @apply border-indigo-800 border border-dashed;

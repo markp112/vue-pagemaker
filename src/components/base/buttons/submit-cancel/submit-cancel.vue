@@ -21,11 +21,11 @@
     name = "submit-cancel";
     
     @Emit('cancelClicked') cancelClick() {
-      console.log("button clicked cancel")
+     return
     }
 
     @Emit('saveClicked') saveClick() {
-      console.log("button clicked save")
+      return
     }
   }
 </script>

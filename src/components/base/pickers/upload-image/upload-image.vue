@@ -1,8 +1,7 @@
 <template>
-<div>
-  <div class="flex flex-col justify-center align-middle w-full border bg-white h-full">
+  <div class="flex flex-col justify-center align-middle w-full bg-white h-full text-xs">
         <input
-          class="w-full"
+          class="w-full "
           type="file"
           @change="setImage( $event.target.name, $event.target.files)"
           accept="image/png, image/jpeg"
@@ -10,34 +9,31 @@
         <input
             class="w-full"
             type="text"
-            @change="getImageFromUrl"
+            @input="getImageFromUrl"
             placeholder="or paste URL"
             name="url"
             v-model="url"
         />
-    <div class="image-drop flex flex-col justify-start" 
+    <div 
+      class="image-drop flex flex-col justify-start" 
       :class="{'is-dragging': isDragging}"
       @dragstart.prevent="dragOver()"
       @dragover.prevent="dragOver()"
       @dragleave.prevent="dragLeave()"
       @drop.prevent="drop($event)">
-      <h3 v-if="!hasFile" class="z-10 fixed font-bold text-accent">Upload a file by dropping it here</h3>
+      <h3 v-if="!hasFile" class="z-10 fixed font-bold text-accent flex-row flex-wrap justify-start">Upload a file by dropping it here</h3>
       <img :src="getImage"  class="border object-contain w-full h-full" ref="imagePlaceholder"/>
     </div>
   </div>
-</div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component';
 import { Emit } from 'vue-property-decorator'
-import FormButton from '@/components/base/buttons/form-button.vue';
+
 
 @Component ({
-  components:{
-    'form-button': FormButton,
-  }
 })
 export default class UploadImage extends Vue {
 

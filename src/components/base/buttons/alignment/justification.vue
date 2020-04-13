@@ -1,0 +1,51 @@
+<template>
+  <div class="flex flex-row justify-evenly text-xl bg-gray-300 p-2 h-10">
+    <img src="@/assets/icons/icons8-indent-32.png" 
+      class="text-accent cursor-pointer hover:bg-secondary-100" 
+      @click="alignStartClick" />
+    <img src="@/assets/icons/icons8-align-center-32.png" 
+      class="text-accent cursor-pointer hover:bg-secondary-100" 
+      @click="alignCenterClick" />
+    <img src="@/assets/icons/icons8-equivalent-32.png" 
+      class="text-accent cursor-pointer hover:bg-secondary-100" 
+      @click="alignEvenlyClick" />
+    <img src="@/assets/icons/icons8-add-white-space-32.png" 
+      class="text-accent cursor-pointer hover:bg-secondary-100" 
+      @click="alignBetweenClick" />
+    <img src="@/assets/icons/icons8-outdent-32.png" 
+      class="text-accent cursor-pointer hover:bg-secondary-100" 
+      @click="alignEndClick" />
+  </div>
+</template>
+
+<script lang="ts">
+  import Vue from 'vue';
+  import Component from 'vue-class-component';
+  import { Emit } from 'vue-property-decorator';
+
+  @Component
+  export default class JustificationButtons extends Vue {
+    name = 'JustificationButtons';
+    // indent = require('@/assets/icons/')
+    
+    @Emit('alignStartClick') alignStartClick() {
+      return;
+    }
+
+    @Emit('alignCenterClick') alignCenterClick() {
+      return;
+    }
+
+    @Emit('alignEvenlyClick') alignEvenlyClick() {
+      return;
+    }
+
+    @Emit('alignBetweenClick') alignBetweenClick() {
+      return;
+    }
+    
+    @Emit('alignEndClick') alignEndClick() {
+      return;
+    }
+  }
+</script>

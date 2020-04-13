@@ -30,7 +30,7 @@ import GenericComponent from '@/components/page-builder-elements/generic/generic
 @Component({
   props: {
     thisComponent: {
-        default: (): PageData => { return new ComponentContainer() }
+        default: (): ComponentContainer => { return new ComponentContainer() }
         },
   },
   components: {
@@ -41,19 +41,19 @@ import GenericComponent from '@/components/page-builder-elements/generic/generic
 
 export default class Container extends Vue {
 
-showBorder = false;
+  showBorder = false;
 
-created() {
-  this.showBorder = false;
-}
+  created() {
+    this.showBorder = false;
+  }
 
 
- getClasses(): string {
-    let componentClassSpec = this.$props.thisComponent.classDefinition;
-    if(this.showBorder) {
-      componentClassSpec += ' border1'
-    }
-    return componentClassSpec
+  getClasses(): string {
+      let componentClassSpec = this.$props.thisComponent.classDefinition;
+      if(this.showBorder) {
+        componentClassSpec += ' border1'
+      }
+      return componentClassSpec
   }
 
   getStyles(): string {
@@ -68,31 +68,31 @@ created() {
     return style;
   }
 
-@Emit('componentClicked')
-onClick() {
-  this.$store.dispatch('updateEditedComponentRef', this.$props.thisComponent)
-  this.$store.dispatch('updateShowEditDelete', true)
-  this.showBorder = !this.showBorder;
-  return
-}
-
-componentClick(event: Event) {
-  event.stopPropagation();
-}
-
-onDrop(event: DragEvent) {
-  const componentBuilder = new ComponentBuilder();
-  if(this.$store.getters.dragDropEventHandled) { return }
-  if(event) {
-    const componentName = componentBuilder.getComponentName(event);
-    const ref = `${componentName}::${this.$store.getters.nextComponentId}`;
-    const component = this.$store.getters.componentDefinition(componentName);
-    const parent = this.$props.thisComponent.ref; // when dropping a component this componet will be its parent
-    const newComponent: PageData = componentBuilder.buildComponent(component, ref, parent );
-    this.$store.dispatch('addNewPageElement', newComponent);
-    this.$store.dispatch('toggleDragDropEventHandled', true);
+  @Emit('componentClicked')
+  onClick() {
+    this.$store.dispatch('updateEditedComponentRef', this.$props.thisComponent)
+    this.$store.dispatch('updateShowEditDelete', true)
+    this.showBorder = !this.showBorder;
+    return
   }
-}
+
+  componentClick(event: Event) {
+    event.stopPropagation();
+  }
+
+  onDrop(event: DragEvent) {
+    const componentBuilder = new ComponentBuilder();
+    if(this.$store.getters.dragDropEventHandled) { return }
+    if(event) {
+      const componentName = componentBuilder.getComponentName(event);
+      const ref = `${componentName}::${this.$store.getters.nextComponentId}`;
+      const component = this.$store.getters.componentDefinition(componentName);
+      const parent = this.$props.thisComponent; // when dropping a component this componet will be its parent
+      const newComponent: PageData = componentBuilder.buildComponent(component, ref, parent );
+      this.$store.dispatch('addNewPageElement', newComponent);
+      this.$store.dispatch('toggleDragDropEventHandled', true);
+    }
+  }
 
 }
 </script>

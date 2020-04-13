@@ -9,23 +9,22 @@ export interface Style {
 
 //definition for a component as dropped on the page from a sidebar
 export interface ComponentDefinitionInterface {
-  componentName: string; //  unique name for this component
-  class: string;    // class defintion which controls the layout of this element
+  //  unique name for this component
+  componentName: string;
+  // class defintion which controls the layout of this element
+  class: string;
   componentRef: ComponentRef; // the html tag used to put this element on the page
-  isContainer: boolean;       // is a container or component 
+  isContainer: boolean; // is a container or component 
   sidebarIcon: IconInterface; // icon for this component
-  type: string;               // what is this see types
+  type: string; // what is this see types
 }
 
 export interface DataComponentDefinitionInterface extends ComponentDefinitionInterface {
   data: ComponentTypes; // for when a component needs data e.g. picture element
 }
+
 export type ComponentDefinitionTypes = ComponentDefinitionInterface | DataComponentDefinitionInterface;
-
-
-
 export class ComponentDefinitions {
-
   _componentDefinitions: ComponentDefinitionTypes[];
 
   constructor() {
@@ -33,19 +32,20 @@ export class ComponentDefinitions {
   }
 
   add(newComponent: ComponentDefinitionTypes): void {
-    const component: ComponentDefinitionTypes | undefined = this.getComponent(newComponent.componentName)
+    const component: ComponentDefinitionTypes | undefined = this.getComponent(newComponent.componentName);
     if (component !== undefined) {
-      this.delete(component.componentName)
+      this.delete(component.componentName);
     }
-    this._componentDefinitions.push(newComponent)
+    this._componentDefinitions.push(newComponent);
   }
 
   delete(componentName: string): void {
-    this._componentDefinitions = this._componentDefinitions.filter((component: ComponentDefinitionTypes) => component.componentName !== componentName);
+    this._componentDefinitions = this._componentDefinitions.filter(
+      (component: ComponentDefinitionTypes) => component.componentName !== componentName);
   }
 
   getComponent(componentName = '', componentRef = ''): ComponentDefinitionTypes | undefined {
-    if (componentName === '' && componentRef === '') return
+    if (componentName === '' && componentRef === '') return;
     if (componentRef !== '') {
       return this._componentDefinitions.filter(comp => comp.componentRef === componentRef)[0];
     } else {
@@ -77,7 +77,7 @@ export interface PageElementInterface {
   componentHTMLTag: string;
   isContainer: boolean;
   styles: Style[];
-  parent: ComponentRef;
+  parentRef: string;
   classDefinition: string;
   type: string;
   data: ComponentTypes;
@@ -89,13 +89,15 @@ export interface PageContainerInterface extends PageElementInterface {
 
 export type PageData = PageElement | ComponentContainer;
 
-export class PageElement implements PageElementInterface {
+export class PageElement implements Partial<PageElementInterface> {
   private _name: string;  //name of the component
   private _ref: ComponentRef; // unique ref of this component in the Dom
   private _componentHTMLTag: string; // component tag
   private _isContainer: boolean; // can contain  other elements
   private _styles: Style[]; // css styles
-  private _parent: ComponentRef; // ref to parent element
+  private _parent!: ComponentContainer; // parent Object
+ // parent Object
+  private _parentRef: ComponentRef; // string ref to the parent
   private _classDefinition: string;
   private _type: string // what is this component as in image text etc
   private _data: ComponentTypes;
@@ -106,7 +108,7 @@ export class PageElement implements PageElementInterface {
     this._componentHTMLTag = '';
     this._isContainer = false;
     this._styles = [];
-    this._parent = ''
+    this._parentRef = 'ROOT';
     this._classDefinition = '';
     this._type = '';
     this._data = undefined;
@@ -145,31 +147,47 @@ export class PageElement implements PageElementInterface {
   }
 
   get styles(): Style[] {
-    return this._styles
+    return this._styles;
   }
 
   get type(): string {
-    return this._type
+    return this._type;
   }
 
   set type(type: string) {
-    this._type = type
+    this._type = type;
   }
 
   get classDefinition(): string {
-    return this._classDefinition
+    return this._classDefinition;
   }
 
   set classDefinition(definition: string) {
-    this._classDefinition = definition
+    this._classDefinition = definition;
+  }
+
+  get parent(): ComponentContainer {
+    return this._parent;
+  }
+
+  set parent(newParent: ComponentContainer) {
+    this._parent = newParent;
+  }
+
+  get parentRef(): string {
+    return this._parentRef
+  }
+
+  set parentRef(parentRef: string) {
+    this._parentRef = parentRef;
   }
 
   get data(): ComponentTypes {
-    return this._data
+    return this._data;
   }
 
   set data(data: ComponentTypes) {
-    this._data = data
+    this._data = data;
   }
 
   addStyle(newStyle: Style) {
@@ -182,12 +200,14 @@ export class PageElement implements PageElementInterface {
     }
   }
 
-  get parent(): ComponentRef {
-    return this._parent
-  }
-
-  set parent(newParent: ComponentRef) {
-    this._parent = newParent
+  height(): string {
+    if (this._classDefinition) {
+      const classDef = this._classDefinition;
+      const posOfHeight = classDef.indexOf('h-');
+      const height = classDef.substring(posOfHeight, classDef.indexOf(' ', posOfHeight) );
+      return height;
+    }
+    else return '';
   }
 }
 
@@ -203,10 +223,41 @@ export class ComponentContainer extends PageElement {
     return this._elements;
   }
 
+  addClass(classDef: string): void {
+    if (classDef.indexOf('flex') >= 0) {
+      this.processFlex(classDef);
+    }
+  }
+
+  private cutString(stringToCutFrom: string, wordToCut: string): string {
+    const index =  stringToCutFrom.indexOf(wordToCut);
+    if (index >= 0) {
+      return  stringToCutFrom.split(' ').filter(word => word !== wordToCut).join(' ');
+    } else return stringToCutFrom;
+  }
+
+  private processFlex(classDef: string): void {
+    const index = this.classDefinition.indexOf('flex');
+    if (index >= 0) {
+      let tempclass = this.classDefinition;
+      tempclass = this.cutString(tempclass, 'flex');
+      tempclass = this.cutString(tempclass, 'flex-row');
+      tempclass = this.cutString(tempclass, 'justify-center');
+      tempclass = this.cutString(tempclass, 'justify-evenly');
+      tempclass = this.cutString(tempclass, 'justify-between');
+      tempclass = this.cutString(tempclass, 'justify-end');
+      tempclass = this.cutString(tempclass, 'justify-start');
+      tempclass += ` ${classDef}`;
+      this.classDefinition = tempclass;
+    } else {
+      this.classDefinition += ` ${classDef}`;
+    }
+  }
+
   addNewElement(newElement: PageData) {
     const existingElement = this._elements.filter((element: PageData) => element.ref === newElement.ref)[0];
     if (!existingElement) {
-      this._elements.push(newElement)
+      this._elements.push(newElement);
     } else {
       this._elements = this._elements.filter((element: PageData) => element.ref !== newElement.ref);
       this._elements.push(newElement);
@@ -218,6 +269,6 @@ export class ComponentContainer extends PageElement {
   }
 
   deleteElement(ref: ComponentRef) {
-    this._elements = this._elements.filter(element => element.ref !== ref)
+    this._elements = this._elements.filter(element => element.ref !== ref);
   }
 }

@@ -10,28 +10,31 @@ export class ComponentBuilder {
     return dataTransfer ? dataTransfer.getData('text') : '';
   }
 
-  buildComponent(component: ComponentDefinitionInterface, ref: string , parent: ComponentRef): PageData {
+  buildComponent(component: ComponentDefinitionInterface, ref: string , parent: ComponentContainer): PageData {
     if(component.isContainer) return this.buildContainer(component, ref, parent)
     else return this.buildTheComponent(component, ref, parent);
   }
   
-  private buildContainer(component: ComponentDefinitionInterface ,ref: string, parent: ComponentRef) {
+  private buildContainer(component: ComponentDefinitionInterface ,ref: string, parent:  ComponentContainer) {
     const container: ComponentContainer = new ComponentContainer();
     container.name = component.componentName
     container.ref = ref;
+    container.isContainer = component.isContainer;
     container.classDefinition = component.class;
     container.componentHTMLTag =  component.componentRef; 
-    container.parent = parent;
+    if(parent.ref !== 'ROOT') { container.parent = parent };
+    container.parentRef = parent.ref;
     return container
   }
 
-  private buildTheComponent(component: ComponentDefinitionInterface, ref: string, parent: ComponentRef): PageElement {
+  private buildTheComponent(component: ComponentDefinitionInterface, ref: string, parent: ComponentContainer): PageElement {
     const genericComponent = new PageElement();
     genericComponent.ref = ref;
     genericComponent.isContainer = false;
     genericComponent.classDefinition = component.class;
     genericComponent.componentHTMLTag =  component.componentRef;
     genericComponent.parent = parent;
+    genericComponent.parentRef = parent.ref;
     genericComponent.type = component.type;
     genericComponent.name = component.componentName;
     switch (component.type) {
@@ -51,5 +54,4 @@ export class ComponentBuilder {
     return genericComponent
 
   }
-
 }

@@ -31,8 +31,6 @@
     routeTo(index: number) {
 
       const link = this.breadcrumbList[index].link === undefined ? '' : `/${this.breadcrumbList[index].link}`;
-      console.log('%c⧭', 'color: #00e600', link)
-      console.log('%c%s', 'color: #f2ceb6', link)
       if (link != undefined) {
         this.$router.push(link);
       }

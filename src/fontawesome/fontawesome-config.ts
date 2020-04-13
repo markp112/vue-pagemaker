@@ -8,6 +8,9 @@ import {
   faPlusCircle, 
   faImage, 
   faAlignJustify, 
+  faAlignLeft,
+  faAlignRight,
+  faAlignCenter,
   faHome, 
   faQuestion, 
   faQuestionCircle, 
@@ -24,6 +27,7 @@ import {
   faClone,
   faTrashAlt,
   faBahai,
+  faTimesCircle,
   } from '@fortawesome/free-solid-svg-icons';
 
   library.add(  
@@ -34,6 +38,9 @@ import {
     faPlusCircle, 
     faImage, 
     faAlignJustify, 
+    faAlignLeft,
+    faAlignRight,
+    faAlignCenter,
     faHome, 
     faQuestion, 
     faQuestionCircle, 
@@ -50,6 +57,8 @@ import {
     faClone,
     faTrashAlt,
     faBahai,
+    faTimesCircle,
+  
     );
 
     export {

@@ -1,5 +1,5 @@
 <template>
-  <div class="border-r-4 p-0  md:h-sidebar ml-2">
+  <div class="border-r-4 p-0 h-sidebar">
      <component :is="sidebarContent"></component>
   </div>
 </template>
@@ -9,11 +9,13 @@
 import Component from 'vue-class-component';
 import { Emit, Vue } from 'vue-property-decorator';
 import sidebarComponentIcons from './sidebar-component-icons.vue';
-import ImageEditorSidebar from '@/components//core/sidebar/image-editor/image-editor.vue'
+import ImageEditorSidebar from '@/components/core/sidebar/image-editor/image-editor.vue';
+import ContainerEditorSidebar from '@/components/core/sidebar/container-editor/container-editor.vue';
 @Component({
   components:{
     'sidebar-components' : sidebarComponentIcons,
     'image-editor' : ImageEditorSidebar,
+    'container-editor' : ContainerEditorSidebar,
   }
 })
 export default class SideBar extends Vue {

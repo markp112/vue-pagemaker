@@ -1,5 +1,5 @@
 <template>
-      <ul class='flex flex-row flex-wrap text-4xl justify-evenly w-full mt-4'>
+      <ul class='flex flex-row flex-wrap text-4xl justify-evenly w-full mt-4 ml-2'>
         <li v-for="element in sidebarElements" :key="element.componentName" >
           <draggable-icon draggable="true" :id="element.componentName">
             <font-awesome-icon :icon='element.sidebarIcon.icon' 
