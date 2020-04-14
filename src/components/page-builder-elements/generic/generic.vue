@@ -1,5 +1,5 @@
 <template>
-    <div :id="$props.thisComponent.ref">
+    <div :id="$props.thisComponent.ref"  :class="getClasses()">
       <span
         v-if="!isImage"
         :class="getClasses()"

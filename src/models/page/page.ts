@@ -238,6 +238,7 @@ export class PageElement implements Partial<PageElementInterface> {
       tempclass = this.cutString(tempclass, 'w-8/12');
       tempclass = this.cutString(tempclass, 'w-10/12');
       tempclass = this.cutString(tempclass, 'w-full');
+      tempclass = this.cutString(tempclass, 'w-auto');
       tempclass += ` ${classDef}`;
       this.classDefinition = tempclass;
     } else {

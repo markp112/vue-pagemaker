@@ -3,7 +3,6 @@
     <span class="inline-block flex flex-row justify-end mr-2 mb-4">
       <close-button @onClick="closeButtonClick"></close-button>
     </span>
-    <upload-image @image-url="urlChanged" ></upload-image>
     <div class="mr-2 mt-4">
       <align-buttons 
         @alignLeftClick="alignLeftClick"
@@ -34,7 +33,7 @@ import { SidebarModule } from '@/store//sidebar/sidebar';
     'widths-buttons': WidthsButtons,
   }
 })
-export default class ImageEditorSidebar extends Vue {
+export default class TextEditorSidebar extends Vue {
 
   urlChanged(url: string ) {
     PageModule.updateComponentImage(url);

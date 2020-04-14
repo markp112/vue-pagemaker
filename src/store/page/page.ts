@@ -128,7 +128,6 @@ class PageStore extends VuexModule implements PageStateInterface {
   public updateComponentClassProperties(classDef: string): void {
     console.log('%c⧭', 'color: #0088cc', this.editedComponentRef);
     if (this.editedComponentRef) {
-      
       const component: PageData = this.editedComponentRef as PageData;
       if (component) {
         component.addClass(classDef);

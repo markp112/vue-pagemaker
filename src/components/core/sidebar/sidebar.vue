@@ -11,13 +11,15 @@ import { Emit, Vue } from 'vue-property-decorator';
 import sidebarComponentIcons from './sidebar-component-icons.vue';
 import ImageEditorSidebar from '@/components/core/sidebar/image-editor/image-editor.vue';
 import ContainerEditorSidebar from '@/components/core/sidebar/container-editor/container-editor.vue';
+import TextEditorSidebar from '@/components/core/sidebar/text-editor//text-editor.vue';
 import { SidebarModule } from '@/store//sidebar/sidebar';
 
 @Component({
   components:{
-    'sidebar-components' : sidebarComponentIcons,
-    'image-editor' : ImageEditorSidebar,
-    'container-editor' : ContainerEditorSidebar,
+    'sidebar-components': sidebarComponentIcons,
+    'image-editor': ImageEditorSidebar,
+    'text-editor': TextEditorSidebar,
+    'container-editor': ContainerEditorSidebar,
   }
 })
 export default class SideBar extends Vue {

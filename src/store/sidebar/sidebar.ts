@@ -119,6 +119,9 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
         case 'Image':
           this.context.commit('setSidebarEditor', 'image-editor' as sidebarComponents);
           break;
+        case 'Text':
+          this.context.commit('setSidebarEditor', 'text-editor' as sidebarComponents);
+          break;
         case 'container':
           this.context.commit('setSidebarEditor', 'container-editor' as sidebarComponents);
           break;
