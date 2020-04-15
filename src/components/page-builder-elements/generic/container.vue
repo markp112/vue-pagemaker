@@ -89,10 +89,12 @@ export default class Container extends Vue {
       const componentName = componentBuilder.getComponentName(event);
       const ref = `${componentName}::${PageModule.nextComponentId}`;
       const component = SidebarModule.getComponentDefinition(componentName);
-      const parent = this.$props.thisComponent; // when dropping a component this componet will be its parent
+      const parent: ComponentContainer  = this.$props.thisComponent; // when dropping a component this componet will be its parent
       if(component) {
         const newComponent: PageData = componentBuilder.buildComponent(component, ref, parent );
-        PageModule.addNewPageElement(newComponent);
+        console.log("Parent = ", parent)
+        console.log("Componet=", newComponent)
+        parent.addNewElement(newComponent);
         ServicesModule.toggleDragDropEventHandled(true);
       }
     }

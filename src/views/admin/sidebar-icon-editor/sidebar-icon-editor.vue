@@ -49,7 +49,7 @@
           placeholder="css classes to define the component"
         >
         <label for="isContainer">Container:</label>
-        <input type="checkbox" name="isContainer" id="active" :value="editorComponent.isContainer" class="mt-5 w-1/12">
+        <input type="checkbox" name="isContainer" id="active" :value="editorComponent.isContainer" class="mt-5 w-1/12" v-model="editorComponent.isContainer">
         <submit-cancel v-on:cancelClicked="cancelClick()"  v-on:saveClicked="saveClick()" ></submit-cancel>
       </form>
         <p class="w-full bg-gray-400 mt-2 p-2 text-accent text-center font-bold">Component Preview</p>

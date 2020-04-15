@@ -277,7 +277,6 @@ export class ComponentContainer extends PageElement {
     return this._elements;
   }
 
-
   addNewElement(newElement: PageData) {
     const existingElement = this._elements.filter((element: PageData) => element.ref === newElement.ref)[0];
     if (!existingElement) {

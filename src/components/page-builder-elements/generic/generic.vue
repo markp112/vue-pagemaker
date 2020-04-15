@@ -1,5 +1,5 @@
 <template>
-    <div :id="$props.thisComponent.ref"  :class="getClasses()">
+    <div :id="$props.thisComponent.ref"  :class="getClasses()" >
       <span
         v-if="!isImage"
         :class="getClasses()"
@@ -30,6 +30,7 @@ import { Content, ComponentTypes } from '@/models//components/components';
 import UploadImage from '@/components/base/pickers/upload-image/upload-image.vue';
 import { PageModule } from '@/store//page/page';
 
+
 @Component({
   props: {
     thisComponent: {
@@ -40,7 +41,10 @@ import { PageModule } from '@/store//page/page';
   },
   components: {
     'upload-image': UploadImage,
-  }
+  },
+  directives: {
+
+  },
 })
 export default class GenericComponent extends Vue {
   name="generic-component";

@@ -52,6 +52,5 @@ export class ComponentBuilder {
 
     }
     return genericComponent
-
   }
 }
