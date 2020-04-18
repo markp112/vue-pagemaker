@@ -22,12 +22,18 @@
           @click="iconPickerClicked()">...
         </span>
         <span>
-          <font-awesome-icon
-            v-if="page.icon!==''" 
-            class="ml-2 inline-block text-lg align-middle"
-            :icon="page.icon.icon" 
-            :prefix="page.icon.prefix" name="icon">
-          </font-awesome-icon>
+          <div v-if="page.icon!==''">
+            <font-awesome-icon
+              v-if="!page.icon.isImagge"
+              class="ml-2 inline-block text-lg align-middle"
+              :icon="page.icon.icon" 
+              :prefix="page.icon.prefix" name="icon">
+            </font-awesome-icon>
+            <img 
+              v-if="page.icon.isImagge"
+              :src="page.icon.path"
+            />
+          </div>
         </span>
         <icon-picker @icon-clicked="iconClick" id="icon"></icon-picker>
       </div>
@@ -50,7 +56,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Page } from '@/models/pages/pages';
 import IconPicker from '@/components/base/pickers/icon-picker/icon-picker.vue';
-import { IconInterface } from '../../models/font-awesome/icon';
+import { Icon } from '../../models/font-awesome/icon';
 import InvalidForm from '@/components/base/notifications/invalid-form.vue';
 import { Notification } from '@/models/notifications/notifications';
 import { SnackbarMessage, SnackBarGenerator } from '@/models/notifications/snackbar';
@@ -90,7 +96,7 @@ export default class PageEditor extends Vue {
     ComponentPropsModule.toggleIconPicker(true);
   }
 
-  iconClick(icon: IconInterface) {
+  iconClick(icon: Icon) {
     this.page.icon = icon
   }
 

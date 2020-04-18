@@ -28,6 +28,7 @@ import {
   faTrashAlt,
   faBahai,
   faTimesCircle,
+  faMehBlank,
   } from '@fortawesome/free-solid-svg-icons';
 
   library.add(  
@@ -58,7 +59,7 @@ import {
     faTrashAlt,
     faBahai,
     faTimesCircle,
-  
+    faMehBlank,
     );
 
     export {

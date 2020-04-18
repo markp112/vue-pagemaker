@@ -1,5 +1,6 @@
 import { PageData, ComponentContainer, PageElement, ComponentRef, ComponentDefinitionInterface } from '@/models/page/page';
-import { Button, Text, LOREMIPSUM, Image } from '@/models/components/components';
+import { Button, Text, LOREMIPSUM, Image, ComponentTypes } from '@/models/components/components';
+import { ComponentTypesEnum, enumerate } from '@/models/enums/componentTypes/componentTypes';
 export const _componentClasses: ComponentDefinitionInterface[] = []
 
 
@@ -37,16 +38,20 @@ export class ComponentBuilder {
     genericComponent.parentRef = parent.ref;
     genericComponent.type = component.type;
     genericComponent.name = component.componentName;
-    switch (component.type) {
-      case 'Button': 
+    const componentType: ComponentTypesEnum = enumerate[component.type];
+
+    console.log('%c%s', 'color: #917399', componentType, "Type", componentType === ComponentTypesEnum.text);
+    switch (componentType) {
+      case  ComponentTypesEnum.button: 
         genericComponent.data = new Button();
         genericComponent.data.content ='Click Me'
         break;
-      case 'Text':
+      case ComponentTypesEnum.text:
+        console.log("this is text")
         genericComponent.data = new Text();
         genericComponent.data.content = LOREMIPSUM;
         break;
-      case 'Image':
+      case ComponentTypesEnum.image:
         genericComponent.data = new Image();
         break;
 

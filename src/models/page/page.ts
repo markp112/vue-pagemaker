@@ -1,4 +1,4 @@
-import { IconInterface } from '../font-awesome/icon';
+import { IconInterface, initIcon } from '../font-awesome/icon';
 import { ComponentTypes } from '../components/components';
 
 //interface for an html Style
@@ -63,7 +63,7 @@ export const initComponentDefinition = {
   class: '',
   componentRef: '',
   isContainer: false,
-  sidebarIcon: { icon: '', prefix: '' },
+  sidebarIcon: initIcon,
   type: '',
 }
 

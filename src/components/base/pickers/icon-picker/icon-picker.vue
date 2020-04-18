@@ -1,47 +1,61 @@
 <template>
     <ul v-if="isShowMe" class="w-20 bg-gray-800 p-2 z-10 flex flex-row flex-wrap justify-start shadow-lg rounded-md absolute ">
       <li v-for="(icon,idx) in icons" :key="idx" class="icon-list ">
-        <font-awesome-icon :icon="icon.icon"
-            :prefix="icon.prefix"
-            class="icon-picker"
-            @click="iconClicked(idx)"
-            >
-        </font-awesome-icon>
+        <icon-image :icon="icon" classDef="icon-picker" @iconClick="iconClicked"></icon-image>
       </li>
     </ul>
 </template>
 
 <script lang="ts">
-import { IconInterface } from '@/models/font-awesome/icon';
+import { IconInterface, initIcon, IconBuilder, Icon } from '@/models/font-awesome/icon';
 import Component from 'vue-class-component';
 import { Vue,  Emit, Prop } from 'vue-property-decorator';
 import { ComponentPropsModule } from '@/store/component-props/component-props';
+import IconImage from '@/components/base/icon-image/icon-image.vue';
 
 @Component({
+  components: {
+    'icon-image': IconImage,
+  }
 })
-export default class IconPicker extends Vue{
+export default class IconPicker extends Vue {
   name = "IconPicker"
+  icons: IconInterface[] = [];
 
-  icons: IconInterface [] = [{ icon: 'home', prefix: 'fas' },
-      { icon: 'question', prefix: 'fas' },
-      { icon: 'question-circle', prefix: 'fas' },
-      { icon: 'blog', prefix: 'fas' },
-      { icon: 'photo-video', prefix: 'fas' },
-      { icon: 'camera', prefix: 'fas' },
-      { icon: 'images', prefix: 'fas' },
-      { icon: 'id-card', prefix: 'fas' },
-      { icon: 'phone', prefix: 'fas' },
-      { icon: 'envelope', prefix: 'fas' },
-      { icon: 'align-justify', prefix: 'fas'},
-      { icon: 'columns', prefix: 'fas'},
-      { icon: 'clone', prefix: 'fas'},
-      { icon: 'bahai', prefix: 'fas'},
-];
+  created() {
+    this.buildIcons()
+  }
+
+  buildIcons(){
+    const iconBuilder = new IconBuilder();
+    this.icons.push(iconBuilder.buildFontAwesomeIcon('home', 'fas'));
+    this.icons.push(iconBuilder.buildFontAwesomeIcon('question', 'fas'));
+    this.icons.push(iconBuilder.buildFontAwesomeIcon('question-circle', 'fas'));
+    this.icons.push(iconBuilder.buildFontAwesomeIcon('blog', 'fas'));
+    this.icons.push(iconBuilder.buildFontAwesomeIcon('photo-video', 'fas'));
+    this.icons.push(iconBuilder.buildFontAwesomeIcon('camera', 'fas'));
+    this.icons.push(iconBuilder.buildFontAwesomeIcon('images', 'fas'));
+    this.icons.push(iconBuilder.buildFontAwesomeIcon('id-card', 'fas'));
+    this.icons.push(iconBuilder.buildFontAwesomeIcon('phone', 'fas'));
+    this.icons.push(iconBuilder.buildFontAwesomeIcon('envelope', 'fas'));
+    this.icons.push(iconBuilder.buildFontAwesomeIcon('align-justify', 'fas'));
+    this.icons.push(iconBuilder.buildFontAwesomeIcon('columns', 'fas'));
+    this.icons.push(iconBuilder.buildFontAwesomeIcon('clone', 'fas'));
+    this.icons.push(iconBuilder.buildFontAwesomeIcon('bahai', 'fas'));
+    this.icons.push(iconBuilder.buildImageIcon(`icons8-page-32.png`, 'Page'))
+    this.icons.push(iconBuilder.buildImageIcon(`icons8-group-objects-32.png`, 'group'))
+    this.icons.push(iconBuilder.buildImageIcon(`icons8-text-32.png`, 'group'))
+  }
+
+  getPath(image: string): string {
+    const path = require.context('@/assets/icons',false,/\.png$/);
+    return path(`./${image}`);
+  }
 
   @Emit('icon-clicked')
-  iconClicked(idx: number) {
+  iconClicked(icon: IconInterface) {
     ComponentPropsModule.toggleIconPicker(false);
-    return this.icons[idx];
+    return icon;
   }
 
   get isShowMe(): boolean {

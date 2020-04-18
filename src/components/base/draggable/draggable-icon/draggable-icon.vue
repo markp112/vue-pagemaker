@@ -16,8 +16,8 @@ import Component from 'vue-class-component';
 import { ServicesModule } from '@/store/services/services';
 @Component({
   props: {
-    id: { default:'' },
-    draggable: { default:false }
+    id: { default: '' },
+    draggable: { default: false },
   }
 })
 export default class DraggableIcon extends Vue {
@@ -28,7 +28,6 @@ export default class DraggableIcon extends Vue {
   }
 
   onDragStart(e: DragEvent): void {
-    const target = e.target;
     if(e.currentTarget)    (e.currentTarget as HTMLDivElement).style.border ='dashed 0.5px'; 
     if(e.dataTransfer) {
       if(e.target) {
@@ -40,8 +39,7 @@ export default class DraggableIcon extends Vue {
 
   onDragLeave(e: DragEvent): void {
     const target = e.target;
-    if(e.currentTarget)    (e.currentTarget as HTMLDivElement).style.border ='none'; 
+    if(e.currentTarget) (e.currentTarget as HTMLDivElement).style.border ='none'; 
   }
-
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-    <div :id="$props.thisComponent.ref"  :class="getClasses()" >
+    <div :id="$props.thisComponent.ref"  :class="getClasses()" @mousemove="mouseMove">
       <span
         v-if="!isImage"
         :class="getClasses()"
@@ -47,7 +47,7 @@ import { PageModule } from '@/store//page/page';
   },
 })
 export default class GenericComponent extends Vue {
-  name="generic-component";
+  name = "generic-component";
   showBorder = false;
   isImage = false;
   data: ComponentTypes;
@@ -55,7 +55,7 @@ export default class GenericComponent extends Vue {
 
   created() {
     this.data = this.$props.thisComponent.data;
-    if (this.$props.thisComponent.type === 'Image') { 
+    if (this.$props.thisComponent.type === 'image') { 
       this.isImage = true;
       const component = (this.$props.thisComponent as PageElement)
       component.classDefinition += ` ${component.parent.height()} `;

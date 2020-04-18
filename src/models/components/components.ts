@@ -12,7 +12,6 @@ export const initDimensions = {
   units: Units.px
 }
 
-
 export interface Content {
   content: string
 }
@@ -29,7 +28,6 @@ export interface TextInterface  extends Content{
 export interface ButtonInterface extends Content {
   content: string;
 }
-
 
 export class Image implements ImageInterface {
   private _content: string;
@@ -89,7 +87,5 @@ export class Button implements Content {
   }
 }
 
-
 export type ComponentTypes = Image | Text | Button | undefined;
-
 export const LOREMIPSUM = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'

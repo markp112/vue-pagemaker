@@ -1,11 +1,8 @@
 <template>
-      <ul class='flex flex-row flex-wrap text-4xl justify-evenly w-full mt-4 ml-2'>
+      <ul class='flex flex-row flex-wrap text-4xl justify-evenly w-full mt-4 ml-2 mr-2'>
         <li v-for="element in sidebarElements" :key="element.componentName" >
           <draggable-icon draggable="true" :id="element.componentName">
-            <font-awesome-icon :icon='element.sidebarIcon.icon' 
-              :prefix='element.sidebarIcon.prefix' 
-              class="icon" 
-              />
+            <icon-image :icon = "element.sidebarIcon" classDef="icon" :id="element.componentName"></icon-image>
           </draggable-icon>
         </li>
       </ul>
@@ -18,10 +15,12 @@ import  DraggableIcon from '@/components/base/draggable/draggable-icon/draggable
 import { ComponentDefinitionInterface, ComponentDefinitions} from '@/models/page/page';
 import Component from 'vue-class-component';
 import { SidebarModule } from '@/store//sidebar/sidebar';
+import IconImage from '@/components/base/icon-image/icon-image.vue';
 
 @Component({
   components:{
     'draggable-icon': DraggableIcon,
+    'icon-image': IconImage,
   }
 })
 export default class SidebarComponentIcons extends Vue {
@@ -43,7 +42,7 @@ export default class SidebarComponentIcons extends Vue {
   }
 
   .icon {
-    @apply transform cursor-pointer;
+    @apply transform cursor-pointer mr-2;
   }
 
   .icon:hover {

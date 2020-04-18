@@ -4,9 +4,13 @@
   <div class="flex flex-row justify-start h-full overflow-hidden">
     <div class=" w-2/12 border-r-2 border-gray-500  flex-wrap mt-8 ml-2">
       <create-new  @onClick="createNew"></create-new>
-      <ul class="flex flex-row justify-start align-top mt-4">
+      <ul class="flex flex-row justify-start flex-wrap align-top mt-4">
         <li v-for="(element,idx) in icons" :key="idx" class="text-2xl w-4/12 cursor-pointer">
-          <font-awesome-icon :icon="element.sidebarIcon.icon" :prefix="element.sidebarIcon.prefix" @click="iconClicked(idx)"/>
+          <icon-image 
+            :icon="element.sidebarIcon" 
+            @iconClick="iconClicked"
+            >
+          </icon-image>
         </li>
       </ul>
     </div>
@@ -30,10 +34,9 @@
         <div>
           <span class="h-8 w-8 bg-accent1 text-center font-bold align-middle border cursor-pointer relative inline-block" @click="showIconPicker()">...</span>
             <span>
-              <font-awesome-icon v-if="editorComponent.sidebarIcon.icon !==''" class="ml-2 inline-block text-2xl align-middle"
-              :icon="iconLocal.icon" 
-              :prefix="iconLocal.prefix" name="icon" ref="icon">
-              </font-awesome-icon>
+              <div v-if="editorComponent.sidebarIcon.icon !==''" class="inline-block">
+                <icon-image :icon="iconLocal" classDef="ml-2 inline-block text-2xl align-middle"></icon-image>
+              </div>
             </span>
           <icon-picker @icon-clicked="iconPickerClick" id="icon-picker" ref="icon-picker"></icon-picker>
         </div>
@@ -66,7 +69,7 @@ import IconPicker from '@/components/base/pickers/icon-picker/icon-picker.vue';
 import SubmitCancel from '@/components/base/buttons/submit-cancel/submit-cancel.vue';
 import InvalidForm from '@/components/base/notifications/invalid-form.vue';
 import { SnackbarMessage, SnackbarTypes, SnackBarGenerator } from '@/models/notifications/snackbar';
-import { IconInterface, initIcon } from '@/models/font-awesome/icon';
+import { initIcon, IconInterface } from '@/models/font-awesome/icon';
 import { initAuthStatus } from '../../../models/user/user';
 import { Notification, notificationDefault } from '../../../models/notifications/notifications';
 import CreateNew from '@/components/base/buttons/create-new/create-new.vue';
@@ -74,10 +77,13 @@ import { ComponentDefinitionInterface, initComponentDefinition } from '../../../
 import { SidebarModule } from '@/store//sidebar/sidebar';
 import { ComponentPropsModule } from '@/store/component-props/component-props';
 import { SnackbarModule } from '@/store/snackbar/snackbar';
+import  IconImage from '@/components/base/icon-image/icon-image.vue';
+import { ComponentTypesEnum } from '@/models/enums/componentTypes/componentTypes';
 
 @Component({
   components:{
     'icon-picker': IconPicker,
+    'icon-image': IconImage,
     'submit-cancel': SubmitCancel,
     'invalid-form': InvalidForm,
     'create-new': CreateNew,
@@ -88,20 +94,18 @@ export default class SidebarIconEditor extends Vue {
   classDef = '';
   iconLocal: IconInterface = initIcon;
   editorComponent: ComponentDefinitionInterface =  initComponentDefinition;
-  componentType: string[] = [
-    'Image',
-    'Text',
-    'Jumbo',
-    'Nav Bar',
-    'Links Menu',
-    'Button', 
-    ];
+  componentType: string [] = [];
 
   created(): void {
-    this.iconLocal = initIcon;
     SidebarModule.loadSideBarElements();
     this.editorComponent = initComponentDefinition;
     SidebarModule.toggleSidebar(false);
+    this.componentType = Object.keys(ComponentTypesEnum);
+  }
+
+  getPath(image: string): string {
+    const path = require.context('@/assets/icons',false,/\.png$/);
+    return path(`./${image}`);
   }
 
   iconPickerClick(icon: IconInterface): void {
@@ -113,9 +117,9 @@ export default class SidebarIconEditor extends Vue {
     ComponentPropsModule.toggleIconPicker(true);
   }
 
-  iconClicked(idx: number){
-    this.editorComponent = SidebarModule.getSidebarElements[idx];
-    this.iconLocal = this.editorComponent.sidebarIcon;
+  iconClicked(icon: IconInterface){
+    this.editorComponent = SidebarModule.getSidebarElements.filter(element => element.sidebarIcon.icon === icon.icon)[0];
+    this.iconLocal = icon;
     this.classDef = this.editorComponent.class;
   }
 

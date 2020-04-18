@@ -72,6 +72,7 @@ export default class PageBuilder extends Vue {
     }
     if (event) {
       const componentName = componentBuilder.getComponentName(event);
+      console.log('%c%s', 'color: #e50000', componentName)
       const component = SidebarModule.getComponentDefinition(componentName);
       console.log('%c⧭', 'color: #00a3cc', component)
       const ref = `${componentName}::${PageModule.nextComponentId}`;
