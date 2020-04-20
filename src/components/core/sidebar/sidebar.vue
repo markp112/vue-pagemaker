@@ -30,6 +30,8 @@ export default class SideBar extends Vue {
   }
 
   get sidebarContent(): string {
+    
+    console.log('%c%s', 'color: #00a3cc', SidebarModule.sidebarComponentType)
     return SidebarModule.sidebarComponentType;
   }
 }

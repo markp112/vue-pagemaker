@@ -4,13 +4,13 @@
         v-if="!isImage"
         :class="getClasses()"
         :style="getStyles()"
-        @click="onClick($event)"
+        @click.prevent="onClick($event)"
       >{{ data.content }}</span>
       <img 
         v-if="isImage" 
         :src="data.content" 
         :class="getClasses()"
-        @click="onClick($event)"
+        @click.prevent="onClick($event)"
       />
     </div>
 </template>
@@ -83,10 +83,15 @@ export default class GenericComponent extends Vue {
   }
 
   onClick(event: Event) {
+    event.stopPropagation();
     PageModule.updateEditedComponentRef(this.$props.thisComponent);
     PageModule.updateShowEditDelete(true);
     this.showBorder = !this.showBorder;
-    event.stopPropagation();
+    
+  }
+
+  mouseMove(e:Event) {
+    const x=1
   }
 }
 </script>

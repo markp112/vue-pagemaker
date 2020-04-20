@@ -5,6 +5,7 @@ import {
   PageElement,
   PageData,
 } from '@/models/page/page';
+import { ComponentTypesEnum, enumerate } from '@/models/enums/componentTypes/componentTypes';
 
 export interface PageStateInterface {
   _pageElements: PageData [],
@@ -80,7 +81,8 @@ class PageStore extends VuexModule implements PageStateInterface {
   private setComponentImage(url: string): void {
     if (this._editedComponentRef) {
       if (this._editedComponentRef.data) {
-        if (this._editedComponentRef.type === 'Image') {
+        const componentType: ComponentTypesEnum = enumerate[this._editedComponentRef.type];
+        if (componentType === ComponentTypesEnum.image) {
             this._editedComponentRef.data.content  = url;
           }
         }
@@ -143,7 +145,6 @@ class PageStore extends VuexModule implements PageStateInterface {
   }
 
   public get editedComponentRef(): PageData | undefined {
-    console.log("editedComponentRef called",  this._editedComponentRef)
     return this._editedComponentRef;
   }
 

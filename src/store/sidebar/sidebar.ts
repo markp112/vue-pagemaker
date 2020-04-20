@@ -12,7 +12,7 @@ import {
 } from '@/models/notifications/notifications';
 import  { PageModule } from '@/store/page/page';
 import firebase from 'firebase';
-
+import { ComponentTypesEnum, enumerate } from '@/models/enums/componentTypes/componentTypes';
 
 const SIDEBARCOLLECTION = 'component-definitions';
 
@@ -107,22 +107,18 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
   public updateSidebarEditor() {
     const componentType: PageData | undefined = PageModule.editedComponentRef;
     if (componentType) {
-      let whichComponentType = '';
-      if (componentType.isContainer) {
-        whichComponentType = 'container'; 
-      } else {
-        whichComponentType = componentType.type;
-      }
-        console.log('%c%s', 'color: #aa00ff', whichComponentType);
+      const whichComponentType: ComponentTypesEnum = enumerate[componentType.type];
+      console.log('%c%s', 'color: #00e600', whichComponentType);
 
       switch (whichComponentType) {
-        case 'Image':
+        case ComponentTypesEnum.image:
+          console.log("is Image")
           this.context.commit('setSidebarEditor', 'image-editor' as sidebarComponents);
           break;
-        case 'Text':
+        case ComponentTypesEnum.text:
           this.context.commit('setSidebarEditor', 'text-editor' as sidebarComponents);
           break;
-        case 'container':
+        case ComponentTypesEnum.jumbo || ComponentTypesEnum.pageTemplate || ComponentTypesEnum.groupingContainer || ComponentTypesEnum.navBar :
           this.context.commit('setSidebarEditor', 'container-editor' as sidebarComponents);
           break;
       }

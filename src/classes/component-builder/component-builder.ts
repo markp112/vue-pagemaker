@@ -39,8 +39,6 @@ export class ComponentBuilder {
     genericComponent.type = component.type;
     genericComponent.name = component.componentName;
     const componentType: ComponentTypesEnum = enumerate[component.type];
-
-    console.log('%c%s', 'color: #917399', componentType, "Type", componentType === ComponentTypesEnum.text);
     switch (componentType) {
       case  ComponentTypesEnum.button: 
         genericComponent.data = new Button();
@@ -54,7 +52,6 @@ export class ComponentBuilder {
       case ComponentTypesEnum.image:
         genericComponent.data = new Image();
         break;
-
     }
     return genericComponent
   }

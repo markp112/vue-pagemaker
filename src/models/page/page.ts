@@ -1,5 +1,6 @@
 import { IconInterface, initIcon } from '../font-awesome/icon';
 import { ComponentTypes } from '../components/components';
+import { ComponentTypesEnum } from '../enums/componentTypes/componentTypes';
 
 //interface for an html Style
 export interface Style {
@@ -16,7 +17,7 @@ export interface ComponentDefinitionInterface {
   componentRef: ComponentRef; // the html tag used to put this element on the page
   isContainer: boolean; // is a container or component 
   sidebarIcon: IconInterface; // icon for this component
-  type: string; // what is this see types
+  type: ComponentTypesEnum; // what is this see types
 }
 
 export interface DataComponentDefinitionInterface extends ComponentDefinitionInterface {
@@ -64,7 +65,7 @@ export const initComponentDefinition = {
   componentRef: '',
   isContainer: false,
   sidebarIcon: initIcon,
-  type: '',
+  type: ComponentTypesEnum.undefined,
 }
 
 // unique reference for this component when dropped on the page
@@ -79,7 +80,7 @@ export interface PageElementInterface {
   styles: Style[];
   parentRef: string;
   classDefinition: string;
-  type: string;
+  type: ComponentTypesEnum;
   data: ComponentTypes;
 }
 
@@ -99,7 +100,7 @@ export class PageElement implements Partial<PageElementInterface> {
  // parent Object
   private _parentRef: ComponentRef; // string ref to the parent
   private _classDefinition: string;
-  private _type: string // what is this component as in image text etc
+  private _type: ComponentTypesEnum // what is this component as in image text etc
   private _data: ComponentTypes;
 
   constructor() {
@@ -110,7 +111,7 @@ export class PageElement implements Partial<PageElementInterface> {
     this._styles = [];
     this._parentRef = 'ROOT';
     this._classDefinition = '';
-    this._type = '';
+    this._type = ComponentTypesEnum.undefined;
     this._data = undefined;
   }
 
@@ -150,11 +151,11 @@ export class PageElement implements Partial<PageElementInterface> {
     return this._styles;
   }
 
-  get type(): string {
+  get type(): ComponentTypesEnum {
     return this._type;
   }
 
-  set type(type: string) {
+  set type(type: ComponentTypesEnum) {
     this._type = type;
   }
 
@@ -211,7 +212,6 @@ export class PageElement implements Partial<PageElementInterface> {
   }
   
   addClass(classDef: string): void {
-    console.log('%c%s', 'color: #e50000', classDef);
     if (classDef.indexOf('flex') >= 0) {
       this.processFlex(classDef);
     }

@@ -1,4 +1,5 @@
 export enum ComponentTypesEnum {
+  undefined,
   jumbo,
   button,
   navBar,
