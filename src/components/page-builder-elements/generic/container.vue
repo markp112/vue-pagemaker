@@ -51,6 +51,28 @@ type xTypes = 'l' | 'm' | 'r';
 type handleStartPosType = 'mouseX' | 'mouseY' | 'x' | 'y' | 'w' | 'h';
 type handleDirectionType = 'y' | 'x' | 'xy'
 
+interface BoxProperties {
+  mouseX: number;
+  mouseY: number;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  top: number; 
+  left: number;
+  };
+
+const initBoxProperties: BoxProperties = {
+  mouseX: 0,
+  mouseY: 0,
+  x: 0,
+  y: 0,
+  width: 0,
+  height: 0,
+  top: 0,
+  left: 0,
+}
+
 @Component({
   props: {
     thisComponent: {
@@ -69,16 +91,7 @@ export default class Container extends Vue {
   isSizing = false;
   parentWidth?: number;
   parentHeight?: number;
-  thisContainer = {
-    height: 0,
-    width: 0,
-    x: 0,
-    y: 0,
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-  }
+  thisContainer: BoxProperties = initBoxProperties;
   handles = [ 'tl', 'tm', 'tr', 'mr', 'br', 'bm', 'bl', 'ml' ];
   handleSize = 8;
   componentStyle = '';
@@ -96,24 +109,32 @@ export default class Container extends Vue {
 };
 parentScaleX = 1;
 parentScaleY = 1;
-handleStartPos = { mouseX: 0, mouseY: 0, x: 0, y: 0, w: 0, h: 0 };
+handleStartPos = 1;
 handleDirection: handleDirectionType = 'x';
 
   created() {
     this.showBorder = false;
-    
   }
 
   mounted() {
   const parentElement: Element =  this.$parent.$el;
   this.parentWidth = parentElement.clientWidth;
   this.parentHeight = parentElement.clientHeight;
-  this.thisContainer = this.$el.getBoundingClientRect();
+  this.thisContainer = this.getElementBoxProperties();
 
   console.log("element=", this.$el.getBoundingClientRect(), this.thisContainer);
-  
-
   }
+
+getElementBoxProperties(): BoxProperties {
+  const boundingRect: BoxProperties = initBoxProperties;
+  boundingRect.x = this.$el.getBoundingClientRect().x;
+  boundingRect.y = this.$el.getBoundingClientRect().y;
+  boundingRect.width = this.$el.getBoundingClientRect().width;
+  boundingRect.height = this.$el.getBoundingClientRect().height;
+  boundingRect.top = this.$el.getBoundingClientRect().top;
+  boundingRect.left = this.$el.getBoundingClientRect().left;
+  return  boundingRect;
+}
 
   getClasses(): string {
       let componentClassSpec = this.$props.thisComponent.classDefinition;
@@ -186,61 +207,98 @@ handleDirection: handleDirectionType = 'x';
   }
 
   handleMouseUp() {
+    console.log("MouseUp")
     this.isSizing = false;
+    window.removeEventListener('mousemove',() => {this.handleMove(event as MouseEvent)});
+    window.removeEventListener('mouseup',() => {this.handleMouseUp()});
   }
 
-  handleDown(handle: string , ev: MouseEvent){
-    const handleStartPos = this.handleStartPos;
-    
-  this.thisContainer = this.$el.getBoundingClientRect();
-  const firstLetter = handle.charAt(0);
-  const secondLetter = handle.charAt(1);
-  switch (firstLetter)  {
-    case 't' || 'b':
-      this.handleDirection = 'y'
-      break;
-  };
-  switch(secondLetter) {
-    case 'r' || 'l':
-      this.handleDirection = this.handleDirection === 'y' ? 'xy' : 'x'
-  };
-
-  if(this.isActive) { 
-      window.addEventListener('mousemove', this.hm())
-      window.addEventListener('mouseup', stopResize)
-    this.isSizing = true };
-
-
-
+  handleDown(handle: string , ev: MouseEvent) {
+    if (!this.isActive) return;
+    this.thisContainer = this.getElementBoxProperties();
+    const firstLetter = handle.charAt(0);
+    const secondLetter = handle.charAt(1);
+    switch (firstLetter)  {
+      case 't':
+        this.handleDirection = 'y';
+        break;
+      case 'b':
+        this.handleDirection = 'y';
+        break;
+    };
+    switch(secondLetter) {
+      case 'r':
+        this.handleDirection = this.handleDirection === 'y' ? 'xy' : 'x';
+        break;
+      case 'l':
+        this.handleDirection = this.handleDirection === 'y' ? 'xy' : 'x';
+        break;
+    };
+    if(!this.isSizing) {
+    window.addEventListener('mousemove',() => {this.handleMove(event as MouseEvent)});
+    window.addEventListener('mouseup',() => {this.handleMouseUp()});
+    this.isSizing = true
+    }
   }
 
-  handleMove(handle: string, ev: MouseEvent) {
-    if(!this.isSizing) return
-    const handleStartPos = this.thisContainer
-    console.log("mousemove ", ev)
-    console.log("this container", this.thisContainer)
-   let newWidth =this.$el.getBoundingClientRect().width;
-    // const newHeight = this.thisContainer.height + ev.y - this.thisContainer.y;
-    let newHeight = this.$el.getBoundingClientRect().height;
-    if (this.handleDirection === 'y') {
-        newHeight = ev.pageY - this.$el.getBoundingClientRect().top;
+
+
+  handleMove(ev: MouseEvent) {
+    if(!this.isSizing) return;
+    this.thisContainer = this.getElementBoxProperties();
+    
+    const boxLeft = this.thisContainer.left + pageXOffset;
+    const boxTop = this.thisContainer.top += pageYOffset;
+    const boxWidth = this.thisContainer.width;
+    this.thisContainer.x = ev.clientX - boxLeft;
+    this.thisContainer.y = ev.clientY - boxTop;
+    console.log('%c⧭', 'color: #f2ceb6', this.thisContainer)
+
+    const MARGIN = 5;
+    const onTopEdge = this.thisContainer.y < MARGIN;
+    const onLeftEdge = this.thisContainer.x < MARGIN;
+    const onRightEdge = this.thisContainer.x >= this.thisContainer.width - MARGIN;
+    const onBottomEdge = this.thisContainer.y >= this.thisContainer.height - MARGIN;
+
+    if (onRightEdge) {
+      this.thisContainer.width = (ev.clientX - boxLeft);
+    } 
+    if (onBottomEdge) {
+      this.thisContainer.height = (ev.clientY - boxTop);
     }
-      if (this.handleDirection === 'x') {
-        newWidth = ev.pageX - this.$el.getBoundingClientRect().left;
+    if (onLeftEdge) {
+      this.thisContainer.left = ev.clientX;
+      this.thisContainer.width = boxLeft - ev.clientX ;
     }
-    
-    const delta = {
-      x: (handleStartPos.x - ev.x) / this.parentScaleX, 
-      y: (handleStartPos.y - ev.y) / this.parentScaleX
-    }
-      console.log('%c⧭', 'color: #00bf00', delta)
-    
-// height:${this.thisContainer.height}px;
-    
-    // this.thisContainer.top += delta.y;
-    this.componentStyle=`height:${newHeight}px;width:${newWidth}px;`
-    
+
+    this.componentStyle=`height:${this.thisContainer.height}px;width:${this.thisContainer.width}px;left:${this.thisContainer.left}px`
   }
+// left:${this.thisContainer.left}px;
+  // handleMove(ev: MouseEvent) {
+  //   if(!this.isSizing) return
+  //   const handleStartPos: BoxProperties = this.thisContainer
+    
+  
+  //  console.log('%c⧭', 'color: #733d00', handleStartPos )
+    
+  //   let newWidth =this.$el.getBoundingClientRect().width;
+  //   // const newHeight = this.thisContainer.height + ev.y - this.thisContainer.y;
+  //   let newHeight = this.$el.getBoundingClientRect().height;
+  //   let newLeft = this.$el.getBoundingClientRect().left;
+  //   if (this.handleDirection === 'y' || this.handleDirection === 'xy') {
+  //       newHeight = ev.pageY - this.$el.getBoundingClientRect().top;
+  //   }
+  //   if (this.handleDirection === 'x' || this.handleDirection === 'xy') {
+        
+  //       newWidth = ev.pageX - this.$el.getBoundingClientRect().left;
+  //       console.log('%c%s', 'color: #00bf00', newWidth)
+  //   }
+  //   if(newWidth < handleStartPos.left + handleStartPos.width) {
+  //     newLeft = ev.clientX + page
+  //      newWidth = ev.pageX - this.$el.getBoundingClientRect().left + this.$el.getBoundingClientRect().width;
+  //   }
+  //   this.componentStyle=`height:${newHeight}px;width:${newWidth}px;left:${newLeft}px;`
+  // }
 }
 </script>
 
