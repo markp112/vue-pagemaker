@@ -21,16 +21,11 @@
         >
     </component>
     <div
-      v-for="handle in handles"
-      :key="handle"
-      class="handle-stick"
-      :class="['handle-stick-' + handle]"
-      :style="grabHandles(handle)"
-      @mousedown.stop.prevent="handleDown(handle, $event)"
+      class="triangle"
+      :class ="{'active': isActive, 'in-active': !isActive}"
+      @mousedown.stop.prevent="handleDown($event)"
       @mouseup="handleMouseUp()"
-      @touchstart.stop.prevent="handleDown(handle, $event)"
-      @mousemove="handleMove(handle, $event)"
-      >
+      @mousemove="handleMove($event)">
     </div>
   </div>
 </template>
@@ -46,9 +41,6 @@ import { PageModule } from '@/store/page/page';
 import { ServicesModule } from '@/store/services/services';
 import { SidebarModule } from '@/store/sidebar/sidebar';
 
-type yTypes = 't' | 'm' | 'b';
-type xTypes = 'l' | 'm' | 'r';
-type handleStartPosType = 'mouseX' | 'mouseY' | 'x' | 'y' | 'w' | 'h';
 type handleDirectionType = 'y' | 'x' | 'xy'
 
 interface BoxProperties {
@@ -92,25 +84,8 @@ export default class Container extends Vue {
   parentWidth?: number;
   parentHeight?: number;
   thisContainer: BoxProperties = initBoxProperties;
-  handles = [ 'tl', 'tm', 'tr', 'mr', 'br', 'bm', 'bl', 'ml' ];
-  handleSize = 8;
   componentStyle = '';
-  styleMapping = {
-    y: {
-        t: 'top',
-        m: 'margin-top',
-        b: 'bottom',
-    },
-    x: {
-        l: 'left',
-        m: 'margin-left',
-        r: 'right',
-    }
-};
-parentScaleX = 1;
-parentScaleY = 1;
-handleStartPos = 1;
-handleDirection: handleDirectionType = 'x';
+  handleDirection: handleDirectionType='xy';
 
   created() {
     this.showBorder = false;
@@ -121,8 +96,6 @@ handleDirection: handleDirectionType = 'x';
   this.parentWidth = parentElement.clientWidth;
   this.parentHeight = parentElement.clientHeight;
   this.thisContainer = this.getElementBoxProperties();
-
-  console.log("element=", this.$el.getBoundingClientRect(), this.thisContainer);
   }
 
 getElementBoxProperties(): BoxProperties {
@@ -137,12 +110,11 @@ getElementBoxProperties(): BoxProperties {
 }
 
   getClasses(): string {
-      let componentClassSpec = this.$props.thisComponent.classDefinition;
-      if(this.showBorder) {
-        componentClassSpec += ' border1'
-      }
-      componentClassSpec += this.isActive ? ' handle.active' : ' inactive'
-      return componentClassSpec
+    let componentClassSpec = this.$props.thisComponent.classDefinition;
+    if(this.showBorder) {
+      componentClassSpec += ' border1'
+    }
+    return componentClassSpec
   }
 
   getStyles(): string {
@@ -159,7 +131,6 @@ getElementBoxProperties(): BoxProperties {
 
   @Emit('componentClicked')
   onClick() {
-    console.log("clicked")
     PageModule.updateEditedComponentRef(this.$props.thisComponent);
     PageModule.updateShowEditDelete(true);
     this.showBorder = !this.showBorder;
@@ -189,21 +160,7 @@ getElementBoxProperties(): BoxProperties {
     }
   }
   get getStyle(): string {
-
     return this.componentStyle;
-  }
-  get grabHandles() {
-    return (stick: string) => {
-          const handleStyle = {
-              width: `${this.handleSize / this.parentScaleX}px`,
-              height: `${this.handleSize / this.parentScaleY}px`,
-          };
-          const firstLetter: yTypes = stick.charAt(0) as yTypes;
-          const secondLetter: xTypes = stick.charAt(1) as xTypes; 
-          const yStyle = `${this.styleMapping.y[firstLetter]}:${this.handleSize / this.parentScaleX / -2}px;`;
-          const xStyle = `${this.styleMapping.x[secondLetter]}:${this.handleSize / this.parentScaleX / -2}px;`;
-          return `height:${handleStyle.height}; width:${handleStyle.width};${yStyle}${xStyle}`;
-    }
   }
 
   handleMouseUp() {
@@ -213,92 +170,27 @@ getElementBoxProperties(): BoxProperties {
     window.removeEventListener('mouseup',() => {this.handleMouseUp()});
   }
 
-  handleDown(handle: string , ev: MouseEvent) {
+  handleDown(ev: MouseEvent) {
     if (!this.isActive) return;
+    
     this.thisContainer = this.getElementBoxProperties();
-    const firstLetter = handle.charAt(0);
-    const secondLetter = handle.charAt(1);
-    switch (firstLetter)  {
-      case 't':
-        this.handleDirection = 'y';
-        break;
-      case 'b':
-        this.handleDirection = 'y';
-        break;
-    };
-    switch(secondLetter) {
-      case 'r':
-        this.handleDirection = this.handleDirection === 'y' ? 'xy' : 'x';
-        break;
-      case 'l':
-        this.handleDirection = this.handleDirection === 'y' ? 'xy' : 'x';
-        break;
-    };
+    this.handleDirection = 'xy'
     if(!this.isSizing) {
-    window.addEventListener('mousemove',() => {this.handleMove(event as MouseEvent)});
-    window.addEventListener('mouseup',() => {this.handleMouseUp()});
-    this.isSizing = true
+      window.addEventListener('mousemove',() => {this.handleMove(event as MouseEvent)});
+      window.addEventListener('mouseup',() => {this.handleMouseUp()});
+      this.isSizing = true
     }
   }
-
-
 
   handleMove(ev: MouseEvent) {
     if(!this.isSizing) return;
     this.thisContainer = this.getElementBoxProperties();
-    
     const boxLeft = this.thisContainer.left + pageXOffset;
     const boxTop = this.thisContainer.top += pageYOffset;
-    const boxWidth = this.thisContainer.width;
-    this.thisContainer.x = ev.clientX - boxLeft;
-    this.thisContainer.y = ev.clientY - boxTop;
-    console.log('%c⧭', 'color: #f2ceb6', this.thisContainer)
-
-    const MARGIN = 5;
-    const onTopEdge = this.thisContainer.y < MARGIN;
-    const onLeftEdge = this.thisContainer.x < MARGIN;
-    const onRightEdge = this.thisContainer.x >= this.thisContainer.width - MARGIN;
-    const onBottomEdge = this.thisContainer.y >= this.thisContainer.height - MARGIN;
-
-    if (onRightEdge) {
-      this.thisContainer.width = (ev.clientX - boxLeft);
-    } 
-    if (onBottomEdge) {
-      this.thisContainer.height = (ev.clientY - boxTop);
-    }
-    if (onLeftEdge) {
-      this.thisContainer.left = ev.clientX;
-      this.thisContainer.width = boxLeft - ev.clientX ;
-    }
-
-    this.componentStyle=`height:${this.thisContainer.height}px;width:${this.thisContainer.width}px;left:${this.thisContainer.left}px`
+    this.thisContainer.width = (ev.clientX - boxLeft);
+    this.thisContainer.height = (ev.clientY - boxTop);
+    this.componentStyle=`height:${this.thisContainer.height}px;width:${this.thisContainer.width}px`
   }
-// left:${this.thisContainer.left}px;
-  // handleMove(ev: MouseEvent) {
-  //   if(!this.isSizing) return
-  //   const handleStartPos: BoxProperties = this.thisContainer
-    
-  
-  //  console.log('%c⧭', 'color: #733d00', handleStartPos )
-    
-  //   let newWidth =this.$el.getBoundingClientRect().width;
-  //   // const newHeight = this.thisContainer.height + ev.y - this.thisContainer.y;
-  //   let newHeight = this.$el.getBoundingClientRect().height;
-  //   let newLeft = this.$el.getBoundingClientRect().left;
-  //   if (this.handleDirection === 'y' || this.handleDirection === 'xy') {
-  //       newHeight = ev.pageY - this.$el.getBoundingClientRect().top;
-  //   }
-  //   if (this.handleDirection === 'x' || this.handleDirection === 'xy') {
-        
-  //       newWidth = ev.pageX - this.$el.getBoundingClientRect().left;
-  //       console.log('%c%s', 'color: #00bf00', newWidth)
-  //   }
-  //   if(newWidth < handleStartPos.left + handleStartPos.width) {
-  //     newLeft = ev.clientX + page
-  //      newWidth = ev.pageX - this.$el.getBoundingClientRect().left + this.$el.getBoundingClientRect().width;
-  //   }
-  //   this.componentStyle=`height:${newHeight}px;width:${newWidth}px;left:${newLeft}px;`
-  // }
 }
 </script>
 
@@ -311,42 +203,32 @@ getElementBoxProperties(): BoxProperties {
     position: relative;
     box-sizing: border-box;
 }
-.handle.active:before{
-    content: '';
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    box-sizing: border-box;
-    outline: 1px dashed #d6d6d6;
+.border1 {
+  @apply border-indigo-800 border border-dashed;
 }
-.handle-stick {
-    box-sizing: border-box;
-    position: absolute;
-    font-size: 1px;
-    background: #ffffff;
-    border: 1px solid #6c6c6c;
-    box-shadow: 0 0 2px #bbb;
+
+.triangle {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  right: -1px;
+  box-sizing: border-box;
+  cursor: nwse-resize;
+  width: 0;
+	height: 0;
+	text-indent: -9999px;
+	border-top: 10px solid transparent;
+	border-bottom: 10px solid transparent;
+	border-left: 10px solid rgb(56, 55, 56);
+  transform:rotate(45deg);
 }
-.inactive .handle-stick {
-    display: none;
+  
+.active {
+  visibility: visible;
 }
-.handle-stick-tl, .handle-stick-br {
-    cursor: nwse-resize;
+
+.in-active {
+  visibility: hidden;
 }
-.handle-stick-tm, .handle-stick-bm {
-    left: 50%;
-    cursor: ns-resize;
-}
-.handle-stick-tr, .handle-stick-bl {
-    cursor: nesw-resize;
-}
-.handle-stick-ml, .handle-stick-mr {
-    top: 50%;
-    cursor: ew-resize;
-}
-.handle-stick.not-resizable{
-    display: none;
-}
+
 </style>
