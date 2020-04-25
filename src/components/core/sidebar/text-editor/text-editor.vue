@@ -59,7 +59,6 @@ export default class TextEditorSidebar extends Vue {
   }
   
   setWidthClick(width: number) {
-    console.log('%c%s', 'color: #aa00ff', width)
     interface Widths {
       [key: string]: string;
     }

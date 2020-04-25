@@ -45,7 +45,6 @@ export class ComponentBuilder {
         genericComponent.data.content ='Click Me'
         break;
       case ComponentTypesEnum.text:
-        console.log("this is text")
         genericComponent.data = new Text();
         genericComponent.data.content = LOREMIPSUM;
         break;

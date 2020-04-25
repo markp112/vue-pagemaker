@@ -152,8 +152,6 @@ getElementBoxProperties(): BoxProperties {
       const parent: ComponentContainer  = this.$props.thisComponent; // when dropping a component this componet will be its parent
       if(component) {
         const newComponent: PageData = componentBuilder.buildComponent(component, ref, parent );
-        console.log("Parent = ", parent)
-        console.log("Componet=", newComponent)
         parent.addNewElement(newComponent);
         ServicesModule.toggleDragDropEventHandled(true);
       }
@@ -202,7 +200,7 @@ getElementBoxProperties(): BoxProperties {
   .handle {
     position: relative;
     box-sizing: border-box;
-}
+  }
 .border1 {
   @apply border-indigo-800 border border-dashed;
 }

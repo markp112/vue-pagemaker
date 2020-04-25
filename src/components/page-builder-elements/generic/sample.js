@@ -6,7 +6,6 @@ box.addEventListener("mousedown", onMouseDown);
 box.addEventListener("mousemove", onMouseMove);
 
 function onMouseDown(event) {
-    console.log("on mouse down called")
     var box = event.target
 
     // store the attributes of the WebBox at the time of the mousedown event.

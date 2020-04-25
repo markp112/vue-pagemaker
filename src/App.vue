@@ -54,7 +54,6 @@ export default class extends Vue{
   }
 
   get showSidebar(){
-      console.log("App.showsidebar")
       return SidebarModule.showSidebar;
     }
 }
