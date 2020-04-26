@@ -1,4 +1,5 @@
-import { PageData, ComponentContainer, PageElement, ComponentRef, ComponentDefinitionInterface } from '@/models/page/page';
+import { PageData, ComponentContainer, PageElement } from '@/models/page/page';
+import { ComponentRef, ComponentDefinitionInterface } from '@/models/components/base-component'
 import { Button, Text, LOREMIPSUM, Image, ComponentTypes } from '@/models/components/components';
 import { ComponentTypesEnum, enumerate } from '@/models/enums/componentTypes/componentTypes';
 export const _componentClasses: ComponentDefinitionInterface[] = []
@@ -23,8 +24,10 @@ export class ComponentBuilder {
     container.isContainer = component.isContainer;
     container.classDefinition = component.class;
     container.componentHTMLTag =  component.componentRef; 
+    container.buildBoxDimensions(component.boxDimensions);
     if(parent.ref !== 'ROOT') { container.parent = parent };
     container.parentRef = parent.ref;
+    console.log('%c⧭', 'color: #00bf00', container);
     return container
   }
 
@@ -38,6 +41,7 @@ export class ComponentBuilder {
     genericComponent.parentRef = parent.ref;
     genericComponent.type = component.type;
     genericComponent.name = component.componentName;
+    genericComponent.buildBoxDimensions(component.boxDimensions);
     const componentType: ComponentTypesEnum = enumerate[component.type];
     switch (componentType) {
       case  ComponentTypesEnum.button: 

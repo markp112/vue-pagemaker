@@ -1,6 +1,6 @@
 import store from '@/store';
 import { Module, Mutation, Action, VuexModule, getModule } from 'vuex-module-decorators';
-import { ComponentDefinitionInterface } from '@/models/page/page';
+import { ComponentDefinitionInterface } from '@/models/components/base-component';
 // manages properties for components used by PageMaker as part of the pagemaker functionality
 
 export interface ComponentPropsStateInterface {

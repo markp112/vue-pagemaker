@@ -1,75 +1,18 @@
-import { IconInterface, initIcon } from '../font-awesome/icon';
 import { ComponentTypes } from '../components/components';
 import { ComponentTypesEnum } from '../enums/componentTypes/componentTypes';
-
+import {
+  ComponentRef,
+  top,
+  left,
+  width,
+  height
+} from '@/models/components/base-component';
+import { BoxDimensions, BoxDimensionsInterface } from '../components/box-dimension';
 //interface for an html Style
 export interface Style {
   style: string;
   value: string;
 }
-
-//definition for a component as dropped on the page from a sidebar
-export interface ComponentDefinitionInterface {
-  //  unique name for this component
-  componentName: string;
-  // class defintion which controls the layout of this element
-  class: string;
-  componentRef: ComponentRef; // the html tag used to put this element on the page
-  isContainer: boolean; // is a container or component 
-  sidebarIcon: IconInterface; // icon for this component
-  type: ComponentTypesEnum; // what is this see types
-}
-
-export interface DataComponentDefinitionInterface extends ComponentDefinitionInterface {
-  data: ComponentTypes; // for when a component needs data e.g. picture element
-}
-
-export type ComponentDefinitionTypes = ComponentDefinitionInterface | DataComponentDefinitionInterface;
-export class ComponentDefinitions {
-  _componentDefinitions: ComponentDefinitionTypes[];
-
-  constructor() {
-    this._componentDefinitions = [];
-  }
-
-  add(newComponent: ComponentDefinitionTypes): void {
-    const component: ComponentDefinitionTypes | undefined = this.getComponent(newComponent.componentName);
-    if (component !== undefined) {
-      this.delete(component.componentName);
-    }
-    this._componentDefinitions.push(newComponent);
-  }
-
-  delete(componentName: string): void {
-    this._componentDefinitions = this._componentDefinitions.filter(
-      (component: ComponentDefinitionTypes) => component.componentName !== componentName);
-  }
-
-  getComponent(componentName = '', componentRef = ''): ComponentDefinitionTypes | undefined {
-    if (componentName === '' && componentRef === '') return;
-    if (componentRef !== '') {
-      return this._componentDefinitions.filter(comp => comp.componentRef === componentRef)[0];
-    } else {
-      return this._componentDefinitions.filter(comp => comp.componentName === componentName)[0];
-    }
-  }
-
-  componentDefinitions(): ComponentDefinitionTypes[] {
-    return this._componentDefinitions;
-  }
-}
-
-export const initComponentDefinition = {
-  componentName: '',
-  class: '',
-  componentRef: '',
-  isContainer: false,
-  sidebarIcon: initIcon,
-  type: ComponentTypesEnum.undefined,
-}
-
-// unique reference for this component when dropped on the page
-export type ComponentRef = string;
 
 // represents the definition of the object the user has dropped on the page
 export interface PageElementInterface {
@@ -82,6 +25,7 @@ export interface PageElementInterface {
   classDefinition: string;
   type: ComponentTypesEnum;
   data: ComponentTypes;
+  boxDimensions: BoxDimensions;
 }
 
 export interface PageContainerInterface extends PageElementInterface {
@@ -91,29 +35,18 @@ export interface PageContainerInterface extends PageElementInterface {
 export type PageData = PageElement | ComponentContainer;
 
 export class PageElement implements Partial<PageElementInterface> {
-  private _name: string;  //name of the component
-  private _ref: ComponentRef; // unique ref of this component in the Dom
-  private _componentHTMLTag: string; // component tag
-  private _isContainer: boolean; // can contain  other elements
-  private _styles: Style[]; // css styles
+  private _name = '';  //name of the component
+  private _ref: ComponentRef = ''; // unique ref of this component in the Dom
+  private _componentHTMLTag = ''; // component tag
+  private _isContainer = false; // can contain  other elements
+  private _styles: Style[] = []; // css styles
   private _parent!: ComponentContainer; // parent Object
  // parent Object
-  private _parentRef: ComponentRef; // string ref to the parent
-  private _classDefinition: string;
-  private _type: ComponentTypesEnum // what is this component as in image text etc
-  private _data: ComponentTypes;
-
-  constructor() {
-    this._name = '';
-    this._ref = '';
-    this._componentHTMLTag = '';
-    this._isContainer = false;
-    this._styles = [];
-    this._parentRef = 'ROOT';
-    this._classDefinition = '';
-    this._type = ComponentTypesEnum.undefined;
-    this._data = undefined;
-  }
+  private _parentRef: ComponentRef = ''; // string ref to the parent
+  private _classDefinition = 'bg-gray-200';
+  private _type: ComponentTypesEnum =  ComponentTypesEnum.undefined; // what is this component as in image text etc
+  private _data: ComponentTypes = undefined;
+  private _boxDimensions: BoxDimensions = new BoxDimensions(width, height, top, left);
 
   get name(): string {
     return this._name
@@ -189,6 +122,13 @@ export class PageElement implements Partial<PageElementInterface> {
 
   set data(data: ComponentTypes) {
     this._data = data;
+  }
+  get boxDimensions(): BoxDimensions {
+    return this._boxDimensions;
+  }
+
+  buildBoxDimensions(boxDimensions: BoxDimensionsInterface): void {
+    this._boxDimensions = new BoxDimensions(boxDimensions.width, boxDimensions.height, boxDimensions.top, boxDimensions.left);
   }
 
   addStyle(newStyle: Style) {

@@ -27,7 +27,18 @@ export interface ResizeDimensions {
 
 @Component({
   props: {
-    isActive: { default: false, }
+    isActive: { default: false },
+    parentContainerProps: { default: () => {
+      return {
+        width: 0,
+        height: 0,
+        top: 0,
+        left: 0
+
+      }
+    }
+      
+    }
   }
 })
 export default class Resize extends  Vue {
@@ -36,24 +47,16 @@ export default class Resize extends  Vue {
 
 getElementBoxProperties(): BoxProperties | null {
   const parent: HTMLDivElement | null = this.$el.parentElement as HTMLDivElement;
-  // const boundingRect: BoxProperties = {
-    
-  //   width: this.$el.getBoundingClientRect().width,
-  //   height: this.$el.getBoundingClientRect().height,
-  //   top: this.$el.getBoundingClientRect().top,
-  //   left: this.$el.getBoundingClientRect().left,
-  // };
-if (parent){
-    const boundingRect: BoxProperties = {
-    
-    width: parent.getBoundingClientRect().width,
-    height: parent.getBoundingClientRect().height,
-    top: parent.getBoundingClientRect().top,
-    left: parent.getBoundingClientRect().left,
-  };
-  return  boundingRect;
-}
-else return null
+  if (parent){
+      const boundingRect: BoxProperties = {
+      width: parent.getBoundingClientRect().width,
+      height: parent.getBoundingClientRect().height,
+      top: parent.getBoundingClientRect().top,
+      left: parent.getBoundingClientRect().left,
+    };
+    return  boundingRect;
+  }
+  else return null
 }
 
   handleMouseUp() {

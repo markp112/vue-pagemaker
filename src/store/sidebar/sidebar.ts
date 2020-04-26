@@ -1,18 +1,21 @@
 // Controls the sidebar
 import store from '@/store';
 import { Module, Mutation, Action, VuexModule, getModule } from 'vuex-module-decorators';
-import {
+import {  PageData} from '@/models/page/page';
+import {  
   ComponentDefinitions,
-  ComponentDefinitionInterface,
-  PageData,
-} from '@/models/page/page';
+  ComponentDefinitionInterface
+} from '@/models/components/base-component'
 import {
   Notification,
   notificationDefault,
 } from '@/models/notifications/notifications';
 import  { PageModule } from '@/store/page/page';
 import firebase from 'firebase';
-import { ComponentTypesEnum, enumerate } from '@/models/enums/componentTypes/componentTypes';
+import { 
+  ComponentTypesEnum,
+  enumerate 
+} from '@/models/enums/componentTypes/componentTypes';
 
 const SIDEBARCOLLECTION = 'component-definitions';
 

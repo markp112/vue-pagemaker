@@ -76,6 +76,7 @@ export default class PageBuilder extends Vue {
       const ref = `${componentName}::${PageModule.nextComponentId}`;
       if (component){
         const newComponent: PageData = componentBuilder.buildComponent(component, ref, PARENTCOMPONENT);
+        console.log('%c⧭', 'color: #0088cc', newComponent)
         PageModule.addNewPageElement(newComponent);
       }
     }

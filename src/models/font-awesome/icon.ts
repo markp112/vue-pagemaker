@@ -1,13 +1,8 @@
-import { fas } from '@fortawesome/free-solid-svg-icons';
-
 export interface IconInterface{
   icon: string;
   prefix: string;
   isImage: boolean;
 };
-
-
-
 export class Icon implements IconInterface {
   private _isImage: boolean;
   private _icon: string;
@@ -61,6 +56,6 @@ export class IconBuilder {
   }
 
   public static buildPlaceholderIcon(): Icon {
-    return new Icon(false,  'faMehBlank', 'fas');
+    return new Icon(false,  'meh-blank', 'fas');
   }
 }

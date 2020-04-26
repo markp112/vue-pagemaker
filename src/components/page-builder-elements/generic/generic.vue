@@ -1,28 +1,21 @@
 <template>
-    <div :id="$props.thisComponent.ref"  class="handle" :style="style" >
-      <span
+  
+      <div
+        :id="$props.thisComponent.ref"  
         v-if="!isImage"
         :class="getClasses()"
         :style="getStyles()"
         @click.prevent="onClick($event)"
-      >{{ data.content }}</span>
+      >{{ data.content }}</div>
       <img 
-        v-if="isImage" 
+        :id="$props.thisComponent.ref"
+        v-else-if="isImage" 
         :src="data.content" 
-   
+        :style="getStyles()"
         class="w-full h-full"
         @click.prevent="onClick($event)"
-
       />
-      <resizeable isActive='true' @onResize="onResize"></resizeable>
-      <!-- <div
-        class="triangle"
-        :class ="{'active': isActive, 'in-active': !isActive}"
-        @mousedown.stop.prevent="handleDown($event)"
-        @mouseup="handleMouseUp()"
-        @mousemove="handleMove($event)">
-    </div> -->
-    </div>
+  
 </template>
 
 <script lang="ts">
@@ -31,16 +24,18 @@ import Component from 'vue-class-component';
 import { Emit } from 'vue-property-decorator';
 import {
   Style,
-  ComponentRef,
   PageData,
   ComponentContainer,
   PageElement,
 } from '@/models/page/page';
+import {  ComponentRef } from '@/models/components/base-component';
 import { Content, ComponentTypes } from '@/models//components/components';
-import UploadImage from '@/components/base/pickers/upload-image/upload-image.vue';
-import { PageModule } from '@/store//page/page';
-import  Resize, { ResizeDimensions }  from '@/components/base/resizeable/resize.vue';
+import { BoxDimensions } from '@/models/components/box-dimension';
+import { PageModule } from '@/store/page/page';
 import { TriangleDirective } from '@/shared/directives/triangle/triangle';
+import  Resize, { ResizeDimensions }  from '@/components/base/resizeable/resize.vue';
+import UploadImage from '@/components/base/pickers/upload-image/upload-image.vue';
+
 @Component({
   props: {
     thisComponent: {
@@ -65,12 +60,14 @@ export default class GenericComponent extends Vue {
   data: ComponentTypes;
   editorComponent = '';
   styles: Style[] = [];
-  style = 'height:100%; width:50%';
+  style = '';
+  parentContainerProps?: BoxDimensions;
 
   created() {
     this.data = this.$props.thisComponent.data;
     if (this.$props.thisComponent.type === 'image') { 
       this.isImage = true;
+      
       const component = (this.$props.thisComponent as PageElement)
       component.classDefinition += ` ${component.parent.height()} `;
     }
@@ -81,19 +78,21 @@ export default class GenericComponent extends Vue {
     if (this.showBorder) {
       componentClassSpec += ' border1';
     }
+    console.log('%c%s', 'color: #d90000', componentClassSpec)
     return componentClassSpec;
   }
 
-   getStyles(): string {
+  getStyles(): string {
     let style: string;
+    const component: ComponentContainer = this.$props.thisComponent;
     style = '';
-    this.styles = this.$props.thisComponent.styles;
+    this.styles = component.styles;
     if (this.styles.length > 0) {
       this.styles.forEach(element => {
         style += `${element.style}:${element.value};`;
       });
     }
-    console.log('%c%s', 'color: #aa00ff', style)
+    style += `${component.boxDimensions.heightAsStyle};${component.boxDimensions.widthAsStyle}`;
     return style;
   }
 

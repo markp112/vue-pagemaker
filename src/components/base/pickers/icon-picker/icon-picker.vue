@@ -42,9 +42,12 @@ export default class IconPicker extends Vue {
     this.icons.push(iconBuilder.buildFontAwesomeIcon('columns', 'fas'));
     this.icons.push(iconBuilder.buildFontAwesomeIcon('clone', 'fas'));
     this.icons.push(iconBuilder.buildFontAwesomeIcon('bahai', 'fas'));
-    this.icons.push(iconBuilder.buildImageIcon(`icons8-page-32.png`, 'Page'))
-    this.icons.push(iconBuilder.buildImageIcon(`icons8-group-objects-32.png`, 'group'))
-    this.icons.push(iconBuilder.buildImageIcon(`icons8-text-32.png`, 'group'))
+    this.icons.push(iconBuilder.buildImageIcon(`icons8-page-32.png`, 'Page'));
+    this.icons.push(iconBuilder.buildImageIcon(`icons8-group-objects-32.png`, 'group'));
+    this.icons.push(iconBuilder.buildImageIcon(`icons8-text-32.png`, 'group'));
+    this.icons.push(iconBuilder.buildImageIcon(`icons8-splash-32.png`,`group`));
+    this.icons.push(iconBuilder.buildImageIcon(`icons8-button-36.png`,`group`));
+    this.icons.push(iconBuilder.buildImageIcon(`icons8-shipping-container-32.png`,`group`));
   }
 
   getPath(image: string): string {

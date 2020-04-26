@@ -12,7 +12,7 @@
 
 import Vue from 'vue';
 import  DraggableIcon from '@/components/base/draggable/draggable-icon/draggable-icon.vue';
-import { ComponentDefinitionInterface, ComponentDefinitions} from '@/models/page/page';
+import { ComponentDefinitionInterface, initComponentDefinition } from '@/models/components/base-component';
 import Component from 'vue-class-component';
 import { SidebarModule } from '@/store//sidebar/sidebar';
 import IconImage from '@/components/base/icon-image/icon-image.vue';
@@ -37,16 +37,16 @@ export default class SidebarComponentIcons extends Vue {
 
 <style lang="postcss" scoped>
 
-  .icon-list-sidebar {
-    @apply flex flex-row flex-wrap text-4xl justify-evenly w-full ;
-  }
+.icon-list-sidebar {
+  @apply flex flex-row flex-wrap text-4xl justify-evenly w-full ;
+}
 
-  .icon {
-    @apply transform cursor-pointer mr-2;
-  }
+.icon {
+  @apply transform cursor-pointer mr-2;
+}
 
-  .icon:hover {
-    @apply shadow  shadow-xl -translate-x-1 -translate-y-1;
-  }
+.icon:hover {
+  @apply shadow  shadow-xl -translate-x-1 -translate-y-1;
+}
 
 </style>

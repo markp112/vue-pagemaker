@@ -3,7 +3,7 @@
     :id="$props.thisComponent.ref" 
     class="handle"
     :class="getClasses()"
-    :style="getStyle"
+    :style="getStyles()"
     :ref="$props.thisComponent.ref"
     @dragover.prevent
     @drop.prevent="onDrop"
@@ -88,6 +88,7 @@ export default class Container extends Vue {
   handleDirection: handleDirectionType='xy';
 
   created() {
+    console.log("Hi")
     this.showBorder = false;
   }
 
@@ -120,12 +121,14 @@ getElementBoxProperties(): BoxProperties {
   getStyles(): string {
     let style: string;
     style = '';
-    const styles: Style[] = this.$props.thisComponent.styles;
+    const component: ComponentContainer = this.$props.thisComponent;
+    const styles: Style[] = component.styles;
     if ( styles.length > 0 ){
       styles.forEach(element => {
           style += `${element.style}:${element.value};`
       });
     }
+    style += component.boxDimensions.getDimensionsAsStyleString;
     return style;
   }
 

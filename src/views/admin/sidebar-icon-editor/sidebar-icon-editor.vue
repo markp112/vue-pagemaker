@@ -23,12 +23,12 @@
           class="input-control"
           placeholder="name of the editor component"
         >
-        <label for="htmlTag">Name:</label>
+        <label for="htmlTag">HTML Tag:</label>
         <input type="text"
           id="htmlTag"
           v-model="editorComponent.componentRef"
           class="input-control"
-          placeholder="HtmlTag for component on page"
+          placeholder="HtmlTag for component on page container or generic"
         >
         <label for="icon">Select Icon</label>
         <div>
@@ -51,14 +51,76 @@
           class="input-control"
           placeholder="css classes to define the component"
         >
+        <div class="dimensions">
+          <label for="type">Width</label>
+          <input type="text"
+            id="width"
+            v-model="editorComponent.boxDimensions.width.value"
+            class="input-control"
+            placeholder="width as a number"
+          >
+          <label for="type">Units</label>
+          <input type="text"
+            id="width-units"
+            v-model="editorComponent.boxDimensions.width.units"
+            class="input-control"
+            placeholder="px | % | em"
+          >
+          <label for="type">Height</label>
+          <input type="text"
+            id="height"
+            v-model="editorComponent.boxDimensions.height.value"
+            class="input-control"
+            placeholder="width as a number"
+          >
+          <label for="type">Units</label>
+          <input type="text"
+            id="height-units"
+            v-model="editorComponent.boxDimensions.height.units"
+            class="input-control"
+            placeholder="px | % | em"
+          >
+        </div>
+        <div class="dimensions">
+          <label for="type">Left</label>
+          <input type="text"
+            id="left"
+            v-model="editorComponent.boxDimensions.left.value"
+            class="input-control"
+            placeholder="width as a number"
+          >
+          <label for="type">Units</label>
+          <input type="text"
+            id="left-units"
+            v-model="editorComponent.boxDimensions.left.units"
+            class="input-control"
+            placeholder="px | % | em"
+          >
+          <label for="type">Top</label>
+          <input type="text"
+            id="top"
+            v-model="editorComponent.boxDimensions.top.value"
+            class="input-control"
+            placeholder="width as a number"
+          >
+          <label for="type">Units</label>
+          <input type="text"
+            id="top-units"
+            v-model="editorComponent.boxDimensions.top.units"
+            class="input-control"
+            placeholder="px | % | em"
+          >
+        </div>
         <label for="isContainer">Container:</label>
         <input type="checkbox" name="isContainer" id="active" :value="editorComponent.isContainer" class="mt-5 w-1/12" v-model="editorComponent.isContainer">
         <submit-cancel v-on:cancelClicked="cancelClick()"  v-on:saveClicked="saveClick()" ></submit-cancel>
       </form>
-        <p class="w-full bg-gray-400 mt-2 p-2 text-accent text-center font-bold">Component Preview</p>
-      <div class="mt-2" :class="classDef">Component</div>
+      <p class="w-full bg-gray-400 mt-2 p-2 text-accent text-center font-bold">Component Preview</p>
+      <div class="relative bg-gray-300">
+        <div class="mt-2 absolute" :class="classDef" :style="getStyles">Component</div>
+        </div>
+      </div>
     </div>
-  </div>
   </section>
 </template>
 
@@ -71,14 +133,22 @@ import InvalidForm from '@/components/base/notifications/invalid-form.vue';
 import { SnackbarMessage, SnackbarTypes, SnackBarGenerator } from '@/models/notifications/snackbar';
 import { initIcon, IconInterface } from '@/models/font-awesome/icon';
 import { initAuthStatus } from '../../../models/user/user';
-import { Notification, notificationDefault } from '../../../models/notifications/notifications';
+import { 
+  Notification,
+  notificationDefault
+} from '../../../models/notifications/notifications';
 import CreateNew from '@/components/base/buttons/create-new/create-new.vue';
-import { ComponentDefinitionInterface, initComponentDefinition } from '../../../models/page/page';
+import { 
+  ComponentDefinitionInterface,
+  initComponentDefinition,
+  ComponentDefinition,
+} from '@/models/components/base-component';
 import { SidebarModule } from '@/store//sidebar/sidebar';
 import { ComponentPropsModule } from '@/store/component-props/component-props';
 import { SnackbarModule } from '@/store/snackbar/snackbar';
 import  IconImage from '@/components/base/icon-image/icon-image.vue';
 import { ComponentTypesEnum } from '@/models/enums/componentTypes/componentTypes';
+import { BoxDimensions } from '../../../models/components/box-dimension';
 
 @Component({
   components:{
@@ -93,12 +163,11 @@ export default class SidebarIconEditor extends Vue {
   name = 'Sidebar Icon Editor';
   classDef = '';
   iconLocal: IconInterface = initIcon;
-  editorComponent: ComponentDefinitionInterface =  initComponentDefinition;
+  editorComponent: ComponentDefinition = new ComponentDefinition();
   componentType: string [] = [];
 
   created(): void {
     SidebarModule.loadSideBarElements();
-    this.editorComponent = initComponentDefinition;
     SidebarModule.toggleSidebar(false);
     this.componentType = Object.keys(ComponentTypesEnum);
   }
@@ -117,39 +186,70 @@ export default class SidebarIconEditor extends Vue {
     ComponentPropsModule.toggleIconPicker(true);
   }
 
-  iconClicked(icon: IconInterface){
-    this.editorComponent = SidebarModule.getSidebarElements.filter(element => element.sidebarIcon.icon === icon.icon)[0];
+  iconClicked(icon: IconInterface) {
+    const component: ComponentDefinitionInterface = SidebarModule.getSidebarElements.filter(element => element.sidebarIcon.icon === icon.icon)[0];
+    this.editorComponent.componentName = component.componentName;
+    this.editorComponent.componentRef = component.componentRef;
+    this.editorComponent.class = component.class;
+    this.editorComponent.isContainer = component.isContainer;
+    this.editorComponent.sidebarIcon = component.sidebarIcon;
+    this.editorComponent.type = component.type;
+    this.editorComponent.boxDimensions = new BoxDimensions(
+      component.boxDimensions.width, 
+      component.boxDimensions.height, 
+      component.boxDimensions.left, 
+      component.boxDimensions.top);
     this.iconLocal = icon;
     this.classDef = this.editorComponent.class;
   }
 
-  createNew():void {
-    this.editorComponent = initComponentDefinition;
+  createNew(): void {
+    this.editorComponent = new ComponentDefinition();
   }
 
   saveClick(): void {
     this.editorComponent.class = this.classDef;
-    SidebarModule.saveEditorElement(this.editorComponent)
+    const component: ComponentDefinitionInterface = this.editorComponent.toObject as ComponentDefinitionInterface;
+    SidebarModule.saveEditorElement(component)
     .then(result  => {
-        const notification = result as Notification;
-        if(notification.status === "ok") {
-          const snackbarMessage: SnackbarMessage = SnackBarGenerator.snackbarSuccess(`The ${this.editorComponent.componentName} has been created`,'Page Saved');
-          SnackbarModule.showSnackbar(snackbarMessage);
-          this.$router.push('/iconeditor');
-        } else {
-          this.showErrorsnackbar(notification.message, "Error on Save");
-        }
-      })
+      const notification = result as Notification;
+      if(notification.status === "ok") {
+        const snackbarMessage: SnackbarMessage = SnackBarGenerator.snackbarSuccess(`The ${this.editorComponent.componentName} has been created`,'Page Saved');
+        SnackbarModule.showSnackbar(snackbarMessage);
+        this.$router.push('/iconeditor');
+      } else {
+        this.showErrorsnackbar(notification.message, "Error on Save");
+      }
+    })
   }
 
-  showErrorsnackbar(message: string, title: string ) {
-      const snackbarMessage = SnackBarGenerator.snackbarError(message ,title);
-      SnackbarModule.showSnackbar(snackbarMessage);
+  showErrorsnackbar(message: string, title: string): void {
+    const snackbarMessage = SnackBarGenerator.snackbarError(message ,title);
+    SnackbarModule.showSnackbar(snackbarMessage);
   }
 
   get icons(): ComponentDefinitionInterface[] {
     return SidebarModule.getSidebarElements;
   }
+
+  get getStyles(): string {
+    const boxDimension: BoxDimensions = this.editorComponent.boxDimensions;
+    return boxDimension.getDimensionsAsStyleString;
+  }
 }
 
 </script>
+
+<style lang="postcss" scoped>
+.dimensions {
+  @apply flex flex-row justify-start flex-wrap w-full;
+}
+
+.dimensions input {
+  @apply w-16 mt-2;
+}
+
+.dimensions label { 
+  @apply w-12 ml-2 inline-block;
+}
+</style>
