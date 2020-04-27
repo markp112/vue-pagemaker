@@ -14,6 +14,7 @@
         :key="i"
         :index="i" 
         :thisComponent="layout"
+        :parentDimensions="thisComponent.boxDimensions"
         @onClick.prevent="componentClick"
         z-index = "1"
         @dragover.prevent
@@ -41,30 +42,6 @@ import { PageModule } from '@/store/page/page';
 import { ServicesModule } from '@/store/services/services';
 import { SidebarModule } from '@/store/sidebar/sidebar';
 
-type handleDirectionType = 'y' | 'x' | 'xy'
-
-interface BoxProperties {
-  mouseX: number;
-  mouseY: number;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  top: number; 
-  left: number;
-  };
-
-const initBoxProperties: BoxProperties = {
-  mouseX: 0,
-  mouseY: 0,
-  x: 0,
-  y: 0,
-  width: 0,
-  height: 0,
-  top: 0,
-  left: 0,
-}
-
 @Component({
   props: {
     thisComponent: {
@@ -81,34 +58,37 @@ export default class Container extends Vue {
   showBorder = false;
   isActive = false;
   isSizing = false;
-  parentWidth?: number;
-  parentHeight?: number;
-  thisContainer: BoxProperties = initBoxProperties;
+  // parentWidth?: number;
+  // parentHeight?: number;
+  // thisContainer: BoxProperties = initBoxProperties;
   componentStyle = '';
-  handleDirection: handleDirectionType='xy';
+  // handleDirection: handleDirectionType='xy';
 
   created() {
-    console.log("Hi")
     this.showBorder = false;
+    
   }
 
   mounted() {
+  
   const parentElement: Element =  this.$parent.$el;
-  this.parentWidth = parentElement.clientWidth;
-  this.parentHeight = parentElement.clientHeight;
-  this.thisContainer = this.getElementBoxProperties();
+  this.$props.thisComponent.left = {value: this.$el.getBoundingClientRect().left, units: 'px'};
+  this.$props.thisComponent.top = {value: this.$el.getBoundingClientRect().top, units: 'px'};
+  // this.parentWidth = parentElement.clientWidth;
+  // this.parentHeight = parentElement.clientHeight;
+  // this.thisContainer = this.getElementBoxProperties();
   }
 
-getElementBoxProperties(): BoxProperties {
-  const boundingRect: BoxProperties = initBoxProperties;
-  boundingRect.x = this.$el.getBoundingClientRect().x;
-  boundingRect.y = this.$el.getBoundingClientRect().y;
-  boundingRect.width = this.$el.getBoundingClientRect().width;
-  boundingRect.height = this.$el.getBoundingClientRect().height;
-  boundingRect.top = this.$el.getBoundingClientRect().top;
-  boundingRect.left = this.$el.getBoundingClientRect().left;
-  return  boundingRect;
-}
+// getElementBoxProperties(): BoxProperties {
+//   const boundingRect: BoxProperties = initBoxProperties;
+//   boundingRect.x = this.$el.getBoundingClientRect().x;
+//   boundingRect.y = this.$el.getBoundingClientRect().y;
+//   boundingRect.width = this.$el.getBoundingClientRect().width;
+//   boundingRect.height = this.$el.getBoundingClientRect().height;
+//   boundingRect.top = this.$el.getBoundingClientRect().top;
+//   boundingRect.left = this.$el.getBoundingClientRect().left;
+//   return  boundingRect;
+// }
 
   getClasses(): string {
     let componentClassSpec = this.$props.thisComponent.classDefinition;
@@ -174,8 +154,8 @@ getElementBoxProperties(): BoxProperties {
   handleDown(ev: MouseEvent) {
     if (!this.isActive) return;
     
-    this.thisContainer = this.getElementBoxProperties();
-    this.handleDirection = 'xy'
+    // this.thisContainer = this.getElementBoxProperties();
+    // this.handleDirection = 'xy'
     if(!this.isSizing) {
       window.addEventListener('mousemove',() => {this.handleMove(event as MouseEvent)});
       window.addEventListener('mouseup',() => {this.handleMouseUp()});
@@ -185,12 +165,14 @@ getElementBoxProperties(): BoxProperties {
 
   handleMove(ev: MouseEvent) {
     if(!this.isSizing) return;
-    this.thisContainer = this.getElementBoxProperties();
-    const boxLeft = this.thisContainer.left + pageXOffset;
-    const boxTop = this.thisContainer.top += pageYOffset;
-    this.thisContainer.width = (ev.clientX - boxLeft);
-    this.thisContainer.height = (ev.clientY - boxTop);
-    this.componentStyle=`height:${this.thisContainer.height}px;width:${this.thisContainer.width}px`
+    // this.thisContainer = this.getElementBoxProperties();
+    const boxLeft = this.$el.getBoundingClientRect().left + pageXOffset;
+    const boxTop = this.$el.getBoundingClientRect().top + pageYOffset;
+    this.$props.thisComponent.boxDimensions.width.value = (ev.clientX - boxLeft);
+    this.$props.thisComponent.boxDimensions.width.units = 'px';
+    this.$props.thisComponent.boxDimensions.height.value = (ev.clientY - boxTop);
+    
+    // this.componentStyle=`height:${this.$props.thisComponent.boxDimensions.height.value}px;width:${this.$props.thisComponent.boxDimensions.width.value}px`
   }
 }
 </script>

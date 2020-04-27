@@ -12,6 +12,7 @@
 <script lang="ts">
 import Component from 'vue-class-component'
 import { Vue, Emit, Prop } from 'vue-property-decorator';
+import { BoxDimensions } from '@/models/components/box-dimension';
 
 interface BoxProperties {
   width: number;
@@ -28,17 +29,14 @@ export interface ResizeDimensions {
 @Component({
   props: {
     isActive: { default: false },
-    parentContainerProps: { default: () => {
-      return {
-        width: 0,
-        height: 0,
-        top: 0,
-        left: 0
-
-      }
-    }
-      
-    }
+    ParentBoxDimensions: { 
+      default: (): BoxDimensions => { return new BoxDimensions(
+          { value: 0, units: 'px' },
+          { value: 0, units: 'px' },
+          { value: 0, units: 'px' },
+          { value: 0, units: 'px' }
+        )},
+    },
   }
 })
 export default class Resize extends  Vue {

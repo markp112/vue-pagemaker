@@ -1,5 +1,5 @@
 <template>
-  
+  <div class="handle"  v-triangle-symbol :style="getStyles()">
       <div
         :id="$props.thisComponent.ref"  
         v-if="!isImage"
@@ -14,8 +14,10 @@
         :style="getStyles()"
         class="w-full h-full"
         @click.prevent="onClick($event)"
+        v-triangle-symbol
       />
-  
+      <resizeable :isActive="showBorder"></resizeable>
+  </div>
 </template>
 
 <script lang="ts">
@@ -42,6 +44,14 @@ import UploadImage from '@/components/base/pickers/upload-image/upload-image.vue
       default: (): PageData => {
         return new PageElement();
       },
+      parentDimensions: {
+        default: (): BoxDimensions => { return new BoxDimensions(
+          { value: 0, units: 'px' },
+          { value: 0, units: 'px' },
+          { value: 0, units: 'px' },
+          { value: 0, units: 'px' }
+        )},
+      }
     },
   },
 
