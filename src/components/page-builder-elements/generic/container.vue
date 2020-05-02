@@ -40,6 +40,7 @@ import GenericComponent from '@/components/page-builder-elements/generic/generic
 import { PageModule } from '@/store/page/page';
 import { ServicesModule } from '@/store/services/services';
 import { SidebarModule } from '@/store/sidebar/sidebar';
+import { ComponentCounter } from '@/classes/component-counter/singleton-counter';
 
 @Component({
   props: {
@@ -54,10 +55,11 @@ import { SidebarModule } from '@/store/sidebar/sidebar';
 
 export default class Container extends Vue {
 
-  showBorder = false;
-  isActive = false;
-  isSizing = false;
-  componentStyle = '';
+  private showBorder = false;
+  private isActive = false;
+  private isSizing = false;
+  private componentStyle = '';
+  private componentCounter: ComponentCounter = ComponentCounter.getInstance();
 
   mounted() {
     const parentElement: Element = this.$parent.$el;
@@ -104,10 +106,12 @@ export default class Container extends Vue {
 
   onDrop(event: DragEvent) {
     const componentBuilder = new ComponentBuilder();
+    console.log("onDrop")
     if (ServicesModule.dragDropEventHandled) { return }
     if (event) {
       const componentName = componentBuilder.getComponentName(event);
-      const ref = `${componentName}::${PageModule.nextComponentId}`;
+      const id: number = this.componentCounter.getNextCounter();
+      const ref = `${componentName}::${id}`;
       const component = SidebarModule.getComponentDefinition(componentName);
       const parent: ComponentContainer  = this.$props.thisComponent; // when dropping a component this componet will be its parent
       if(component) {

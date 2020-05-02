@@ -1,12 +1,12 @@
 <template>
-  <div :id="id"
-        :draggable="draggable"
-        @dragstart="onDragStart"
-        @dragover.stop
-        @dragleave="onDragLeave"
-        class="p-1 m-0"
-      >
-  <slot />
+  <div
+    :id="id"
+    :draggable="draggable"
+    @dragstart="onDragStart"
+    @dragover.stop
+    @dragleave="onDragLeave"
+    class="p-1 m-0">
+    <slot />
   </div>
 </template>
 

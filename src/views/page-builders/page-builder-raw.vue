@@ -36,6 +36,7 @@ import EditDeleteOption from '@/components/page-builder-elements/utility/edit-de
 import { PageModule } from '@/store/page/page';
 import { SidebarModule } from '@/store/sidebar/sidebar';
 import { ServicesModule } from '@/store/services/services';
+import { ComponentCounter } from '@/classes/component-counter/singleton-counter';
 
 const PARENT = 'ROOT';
 const PARENTCOMPONENT = new ComponentContainer();
@@ -55,6 +56,7 @@ export default class PageBuilder extends Vue {
   name = 'pageBuilder';
   title!: string;
   bgColour = 'bg-gray-200';
+  private componentCounter: ComponentCounter = ComponentCounter.getInstance();
 
   created() {
     this.title = this.$route.params.title;
@@ -73,7 +75,8 @@ export default class PageBuilder extends Vue {
     if (event) {
       const componentName = componentBuilder.getComponentName(event);
       const component = SidebarModule.getComponentDefinition(componentName);
-      const ref = `${componentName}::${PageModule.nextComponentId}`;
+      const id = this.componentCounter.getNextCounter();
+      const ref = `${componentName}::${id}`;
       if (component){
         const newComponent: PageData = componentBuilder.buildComponent(component, ref, PARENTCOMPONENT);
         PageModule.addNewPageElement(newComponent);

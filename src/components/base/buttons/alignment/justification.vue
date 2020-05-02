@@ -1,18 +1,18 @@
 <template>
   <div class="flex flex-row justify-evenly text-xl bg-gray-300 p-2 h-10">
-    <img src="@/assets/icons/icons8-indent-32.png" 
+    <img src="@/assets/icons/align_vertical_left-32.png" 
       class="text-accent cursor-pointer hover:bg-secondary-100" 
       @click="alignStartClick" />
-    <img src="@/assets/icons/icons8-align-center-32.png" 
+    <img src="@/assets/icons/align_horizontal_center-32.png" 
       class="text-accent cursor-pointer hover:bg-secondary-100" 
       @click="alignCenterClick" />
-    <img src="@/assets/icons/icons8-equivalent-32.png" 
+    <img src="@/assets/icons/space_evenly_horizontal-32.png" 
       class="text-accent cursor-pointer hover:bg-secondary-100" 
       @click="alignEvenlyClick" />
     <img src="@/assets/icons/icons8-add-white-space-32.png" 
       class="text-accent cursor-pointer hover:bg-secondary-100" 
       @click="alignBetweenClick" />
-    <img src="@/assets/icons/icons8-outdent-32.png" 
+    <img src="@/assets/icons/align_vertical_right-32.png" 
       class="text-accent cursor-pointer hover:bg-secondary-100" 
       @click="alignEndClick" />
   </div>

@@ -188,19 +188,36 @@ export class PageElement implements Partial<PageElementInterface> {
   private processFlex(classDef: string): void {
     const index = this.classDefinition.indexOf('flex');
     if (index >= 0) {
-      let tempclass = this.classDefinition;
-      tempclass = this.cutString(tempclass, 'flex');
-      tempclass = this.cutString(tempclass, 'flex-row');
-      tempclass = this.cutString(tempclass, 'justify-center');
-      tempclass = this.cutString(tempclass, 'justify-between');
-      tempclass = this.cutString(tempclass, 'justify-around');
-      tempclass = this.cutString(tempclass, 'justify-end');
-      tempclass = this.cutString(tempclass, 'justify-start');
-      tempclass += ` ${classDef}`;
-      this.classDefinition = tempclass;
+      const tempclass = this.classDefinition;
+      if (classDef.indexOf('justify') > 0) {
+        this.classDefinition = this.processFlexHorizontalAlignment(classDef, tempclass)
+      } else if (classDef.indexOf('items-') > 0) {
+        this.classDefinition = this.processFlexVerticalAlignment(classDef, tempclass)
+      }
     } else {
       this.classDefinition += ` ${classDef}`;
     }
+  }
+
+  private processFlexHorizontalAlignment(classDef: string, tempclass: string): string {
+    tempclass = this.cutString(tempclass, 'flex');
+    tempclass = this.cutString(tempclass, 'flex-row');
+    tempclass = this.cutString(tempclass, 'justify-center');
+    tempclass = this.cutString(tempclass, 'justify-between');
+    tempclass = this.cutString(tempclass, 'justify-around');
+    tempclass = this.cutString(tempclass, 'justify-end');
+    tempclass = this.cutString(tempclass, 'justify-start');
+    tempclass += ` ${classDef}`;
+    return tempclass;
+  }
+  private processFlexVerticalAlignment(classDef: string, tempclass: string): string {
+      tempclass = this.cutString(tempclass, 'flex');
+      tempclass = this.cutString(tempclass, 'flex-row');
+      tempclass = this.cutString(tempclass, 'items-center');
+      tempclass = this.cutString(tempclass, 'items-end');
+      tempclass = this.cutString(tempclass, 'items-start');
+      tempclass += ` ${classDef}`;
+      return tempclass;
   }
 }
 

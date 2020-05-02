@@ -103,7 +103,6 @@ export default class GenericComponent extends Vue {
           this.$props.thisComponent.boxDimensions.width.units = 'px';
           this.$props.thisComponent.boxDimensions.height.value = newDimensions.height;
           this.$props.thisComponent.boxDimensions.height.units = 'px';
-          console.log('%c%s', 'color: #e50000', `height:${newDimensions.height}px;width:${newDimensions.width}px;`);
         }
       }
     }
