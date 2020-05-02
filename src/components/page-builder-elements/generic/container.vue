@@ -14,7 +14,6 @@
         :key="i"
         :index="i" 
         :thisComponent="layout"
-        :parentDimensions="thisComponent.boxDimensions"
         @onClick.prevent="componentClick"
         z-index = "1"
         @dragover.prevent
@@ -45,8 +44,8 @@ import { SidebarModule } from '@/store/sidebar/sidebar';
 @Component({
   props: {
     thisComponent: {
-        default: (): ComponentContainer => { return new ComponentContainer() }
-        },
+      default: (): ComponentContainer => { return new ComponentContainer() }
+    },
   },
   components: {
     'generic-component': GenericComponent,
@@ -58,37 +57,15 @@ export default class Container extends Vue {
   showBorder = false;
   isActive = false;
   isSizing = false;
-  // parentWidth?: number;
-  // parentHeight?: number;
-  // thisContainer: BoxProperties = initBoxProperties;
   componentStyle = '';
-  // handleDirection: handleDirectionType='xy';
-
-  created() {
-    this.showBorder = false;
-    
-  }
 
   mounted() {
-  
-  const parentElement: Element =  this.$parent.$el;
-  this.$props.thisComponent.left = {value: this.$el.getBoundingClientRect().left, units: 'px'};
-  this.$props.thisComponent.top = {value: this.$el.getBoundingClientRect().top, units: 'px'};
-  // this.parentWidth = parentElement.clientWidth;
-  // this.parentHeight = parentElement.clientHeight;
-  // this.thisContainer = this.getElementBoxProperties();
+    const parentElement: Element = this.$parent.$el;
+    // -- convert width and height into pixels as initial dimension may be a percentage and cannot then be used
+    // by the child component to get the actual width / height
+    this.$props.thisComponent.boxDimensions.width = { value: this.$el.getBoundingClientRect().width, units: 'px' };
+    this.$props.thisComponent.boxDimensions.height = { value: this.$el.getBoundingClientRect().height, units: 'px' };
   }
-
-// getElementBoxProperties(): BoxProperties {
-//   const boundingRect: BoxProperties = initBoxProperties;
-//   boundingRect.x = this.$el.getBoundingClientRect().x;
-//   boundingRect.y = this.$el.getBoundingClientRect().y;
-//   boundingRect.width = this.$el.getBoundingClientRect().width;
-//   boundingRect.height = this.$el.getBoundingClientRect().height;
-//   boundingRect.top = this.$el.getBoundingClientRect().top;
-//   boundingRect.left = this.$el.getBoundingClientRect().left;
-//   return  boundingRect;
-// }
 
   getClasses(): string {
     let componentClassSpec = this.$props.thisComponent.classDefinition;
@@ -145,7 +122,6 @@ export default class Container extends Vue {
   }
 
   handleMouseUp() {
-    console.log("MouseUp")
     this.isSizing = false;
     window.removeEventListener('mousemove',() => {this.handleMove(event as MouseEvent)});
     window.removeEventListener('mouseup',() => {this.handleMouseUp()});
@@ -153,9 +129,6 @@ export default class Container extends Vue {
 
   handleDown(ev: MouseEvent) {
     if (!this.isActive) return;
-    
-    // this.thisContainer = this.getElementBoxProperties();
-    // this.handleDirection = 'xy'
     if(!this.isSizing) {
       window.addEventListener('mousemove',() => {this.handleMove(event as MouseEvent)});
       window.addEventListener('mouseup',() => {this.handleMouseUp()});
@@ -172,7 +145,6 @@ export default class Container extends Vue {
     this.$props.thisComponent.boxDimensions.width.units = 'px';
     this.$props.thisComponent.boxDimensions.height.value = (ev.clientY - boxTop);
     
-    // this.componentStyle=`height:${this.$props.thisComponent.boxDimensions.height.value}px;width:${this.$props.thisComponent.boxDimensions.width.value}px`
   }
 }
 </script>

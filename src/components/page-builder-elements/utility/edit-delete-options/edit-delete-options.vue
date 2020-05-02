@@ -18,7 +18,7 @@ import { SidebarModule } from '@/store/sidebar/sidebar';
     showMe: { default: false }
   }
 })
-export default class EditDeleteOption extends Vue{
+export default class EditDeleteOption extends Vue {
   localShowMe = false;
   created() {
     this.localShowMe = this.$props.showMe

@@ -30,7 +30,6 @@ export default class SideBar extends Vue {
   }
 
   get sidebarContent(): string {
-    
     return SidebarModule.sidebarComponentType;
   }
 }

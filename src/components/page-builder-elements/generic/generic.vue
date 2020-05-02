@@ -1,41 +1,47 @@
 <template>
-  <div class="handle"  v-triangle-symbol :style="getStyles()">
-      <div
-        :id="$props.thisComponent.ref"  
-        v-if="!isImage"
-        :class="getClasses()"
-        :style="getStyles()"
-        @click.prevent="onClick($event)"
-      >{{ data.content }}</div>
-      <img 
-        :id="$props.thisComponent.ref"
-        v-else-if="isImage" 
-        :src="data.content" 
-        :style="getStyles()"
-        class="w-full h-full"
-        @click.prevent="onClick($event)"
-        v-triangle-symbol
-      />
-      <resizeable :isActive="showBorder"></resizeable>
+  <div class="handle" 
+    :style="getStyles()"
+    :id="$props.thisComponent.ref"
+    :class="getClasses()"
+    >
+    <div
+      v-if="!isImage"
+      :style="getStyles()"
+      @click.prevent="onClick($event)"
+    >
+      {{ data.content }}
+    </div>
+    <img
+      v-else-if="isImage"
+      :src="data.content"
+      :style="getStyles()"
+      class="h-full"
+      @click.prevent="onClick($event)"
+    />
+    <resizeable
+      :isActive="showBorder"
+      :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"
+      @onResize="onResize"
+
+      ></resizeable>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { Emit } from 'vue-property-decorator';
-import {
-  Style,
-  PageData,
-  ComponentContainer,
-  PageElement,
-} from '@/models/page/page';
-import {  ComponentRef } from '@/models/components/base-component';
-import { Content, ComponentTypes } from '@/models//components/components';
+import 
+  {
+    Style,
+    PageData,
+    ComponentContainer,
+    PageElement,
+  } from '@/models/page/page';
+import { ComponentTypes } from '@/models/components/components';
 import { BoxDimensions } from '@/models/components/box-dimension';
 import { PageModule } from '@/store/page/page';
-import { TriangleDirective } from '@/shared/directives/triangle/triangle';
-import  Resize, { ResizeDimensions }  from '@/components/base/resizeable/resize.vue';
+import Resize,
+  { ResizeDimensions } from '@/components/base/resizeable/resize.vue';
 import UploadImage from '@/components/base/pickers/upload-image/upload-image.vue';
 
 @Component({
@@ -44,42 +50,26 @@ import UploadImage from '@/components/base/pickers/upload-image/upload-image.vue
       default: (): PageData => {
         return new PageElement();
       },
-      parentDimensions: {
-        default: (): BoxDimensions => { return new BoxDimensions(
-          { value: 0, units: 'px' },
-          { value: 0, units: 'px' },
-          { value: 0, units: 'px' },
-          { value: 0, units: 'px' }
-        )},
-      }
     },
   },
-
   components: {
     'upload-image': UploadImage,
-    resizeable  : Resize,
-  },
-  directives :{
-    'triangle-symbol': TriangleDirective
+    resizeable: Resize,
   },
 })
 export default class GenericComponent extends Vue {
-  name = "generic-component";
+  name = 'generic-component';
   showBorder = false;
   isImage = false;
   data: ComponentTypes;
   editorComponent = '';
   styles: Style[] = [];
   style = '';
-  parentContainerProps?: BoxDimensions;
 
   created() {
     this.data = this.$props.thisComponent.data;
-    if (this.$props.thisComponent.type === 'image') { 
+    if (this.$props.thisComponent.type === 'image') {
       this.isImage = true;
-      
-      const component = (this.$props.thisComponent as PageElement)
-      component.classDefinition += ` ${component.parent.height()} `;
     }
   }
 
@@ -88,7 +78,6 @@ export default class GenericComponent extends Vue {
     if (this.showBorder) {
       componentClassSpec += ' border1';
     }
-    console.log('%c%s', 'color: #d90000', componentClassSpec)
     return componentClassSpec;
   }
 
@@ -108,14 +97,13 @@ export default class GenericComponent extends Vue {
 
   onResize(newDimensions: ResizeDimensions | undefined) {
     if (newDimensions) {
-      if(PageModule.editedComponentRef) {
-        if(newDimensions.height !== undefined) {
-          // const styleH: Style = { style:'height', value: `${newDimensions.height}px`};
-          // PageModule.editedComponentRef.addStyle(styleH)
-          // const styleW: Style = { style:'width', value: `${newDimensions.width}px`};
-          // PageModule.editedComponentRef.addStyle(styleW);
-          this.style = `height:${newDimensions.height}px;width:${newDimensions.width}px;`;
-          console.log('%c%s', 'color: #e50000', `height:${newDimensions.height}px;width:${newDimensions.width}px;`)
+      if (PageModule.editedComponentRef) {
+        if (newDimensions.height !== undefined) {
+          this.$props.thisComponent.boxDimensions.width.value = newDimensions.width;
+          this.$props.thisComponent.boxDimensions.width.units = 'px';
+          this.$props.thisComponent.boxDimensions.height.value = newDimensions.height;
+          this.$props.thisComponent.boxDimensions.height.units = 'px';
+          console.log('%c%s', 'color: #e50000', `height:${newDimensions.height}px;width:${newDimensions.width}px;`);
         }
       }
     }
@@ -127,15 +115,22 @@ export default class GenericComponent extends Vue {
     PageModule.updateShowEditDelete(true);
     this.showBorder = !this.showBorder;
   }
-
 }
 </script>
 
 <style lang="postcss" scoped>
-  .handle {
-    position: relative;
-    box-sizing: border-box;
-  }
+.handle {
+  position: relative;
+  box-sizing: border-box;
+}
+
+.active {
+  visibility: visible;
+}
+
+.in-active {
+  visibility: hidden;
+}
 
 .border1 {
   @apply border-indigo-800 border border-dashed;

@@ -4,7 +4,8 @@ import { Module, Mutation, Action, VuexModule, getModule } from 'vuex-module-dec
 import {  PageData} from '@/models/page/page';
 import {  
   ComponentDefinitions,
-  ComponentDefinitionInterface
+  ComponentDefinitionInterface,
+  ComponentTypesString
 } from '@/models/components/base-component'
 import {
   Notification,
@@ -12,10 +13,7 @@ import {
 } from '@/models/notifications/notifications';
 import  { PageModule } from '@/store/page/page';
 import firebase from 'firebase';
-import { 
-  ComponentTypesEnum,
-  enumerate 
-} from '@/models/enums/componentTypes/componentTypes';
+
 
 const SIDEBARCOLLECTION = 'component-definitions';
 
@@ -110,21 +108,18 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
   public updateSidebarEditor() {
     const componentType: PageData | undefined = PageModule.editedComponentRef;
     if (componentType) {
-      const whichComponentType: ComponentTypesEnum = enumerate[componentType.type];
-      console.log('%c%s', 'color: #00e600', whichComponentType);
-
+      const whichComponentType: ComponentTypesString = componentType.type;
       switch (whichComponentType) {
-        case ComponentTypesEnum.image:
-          console.log("is Image")
+        case 'image':
           this.context.commit('setSidebarEditor', 'image-editor' as sidebarComponents);
           break;
-        case ComponentTypesEnum.text:
+        case 'text':
           this.context.commit('setSidebarEditor', 'text-editor' as sidebarComponents);
           break;
-        case ComponentTypesEnum.jumbo || ComponentTypesEnum.pageTemplate || ComponentTypesEnum.groupingContainer || ComponentTypesEnum.navBar :
+        case 'jumbo' || 'pageTemplate' || 'groupingContainer' || 'navBar' :
           this.context.commit('setSidebarEditor', 'container-editor' as sidebarComponents);
           break;
-      }
+      };
     }
   }
 
@@ -134,11 +129,19 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
     this.context.commit('setSidebarEditor', sidebarComponent);
   }
 
- get getSidebarElements(): ComponentDefinitionInterface[] {
+  get getSidebarElements(): ComponentDefinitionInterface[] {
+    return this._sidebarElements.componentDefinitions().filter(elem => elem.isContainer === false);
+  }
+
+  get getSidebarContainers(): ComponentDefinitionInterface[] {
+    return this._sidebarElements.componentDefinitions().filter(elem => elem.isContainer === true);
+  }
+
+  get getSidebarAllIcons(): ComponentDefinitionInterface[] {
     return this._sidebarElements.componentDefinitions();
   }
 
-   get getComponentDefinition(): (componentName: string)
+  get getComponentDefinition(): (componentName: string)
     => ComponentDefinitionInterface | undefined {
     return (componentName: string) =>
       this._sidebarElements.getComponent(componentName);

@@ -30,7 +30,6 @@ class AuthStore extends VuexModule implements UserStateInterface {
 
   @Mutation
   private setUser(user: UserInterface): void {
-    console.log("setUSer called");
     this.user = user;
   }
 

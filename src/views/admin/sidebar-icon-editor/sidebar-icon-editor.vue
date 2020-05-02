@@ -147,8 +147,8 @@ import { SidebarModule } from '@/store//sidebar/sidebar';
 import { ComponentPropsModule } from '@/store/component-props/component-props';
 import { SnackbarModule } from '@/store/snackbar/snackbar';
 import  IconImage from '@/components/base/icon-image/icon-image.vue';
-import { ComponentTypesEnum } from '@/models/enums/componentTypes/componentTypes';
 import { BoxDimensions } from '../../../models/components/box-dimension';
+import { ComponentTypesArray } from '@/models/components/base-component';
 
 @Component({
   components:{
@@ -164,12 +164,11 @@ export default class SidebarIconEditor extends Vue {
   classDef = '';
   iconLocal: IconInterface = initIcon;
   editorComponent: ComponentDefinition = new ComponentDefinition();
-  componentType: string [] = [];
+  componentType = ComponentTypesArray;
 
   created(): void {
     SidebarModule.loadSideBarElements();
     SidebarModule.toggleSidebar(false);
-    this.componentType = Object.keys(ComponentTypesEnum);
   }
 
   getPath(image: string): string {
@@ -187,7 +186,7 @@ export default class SidebarIconEditor extends Vue {
   }
 
   iconClicked(icon: IconInterface) {
-    const component: ComponentDefinitionInterface = SidebarModule.getSidebarElements.filter(element => element.sidebarIcon.icon === icon.icon)[0];
+    const component: ComponentDefinitionInterface = SidebarModule.getSidebarAllIcons.filter(element => element.sidebarIcon.icon === icon.icon)[0];
     this.editorComponent.componentName = component.componentName;
     this.editorComponent.componentRef = component.componentRef;
     this.editorComponent.class = component.class;
@@ -229,7 +228,7 @@ export default class SidebarIconEditor extends Vue {
   }
 
   get icons(): ComponentDefinitionInterface[] {
-    return SidebarModule.getSidebarElements;
+    return SidebarModule.getSidebarAllIcons;
   }
 
   get getStyles(): string {

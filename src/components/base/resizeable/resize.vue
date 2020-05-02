@@ -1,10 +1,10 @@
 <template>
   <div
-      class="triangle"
-      :class ="{'active': $props.isActive, 'in-active': !$props.isActive}"
-      @mousedown.stop.prevent="handleDown($event)"
-      @mouseup="handleMouseUp()"
-      @mousemove="handleMove($event)">
+    class="absolute triangle1 "
+    :class ="{'active': $props.isActive, 'in-active': !$props.isActive}"
+    @mousedown.stop.prevent="handleDown($event)"
+    @mouseup="handleMouseUp()"
+    @mousemove="handleMove($event)">
   </div>    
 
 </template>
@@ -29,7 +29,7 @@ export interface ResizeDimensions {
 @Component({
   props: {
     isActive: { default: false },
-    ParentBoxDimensions: { 
+    parentContainerDimensions: { 
       default: (): BoxDimensions => { return new BoxDimensions(
           { value: 0, units: 'px' },
           { value: 0, units: 'px' },
@@ -43,55 +43,66 @@ export default class Resize extends  Vue {
   name = "resize";
   isSizing = false;
 
-getElementBoxProperties(): BoxProperties | null {
-  const parent: HTMLDivElement | null = this.$el.parentElement as HTMLDivElement;
-  if (parent){
-      const boundingRect: BoxProperties = {
-      width: parent.getBoundingClientRect().width,
-      height: parent.getBoundingClientRect().height,
-      top: parent.getBoundingClientRect().top,
-      left: parent.getBoundingClientRect().left,
-    };
-    return  boundingRect;
+  getElementBoxProperties(): BoxProperties | null {
+    const parent: HTMLDivElement | null = this.$el.parentElement as HTMLDivElement;
+    if (parent){
+        const boundingRect: BoxProperties = {
+        width: parent.getBoundingClientRect().width,
+        height: parent.getBoundingClientRect().height,
+        top: parent.getBoundingClientRect().top,
+        left: parent.getBoundingClientRect().left,
+      };
+      return  boundingRect;
+    }
+    else return null;
   }
-  else return null
-}
 
   handleMouseUp() {
-    console.log("MouseUp")
     this.isSizing = false;
-    window.removeEventListener('mousemove',() => {this.handleMove(event as MouseEvent)});
-    window.removeEventListener('mouseup',() => {this.handleMouseUp()});
+    window.removeEventListener('mousemove',() => { this.handleMove(event as MouseEvent) });
+    window.removeEventListener('mouseup',() => { this.handleMouseUp() });
   }
 
   handleDown(ev: MouseEvent) {
     if (!this.$props.isActive) return;
     if(!this.isSizing) {
-      window.addEventListener('mousemove', () => {this.handleMove(event as MouseEvent)});
-      window.addEventListener('mouseup', () => {this.handleMouseUp()});
+      window.addEventListener('mousemove', () => { this.handleMove(event as MouseEvent) });
+      window.addEventListener('mouseup', () => { this.handleMouseUp() });
       this.isSizing = true
     }
   }
   @Emit('onResize')
   handleMove(ev: MouseEvent): ResizeDimensions | undefined {
-    if(!this.isSizing) return undefined;
-    const thisElement = this.getElementBoxProperties();
-    if(thisElement){
-      const boxLeft = thisElement.left + pageXOffset;
-      const boxTop = thisElement.top += pageYOffset;
-      const resizeDimensions: ResizeDimensions = { height: 0, width: 0 }
-      resizeDimensions.width = (ev.clientX - boxLeft);
-      resizeDimensions.height = (ev.clientY - boxTop);
-      return resizeDimensions;
-    } else return undefined;
+    if(this.isSizing) { 
+      const thisElement: BoxProperties | null = this.getElementBoxProperties();
+      if(thisElement){
+        return this.calcNewDimensions(thisElement, ev.clientX, ev.clientY);
+      } 
+    } 
+    return undefined;
+  }
+
+  calcNewDimensions(element: BoxProperties, clientX: number, clientY: number): ResizeDimensions {
+    const parentDimensions = this.$props.parentContainerDimensions;
+    const boxLeft = element.left + pageXOffset;
+    const boxTop = element.top += pageYOffset;
+    const resizeDimensions: ResizeDimensions = { height: 0, width: 0 }
+    resizeDimensions.width = (clientX - boxLeft);
+    resizeDimensions.height = (clientY - boxTop);
+    if(resizeDimensions.width  > parentDimensions.left.value + parentDimensions.width.value) {
+      resizeDimensions.width = parentDimensions.left.value + parentDimensions.width.value
+    }
+    if(resizeDimensions.height  > parentDimensions.top.value + parentDimensions.height.value) {
+      resizeDimensions.height = parentDimensions.top.value + parentDimensions.height.value
+    }
+    return resizeDimensions;
   }
 }
 </script>
 
-
 <style lang="postcss" scoped>
 
-  .triangle {
+  .triangle1 {
     content: '';
     position: absolute;
     bottom: -6px;

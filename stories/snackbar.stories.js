@@ -23,7 +23,6 @@ export const store = new Vuex.Store({
       },
       getters: {
       snackbarMessage() {
-        console.log("getter called")
         return this.snackbar;
       }
       },

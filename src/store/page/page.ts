@@ -5,7 +5,7 @@ import {
   PageElement,
   PageData,
 } from '@/models/page/page';
-import { ComponentTypesEnum, enumerate } from '@/models/enums/componentTypes/componentTypes';
+import { ComponentTypesString } from '@/models/components/base-component';
 
 export interface PageStateInterface {
   _pageElements: PageData [],
@@ -81,8 +81,8 @@ class PageStore extends VuexModule implements PageStateInterface {
   private setComponentImage(url: string): void {
     if (this._editedComponentRef) {
       if (this._editedComponentRef.data) {
-        const componentType: ComponentTypesEnum = enumerate[this._editedComponentRef.type];
-        if (componentType === ComponentTypesEnum.image) {
+        const componentType:ComponentTypesString = this._editedComponentRef.type;
+        if (componentType === 'image') {
             this._editedComponentRef.data.content  = url;
           }
         }

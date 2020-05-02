@@ -1,11 +1,11 @@
 import { ComponentTypes } from '../components/components';
-import { ComponentTypesEnum } from '../enums/componentTypes/componentTypes';
 import {
   ComponentRef,
   top,
   left,
   width,
-  height
+  height,
+  ComponentTypesString
 } from '@/models/components/base-component';
 import { BoxDimensions, BoxDimensionsInterface } from '../components/box-dimension';
 //interface for an html Style
@@ -23,7 +23,7 @@ export interface PageElementInterface {
   styles: Style[];
   parentRef: string;
   classDefinition: string;
-  type: ComponentTypesEnum;
+  type: ComponentTypesString;
   data: ComponentTypes;
   boxDimensions: BoxDimensions;
 }
@@ -44,7 +44,7 @@ export class PageElement implements Partial<PageElementInterface> {
  // parent Object
   private _parentRef: ComponentRef = ''; // string ref to the parent
   private _classDefinition = 'bg-gray-200';
-  private _type: ComponentTypesEnum =  ComponentTypesEnum.undefined; // what is this component as in image text etc
+  private _type: ComponentTypesString = undefined; // what is this component as in image text etc
   private _data: ComponentTypes = undefined;
   private _boxDimensions: BoxDimensions = new BoxDimensions(width, height, top, left);
 
@@ -84,11 +84,11 @@ export class PageElement implements Partial<PageElementInterface> {
     return this._styles;
   }
 
-  get type(): ComponentTypesEnum {
+  get type(): ComponentTypesString {
     return this._type;
   }
 
-  set type(type: ComponentTypesEnum) {
+  set type(type: ComponentTypesString) {
     this._type = type;
   }
 
@@ -141,15 +141,15 @@ export class PageElement implements Partial<PageElementInterface> {
     }
   }
 
-  height(): string {
-    if (this._classDefinition) {
-      const classDef = this._classDefinition;
-      const posOfHeight = classDef.indexOf('h-');
-      const height = classDef.substring(posOfHeight, classDef.indexOf(' ', posOfHeight) );
-      return height;
-    }
-    else return '';
-  }
+  // height(): string {
+  //   if (this._classDefinition) {
+  //     const classDef = this._classDefinition;
+  //     const posOfHeight = classDef.indexOf('h-');
+  //     const height = classDef.substring(posOfHeight, classDef.indexOf(' ', posOfHeight) );
+  //     return height;
+  //   }
+  //   else return '';
+  // }
   
   addClass(classDef: string): void {
     if (classDef.indexOf('flex') >= 0) {
@@ -169,7 +169,6 @@ export class PageElement implements Partial<PageElementInterface> {
 
   private processWidths(classDef: string) {
     const index = this.classDefinition.indexOf('w-');
-    console.log('%c%s', 'color: #733d00', index);
     if (index >= 0) {
       let tempclass = this.classDefinition;
       tempclass = this.cutString(tempclass, 'w-2/12');

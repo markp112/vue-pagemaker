@@ -20,7 +20,6 @@ class SitesStore extends VuexModule implements SitesStateInterface{
 
   @Mutation
   private addSiteToSites(site: Site): void {
-    console.log("add sites to site called")
     this.sites.push(site);
   }
 
@@ -82,7 +81,6 @@ class SitesStore extends VuexModule implements SitesStateInterface{
       .then (result => {
         result.forEach(doc =>{
           const site: Site = doc.data() as Site;
-          console.log("site", site);
           this.context.commit('addSiteToSites', site);
         })
         resolve(notification);

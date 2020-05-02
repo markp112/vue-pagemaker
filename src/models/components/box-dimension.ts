@@ -13,7 +13,6 @@ export class Dimension implements DimensionInterface {
     this.value = value;
     this.units = units;
   }
-
 }
 
 export interface BoxDimensionsInterface {
@@ -21,13 +20,20 @@ export interface BoxDimensionsInterface {
   height: Dimension;
   top: Dimension; 
   left: Dimension;
-  };
+};
 
 export class BoxDimensions implements BoxDimensionsInterface {
   width: Dimension;
   height: Dimension;
   top: Dimension;
   left: Dimension;
+
+  constructor(width: Dimension, height: Dimension, top: Dimension, left: Dimension){
+    this.height = height;
+    this.width = width;
+    this.left = left;
+    this.top = top;
+  }
 
   get heightAsStyle(): string {
     return `height:${this.height.value}${this.height.units}`;
@@ -57,14 +63,6 @@ export class BoxDimensions implements BoxDimensionsInterface {
       top: { value: this.top.value, units: this.top.units },
     }
   }
-
-  constructor(width: Dimension, height: Dimension, top: Dimension, left: Dimension){
-    this.height = height;
-    this.width = width;
-    this.left = left;
-    this.top = top;
-  }
-
 }
 
 

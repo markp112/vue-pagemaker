@@ -32,22 +32,24 @@ export default class IconPicker extends Vue {
     this.icons.push(iconBuilder.buildFontAwesomeIcon('question', 'fas'));
     this.icons.push(iconBuilder.buildFontAwesomeIcon('question-circle', 'fas'));
     this.icons.push(iconBuilder.buildFontAwesomeIcon('blog', 'fas'));
+    this.icons.push(iconBuilder.buildImageIcon(`compass-32.png`,`group`));
     this.icons.push(iconBuilder.buildFontAwesomeIcon('photo-video', 'fas'));
     this.icons.push(iconBuilder.buildFontAwesomeIcon('camera', 'fas'));
     this.icons.push(iconBuilder.buildFontAwesomeIcon('images', 'fas'));
+    this.icons.push(iconBuilder.buildImageIcon(`image-32.png`,`group`));
     this.icons.push(iconBuilder.buildFontAwesomeIcon('id-card', 'fas'));
     this.icons.push(iconBuilder.buildFontAwesomeIcon('phone', 'fas'));
     this.icons.push(iconBuilder.buildFontAwesomeIcon('envelope', 'fas'));
     this.icons.push(iconBuilder.buildFontAwesomeIcon('align-justify', 'fas'));
-    this.icons.push(iconBuilder.buildFontAwesomeIcon('columns', 'fas'));
     this.icons.push(iconBuilder.buildFontAwesomeIcon('clone', 'fas'));
     this.icons.push(iconBuilder.buildFontAwesomeIcon('bahai', 'fas'));
     this.icons.push(iconBuilder.buildImageIcon(`icons8-page-32.png`, 'Page'));
     this.icons.push(iconBuilder.buildImageIcon(`icons8-group-objects-32.png`, 'group'));
     this.icons.push(iconBuilder.buildImageIcon(`icons8-text-32.png`, 'group'));
-    this.icons.push(iconBuilder.buildImageIcon(`icons8-splash-32.png`,`group`));
+    this.icons.push(iconBuilder.buildImageIcon(`edit-text.png`, 'group'));
+    this.icons.push(iconBuilder.buildImageIcon(`elephant.png`,`group`));
     this.icons.push(iconBuilder.buildImageIcon(`icons8-button-36.png`,`group`));
-    this.icons.push(iconBuilder.buildImageIcon(`icons8-shipping-container-32.png`,`group`));
+    this.icons.push(iconBuilder.buildImageIcon(`send_container-32.png`,`group`));
   }
 
   getPath(image: string): string {

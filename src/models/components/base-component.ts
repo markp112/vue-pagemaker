@@ -1,10 +1,14 @@
 import { IconInterface, initIcon } from '../font-awesome/icon';
 import { ComponentTypes } from '../components/components';
-import { ComponentTypesEnum } from '../enums/componentTypes/componentTypes';
-import { BoxDimensions, DimensionInterface, Dimension, BoxDimensionsInterface } from './box-dimension'
+import { BoxDimensions, Dimension } from './box-dimension';
 
 // unique reference for this component when dropped on the page
 export type ComponentRef = string;
+
+export type ComponentTypesString = undefined | 'jumbo' | 'button' | 'navBar' | 'pageTemplate' | 'text' | 'image' | 'groupingContainer';
+export const ComponentTypesArray = [ 'jumbo' , 'button' , 'navBar', 'pageTemplate', 'text', 'image', 'groupingContainer' ];
+
+
 
 export interface ComponentDefinitionInterface {
   //  unique name for this component
@@ -14,7 +18,7 @@ export interface ComponentDefinitionInterface {
   componentRef: ComponentRef; // the html tag used to put this element on the page
   isContainer: boolean; // is a container or component 
   sidebarIcon: IconInterface; // icon for this component
-  type: ComponentTypesEnum; // what is this see types
+  type: ComponentTypesString; // what is this see types
   boxDimensions: BoxDimensions;
 }
 
@@ -29,8 +33,9 @@ export const initComponentDefinition = {
   componentRef: '',
   isContainer: false,
   sidebarIcon: initIcon,
-  type: ComponentTypesEnum.undefined,
+  type: undefined,
   boxDimensions: new BoxDimensions(width, height, top, left),
+  
 }
 
 export class ComponentDefinition implements ComponentDefinitionInterface {
@@ -39,8 +44,9 @@ export class ComponentDefinition implements ComponentDefinitionInterface {
   componentRef: ComponentRef = 'generic';
   isContainer = false;
   sidebarIcon: IconInterface = initIcon;
-  type: ComponentTypesEnum = ComponentTypesEnum.undefined;
+  type: ComponentTypesString = undefined;
   boxDimensions: BoxDimensions = new BoxDimensions(width, height, top, left);
+
 
 get toObject(): Record<string, any> {
     return {
