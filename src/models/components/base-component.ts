@@ -8,8 +8,6 @@ export type ComponentRef = string;
 export type ComponentTypesString = undefined | 'jumbo' | 'button' | 'navBar' | 'pageTemplate' | 'text' | 'image' | 'groupingContainer';
 export const ComponentTypesArray = [ 'jumbo' , 'button' , 'navBar', 'pageTemplate', 'text', 'image', 'groupingContainer' ];
 
-
-
 export interface ComponentDefinitionInterface {
   //  unique name for this component
   componentName: string;
@@ -47,8 +45,7 @@ export class ComponentDefinition implements ComponentDefinitionInterface {
   type: ComponentTypesString = undefined;
   boxDimensions: BoxDimensions = new BoxDimensions(width, height, top, left);
 
-
-get toObject(): Record<string, any> {
+  get toObject(): Record<string, any> {
     return {
       componentName: this.componentName,
       class: this.class,

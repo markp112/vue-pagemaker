@@ -20,7 +20,8 @@ const SIDEBARCOLLECTION = 'component-definitions';
 export type sidebarComponents =
   'image-editor'
   | 'sidebar-components'
-  | 'container-editor';
+  | 'container-editor'
+  | 'button-editor';
 
 export interface SidebarStateInterface {
   _sidebarElements: ComponentDefinitions,
@@ -119,6 +120,8 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
         case 'jumbo' || 'pageTemplate' || 'groupingContainer' || 'navBar' :
           this.context.commit('setSidebarEditor', 'container-editor' as sidebarComponents);
           break;
+        case 'button':
+          this.context.commit('setSidebarEditor', 'button-editor')
       };
     }
   }

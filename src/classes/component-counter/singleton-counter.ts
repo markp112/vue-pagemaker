@@ -16,8 +16,7 @@ export class ComponentCounter {
   }
 
   public getNextCounter (): number  {
-    console.log('Counter called', this.counter)
-    const currentCounter = this.counter;
+    const currentCounter: number  = this.counter;
     this.counter++;
     return currentCounter;
   }

@@ -35,7 +35,7 @@ export interface PageContainerInterface extends PageElementInterface {
 export type PageData = PageElement | ComponentContainer;
 
 export class PageElement implements Partial<PageElementInterface> {
-  private _name = '';  //name of the component
+  private _name = ''; //name of the component
   private _ref: ComponentRef = ''; // unique ref of this component in the Dom
   private _componentHTMLTag = ''; // component tag
   private _isContainer = false; // can contain  other elements
@@ -131,14 +131,14 @@ export class PageElement implements Partial<PageElementInterface> {
     this._boxDimensions = new BoxDimensions(boxDimensions.width, boxDimensions.height, boxDimensions.top, boxDimensions.left);
   }
 
+  updateBoxHeightandWidth(boxDimensions: BoxDimensionsInterface): void {
+    this._boxDimensions.height = boxDimensions.height;
+    this._boxDimensions.width = boxDimensions.width;
+  }
+
   addStyle(newStyle: Style) {
-    const existingStyle = this._styles.filter((element: Style) => element.style === newStyle.style)[0]
-    if (!existingStyle) {
-      this._styles.push(newStyle)
-    } else {
-      this._styles = this._styles.filter((element: Style) => element.style !== newStyle.style);
-      this._styles.push(newStyle)
-    }
+    this._styles = this._styles.filter((element: Style) => element.style !== newStyle.style);
+    this._styles.push(newStyle)
   }
 
   // height(): string {
@@ -151,11 +151,22 @@ export class PageElement implements Partial<PageElementInterface> {
   //   else return '';
   // }
   
+  get id(): number {
+    const index = this._ref.indexOf('::');
+    return parseInt(this._ref.substring(index + 1));
+  }
+
+  public updateRefWithNewId(id: string) {
+    const index = this._ref.indexOf('::');
+    const newRef = this._ref.substring(0, index + 1);
+    this._ref = `${newRef}${id}`;
+  }
+
   addClass(classDef: string): void {
     if (classDef.indexOf('flex') >= 0) {
       this.processFlex(classDef);
     }
-    if(classDef.indexOf('w-') >= 0) {
+    if (classDef.indexOf('w-') >= 0) {
       this.processWidths(classDef);
     }
   }

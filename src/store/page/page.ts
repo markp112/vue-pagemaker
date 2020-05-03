@@ -4,8 +4,10 @@ import {
   ComponentContainer,
   PageElement,
   PageData,
+  Style,
 } from '@/models/page/page';
 import { ComponentTypesString } from '@/models/components/base-component';
+import { BoxDimensions, BoxDimensionsInterface } from '@/models/components/box-dimension';
 
 export interface PageStateInterface {
   _pageElements: PageData [],
@@ -48,18 +50,25 @@ class PageStore extends VuexModule implements PageStateInterface {
     if (this._editedComponentRef) {
     if (this._editedComponentRef.parentRef === this.ROOT) {
       this._pageElements = this._pageElements.filter(element =>{
-        if (this._editedComponentRef)
+        if (this._editedComponentRef) {
           return element.ref !== this._editedComponentRef.ref 
-        })
+        }
+      })
     } else {
       const parentComponent = this._pageElements.filter(element => {
         if (this._editedComponentRef) {
-        return element.ref === this._editedComponentRef.parentRef}
+          return element.ref === this._editedComponentRef.parentRef
+        }})[0];
+        (parentComponent as ComponentContainer).deleteElement(this._editedComponentRef.ref)
       }
-        )[0];
-      (parentComponent as ComponentContainer).deleteElement(this._editedComponentRef.ref)
     }
   }
+
+  @Mutation
+  private setEditedComponentStyles(newStyle: Style) {
+    if (this._editedComponentRef) {
+      this._editedComponentRef.addStyle(newStyle);
+    }
   }
 
   @Mutation 
@@ -81,12 +90,17 @@ class PageStore extends VuexModule implements PageStateInterface {
   private setComponentImage(url: string): void {
     if (this._editedComponentRef) {
       if (this._editedComponentRef.data) {
-        const componentType:ComponentTypesString = this._editedComponentRef.type;
+        const componentType: ComponentTypesString = this._editedComponentRef.type;
         if (componentType === 'image') {
             this._editedComponentRef.data.content  = url;
           }
         }
       }
+  }
+
+  @Mutation
+  private setBoxDimensionsHeightandWidth(newDimensions: BoxDimensionsInterface) {
+    if(this._editedComponentRef) this._editedComponentRef.updateBoxHeightandWidth(newDimensions);
   }
 
   //#endregion Mutations
@@ -117,6 +131,11 @@ class PageStore extends VuexModule implements PageStateInterface {
   }
 
   @Action
+  public updateBoxDimensionHeightandWidth(newDimensions: BoxDimensionsInterface) {
+    this.context.commit('setBoxDimensionsHeightandWidth', newDimensions);
+  }
+
+  @Action
   public updateParentClassProperties(classDef: string): void {
     if (this.editedComponentRef) {
       const parent = this.editedComponentRef.parent;
@@ -124,6 +143,11 @@ class PageStore extends VuexModule implements PageStateInterface {
         parent.addClass(classDef);
       }
     }
+  }
+
+  @Action
+  public updateEditedComponentStyles(newStyle: Style): void {
+    this.context.commit('setEditedComponentStyles', newStyle);
   }
 
   @Action
@@ -139,7 +163,6 @@ class PageStore extends VuexModule implements PageStateInterface {
   @Action getTheEditedComponentRef(): Promise<PageData> {
     return new Promise((resolve) => {
       resolve(this._editedComponentRef);
-      
     });
   }
 
@@ -152,7 +175,13 @@ class PageStore extends VuexModule implements PageStateInterface {
   }
 
   public get pageElements(): PageData[] {
-    return this._pageElements;
+    return this._pageElements.sort(this.compare);
+  }
+
+  private compare(a: PageData, b: PageData) {
+    if (a.id > b.id) return 1
+    if (a.id < b.id) return -1
+    return 0
   }
 
 }

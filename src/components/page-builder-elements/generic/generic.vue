@@ -1,18 +1,27 @@
 <template>
   <div class="handle" 
+    v-if="!isImage"
     :style="getStyles()"
     :id="$props.thisComponent.ref"
     :class="getClasses()"
-    >
-    <div
-      v-if="!isImage"
-      :style="getStyles()"
-      @click.prevent="onClick($event)"
-    >
-      {{ data.content }}
-    </div>
+    @click.prevent="onClick($event)"
+  >
+    {{ data.content }}
+    <resizeable
+      :isActive="showBorder"
+      :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"
+      @onResize="onResize"
+    ></resizeable>
+  </div>
+  <div 
+    v-else-if="isImage"
+    class="handle" 
+    :style="getStyles()"
+    :id="$props.thisComponent.ref"
+    :class="getClasses()"
+    @click.prevent="onClick($event)"
+  >
     <img
-      v-else-if="isImage"
       :src="data.content"
       :style="getStyles()"
       class="h-full"
@@ -22,8 +31,7 @@
       :isActive="showBorder"
       :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"
       @onResize="onResize"
-
-      ></resizeable>
+    ></resizeable>
   </div>
 </template>
 
@@ -37,8 +45,8 @@ import
     ComponentContainer,
     PageElement,
   } from '@/models/page/page';
-import { ComponentTypes } from '@/models/components/components';
-import { BoxDimensions } from '@/models/components/box-dimension';
+import { ComponentTypes, initDimensions } from '@/models/components/components';
+import { BoxDimensions, BoxDimensionsInterface } from '@/models/components/box-dimension';
 import { PageModule } from '@/store/page/page';
 import Resize,
   { ResizeDimensions } from '@/components/base/resizeable/resize.vue';
@@ -99,10 +107,14 @@ export default class GenericComponent extends Vue {
     if (newDimensions) {
       if (PageModule.editedComponentRef) {
         if (newDimensions.height !== undefined) {
-          this.$props.thisComponent.boxDimensions.width.value = newDimensions.width;
-          this.$props.thisComponent.boxDimensions.width.units = 'px';
-          this.$props.thisComponent.boxDimensions.height.value = newDimensions.height;
-          this.$props.thisComponent.boxDimensions.height.units = 'px';
+          const boxDimensions: BoxDimensionsInterface = 
+          { 
+            height: { value: newDimensions.height, units: 'px' },
+            width: { value: newDimensions.width, units: 'px' },
+            top: { value: 0, units: 'px' },
+            left: { value: 0, units: 'px' }
+          }
+          PageModule.updateBoxDimensionHeightandWidth(boxDimensions)
         }
       }
     }

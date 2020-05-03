@@ -12,6 +12,7 @@ import sidebarComponentIcons from './sidebar-component-icons.vue';
 import ImageEditorSidebar from '@/components/core/sidebar/image-editor/image-editor.vue';
 import ContainerEditorSidebar from '@/components/core/sidebar/container-editor/container-editor.vue';
 import TextEditorSidebar from '@/components/core/sidebar/text-editor//text-editor.vue';
+import ButtonEditor from '@/components/core/sidebar/button-editor/button-editor.vue';
 import { SidebarModule } from '@/store//sidebar/sidebar';
 
 @Component({
@@ -20,6 +21,7 @@ import { SidebarModule } from '@/store//sidebar/sidebar';
     'image-editor': ImageEditorSidebar,
     'text-editor': TextEditorSidebar,
     'container-editor': ContainerEditorSidebar,
+    'button-editor': ButtonEditor,
   }
 })
 export default class SideBar extends Vue {

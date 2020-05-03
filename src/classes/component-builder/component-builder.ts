@@ -1,6 +1,6 @@
 import { PageData, ComponentContainer, PageElement } from '@/models/page/page';
-import { ComponentRef, ComponentDefinitionInterface, ComponentTypesString } from '@/models/components/base-component'
-import { Button, Text, LOREMIPSUM, Image, ComponentTypes } from '@/models/components/components';
+import { ComponentDefinitionInterface, ComponentTypesString } from '@/models/components/base-component'
+import { Button, Text, LOREMIPSUM, Image } from '@/models/components/components';
 export const _componentClasses: ComponentDefinitionInterface[] = []
 
 
