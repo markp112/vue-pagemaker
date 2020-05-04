@@ -40,11 +40,11 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import 
   {
-    Style,
     PageData,
     ComponentContainer,
     PageElement,
   } from '@/models/page/page';
+import { Style } from '@/models//styles/styles';
 import { ComponentTypes, initDimensions } from '@/models/components/components';
 import { BoxDimensions, BoxDimensionsInterface } from '@/models/components/box-dimension';
 import { PageModule } from '@/store/page/page';

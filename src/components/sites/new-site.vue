@@ -13,9 +13,11 @@
           <label for="description" >Description</label>
           <textarea rows="4" name="name" id="name" v-model="site.description" placeholder="Description of your site"></textarea>
         </div>
-        <div class="field-wrapper h-32">
+        <div class="field-wrapper">
           <label for="image">Site Image</label>
-          <image-uploader class="w-10/12 mt-4 mb-2" v-on:image-url="updateImageUrl"></image-uploader>
+          <div class="w-10/12">
+            <image-uploader class="mt-4 mb-2" v-on:image-url="updateImageUrl"></image-uploader>
+          </div>
         </div>
         <div class="field-wrapper">
           <label for="created">Created:</label>

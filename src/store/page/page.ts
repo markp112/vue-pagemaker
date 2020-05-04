@@ -4,8 +4,8 @@ import {
   ComponentContainer,
   PageElement,
   PageData,
-  Style,
 } from '@/models/page/page';
+import { Style } from '@/models/styles/styles';
 import { ComponentTypesString } from '@/models/components/base-component';
 import { BoxDimensions, BoxDimensionsInterface } from '@/models/components/box-dimension';
 

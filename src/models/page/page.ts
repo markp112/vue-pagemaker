@@ -8,11 +8,8 @@ import {
   ComponentTypesString
 } from '@/models/components/base-component';
 import { BoxDimensions, BoxDimensionsInterface } from '../components/box-dimension';
+import { Style } from '@/models/styles/styles';
 //interface for an html Style
-export interface Style {
-  style: string;
-  value: string;
-}
 
 // represents the definition of the object the user has dropped on the page
 export interface PageElementInterface {

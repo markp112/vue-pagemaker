@@ -22,7 +22,7 @@
       @dragleave.prevent="dragLeave()"
       @drop.prevent="drop($event)">
       <h3 v-if="!hasFile" class="z-10 fixed font-bold text-accent flex-row flex-wrap justify-start">Upload a file by dropping it here</h3>
-      <img :src="getImage"  class="border object-contain w-full h-full" ref="imagePlaceholder"/>
+      <img :src="getImage"  class="border object-contain  h-32" ref="imagePlaceholder"/>
     </div>
   </div>
 </template>
@@ -98,7 +98,7 @@ export default class UploadImage extends Vue {
 
   get getImage() {
       if(this.url === '') {
-        return require('@/assets/images/imageplaceholder.png');
+        return require('@/assets/images/imageplaceholder-100x83.png');
       } else { return this.url };
     }
 

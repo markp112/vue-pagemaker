@@ -36,21 +36,21 @@
   import Vue from 'vue';
   import Component from 'vue-class-component';
   import { Emit } from 'vue-property-decorator';
-  import { Style } from '@/models/page/page';
+  import { Style, BorderDirections } from '@/models/styles/styles';
 
-type Borders = 'top' | 'bottom' | 'left' | 'right' | 'outside' | null
+  
 
   @Component
   export default class BorderButtons extends Vue {
     name = 'border-buttons';
-    selectedBorder: Borders = null;
+    selectedBorder: BorderDirections = null;
     
     borderStyle: Style = {style: 'border', value: ''}
 
 
   @Emit('onBorderChange')
   setBorder() {
-    this.selectedBorder === 'outside' ? this.borderStyle.style = `border` :  this.borderStyle.style = `border-${this.selectedBorder}`;
+    this.selectedBorder === 'border' ? this.borderStyle.style = `border` :  this.borderStyle.style = `border-${this.selectedBorder}`;
     this.borderStyle.value = 'solid 1px rgba(123, 4, 100,1)'
     return this.borderStyle;
   }
@@ -84,8 +84,8 @@ type Borders = 'top' | 'bottom' | 'left' | 'right' | 'outside' | null
     }
 
   borderOutsideClick(){
-      this.selectedBorder = this.selectedBorder === 'outside' ? null : 'outside';
-      if (this.selectedBorder === 'outside') {
+      this.selectedBorder = this.selectedBorder === 'border' ? null : 'border';
+      if (this.selectedBorder === 'border') {
         this.setBorder();
       }
     }
