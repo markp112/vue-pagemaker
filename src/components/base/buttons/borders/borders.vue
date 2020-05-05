@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="button-panel">
+    <div class="button-panel p-2">
     <img src="@/assets/icons/border_outside-32.png"
       class="text-accent cursor-pointer hover:bg-gray-600"
       :class="{'bg-secondary-100': selectedBorder === 'outside'}"
@@ -22,10 +22,17 @@
       :class="{'bg-secondary-100': selectedBorder === 'right'}"
       @click="borderRightClick" />
     </div>
-    <div class="button-panel mt-1">
-      <img src="@/assets/icons/thickness-32.png"
-      class="text-accent cursor-pointer hover:bg-gray-600"
-      @click="thicknessClick" />
+    <div class="button-panel mt-1 p-1">
+      <div class="flex flex-row flex-start">
+        <img src="@/assets/icons/thickness-32.png"
+          class="text-accent cursor-pointer hover:bg-gray-600"
+          :class="{'bg-secondary-100': isThicknessSelected}"
+          @click="thicknessClick" />
+        <div class="flex flex-col items-center" v-if="isThicknessSelected">
+         <span class="icon-img minus h-4 inline-block w-4"></span>
+         <span class="icon-img plus h-4 inline-block w-4"></span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -44,15 +51,18 @@
   export default class BorderButtons extends Vue {
     name = 'border-buttons';
     selectedBorder: BorderDirections = null;
-    
+    isThicknessSelected = false;
     borderStyle: Style = {style: 'border', value: ''}
 
 
   @Emit('onBorderChange')
   setBorder() {
-    this.selectedBorder === 'border' ? this.borderStyle.style = `border` :  this.borderStyle.style = `border-${this.selectedBorder}`;
-    this.borderStyle.value = 'solid 1px rgba(123, 4, 100,1)'
-    return this.borderStyle;
+    const style: Style ={
+      style: this.selectedBorder === 'border' ? `border` : `border-${this.selectedBorder}`,
+      value: 'solid 1px rgba(123, 4, 100,1)'
+    };
+  
+    return style;
   }
     
     borderBottomClick() {
@@ -91,13 +101,36 @@
     }
 
     thicknessClick(){
-      return;
+      this.isThicknessSelected = !this.isThicknessSelected;
     }
   }
   </script>
 
   <style lang="postcss" scoped>
   .button-panel {
-    @apply flex flex-row justify-evenly text-xl bg-gray-300 p-2 h-10;
+    @apply flex flex-row justify-evenly text-xl bg-gray-300 h-10;
   }
+
+  .icon-img {
+    background-size: 16px 16px;
+    background-position: center;
+  }
+
+  .plus {
+    background-image: url("../../../../assets/icons/plus-24.png");
+    
+  }
+
+  .plus:hover{
+    background-image: url("../../../../assets/icons/plus-olive-24.png");
+  }
+
+  .minus {
+    background-image: url("../../../../assets/icons/minus-24.png");
+  }
+
+ .minus:hover{
+    background-image: url("../../../../assets/icons/minus-olive-24.png");
+  }
+
   </style>

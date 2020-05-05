@@ -66,7 +66,9 @@ class PageStore extends VuexModule implements PageStateInterface {
 
   @Mutation
   private setEditedComponentStyles(newStyle: Style) {
+    
     if (this._editedComponentRef) {
+      console.log('%c⧭', 'color: #7f2200', this._editedComponentRef);
       this._editedComponentRef.addStyle(newStyle);
     }
   }

@@ -134,8 +134,8 @@ export class PageElement implements Partial<PageElementInterface> {
   }
 
   addStyle(newStyle: Style) {
-    this._styles = this._styles.filter((element: Style) => element.style !== newStyle.style);
-    this._styles.push(newStyle)
+    this._styles = this._styles.filter(el => el.style !== newStyle.style);
+    this._styles.push(newStyle);
   }
 
   // height(): string {

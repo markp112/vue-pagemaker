@@ -16,6 +16,7 @@ export interface BorderInterface {
   width: DimensionInterface;
   borderRadius: DimensionInterface;
   getBorderStyle(): Style;
+  getBorderRadius(): Style;
 }
 
 //  
@@ -28,15 +29,19 @@ export class BorderBuilder {
       borderDirection: null,
       colour: 'rgba(0,0,0,1)',
       style: 'solid',
-      width: {value: 1, units: 'px'},
-      borderRadius: {value: 0, units: 'px'},
+      width: { value: 1, units: 'px' },
+      borderRadius: { value: 0, units: 'px' },
       getBorderStyle: () => {
         const style = `${this._border.style}`;
         const width = `${this._border.width.value}${this._border.width.units}`;
         const color = `${this._border.colour}`
         const direction = this._border.borderDirection === 'border' ? this._border.borderDirection : `border-${this._border.borderDirection}`;
         const border: Style = {style: direction, value: `${width} ${style} ${color}`};
-        return border
+        return border;
+      },
+      getBorderRadius: () => {
+        const style: Style = { style: 'border-radius', value: `${this._border.borderRadius.value}${this._border.borderRadius.units}`};
+        return style;
       }
     };
   }
@@ -73,4 +78,4 @@ export class BorderBuilder {
 
 }
 
-let x:BorderInterface = new BorderBuilder().build();
+///let x:BorderInterface = new BorderBuilder().build();
