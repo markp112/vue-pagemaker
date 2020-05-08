@@ -1,4 +1,5 @@
 # vue-pagemaker
+A project to allow the creation of a website by laying out pages adding elements and styling the elements. This project is in development.
 
 ## Project setup
 ```
