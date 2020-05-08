@@ -22,3 +22,9 @@ Requirements:
 ### Nice to haves
 
 * Add an Icon
+
+#### Implementation
+
+* Option 1 make changes in real time
+maintain a local copy to which features are added removed then submit 
+* Option 2 apply changes to a proxy and then update in real time

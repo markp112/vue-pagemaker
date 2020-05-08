@@ -25,6 +25,7 @@ export interface PageElementInterface {
   boxDimensions: BoxDimensions;
 }
 
+export type StyleTypes = 'border';
 export interface PageContainerInterface extends PageElementInterface {
   elements: PageElement[]
 }
@@ -138,16 +139,11 @@ export class PageElement implements Partial<PageElementInterface> {
     this._styles.push(newStyle);
   }
 
-  // height(): string {
-  //   if (this._classDefinition) {
-  //     const classDef = this._classDefinition;
-  //     const posOfHeight = classDef.indexOf('h-');
-  //     const height = classDef.substring(posOfHeight, classDef.indexOf(' ', posOfHeight) );
-  //     return height;
-  //   }
-  //   else return '';
-  // }
-  
+  removeStyle(styleToRemove: StyleTypes) {
+    console.log("this._Styles", this._styles, styleToRemove)
+    this._styles = this._styles.filter(el => !el.style.includes(styleToRemove))
+  }
+
   get id(): number {
     const index = this._ref.indexOf('::');
     return parseInt(this._ref.substring(index + 1));

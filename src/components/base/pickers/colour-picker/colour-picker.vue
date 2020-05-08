@@ -6,11 +6,6 @@
     </div>
     <div class="input-wrapper">
       <span class="text">{{ colour }}</span>
-      <div
-        class="color-div"
-        :style="{'background-color': colour || 'white'}"
-      ></div>
-      <p class="text-style" @click="handleOkClick()">Ok</p>
     </div>
   </div>
 </template>
@@ -38,7 +33,7 @@ handleOkClick(){
   // event.stopPropagation();
   return this.colour;
 }
-
+@Emit('colour')
 setColour(rgbColour: string) {
   this.colour = rgbColour;
 }
@@ -69,6 +64,8 @@ setHue(hue: string) {
   padding: 2px;
   height: 32px;
   justify-content: center;
+  width: 60%;
+  font-size: 8px;
 }
 
 .color-div {

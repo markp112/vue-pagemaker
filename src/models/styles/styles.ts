@@ -15,67 +15,93 @@ export interface BorderInterface {
   style: BorderStyle;
   width: DimensionInterface;
   borderRadius: DimensionInterface;
-  getBorderStyle(): Style;
-  getBorderRadius(): Style;
 }
 
-//  
+export class Border implements BorderInterface {
+  borderDirection: BorderDirections;
+  colour: string;
+  style: BorderStyle;
+  width: DimensionInterface;
+  borderRadius: DimensionInterface;
+
+  constructor(borderBuilder: BorderBuilder) {
+    this.borderDirection = borderBuilder.borderDirection;
+    this.borderRadius = borderBuilder.borderRadius;
+    this.colour = borderBuilder.colour;
+    this.style = borderBuilder.style;
+    this.width = borderBuilder.width;
+  }
+
+  getBorderStyle = (): Style => {
+    const style = `${this.style}`;
+    const width = `${this.width.value}${this.width.units}`;
+    const color = `${this.colour}`
+    const direction = this.borderDirection === 'border' ? this.borderDirection : `border-${this.borderDirection}`;
+    const border: Style = {style: direction, value: `${width} ${style} ${color}`};
+    return border;
+  }
+
+  getBorderRadius = () => {
+    const style: Style = { style: 'border-radius', value: `${this.borderRadius.value}${this.borderRadius.units}`};
+    return style;
+  }
+}
 
 export class BorderBuilder {
-  private readonly _border: BorderInterface;
-
-  constructor() {
-    this._border = {
-      borderDirection: null,
-      colour: 'rgba(0,0,0,1)',
-      style: 'solid',
-      width: { value: 1, units: 'px' },
-      borderRadius: { value: 0, units: 'px' },
-      getBorderStyle: () => {
-        const style = `${this._border.style}`;
-        const width = `${this._border.width.value}${this._border.width.units}`;
-        const color = `${this._border.colour}`
-        const direction = this._border.borderDirection === 'border' ? this._border.borderDirection : `border-${this._border.borderDirection}`;
-        const border: Style = {style: direction, value: `${width} ${style} ${color}`};
-        return border;
-      },
-      getBorderRadius: () => {
-        const style: Style = { style: 'border-radius', value: `${this._border.borderRadius.value}${this._border.borderRadius.units}`};
-        return style;
-      }
-    };
-  }
-
-  borderDirection(borderDirection: BorderDirections): BorderBuilder {
-    this._border.borderDirection = borderDirection;
+  
+  private _borderDirection: BorderDirections = null;
+  private _colour = 'rgba(0,0,0,1)';
+  private _style: BorderStyle = 'solid';
+  private _width: DimensionInterface = { value: 1, units: 'px' };
+  private _borderRadius: DimensionInterface = { value: 0, units: 'px' };
+  
+  setBorderDirection(borderDirection: BorderDirections): BorderBuilder {
+    this._borderDirection = borderDirection;
     return this;
   }
 
-  colour(colour: string): BorderBuilder {
-    this._border.colour = colour;
+  setColour(colour: string): BorderBuilder {
+    this._colour = colour;
     return this;
   }
 
-  style(style: BorderStyle): BorderBuilder {
-    this._border.style = style;
+  setStyle(style: BorderStyle): BorderBuilder {
+    this._style = style;
     return this;
   }
 
-  width(width: DimensionInterface): BorderBuilder {
-    this._border.width = width;
+  setWidth(width: DimensionInterface): BorderBuilder {
+    this._width = width;
     return this;
   }
 
-  borderRadius(borderRadius: DimensionInterface): BorderBuilder {
-    this._border.borderRadius = borderRadius;
+  setBorderRadius(borderRadius: DimensionInterface): BorderBuilder {
+    this._borderRadius = borderRadius;
     return this;
   }
 
-  build(): BorderInterface {
-    return this._border;
+  public build(): Border {
+    return  new Border(this)
   }
 
+  get borderDirection(): BorderDirections {
+    return this._borderDirection
+  }
 
+  get colour(): string {
+    return this._colour;
+  }
+
+  get borderRadius(): DimensionInterface {
+    return this._borderRadius;
+  }
+  
+  get width(): DimensionInterface {
+    return this._width;
+  }
+
+  get style():BorderStyle {
+    return this._style;
+  }
 }
 
-///let x:BorderInterface = new BorderBuilder().build();

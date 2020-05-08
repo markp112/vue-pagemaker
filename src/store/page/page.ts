@@ -4,6 +4,7 @@ import {
   ComponentContainer,
   PageElement,
   PageData,
+  StyleTypes,
 } from '@/models/page/page';
 import { Style } from '@/models/styles/styles';
 import { ComponentTypesString } from '@/models/components/base-component';
@@ -66,10 +67,15 @@ class PageStore extends VuexModule implements PageStateInterface {
 
   @Mutation
   private setEditedComponentStyles(newStyle: Style) {
-    
     if (this._editedComponentRef) {
-      console.log('%c⧭', 'color: #7f2200', this._editedComponentRef);
       this._editedComponentRef.addStyle(newStyle);
+    }
+  }
+
+  @Mutation
+  private removeEditedComponentStyle(styleToRemove: StyleTypes) {
+    if (this._editedComponentRef) {
+      this._editedComponentRef.removeStyle(styleToRemove);
     }
   }
 
@@ -152,6 +158,10 @@ class PageStore extends VuexModule implements PageStateInterface {
     this.context.commit('setEditedComponentStyles', newStyle);
   }
 
+  @Action 
+  public deleteEditedComponentStyle(styleToRemove: StyleTypes): void {
+    this.context.commit('removeEditedComponentStyle', styleToRemove);
+  }
   @Action
   public updateComponentClassProperties(classDef: string): void {
     if (this.editedComponentRef) {

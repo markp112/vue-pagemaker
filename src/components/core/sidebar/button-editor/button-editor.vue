@@ -17,6 +17,7 @@
       <border-buttons 
         class="mt-2"
         @onBorderChange="onBorderChange"
+        @onRemoveStyle="onRemoveStyle"
         ></border-buttons>
     </div>
   </div>
@@ -31,7 +32,8 @@ import ToggleSwitch from '@/components/base/buttons/switch/switch.vue';
 import BorderButtons from '@/components/base/buttons/borders/borders.vue';
 import { PageModule } from '@/store/page/page';
 import { SidebarModule } from '@/store//sidebar/sidebar';
-import { Style } from '@/models/styles/styles';
+import { Style, BorderInterface, Border, BorderBuilder } from '@/models/styles/styles';
+import { StyleTypes } from '../../../../models/page/page';
 
 type BackgroundForeGround = 'background-color' | 'color' | 'border';
 
@@ -48,6 +50,8 @@ export default class ContainerEditorSidebar extends Vue {
   textBackgroundorBorder: BackgroundForeGround = 'background-color';
   isFontSelected = false;
   borderStyle: Style | null = null;
+  borderColour = 'rgba(0, 0, 0, 1)';
+  borderDefintion: BorderInterface | null = null;
 
   closeButtonClick(): void {
     SidebarModule.closeEditor();
@@ -59,14 +63,40 @@ export default class ContainerEditorSidebar extends Vue {
 
   onColourChange(rgbColour: string) {
     if(this.textBackgroundorBorder !== 'border'){
-      const style: Style = {style: this.textBackgroundorBorder, value: rgbColour};
+      const style: Style = { style: this.textBackgroundorBorder, value: rgbColour };
       PageModule.updateEditedComponentStyles(style);
+    } else {
+      this.borderColour = rgbColour;
+      if(this.borderDefintion){
+        this.setBorderStyle(this.buildBorder(this.borderDefintion));
+      }
     }
   }
 
-  onBorderChange(style: Style) {
-    this.borderStyle = style;
-    PageModule.updateEditedComponentStyles(style);
+  buildBorder(borderStyle: BorderInterface): Border {
+    this.borderDefintion = borderStyle;
+    return new BorderBuilder()
+      .setStyle(borderStyle.style)
+      .setBorderDirection(borderStyle.borderDirection)
+      .setWidth(borderStyle.width)
+      .setBorderRadius(borderStyle.borderRadius)
+      .setColour(this.borderColour)
+      .build();
   }
+
+  setBorderStyle(border:Border): void {
+    PageModule.updateEditedComponentStyles(border.getBorderStyle());
+    PageModule.updateEditedComponentStyles(border.getBorderRadius());
+  }
+
+  onBorderChange(borderStyle: BorderInterface) {
+    const border: Border = this.buildBorder(borderStyle);
+    this.setBorderStyle(border); 
+  }
+
+  onRemoveStyle(styleToRemove: StyleTypes): void {
+    console.log('%c%s', 'color: #e5de73', styleToRemove)
+    PageModule.deleteEditedComponentStyle(styleToRemove);
+  } 
 }
 </script>
