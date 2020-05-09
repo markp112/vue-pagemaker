@@ -9,6 +9,7 @@
 * set Shadow
 * set the text
 * Presets preset button designs which are customised via the admin section
+* set navigation link
 
 #### borders
 
@@ -28,3 +29,12 @@ Requirements:
 * Option 1 make changes in real time
 maintain a local copy to which features are added removed then submit 
 * Option 2 apply changes to a proxy and then update in real time
+
+### Text for components e.g. buttons
+
+#### Requirements
+* type in free text
+* select colour
+* select style - weight, italic, underline
+* select font
+* select alignment

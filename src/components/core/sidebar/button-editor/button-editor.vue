@@ -18,7 +18,15 @@
         class="mt-2"
         @onBorderChange="onBorderChange"
         @onRemoveStyle="onRemoveStyle"
+        @onShadowChange="onShadowChange"
         ></border-buttons>
+        <sidebar-text-editor 
+          class="mt-2" 
+          @onFontWeightChange="onFontWeightChange"
+          @onTextChange="onTextChange"
+          @onItalicClick="onItalicClick"
+        >
+          </sidebar-text-editor>
     </div>
   </div>
 </template>
@@ -30,6 +38,7 @@ import CloseButton from '@/components/base/buttons/close-button/close-button.vue
 import ColourPicker from '@/components//base/pickers/colour-picker/colour-picker.vue';
 import ToggleSwitch from '@/components/base/buttons/switch/switch.vue';
 import BorderButtons from '@/components/base/buttons/borders/borders.vue';
+import SideBarTextEditor from '@/components/base/text/sidebar-text-editor/sidebar-text-editor.vue'
 import { PageModule } from '@/store/page/page';
 import { SidebarModule } from '@/store//sidebar/sidebar';
 import { Style, BorderInterface, Border, BorderBuilder } from '@/models/styles/styles';
@@ -43,6 +52,7 @@ type BackgroundForeGround = 'background-color' | 'color' | 'border';
     'colour-picker': ColourPicker,
     'toggle-switch': ToggleSwitch,
     'border-buttons': BorderButtons,
+    'sidebar-text-editor': SideBarTextEditor,
   },
 })
 export default class ContainerEditorSidebar extends Vue {
@@ -89,7 +99,7 @@ export default class ContainerEditorSidebar extends Vue {
     PageModule.updateEditedComponentStyles(border.getBorderRadius());
   }
 
-  onBorderChange(borderStyle: BorderInterface) {
+  onBorderChange(borderStyle: BorderInterface): void {
     const border: Border = this.buildBorder(borderStyle);
     this.setBorderStyle(border); 
   }
@@ -98,5 +108,22 @@ export default class ContainerEditorSidebar extends Vue {
     console.log('%c%s', 'color: #e5de73', styleToRemove)
     PageModule.deleteEditedComponentStyle(styleToRemove);
   } 
+
+  onShadowChange(classDef: string): void {
+    PageModule.updateComponentClassProperties(classDef);
+  }
+
+  onFontWeightChange(classDef: string): void {
+    PageModule.updateComponentClassProperties(classDef);
+  }
+
+  onTextChange(text: string): void {
+    PageModule.updateEditedComponentData(text);
+  }
+
+  onItalicClick(classDef: string) {
+    PageModule.updateComponentClassProperties(classDef);
+  }
+
 }
 </script>

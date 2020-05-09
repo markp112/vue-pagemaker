@@ -117,7 +117,16 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
         case 'text':
           this.context.commit('setSidebarEditor', 'text-editor' as sidebarComponents);
           break;
-        case 'jumbo' || 'pageTemplate' || 'groupingContainer' || 'navBar' :
+        case 'jumbo':
+          this.context.commit('setSidebarEditor', 'container-editor' as sidebarComponents);
+          break;
+        case 'pageTemplate':
+          this.context.commit('setSidebarEditor', 'container-editor' as sidebarComponents);
+          break;
+        case 'groupingContainer':
+          this.context.commit('setSidebarEditor', 'container-editor' as sidebarComponents);
+          break;
+        case 'navBar':
           this.context.commit('setSidebarEditor', 'container-editor' as sidebarComponents);
           break;
         case 'button':

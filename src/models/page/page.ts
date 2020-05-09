@@ -39,7 +39,6 @@ export class PageElement implements Partial<PageElementInterface> {
   private _isContainer = false; // can contain  other elements
   private _styles: Style[] = []; // css styles
   private _parent!: ComponentContainer; // parent Object
- // parent Object
   private _parentRef: ComponentRef = ''; // string ref to the parent
   private _classDefinition = 'bg-gray-200';
   private _type: ComponentTypesString = undefined; // what is this component as in image text etc
@@ -156,18 +155,27 @@ export class PageElement implements Partial<PageElementInterface> {
   }
 
   addClass(classDef: string): void {
-    if (classDef.indexOf('flex') >= 0) {
+    if (classDef.includes('flex')) {
       this.processFlex(classDef);
     }
-    if (classDef.indexOf('w-') >= 0) {
+    if (classDef.includes('w-')) {
       this.processWidths(classDef);
+    }
+    if (classDef.includes('shadow')) {
+      this.processShadow(classDef)
+    }
+    if (classDef.includes('font')) {
+      this.processfont(classDef)
+    }
+    if (classDef.includes('italic')) { 
+      this.processItalic(classDef);
     }
   }
 
   private cutString(stringToCutFrom: string, wordToCut: string): string {
     const index =  stringToCutFrom.indexOf(wordToCut);
     if (index >= 0) {
-      return  stringToCutFrom.split(' ').filter(word => word !== wordToCut).join(' ');
+      return  stringToCutFrom.split(' ').filter(word => !word.includes(wordToCut)).join(' ');
     } else return stringToCutFrom;
   }
 
@@ -175,13 +183,6 @@ export class PageElement implements Partial<PageElementInterface> {
     const index = this.classDefinition.indexOf('w-');
     if (index >= 0) {
       let tempclass = this.classDefinition;
-      tempclass = this.cutString(tempclass, 'w-2/12');
-      tempclass = this.cutString(tempclass, 'w-4/12');
-      tempclass = this.cutString(tempclass, 'w-6/12');
-      tempclass = this.cutString(tempclass, 'w-8/12');
-      tempclass = this.cutString(tempclass, 'w-10/12');
-      tempclass = this.cutString(tempclass, 'w-full');
-      tempclass = this.cutString(tempclass, 'w-auto');
       tempclass += ` ${classDef}`;
       this.classDefinition = tempclass;
     } else {
@@ -205,23 +206,33 @@ export class PageElement implements Partial<PageElementInterface> {
 
   private processFlexHorizontalAlignment(classDef: string, tempclass: string): string {
     tempclass = this.cutString(tempclass, 'flex');
-    tempclass = this.cutString(tempclass, 'flex-row');
-    tempclass = this.cutString(tempclass, 'justify-center');
-    tempclass = this.cutString(tempclass, 'justify-between');
-    tempclass = this.cutString(tempclass, 'justify-around');
-    tempclass = this.cutString(tempclass, 'justify-end');
-    tempclass = this.cutString(tempclass, 'justify-start');
+    tempclass = this.cutString(tempclass, 'justify');
     tempclass += ` ${classDef}`;
     return tempclass;
   }
+
   private processFlexVerticalAlignment(classDef: string, tempclass: string): string {
       tempclass = this.cutString(tempclass, 'flex');
-      tempclass = this.cutString(tempclass, 'flex-row');
-      tempclass = this.cutString(tempclass, 'items-center');
-      tempclass = this.cutString(tempclass, 'items-end');
-      tempclass = this.cutString(tempclass, 'items-start');
-      tempclass += ` ${classDef}`;
+      tempclass = this.cutString(tempclass, 'items');
       return tempclass;
+  }
+
+  private processShadow(classDef: string) {
+    let tempClass: string = this.cutString(this.classDefinition,'shadow');
+    tempClass += ` ${classDef}`;
+    this.classDefinition = tempClass;
+  }
+  private processfont(classDef: string) {
+    let tempClass: string = this.cutString(this.classDefinition,'font');
+    tempClass += ` ${classDef}`;
+    this.classDefinition = tempClass;
+  }
+
+  private processItalic(classDef: string) {
+    let tempClass: string = this.cutString(this.classDefinition,'italic');
+    tempClass += ` ${classDef}`;
+    this.classDefinition = tempClass;
+    
   }
 }
 

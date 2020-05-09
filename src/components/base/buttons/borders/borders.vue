@@ -1,72 +1,7 @@
 <template>
   <div>
-    <div class="button-panel p-2">
-      <img src="@/assets/icons/border_outside-32.png"
-        class="text-accent cursor-pointer hover:bg-gray-600"
-        :class="{'bg-secondary-100': selectedBorder === 'border'}"
-        @click="borderEdgeChange('border')" />
-      <img src="@/assets/icons/border_top-32.png"
-        class="text-accent cursor-pointer hover:bg-gray-600"
-        :class="{'bg-secondary-100': selectedBorder === 'top'}"
-        @click="borderEdgeChange('top')" />
-      <img src="@/assets/icons/border_bottom-32.png"
-        class="text-accent cursor-pointer hover:bg-gray-600"
-        :class="{'bg-secondary-100': selectedBorder === 'bottom'}"
-        @click="borderEdgeChange('bottom')" />
-      <img src="@/assets/icons/border_left-32.png"
-        class="text-accent cursor-pointer hover:bg-gray-600"
-        :class="{'bg-secondary-100': selectedBorder === 'left'}"
-        @click="borderEdgeChange('left')" />
-      <img src="@/assets/icons/border_right-32.png"
-        class="text-accent cursor-pointer hover:bg-gray-600"
-        :class="{'bg-secondary-100': selectedBorder === 'right'}"
-        @click="borderEdgeChange('right')" />
-      <img src="@/assets/icons/border_none-32.png"
-        class="text-accent cursor-pointer hover:bg-gray-600"
-        :class="{'bg-secondary-100': selectedBorder === 'none'}"
-        @click="removeStyle('none')" />
-      <img src="@/assets/icons/eye_open-32.png"
-        v-if="border.style !== 'hidden'"
-        class="text-accent cursor-pointer hover:bg-gray-600"
-        :class="{'bg-secondary-hidden': border.style === 'hidden'}"
-        @click="setLineStyle('hidden')" />
-      <img src="@/assets/icons/hidden-32.png"
-        v-if="border.style === 'hidden'"
-        class="text-accent cursor-pointer hover:bg-gray-600"
-        :class="{'bg-secondary-hidden': border.style === 'solid'}"
-        @click="setLineStyle('solid')" />
-    </div>
-    <div class="button-panel mt-1 p-1">
-      <img src="@/assets/icons/solid-line-32.png"
-        class="text-accent cursor-pointer hover:bg-gray-600"
-        :class="{'bg-secondary-100': border.style === 'solid'}"
-        @click="setLineStyle('solid')" />
-      <img src="@/assets/icons/dotted-line-32.png"
-        class="text-accent cursor-pointer hover:bg-gray-600"
-        :class="{'bg-secondary-100': border.style === 'dotted'}"
-        @click="setLineStyle('dotted')" />
-      <img src="@/assets/icons/dashed-line-32.png"
-        class="text-accent cursor-pointer hover:bg-gray-600"
-        :class="{'bg-secondary-100': border.style === 'dashed'}"
-        @click="setLineStyle('dashed')" />
-      <img src="@/assets/icons/double-line-32.png"
-        class="text-accent cursor-pointer hover:bg-gray-600"
-        :class="{'bg-secondary-100': border.style === 'double'}"
-        @click="setLineStyle('double')" />
-      <img src="@/assets/icons/inset-32.png"
-        class="text-accent cursor-pointer hover:bg-gray-600"
-        :class="{'bg-secondary-100': border.style === 'inset'}"
-        @click="setLineStyle('inset')" />
-      <img src="@/assets/icons/ridge-32.png"
-        class="text-accent cursor-pointer hover:bg-gray-600"
-        :class="{'bg-secondary-100': border.style === 'ridge'}"
-        @click="setLineStyle('ridge')" />
-      <img src="@/assets/icons/groove-32.png"
-        class="text-accent cursor-pointer hover:bg-gray-600"
-        :class="{'bg-secondary-100': border.style === 'groove'}"
-        @click="setLineStyle('groove')" />
-    </div>
-    <div class="button-panel mt-1 p-1">
+  
+    <div class="sidebar-button-panel">
         <div class="flex flex-row flex-start">
           <img src="@/assets/icons/thickness-32.png"
             class="text-accent cursor-pointer hover:bg-gray-600"
@@ -101,11 +36,9 @@
         </select>
       </div>
       <div class="flex flex-row justify-center">
-        <img src="@/assets/icons/shadows-32.png"
-            class="text-accent cursor-pointer hover:bg-gray-600"
-            :class="{'bg-secondary-100': isBorderRadiusSelected}"
-            @click="onBorderRadiusChange" />
-            <icon-select iconSelect="shadows-32.png" :iconList="iconList"></icon-select>
+        <icon-select iconSelect="project_stage_planning-32.png" :iconList="borderEdgeIconList" @selectChange="borderEdgeChange"></icon-select>
+        <icon-select iconSelect="sketch-32.png" :iconList="lineStyleIconList" @selectChange="setLineStyle"></icon-select>
+        <icon-select iconSelect="shadows-32.png" :iconList="shadowIconList" @selectChange="onShadowChange"></icon-select>
       </div>
     </div>
   </div>
@@ -138,16 +71,35 @@
       width: { value: 1, units: 'px' },
       borderRadius: { value: 0, units: 'px' },
     };
-    iconList = [
-      { icon: 'check_box-32.png', class: 'shadow-sm' },
-      { icon: 'check_box-32.png', class: 'shadow-md' },
-      { icon: 'check_box-32.png', class: 'shadow-lg' },
-      { icon: 'check_box-32.png', class: 'shadow-xl' },
-      { icon: 'check_box-32.png', class: 'shadow-2xl' },
-      { icon: 'check_box-32.png', class: 'shadow-inner' },
-      { icon: 'check_box-32.png', class: 'shadow-outline' },
-    ]
-
+    shadowIconList = [
+      { icon: 'check_box-32.png', class: 'shadow-sm', tooltip: 'small shadow' },
+      { icon: 'check_box-32.png', class: 'shadow-md', tooltip: 'medium shadow' },
+      { icon: 'check_box-32.png', class: 'shadow-lg', tooltip: 'large shadow' },
+      { icon: 'check_box-32.png', class: 'shadow-xl', tooltip: 'extra large shadow' },
+      { icon: 'check_box-32.png', class: 'shadow-2xl', tooltip: '2 times extra large shadow' },
+      { icon: 'check_box-32.png', class: 'shadow-inner', tooltip: 'inner shadow' },
+      { icon: 'check_box-32.png', class: 'shadow-outline', tooltip: 'outline shadow' },
+      { icon: 'uncheck_box-32.png', class: 'shadow-none', tooltip: 'remove shadow' },
+    ];
+    lineStyleIconList = [
+      { icon: 'solid-line-32.png', class: 'solid', tooltip: 'solid line' },
+      { icon: 'dotted-line-32.png', class: 'dotted', tooltip: 'dotted line' },
+      { icon: 'dashed-line-32.png', class: 'dashed', tooltip: 'dashed line' },
+      { icon: 'double-line-32.png', class: 'double', tooltip: 'double line' },
+      { icon: 'inset-32.png', class: 'inset', tooltip: 'inset' },
+      { icon: 'outset-32.png', class: 'outset', tooltip: 'outset' },
+      { icon: 'ridge-32.png', class: 'ridge', tooltip: 'ridge' },
+      { icon: 'groove-32.png', class: 'groove', tooltip: 'groove' },
+    ];
+    borderEdgeIconList = [
+      { icon: 'border_outside-32.png', class: 'border', tooltip: 'border all round' },
+      { icon: 'border_top-32.png', class: 'top', tooltip: 'border top' },
+      { icon: 'border_bottom-32.png', class: 'bottom', tooltip: 'border bottom' },
+      { icon: 'border_left-32.png', class: 'left', tooltip: 'border left' },
+      { icon: 'border_right-32.png', class: 'right', tooltip: 'border right' },
+      { icon: 'border_none-32.png', class: 'none', tooltip: 'border none' },
+      { icon: 'hidden-32.png', class: 'hidden', tooltip: 'hidden border' },
+    ];
 
     @Emit('onBorderChange')
     setBorder(): BorderInterface {
@@ -167,6 +119,7 @@
     }
 
     borderEdgeChange(edge: BorderDirections) {
+      console.log('%c%s', 'color: #73998c', edge)
       this.selectedBorder = this.selectedBorder === edge ? null : edge;
       if (this.selectedBorder === edge) {
         this.setBorder();
@@ -193,6 +146,11 @@
 
     onBorderRadiusChange() {
       this.isBorderRadiusSelected = !this.isBorderRadiusSelected;
+    }
+
+    @Emit('onShadowChange')
+    onShadowChange(classDef: string) {
+      return classDef;
     }
 
     @Emit('onBorderChange')

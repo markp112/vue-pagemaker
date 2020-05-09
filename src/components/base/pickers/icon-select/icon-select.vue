@@ -8,38 +8,55 @@
         >
     </div>
     <div>
-    <ul class="border border-gray-800 bg-gray-200 flex flex-col items-center absolute w-12"
-      v-if="toggleSelectOptions"
-    >
-      <li v-for="iconElement in $props.iconList" :key="iconElement.class" @click="iconClicked(iconElement.class)">
-        <img :src="getPath(iconElement.icon)" class="w-8 h-8 mb-2 hover:bg-gray-800" :class="iconElement.class">
-      </li>
-    </ul>
+      <ul class="border border-l-gray-500 bg-gray-200 flex flex-col items-center absolute w-12 shadow-lg"
+        v-if="toggleSelectOptions"
+        @mouseleave="show"
+        @blur="show"
+      >
+        <li v-for="iconElement in $props.iconList"
+          :key="iconElement.class" 
+          @click="iconClicked(iconElement.class)" 
+          class="cursor-pointer mb-2 relative z-auto"
+          :class="{'bg-secondary-100': iconElement.class === selectedItem}">
+          <img :src="getPath(iconElement.icon)"
+              class="w-8 h-8 hover:bg-gray-800"
+              :class="getClass(iconElement.class)"
+              @mouseover="showToolTip=iconElement.class"
+              @mouseleave="showToolTip=''"
+              >
+          <tool-tip :showToolTip="getShowToolTip(iconElement.class)" :tooltip="iconElement.tooltip"></tool-tip>
+        </li>
+      </ul>
+    </div>
   </div>
-  </div>
-
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Emit } from 'vue-property-decorator';
-
-interface IconListElement { icon: string, class: string };
+import ToolTip from '@/components/base/notifications/tooltip/tooltip.vue';
 
 @Component({
   props: {
     iconSelect: { default: '' },
     iconList: { default: () => {
       return []
-    }}
-  }
+    }},
+  },
+  components: {
+    'tool-tip' : ToolTip,
+  },
 })
 export default class IconSelect extends Vue {
   toggleSelectOptions = false;
+  selectedItem = '';
+  showToolTip = '';
 
   @Emit('selectChange')
   iconClicked(classElement: string): string {
+    console.log('%c%s', 'color: #d0bfff', classElement)
+    this.selectedItem = classElement;
     this.show();
     return  classElement;
   }
@@ -51,6 +68,13 @@ export default class IconSelect extends Vue {
   getPath(image: string): string {
     const path = require.context('@/assets/icons',false,/\.png$/);
     return path(`./${image}`);
+  }
+  getClass(classDef: string ) {
+    return classDef === 'hidden' ? '' : classDef 
+  }
+
+  get getShowToolTip(): (classDef: string) => boolean {
+    return (classDef: string) => this.showToolTip === classDef;
   }
 }
 </script>

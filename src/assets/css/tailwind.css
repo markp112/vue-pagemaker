@@ -6,7 +6,9 @@
   @apply flex flex-row justify-center items-center h-auto mt-32;
 }
 
-
+.sidebar-button-panel {
+  @apply  mt-1 p-1 flex flex-row justify-evenly text-xl bg-gray-300 h-10;
+}
 
 @tailwind base;
 @tailwind components;

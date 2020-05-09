@@ -43,3 +43,4 @@ export default class IconImage extends Vue {
   }
 }
 </script>
+

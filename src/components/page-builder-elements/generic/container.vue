@@ -7,8 +7,8 @@
     :ref="$props.thisComponent.ref"
     @dragover.prevent
     @drop.prevent="onDrop"
-    @click="onClick()"
-    @mouseup="handleMouseUp()"
+    @click.prevent="onClick"
+    @mouseup="handleMouseUp"
     >
     <component :is="layout.componentHTMLTag" v-for="(layout,i) in $props.thisComponent.elements"
         :key="i"
@@ -93,11 +93,14 @@ export default class Container extends Vue {
   }
 
   @Emit('componentClicked')
-  onClick() {
+  onClick(ev: Event) {
+    console.log("ev",ev)
+    console.log("Component clicked =", this.$props.thisComponent.ref)
     PageModule.updateEditedComponentRef(this.$props.thisComponent);
     PageModule.updateShowEditDelete(true);
     this.showBorder = !this.showBorder;
     this.isActive = !this.isActive;
+    ev.stopPropagation();
     return
   }
 

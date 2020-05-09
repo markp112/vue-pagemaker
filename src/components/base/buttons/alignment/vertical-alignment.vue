@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-row justify-evenly text-xl bg-gray-300 p-2 h-10">
+  <div class="sidebar-button-panel">
     <img src="@/assets/icons/align_horizontal_top-32.png" 
       class="text-accent cursor-pointer hover:bg-secondary-100" 
       @click="alignTopClick" />

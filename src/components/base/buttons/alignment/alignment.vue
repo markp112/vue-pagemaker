@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-row justify-evenly text-xl bg-gray-300 p-2 h-10">
+  <div class="sidebar-button-panel">
     <font-awesome-icon 
       icon="align-left"
       prefix="fas" 

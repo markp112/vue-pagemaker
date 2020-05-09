@@ -1,5 +1,11 @@
 import store from '@/store';
-import { Module, Mutation, Action, VuexModule, getModule } from 'vuex-module-decorators';
+import {
+  Module,
+  Mutation,
+  Action,
+  VuexModule,
+  getModule,
+} from 'vuex-module-decorators';
 import {
   ComponentContainer,
   PageElement,
@@ -8,27 +14,27 @@ import {
 } from '@/models/page/page';
 import { Style } from '@/models/styles/styles';
 import { ComponentTypesString } from '@/models/components/base-component';
-import { BoxDimensions, BoxDimensionsInterface } from '@/models/components/box-dimension';
+import { BoxDimensionsInterface } from '@/models/components/box-dimension';
 
 export interface PageStateInterface {
-  _pageElements: PageData [],
-  _editedComponentRef: ComponentContainer | PageElement | undefined ,
-  _showEditDelete: boolean,
-  _componentId: number,
+  _pageElements: PageData[];
+  _editedComponentRef: ComponentContainer | PageElement | undefined;
+  _showEditDelete: boolean;
+  // _componentId: number;
 }
 
 @Module({ name: 'pagestore', store, dynamic: true })
 class PageStore extends VuexModule implements PageStateInterface {
 
-  ROOT = 'ROOT'
+  ROOT = 'ROOT';
   //stores all the elements that make up a page
-  public _pageElements: PageData [] = [];  
+  public _pageElements: PageData[] = [];  
   // reference to the component currently being edited
   public _editedComponentRef: ComponentContainer | PageElement | undefined = undefined;
   // show the toolbar for selecting edit // delete
   public _showEditDelete = false;
   // unique number for each component always incremented and set to the max ref of the last component when loading
-  public _componentId = 0;
+  // public _componentId = 0;
 
   @Mutation 
   private pushPageElement(element: PageData): void {
@@ -42,7 +48,7 @@ class PageStore extends VuexModule implements PageStateInterface {
           parentElement.addNewElement (element);
         }
       }
-      this._componentId++;
+      // this._componentId++;
     }
   }
 
@@ -152,22 +158,35 @@ class PageStore extends VuexModule implements PageStateInterface {
       }
     }
   }
+  
+  @Action 
+  public deleteEditedComponentStyle(styleToRemove: StyleTypes): void {
+    this.context.commit('removeEditedComponentStyle', styleToRemove);
+  }
 
   @Action
   public updateEditedComponentStyles(newStyle: Style): void {
     this.context.commit('setEditedComponentStyles', newStyle);
   }
 
-  @Action 
-  public deleteEditedComponentStyle(styleToRemove: StyleTypes): void {
-    this.context.commit('removeEditedComponentStyle', styleToRemove);
-  }
   @Action
   public updateComponentClassProperties(classDef: string): void {
     if (this.editedComponentRef) {
       const component: PageData = this.editedComponentRef as PageData;
       if (component) {
         component.addClass(classDef);
+      }
+    }
+  }
+
+  @Action
+  public updateEditedComponentData(newContent: string): void {
+    if (this.editedComponentRef) {
+      const component: PageData = this.editedComponentRef as PageData;
+      if (component) {
+        if(component.data) {
+          component.data.content = newContent;
+        }
       }
     }
   }
