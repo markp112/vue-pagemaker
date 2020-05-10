@@ -1,20 +1,20 @@
-export interface IconInterface{
+export interface IconInterface {
   icon: string;
   prefix: string;
   isImage: boolean;
-};
+}
 export class Icon implements IconInterface {
   private _isImage: boolean;
   private _icon: string;
   private _prefix: string
 
-  constructor (isImage: boolean, icon: string, prefix: string ) {
+  constructor(isImage: boolean, icon: string, prefix: string) {
     this._isImage = isImage;
     this._icon = icon;
     this._prefix = prefix;
   }
 
-  get isImage() : boolean {
+  get isImage(): boolean {
     return this._isImage;
   }
 

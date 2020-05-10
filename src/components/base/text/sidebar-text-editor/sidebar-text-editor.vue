@@ -1,17 +1,27 @@
 <template>
-  <div class="sidebar-button-panel">
-    <icon-select iconSelect="font_bold-32.png" :iconList="fontWeightIconList" @selectChange="fontWeightChange"></icon-select>
-    <img src="@/assets/icons/font_italic-32.png"
-          class="text-accent cursor-pointer hover:bg-gray-600"
-          :class="{'bg-secondary-100': isFontItalic}"
-          @click="onItalicClick" />
-    <input type="text" 
-      name="text" 
-      v-model="textContent" 
-      @change="textChange" 
-      class="text-sm"
-      >
-
+  <div>
+    <div class="sidebar-button-panel">
+      <font-select @onFontClick="onFontClick"></font-select>
+      <icon-select iconSelect="font_bold-32.png" :iconList="fontWeightIconList" @selectChange="fontWeightChange"></icon-select>
+      <img src="@/assets/icons/font_italic-32.png"
+            class="text-accent cursor-pointer hover:bg-gray-600"
+            :class="{'bg-secondary-100': isFontItalic}"
+            @click="onItalicClick" />
+      <img src="@/assets/icons/font_underlined-32.png"
+            class="text-accent cursor-pointer hover:bg-gray-600"
+            :class="{'bg-secondary-100': isFontUnderlined}"
+            @click="onUnderlinedClick" />
+    </div>
+    <div class="sidebar-button-panel justify-center items-center mt-0">
+      <span class="text-sm mr-2">Label</span>
+      <input type="text" 
+        name="text" 
+        v-model="textContent" 
+        @change="textChange" 
+        class="text-sm w-32 mb-1 bg-gray-400"
+        placeholder="Enter content"
+        >
+    </div>
   </div>
 </template>
 
@@ -20,6 +30,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Emit } from 'vue-property-decorator';
 import IconSelect from '@/components/base/pickers/icon-select/icon-select.vue';
+import FontSelect from '@/components/base/pickers/font-selector/font-selector.vue'
 
 @Component({
   props: {
@@ -29,11 +40,13 @@ import IconSelect from '@/components/base/pickers/icon-select/icon-select.vue';
   },
   components: {
     'icon-select': IconSelect,
+    'font-select': FontSelect,
   },
 })
 export default class SideBarTextEditor extends Vue {
   textContent = '';
   isFontItalic = false;
+  isFontUnderlined = false;
   fontWeightIconList = [
     { icon: '100-32.png', class: 'font-hairline', tooltip: 'font weight hairline' },
     { icon: '200-32.png', class: 'font-thin', tooltip: 'font weight thin' },
@@ -63,6 +76,20 @@ export default class SideBarTextEditor extends Vue {
       return 'italic';
     } 
     return 'not-italic';
+  }
+
+  @Emit('onUnderlineClick')
+  onUnderlinedClick(){
+    this.isFontUnderlined = !this.isFontUnderlined;
+    if(this.isFontUnderlined) {
+      return 'underline';
+    } 
+    return 'no-uunderline';
+  }
+
+  @Emit('onFontClick')
+  onFontClick(fontName: string) {
+    return fontName;
   }
 }
 </script>

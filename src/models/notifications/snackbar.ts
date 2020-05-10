@@ -2,10 +2,10 @@ export enum SnackbarTypes {
   Error = 'error',
   Info = 'info',
   Warning = 'warning',
-  Success ='success',
+  Success = 'success',
 }
 
-export interface SnackbarMessage  {
+export interface SnackbarMessage {
   message: string;
   title: string;
   type: SnackbarTypes;
@@ -13,19 +13,18 @@ export interface SnackbarMessage  {
   show: boolean;
 }
 
-export const initSnackbarMessage:SnackbarMessage = {
+export const initSnackbarMessage: SnackbarMessage = {
   message: '',
   title: '',
-  type:SnackbarTypes.Success,
+  type: SnackbarTypes.Success,
   duration: 5000,
   show: false,
 }
 
 export class SnackBarGenerator {
-
   static _snackBar: SnackbarMessage = initSnackbarMessage;
 
-  private static setBaseProperties(message: string, title: string, duration?: number) {
+  private static setBaseProperties(message: string, title: string, duration?: number): void {
     this._snackBar.message = message;
     this._snackBar.title = title;
     this._snackBar.duration = duration === undefined ? 5000 : duration;

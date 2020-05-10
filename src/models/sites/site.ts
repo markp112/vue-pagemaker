@@ -1,16 +1,16 @@
 export interface Site {
   userId?: string;
-  siteId: string,
-  name: string,
-  created: Date,
-  description?: string,
-  url?: string,
-  image?: string,
-  published?: Date,
-  hostRepo?: string
+  siteId: string;
+  name: string;
+  created: Date;
+  description?: string;
+  url?: string;
+  image?: string;
+  published?: Date;
+  hostRepo?: string;
 }
 
-export const initSite: Site = {siteId:'', name: '', created: new Date()};
+export const initSite: Site = { siteId: '', name: '', created: new Date() };
 
 export class ASite implements Site {
   _userId?: string | undefined;
@@ -30,22 +30,18 @@ export class ASite implements Site {
   }
 
   get getSiteAsSite(): Site {
-   const site : Site ={
+    const site : Site = {
       siteId: this._siteId,
       userId: this._userId,
       name: this._name,
       created: this._created,
     }
-
-
     if(this._description !== undefined) {
       site.description = this._description;
     }
-
     if(this._url !== undefined) {
       site.url = this._url;
     }
-
     return site;
   }
 
@@ -53,47 +49,47 @@ export class ASite implements Site {
     return this._userId === undefined ? '' : this._userId;
   }
 
-  set userId(id: string ) {
+  set userId(id: string) {
     this._userId = id;
   }
 
   get siteId(): string {
-    return  this._siteId
+    return  this._siteId;
   }
   
-  set siteId(id: string ) {
-    this._siteId = id
+  set siteId(id: string) {
+    this._siteId = id;
   }
 
   get name(): string {
-    return this._name
+    return this._name;
   }
   
-  set name(name: string ) {
-    this._name = name
+  set name(name: string) {
+    this._name = name;
   }
   
   get description(): string {
-    return this._description === undefined ? '' : this._description
+    return this._description === undefined ? '' : this._description;
   }
   
-  set description(description: string ) {
+  set description(description: string) {
     this._description = description
   }
 
   get url(): string {
-    return this._url === undefined ? '' : this._url
+    return this._url === undefined ? '' : this._url;
   }
   
-  set url(url: string ) {
-    this._url = url
+  set url(url: string) {
+    this._url = url;
   }
     
   get image(): string {
     return this._image === undefined ? '' : this._image;
   }
   
-  set image(image: string ) {
+  set image(image: string) {
     this._image = image;
   }
 
@@ -101,28 +97,27 @@ export class ASite implements Site {
     return this._hostRepo === undefined ? '' : this._hostRepo;
   }
   
-  set hostRepo(hostRepo: string ) {
+  set hostRepo(hostRepo: string) {
     this._hostRepo = hostRepo;
   }
 
   get created(): Date {
   return this._created;
-}
+  }
 
-set created(created: Date ) {
-  this._created = created;
-}
+  set created(created: Date) {
+    this._created = created;
+  }
 
-get published(): Date | undefined {
-  return this._published;
-}
+  get published(): Date | undefined {
+    return this._published;
+  }
 
-set published(published: Date | undefined) {
-  this._published = published;
-}
+  set published(published: Date | undefined) {
+    this._published = published;
+  }
 
-getSiteDocumentId(): string {
-  return  this._userId + '::' + this._siteId;
-}
-
+  getSiteDocumentId(): string {
+    return  this._userId + '::' + this._siteId;
+  }
 }

@@ -69,6 +69,7 @@ export default class IconSelect extends Vue {
     const path = require.context('@/assets/icons',false,/\.png$/);
     return path(`./${image}`);
   }
+  
   getClass(classDef: string ) {
     return classDef === 'hidden' ? '' : classDef 
   }

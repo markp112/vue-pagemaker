@@ -9,23 +9,21 @@ export class NavMenuItem implements NavMenuInterface {
   _navText: string;
   _navLink: string;
 
-  constructor (id: number, navText: string, navLink: string) {
+  constructor(id: number, navText: string, navLink: string) {
     this._id = id;
     this._navLink = navLink;
     this._navText = navText;
-
   }
 
-  get navLink (): string{
+  get navLink(): string {
     return this._navLink;
-
   }
 
-  get navText ():string {
+  get navText(): string {
     return this._navText;
   }
 
-  get id(): number  {
+  get id(): number {
     return this._id;
   }
 }

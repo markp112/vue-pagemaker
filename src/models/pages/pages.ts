@@ -7,17 +7,16 @@ export interface PageInterface {
   created: Date;
   edited: Date;
   active: boolean;
-
 }
 
 export class Page implements PageInterface {
-  _name: string
-  _icon: Icon
-  _created: Date
-  _edited: Date
-  _active: boolean
-  
-  constructor(){
+  _name: string;
+  _icon: Icon;
+  _created: Date;
+  _edited: Date;
+  _active: boolean;
+
+  constructor() {
     this._name = '';
     this._icon = IconBuilder.buildPlaceholderIcon();
     this._created = new Date();
@@ -25,54 +24,54 @@ export class Page implements PageInterface {
     this._active = false;
   }
 
-  get name (): string {
-    return this._name
+  get name(): string {
+    return this._name;
   }
-  set name( name: string ) {
-    this._name = name
+  set name(name: string) {
+    this._name = name;
   }
 
-  get icon (): Icon {
-    return this._icon
+  get icon(): Icon {
+    return this._icon;
   }
   set icon(icon: Icon) {
-    this._icon = icon
+    this._icon = icon;
   }
 
   get created(): Date {
-    return this._created
+    return this._created;
   }
-  set created( created: Date) {
-    this._created = created
+  set created(created: Date) {
+    this._created = created;
   }
 
   get edited(): Date {
-    return this._edited
+    return this._edited;
   }
-  set edited( edited: Date) {
-    this._edited = edited
+  set edited(edited: Date) {
+    this._edited = edited;
   }
 
   get active(): boolean {
-    return this._active
+    return this._active;
   }
 
   set active(active: boolean) {
     this._active = active;
   }
 
-  get createdFormatted():string {
-    return dateFormat(this._created,'DD mmm YYYY');
+  get createdFormatted(): string {
+    return dateFormat(this._created, 'DD mmm YYYY');
   }
-  
-  getPageDataAsObject():PageInterface {
+
+  getPageDataAsObject(): PageInterface {
     const page = {
       name: this._name,
       icon: this._icon,
       created: this._created,
       edited: this.edited,
       active: this.active,
-    }
+    };
     return page;
   }
 }

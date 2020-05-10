@@ -1,11 +1,9 @@
 <template>
   <div>
-    <div class="color-wrapper">
+    <div class="color-wrapper bg-gray-300 p-1">
       <colour-palette :hue="hue" @colour="setColour"></colour-palette>
       <colour-slider  @colour="setHue" style="margin-left:16px"></colour-slider>
-    </div>
-    <div class="input-wrapper">
-      <span class="text">{{ colour }}</span>
+      <span class="text ml-4 border border-gray-600 text-center align-middle inline-block ">{{ colour }}</span>
     </div>
   </div>
 </template>

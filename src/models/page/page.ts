@@ -5,9 +5,12 @@ import {
   left,
   width,
   height,
-  ComponentTypesString
+  ComponentTypesString,
 } from '@/models/components/base-component';
-import { BoxDimensions, BoxDimensionsInterface } from '../components/box-dimension';
+import {
+  BoxDimensions,
+  BoxDimensionsInterface
+} from '../components/box-dimension';
 import { Style } from '@/models/styles/styles';
 //interface for an html Style
 
@@ -27,7 +30,7 @@ export interface PageElementInterface {
 
 export type StyleTypes = 'border';
 export interface PageContainerInterface extends PageElementInterface {
-  elements: PageElement[]
+  elements: PageElement[];
 }
 
 export type PageData = PageElement | ComponentContainer;
@@ -46,35 +49,35 @@ export class PageElement implements Partial<PageElementInterface> {
   private _boxDimensions: BoxDimensions = new BoxDimensions(width, height, top, left);
 
   get name(): string {
-    return this._name
+    return this._name;
   }
 
   set name(newName: string) {
-    this._name = newName
+    this._name = newName;
   }
 
   get ref(): ComponentRef {
-    return this._ref
+    return this._ref;
   }
 
   set ref(newRef: ComponentRef) {
-    this._ref = newRef
+    this._ref = newRef;
   }
 
   get componentHTMLTag(): string {
-    return this._componentHTMLTag
+    return this._componentHTMLTag;
   }
 
   set componentHTMLTag(newComponent: string) {
-    this._componentHTMLTag = newComponent
+    this._componentHTMLTag = newComponent;
   }
 
   get isContainer(): boolean {
-    return this._isContainer
+    return this._isContainer;
   }
 
   set isContainer(newValue: boolean) {
-    this._isContainer = newValue
+    this._isContainer = newValue;
   }
 
   get styles(): Style[] {
@@ -106,7 +109,7 @@ export class PageElement implements Partial<PageElementInterface> {
   }
 
   get parentRef(): string {
-    return this._parentRef
+    return this._parentRef;
   }
 
   set parentRef(parentRef: string) {
@@ -125,7 +128,12 @@ export class PageElement implements Partial<PageElementInterface> {
   }
 
   buildBoxDimensions(boxDimensions: BoxDimensionsInterface): void {
-    this._boxDimensions = new BoxDimensions(boxDimensions.width, boxDimensions.height, boxDimensions.top, boxDimensions.left);
+    this._boxDimensions = new BoxDimensions(
+      boxDimensions.width,
+      boxDimensions.height,
+      boxDimensions.top,
+      boxDimensions.left
+    );
   }
 
   updateBoxHeightandWidth(boxDimensions: BoxDimensionsInterface): void {
@@ -139,8 +147,7 @@ export class PageElement implements Partial<PageElementInterface> {
   }
 
   removeStyle(styleToRemove: StyleTypes) {
-    console.log("this._Styles", this._styles, styleToRemove)
-    this._styles = this._styles.filter(el => !el.style.includes(styleToRemove))
+    this._styles = this._styles.filter(el => !el.style.includes(styleToRemove));
   }
 
   get id(): number {
@@ -162,13 +169,16 @@ export class PageElement implements Partial<PageElementInterface> {
       this.processWidths(classDef);
     }
     if (classDef.includes('shadow')) {
-      this.processShadow(classDef)
+      this.processShadow(classDef);
     }
     if (classDef.includes('font')) {
-      this.processfont(classDef)
+      this.processfont(classDef);
     }
     if (classDef.includes('italic')) { 
       this.processItalic(classDef);
+    }
+    if (classDef.includes('underline')) { 
+      this.processUnderline(classDef);
     }
   }
 
@@ -232,7 +242,12 @@ export class PageElement implements Partial<PageElementInterface> {
     let tempClass: string = this.cutString(this.classDefinition,'italic');
     tempClass += ` ${classDef}`;
     this.classDefinition = tempClass;
-    
+  }
+
+  private processUnderline(classDef: string) {
+    let tempClass: string = this.cutString(this.classDefinition,'underline');
+    tempClass += ` ${classDef}`;
+    this.classDefinition = tempClass;
   }
 }
 

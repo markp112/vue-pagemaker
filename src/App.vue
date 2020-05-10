@@ -39,7 +39,7 @@ import { SidebarModule } from '@/store/sidebar/sidebar';
 export default class extends Vue{
  
   created() {
-    if(AuthModule.isExistingUser)  {
+    if(AuthModule.isExistingUser) {
       AuthModule.getUserFromLocalStorage();
       NavMenuItemsModule.createNavMenuSignedIn();
       this.$router.push('/sites');
@@ -53,7 +53,7 @@ export default class extends Vue{
     return AuthModule.isUserLoggedIn;
   }
 
-  get showSidebar(){
+  get showSidebar() {
       return SidebarModule.showSidebar;
     }
 }
@@ -67,7 +67,4 @@ export default class extends Vue{
   text-align: center;
   color: #2c3e50;
 }
-
-
-
 </style>

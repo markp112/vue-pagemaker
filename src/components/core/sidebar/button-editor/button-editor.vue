@@ -25,6 +25,8 @@
           @onFontWeightChange="onFontWeightChange"
           @onTextChange="onTextChange"
           @onItalicClick="onItalicClick"
+          @onUnderlineClick="onUnderlineClick"
+          @onFontClick="onFontClick"
         >
           </sidebar-text-editor>
     </div>
@@ -43,6 +45,7 @@ import { PageModule } from '@/store/page/page';
 import { SidebarModule } from '@/store//sidebar/sidebar';
 import { Style, BorderInterface, Border, BorderBuilder } from '@/models/styles/styles';
 import { StyleTypes } from '../../../../models/page/page';
+import { Page } from '../../../../models/pages/pages';
 
 type BackgroundForeGround = 'background-color' | 'color' | 'border';
 
@@ -105,7 +108,6 @@ export default class ContainerEditorSidebar extends Vue {
   }
 
   onRemoveStyle(styleToRemove: StyleTypes): void {
-    console.log('%c%s', 'color: #e5de73', styleToRemove)
     PageModule.deleteEditedComponentStyle(styleToRemove);
   } 
 
@@ -121,9 +123,15 @@ export default class ContainerEditorSidebar extends Vue {
     PageModule.updateEditedComponentData(text);
   }
 
-  onItalicClick(classDef: string) {
+  onItalicClick(classDef: string): void {
+    PageModule.updateComponentClassProperties(classDef);
+  }
+  onUnderlineClick(classDef: string): void {
     PageModule.updateComponentClassProperties(classDef);
   }
 
+  onFontClick(fontName: string): void {
+    PageModule.updateEditedComponentStyles({ style: 'font-family', value: fontName });
+  }
 }
 </script>

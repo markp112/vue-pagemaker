@@ -77,8 +77,12 @@ export default class PageBuilder extends Vue {
       const component = SidebarModule.getComponentDefinition(componentName);
       const id = this.componentCounter.getNextCounter();
       const ref = `${componentName}::${id}`;
-      if (component){
-        const newComponent: PageData = componentBuilder.buildComponent(component, ref, PARENTCOMPONENT);
+      if (component) {
+        const newComponent: PageData = componentBuilder.buildComponent(
+          component,
+          ref,
+          PARENTCOMPONENT
+        );
         PageModule.addNewPageElement(newComponent);
       }
     }
