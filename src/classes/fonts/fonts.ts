@@ -53,6 +53,7 @@ export interface FilesInterface {
 }
 
 export class Fonts {
+  private static instance: Fonts;
 
   private key = secrets.google.fontsAPIKey;
   private fontApi = `https://www.googleapis.com/webfonts/v1/webfonts?key=${this.key}`;
@@ -60,8 +61,14 @@ export class Fonts {
   private fontNamesList: string[] = [];
   private fontNames: FontItemInterface[] = [];
 
-  public initFonts(): Promise<boolean> {
-    return new Promise((resovle) => {
+  public static getInstance(): Fonts {
+    if (!Fonts.instance) {
+      Fonts.instance = new Fonts();
+    }
+    return Fonts.instance;
+  }
+
+  private constructor()  {
       this.getFontsFromGoogle()
       .then (() => {
         this.initialiseFontNames()
@@ -69,9 +76,8 @@ export class Fonts {
           this.initialiseWebFont();
         });
       });
-    });
-  }
-  
+    };
+    
   private getFontsFromGoogle(): Promise<boolean> {
     return new Promise((resolve, reject) => {
       googleApi.get(this.fontApi)
@@ -102,16 +108,13 @@ export class Fonts {
     });
   }
 
-  private initialiseWebFont(): Promise<boolean> {
+  private initialiseWebFont() {
     console.log("load webfonts")
-    return new Promise((resolve) => {
-      WebFont.load({
-        google: {
-          families: this.fontNamesList,
-        },
-      });
-      resolve(true);
-    })
+    WebFont.load({
+      google: {
+        families: this.fontNamesList,
+      },
+    });
   }
 
   public getListofFonts(): FontItemInterface[] {
@@ -119,6 +122,6 @@ export class Fonts {
   }
 
   public filterFonts(filterBy: string): FontItemInterface[] {
-    return this.fontNames.filter(font => font.fontType === filterBy)
+    return this.fontNames.filter(font => font.fontType === filterBy);
   }
 }

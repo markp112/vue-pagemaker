@@ -11,6 +11,8 @@ import { secrets } from '@/firebase/secrets';
 import VueFilterDateFormat from 'vue-filter-date-format';
 import VueFilterDateParse from 'vue-filter-date-parse';
 import Datepicker from 'vuejs-datepicker';
+import { Fonts } from '@/classes/fonts/fonts';
+
 Vue.component('datepicker', Datepicker);
 
 export const firebaseApp = Firebase.initializeApp(secrets.google);
@@ -34,6 +36,7 @@ firebaseApp.firestore().enablePersistence()
       }
   });
 // Subsequent queries will use persistence, if it was enabled successfully
+const fontsService = Fonts.getInstance();
 
 
 Vue.config.productionTip = false;
@@ -41,6 +44,7 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.use(firestorePlugin);
 Vue.use(VueFilterDateFormat);
 Vue.use(VueFilterDateParse);
+
 
 new Vue({
   router,

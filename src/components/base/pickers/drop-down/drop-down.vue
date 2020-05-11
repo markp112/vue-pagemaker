@@ -13,18 +13,11 @@
         @mouseleave="show"
         @blur="show"
       >
-        <li v-for="iconElement in $props.iconList"
-          :key="iconElement.class" 
-          @click="iconClicked(iconElement.class)" 
+        <li v-for="item in $props.selectList"
+          :key="item" 
+          @click="iconClicked(item)" 
           class="cursor-pointer mb-2 relative z-auto"
-          :class="{'bg-secondary-100': iconElement.class === selectedItem}">
-          <img :src="getPath(iconElement.icon)"
-              class="w-8 h-8 hover:bg-gray-800"
-              :class="getClass(iconElement.class)"
-              @mouseover="showToolTip=iconElement.class"
-              @mouseleave="showToolTip=''"
-              >
-          <tool-tip :showToolTip="getShowToolTip(iconElement.class)" :tooltip="iconElement.tooltip"></tool-tip>
+          :class="{'bg-secondary-100': item === selectedItem}">
         </li>
       </ul>
     </div>
@@ -35,23 +28,18 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Emit } from 'vue-property-decorator';
-import ToolTip from '@/components/base/notifications/tooltip/tooltip.vue';
 
 @Component({
   props: {
     iconSelect: { default: '' },
-    iconList: { default: () => {
+    selectList: { default: () => {
       return []
     }},
   },
-  components: {
-    'tool-tip' : ToolTip,
-  },
 })
-export default class IconSelect extends Vue {
+export default class DropDown extends Vue {
   toggleSelectOptions = false;
   selectedItem = '';
-  showToolTip = '';
 
   @Emit('selectChange')
   iconClicked(classElement: string): string {
@@ -71,10 +59,6 @@ export default class IconSelect extends Vue {
   
   getClass(classDef: string ) {
     return classDef === 'hidden' ? '' : classDef 
-  }
-
-  get getShowToolTip(): (classDef: string) => boolean {
-    return (classDef: string) => this.showToolTip === classDef;
   }
 }
 </script>

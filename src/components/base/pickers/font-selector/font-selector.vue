@@ -43,15 +43,13 @@ import { Fonts, FontItemInterface } from '@/classes/fonts/fonts';
 
 @Component
 export default class FontSelect extends Vue {
-  fonts: Fonts = new Fonts();
+  fonts: Fonts = Fonts.getInstance();
   toggleSelectOptions = false;
   selectedItem = '';
   fontList: FontItemInterface[] = [];
+  
   created() {
-    this.fonts.initFonts()
-      .then (() => {
-        this.fontList = this.fonts.getListofFonts();
-      });
+    this.fontList = this.fonts.getListofFonts();
   }
   
   show() {

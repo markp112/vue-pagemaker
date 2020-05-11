@@ -25,48 +25,49 @@ export interface PageStateInterface {
 
 @Module({ name: 'pagestore', store, dynamic: true })
 class PageStore extends VuexModule implements PageStateInterface {
-
   ROOT = 'ROOT';
   //stores all the elements that make up a page
-  public _pageElements: PageData[] = [];  
+  public _pageElements: PageData[] = [];
   // reference to the component currently being edited
-  public _editedComponentRef: ComponentContainer | PageElement | undefined = undefined;
+  public _editedComponentRef:
+    | ComponentContainer
+    | PageElement
+    | undefined = undefined;
   // show the toolbar for selecting edit // delete
   public _showEditDelete = false;
   // unique number for each component always incremented and set to the max ref of the last component when loading
   // public _componentId = 0;
 
-  @Mutation 
+  @Mutation
   private pushPageElement(element: PageData): void {
-    if(element){
-      if(element.parentRef === this.ROOT ) {
+    if (element) {
+      if (element.parentRef === this.ROOT) {
         this._pageElements.push(element);
       } else { // component is nested within another
         if (this._pageElements.length > 0) {
           const parentElement = this._pageElements.filter(
-              elem => { return elem.ref === element.parentRef })[0] as ComponentContainer;
-          parentElement.addNewElement (element);
+              elem => { 
+                return elem.ref === element.parentRef 
+              })[0] as ComponentContainer;
+          parentElement.addNewElement(element);
         }
       }
       // this._componentId++;
     }
   }
 
-  @Mutation 
+  @Mutation
   private deleteAPageElement(): void {
     if (this._editedComponentRef) {
-    if (this._editedComponentRef.parentRef === this.ROOT) {
-      this._pageElements = this._pageElements.filter(element =>{
-        if (this._editedComponentRef) {
-          return element.ref !== this._editedComponentRef.ref 
-        }
-      })
-    } else {
-      const parentComponent = this._pageElements.filter(element => {
-        if (this._editedComponentRef) {
-          return element.ref === this._editedComponentRef.parentRef
-        }})[0];
-        (parentComponent as ComponentContainer).deleteElement(this._editedComponentRef.ref)
+      if (this._editedComponentRef.parentRef === this.ROOT) {
+        this._pageElements = this._pageElements.filter(element => {
+          if (this._editedComponentRef) {
+            return element.ref !== this._editedComponentRef.ref 
+          }
+        });
+      } else {
+        const parentComponent = this._editedComponentRef.parent;
+        (parentComponent as ComponentContainer).deleteElement(this._editedComponentRef.ref);
       }
     }
   }
@@ -85,57 +86,57 @@ class PageStore extends VuexModule implements PageStateInterface {
     }
   }
 
-  @Mutation 
+  @Mutation
   private clearPageElements(): void {
     this._pageElements = [];
   }
 
-  @Mutation 
+  @Mutation
   private setEditedComponentRef(ref: PageData): void {
     this._editedComponentRef = ref;
   }
 
-  @Mutation 
+  @Mutation
   private setShowEditDelete(show: boolean): void {
     this._showEditDelete = show;
   }
 
-  @Mutation 
+  @Mutation
   private setComponentImage(url: string): void {
     if (this._editedComponentRef) {
       if (this._editedComponentRef.data) {
         const componentType: ComponentTypesString = this._editedComponentRef.type;
         if (componentType === 'image') {
-            this._editedComponentRef.data.content  = url;
-          }
+            this._editedComponentRef.data.content = url;
         }
       }
+    }
   }
 
   @Mutation
   private setBoxDimensionsHeightandWidth(newDimensions: BoxDimensionsInterface) {
-    if(this._editedComponentRef) this._editedComponentRef.updateBoxHeightandWidth(newDimensions);
+    if (this._editedComponentRef) this._editedComponentRef.updateBoxHeightandWidth(newDimensions);
   }
 
   //#endregion Mutations
   //#region  Actions
   @Action
-  public updateEditedComponentRef(element: PageData){
+  public updateEditedComponentRef(element: PageData) {
     this.context.commit('setEditedComponentRef', element);
   }
 
   @Action
   public updateShowEditDelete(show: boolean) {
-    this.context.commit("setShowEditDelete", show);
+    this.context.commit('setShowEditDelete', show);
   }
 
   @Action
   public addNewPageElement(element: PageData) {
-    this.context.commit("pushPageElement", element);
+    this.context.commit('pushPageElement', element);
   }
 
-  @Action 
-  public deletePageElement(){
+  @Action
+  public deletePageElement() {
     this.context.commit('deleteAPageElement');
   }
 
@@ -158,8 +159,8 @@ class PageStore extends VuexModule implements PageStateInterface {
       }
     }
   }
-  
-  @Action 
+
+  @Action
   public deleteEditedComponentStyle(styleToRemove: StyleTypes): void {
     this.context.commit('removeEditedComponentStyle', styleToRemove);
   }
@@ -184,21 +185,30 @@ class PageStore extends VuexModule implements PageStateInterface {
     if (this.editedComponentRef) {
       const component: PageData = this.editedComponentRef as PageData;
       if (component) {
-        if(component.data) {
+        if (component.data) {
           component.data.content = newContent;
         }
       }
     }
   }
-  
+
   @Action getTheEditedComponentRef(): Promise<PageData> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       resolve(this._editedComponentRef);
     });
   }
 
   public get editedComponentRef(): PageData | undefined {
     return this._editedComponentRef;
+  }
+
+  public get editComponentData(): string {
+    if (this._editedComponentRef) {
+      return this._editedComponentRef.data !== undefined 
+        ? this._editedComponentRef.data.content
+        : '';
+    }
+    return '';
   }
 
   public get showEditDelete(): boolean {
@@ -210,11 +220,10 @@ class PageStore extends VuexModule implements PageStateInterface {
   }
 
   private compare(a: PageData, b: PageData) {
-    if (a.id > b.id) return 1
-    if (a.id < b.id) return -1
-    return 0
+    if (a.id > b.id) return 1;
+    if (a.id < b.id) return -1;
+    return 0;
   }
-
 }
 
 export const PageModule = getModule(PageStore);

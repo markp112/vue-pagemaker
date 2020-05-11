@@ -32,6 +32,7 @@ export default class EditDeleteOption extends Vue {
   @Emit('deleteClicked')
   trashClick(): void {
     PageModule.updateShowEditDelete(false);
+    PageModule.deletePageElement();
     return
   }
 

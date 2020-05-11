@@ -3,7 +3,6 @@ export class ComponentCounter {
   private static instance: ComponentCounter;
   private counter = 0;
   
-  
   public static getInstance(): ComponentCounter {
     if (!ComponentCounter.instance) {
       ComponentCounter.instance = new ComponentCounter();

@@ -59,6 +59,10 @@ export default class SideBarTextEditor extends Vue {
     { icon: '900-32.png', class: 'font-black', tooltip: 'font weight black' },
     ];
 
+  mounted() {
+    this.textContent = this.$props.textValue;
+  }
+
   @Emit('onFontWeightChange')
   fontWeightChange(classDef: string):string {
     return classDef;

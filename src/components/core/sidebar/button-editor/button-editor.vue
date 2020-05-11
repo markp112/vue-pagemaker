@@ -20,7 +20,8 @@
         @onRemoveStyle="onRemoveStyle"
         @onShadowChange="onShadowChange"
         ></border-buttons>
-        <sidebar-text-editor 
+        <sidebar-text-editor
+          :textValue="data" 
           class="mt-2" 
           @onFontWeightChange="onFontWeightChange"
           @onTextChange="onTextChange"
@@ -28,7 +29,7 @@
           @onUnderlineClick="onUnderlineClick"
           @onFontClick="onFontClick"
         >
-          </sidebar-text-editor>
+        </sidebar-text-editor>
     </div>
   </div>
 </template>
@@ -65,6 +66,7 @@ export default class ContainerEditorSidebar extends Vue {
   borderStyle: Style | null = null;
   borderColour = 'rgba(0, 0, 0, 1)';
   borderDefintion: BorderInterface | null = null;
+  data = PageModule.editComponentData;
 
   closeButtonClick(): void {
     SidebarModule.closeEditor();
