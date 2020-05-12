@@ -1,23 +1,28 @@
 <template>
   <div>
     <div class="flex flex-row justify-start relative">
-      <img :src="getPath(iconSelect)" alt="">
+      <input
+        v-model="selectedItem"
+        class="w-6 text-sm text-center"
+        @change="onInputChange"
+      >
       <img :src="getPath('down-24.png')" 
         class="w-4 h-4 cursor-pointer hover:bg-gray-800"
         @click="show()"
         >
     </div>
     <div>
-      <ul class="border border-l-gray-500 bg-gray-200 flex flex-col items-center absolute w-12 shadow-lg"
+      <ul class="border border-l-gray-500 bg-gray-200 flex flex-col items-center absolute w-12 shadow-lg h-32 overflow-y-scroll"
         v-if="toggleSelectOptions"
         @mouseleave="show"
         @blur="show"
       >
         <li v-for="item in $props.selectList"
           :key="item" 
-          @click="iconClicked(item)" 
-          class="cursor-pointer mb-2 relative z-auto"
-          :class="{'bg-secondary-100': item === selectedItem}">
+          @click="itemClicked(item)" 
+          class="drop-down-li"
+          :class="{'bg-secondary-100 text-gray-200': item === selectedItem}">
+          {{ item }}
         </li>
       </ul>
     </div>
@@ -31,8 +36,7 @@ import { Emit } from 'vue-property-decorator';
 
 @Component({
   props: {
-    iconSelect: { default: '' },
-    selectList: { default: () => {
+      selectList: { default: () => {
       return []
     }},
   },
@@ -41,11 +45,16 @@ export default class DropDown extends Vue {
   toggleSelectOptions = false;
   selectedItem = '';
 
-  @Emit('selectChange')
-  iconClicked(classElement: string): string {
+  @Emit('onSelectChange')
+  itemClicked(classElement: string): string {
     this.selectedItem = classElement;
     this.show();
     return  classElement;
+  }
+
+  @Emit('onSelectChange')
+  onInputChange() {
+    return this.selectedItem;
   }
 
   show() {
@@ -57,8 +66,15 @@ export default class DropDown extends Vue {
     return path(`./${image}`);
   }
   
-  getClass(classDef: string ) {
-    return classDef === 'hidden' ? '' : classDef 
-  }
 }
 </script>
+
+<style lang="postcss">
+.drop-down-li {
+  @apply cursor-pointer mb-2 relative z-auto text-sm w-full text-center;
+}
+
+.drop-down-li:hover {
+  @apply bg-gray-600 text-gray-400;
+}
+</style>

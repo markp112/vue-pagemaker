@@ -28,6 +28,7 @@
           @onItalicClick="onItalicClick"
           @onUnderlineClick="onUnderlineClick"
           @onFontClick="onFontClick"
+          @onFontSizeChange="onFontSizeChange"
         >
         </sidebar-text-editor>
     </div>
@@ -134,6 +135,10 @@ export default class ContainerEditorSidebar extends Vue {
 
   onFontClick(fontName: string): void {
     PageModule.updateEditedComponentStyles({ style: 'font-family', value: fontName });
+  }
+
+  onFontSizeChange(fontSize: number): void {
+    PageModule.updateEditedComponentStyles({ style: 'font-size', value: `${fontSize}px` });
   }
 }
 </script>

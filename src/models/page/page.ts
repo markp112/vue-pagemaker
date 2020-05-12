@@ -204,7 +204,7 @@ export class PageElement implements Partial<PageElementInterface> {
     const index = this.classDefinition.indexOf('flex');
     if (index >= 0) {
       const tempclass = this.classDefinition;
-      if (classDef.indexOf('justify') > 0) {
+      if (classDef.indexOf('justify-') > 0) {
         this.classDefinition = this.processFlexHorizontalAlignment(classDef, tempclass)
       } else if (classDef.indexOf('items-') > 0) {
         this.classDefinition = this.processFlexVerticalAlignment(classDef, tempclass)
@@ -224,6 +224,7 @@ export class PageElement implements Partial<PageElementInterface> {
   private processFlexVerticalAlignment(classDef: string, tempclass: string): string {
       tempclass = this.cutString(tempclass, 'flex');
       tempclass = this.cutString(tempclass, 'items');
+      tempclass += ` ${classDef}`;
       return tempclass;
   }
 
