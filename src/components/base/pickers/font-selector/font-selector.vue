@@ -9,7 +9,7 @@
         @click="show()"
         >
     </div>
-    <div v-if="toggleSelectOptions" class="absolute">
+    <div v-if="toggleSelectOptions" class="absolute z-20">
       <div class="flex flex-row justify-start">
         <span class="font-filter" @click="filterFonts('display')">d</span>
         <span class="font-filter" @click="filterFonts('handwriting')">h</span>
@@ -17,7 +17,7 @@
         <span class="font-filter" @click="filterFonts('serif')">s</span>
         <span class="font-filter" @click="filterFonts('sans-serif')">ss</span>
       </div>
-      <ul class="border border-l-gray-500 bg-gray-200 flex flex-col items-start  w-32 h-64 shadow-lg overflow-y-scroll"
+      <ul class="border border-l-gray-500 bg-gray-200 flex flex-col items-start w-32 h-64 shadow-lg overflow-y-scroll"
         @mouseleave="show"
         @blur="show"
       >

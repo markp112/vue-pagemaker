@@ -31,6 +31,7 @@
           @onFontSizeChange="onFontSizeChange"
         >
         </sidebar-text-editor>
+        <actions-select onActionSelect="onActionSelect"></actions-select>
     </div>
   </div>
 </template>
@@ -42,12 +43,14 @@ import CloseButton from '@/components/base/buttons/close-button/close-button.vue
 import ColourPicker from '@/components//base/pickers/colour-picker/colour-picker.vue';
 import ToggleSwitch from '@/components/base/buttons/switch/switch.vue';
 import BorderButtons from '@/components/base/buttons/borders/borders.vue';
-import SideBarTextEditor from '@/components/base/text/sidebar-text-editor/sidebar-text-editor.vue'
+import SideBarTextEditor from '@/components/base/text/sidebar-text-editor/sidebar-text-editor.vue';
+import ActionsSelect from '@/components/base/pickers/actions-select/actions-select.vue';
 import { PageModule } from '@/store/page/page';
 import { SidebarModule } from '@/store//sidebar/sidebar';
 import { Style, BorderInterface, Border, BorderBuilder } from '@/models/styles/styles';
 import { StyleTypes } from '../../../../models/page/page';
 import { Page } from '../../../../models/pages/pages';
+import { ActionEvent } from '../../../../models/components/base-component';
 
 type BackgroundForeGround = 'background-color' | 'color' | 'border';
 
@@ -58,6 +61,7 @@ type BackgroundForeGround = 'background-color' | 'color' | 'border';
     'toggle-switch': ToggleSwitch,
     'border-buttons': BorderButtons,
     'sidebar-text-editor': SideBarTextEditor,
+    'actions-select': ActionsSelect,
   },
 })
 export default class ContainerEditorSidebar extends Vue {
@@ -139,6 +143,10 @@ export default class ContainerEditorSidebar extends Vue {
 
   onFontSizeChange(fontSize: number): void {
     PageModule.updateEditedComponentStyles({ style: 'font-size', value: `${fontSize}px` });
+  }
+
+  onActionEvent(actionEvent: ActionEvent) {
+    PageModule.updateEditedComponentActionEvent(actionEvent);
   }
 }
 </script>

@@ -43,10 +43,17 @@ import
     PageData,
     ComponentContainer,
     PageElement,
+    PageElementBuilder,
   } from '@/models/page/page';
 import { Style } from '@/models//styles/styles';
-import { ComponentTypes, initDimensions } from '@/models/components/components';
-import { BoxDimensions, BoxDimensionsInterface } from '@/models/components/box-dimension';
+import {
+  ComponentTypes,
+  initDimensions,
+} from '@/models/components/components';
+import {
+  BoxDimensions,
+  BoxDimensionsInterface,
+} from '@/models/components/box-dimension';
 import { PageModule } from '@/store/page/page';
 import Resize,
   { ResizeDimensions } from '@/components/base/resizeable/resize.vue';
@@ -56,7 +63,7 @@ import UploadImage from '@/components/base/pickers/upload-image/upload-image.vue
   props: {
     thisComponent: {
       default: (): PageData => {
-        return new PageElement();
+        return new PageElementBuilder().build();
       },
     },
   },

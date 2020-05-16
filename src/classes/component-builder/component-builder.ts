@@ -1,4 +1,4 @@
-import { PageData, ComponentContainer, PageElement } from '@/models/page/page';
+import { PageData, ComponentContainer, PageElement, PageElementBuilder } from '@/models/page/page';
 import { ComponentDefinitionInterface, ComponentTypesString } from '@/models/components/base-component'
 import { Button, Text, LOREMIPSUM, Image } from '@/models/components/components';
 export const _componentClasses: ComponentDefinitionInterface[] = []
@@ -17,44 +17,49 @@ export class ComponentBuilder {
   }
   
   private buildContainer(component: ComponentDefinitionInterface ,ref: string, parent:  ComponentContainer) {
-    const container: ComponentContainer = new ComponentContainer();
-    container.name = component.componentName
-    container.ref = ref;
-    container.isContainer = component.isContainer;
-    container.classDefinition = component.class;
-    container.componentHTMLTag =  component.componentRef; 
+    const container: ComponentContainer = new ComponentContainer(
+        new PageElementBuilder()
+          .setName(component.componentName)
+          .setRef(ref)
+          .setIsContainer(component.isContainer)
+          .setClassDefintion(component.class)
+          .setComponentHtmlTag(component.componentRef)
+          .setType(component.type)        
+        );
     container.buildBoxDimensions(component.boxDimensions);
-    container.type = component.type;
     if(parent.ref !== 'ROOT') { container.parent = parent };
     container.parentRef = parent.ref;
     return container
   }
 
+  private buildBaseComponent(component: ComponentDefinitionInterface, ref: string, parent: ComponentContainer): PageElementBuilder {
+    return new PageElementBuilder()
+      .setName(component.componentName)
+      .setParent(parent)
+      .setIsContainer(false)
+      .setComponentHtmlTag(component.componentRef)
+      .setClassDefintion(component.class)
+      .setRef(ref)
+      .setType(component.type);
+  }
+
   private buildTheComponent(component: ComponentDefinitionInterface, ref: string, parent: ComponentContainer): PageElement {
-    const genericComponent = new PageElement();
-    genericComponent.ref = ref;
-    genericComponent.isContainer = false;
-    genericComponent.classDefinition = component.class;
-    genericComponent.componentHTMLTag =  component.componentRef;
-    genericComponent.parent = parent;
-    genericComponent.parentRef = parent.ref;
-    genericComponent.type = component.type;
-    genericComponent.name = component.componentName;
-    genericComponent.buildBoxDimensions(component.boxDimensions);
+    let theComponent: PageElement | null = null;
     const componentType: ComponentTypesString = component.type;
     switch (componentType) {
       case  'button': 
-        genericComponent.data = new Button();
-        genericComponent.data.content ='Click Me'
+        theComponent = this.buildBaseComponent(component, ref, parent).buildAButton();
         break;
       case 'text':
-        genericComponent.data = new Text();
-        genericComponent.data.content = LOREMIPSUM;
+        theComponent = this.buildBaseComponent(component, ref, parent).buildATextComponent();
         break;
       case 'image':
-        genericComponent.data = new Image();
+        theComponent = this.buildBaseComponent(component, ref, parent).buildAnImage();
         break;
+      default:
+        theComponent = this.buildBaseComponent(component, ref, parent).build();
     }
-    return genericComponent
+    theComponent.buildBoxDimensions(component.boxDimensions);
+    return theComponent;
   }
 }

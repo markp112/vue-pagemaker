@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class="flex flex-row justify-start relative">
+    <div class="flex flex-row justify-start relative w-16">
       <input
         v-model="selectedItem"
-        class="w-6 text-sm text-center"
+        class="min-w-6 text-sm text-center"
         @change="onInputChange"
       >
       <img :src="getPath('down-24.png')" 
@@ -12,7 +12,7 @@
         >
     </div>
     <div>
-      <ul class="border border-l-gray-500 bg-gray-200 flex flex-col items-center absolute w-12 shadow-lg h-32 overflow-y-scroll"
+      <ul class="border border-l-gray-500 bg-gray-200 flex flex-col items-center absolute z-10 w-12 shadow-lg h-32 overflow-y-scroll"
         v-if="toggleSelectOptions"
         @mouseleave="show"
         @blur="show"

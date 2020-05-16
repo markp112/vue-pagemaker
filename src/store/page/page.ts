@@ -13,7 +13,7 @@ import {
   StyleTypes,
 } from '@/models/page/page';
 import { Style } from '@/models/styles/styles';
-import { ComponentTypesString } from '@/models/components/base-component';
+import { ComponentTypesString, ActionEvent } from '@/models/components/base-component';
 import { BoxDimensionsInterface } from '@/models/components/box-dimension';
 
 export interface PageStateInterface {
@@ -118,7 +118,12 @@ class PageStore extends VuexModule implements PageStateInterface {
     if (this._editedComponentRef) this._editedComponentRef.updateBoxHeightandWidth(newDimensions);
   }
 
+  @Mutation
+  private setEditedComponentActionEvent(actionEvent: ActionEvent) {
+    if(this.editedComponentRef) this.editedComponentRef.actionEvent = actionEvent;
+  }
   //#endregion Mutations
+
   //#region  Actions
   @Action
   public updateEditedComponentRef(element: PageData) {
@@ -192,12 +197,20 @@ class PageStore extends VuexModule implements PageStateInterface {
     }
   }
 
-  @Action getTheEditedComponentRef(): Promise<PageData> {
+  @Action
+  getTheEditedComponentRef(): Promise<PageData> {
     return new Promise(resolve => {
       resolve(this._editedComponentRef);
     });
   }
 
+  @Action
+  updateEditedComponentActionEvent(actionEvent: ActionEvent) {
+    this.context.commit("setEditedComponentActionEvent", actionEvent);
+  }
+
+// #region Actions
+// #region getters
   public get editedComponentRef(): PageData | undefined {
     return this._editedComponentRef;
   }

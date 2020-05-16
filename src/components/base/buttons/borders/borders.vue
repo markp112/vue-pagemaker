@@ -2,6 +2,11 @@
   <div>
   
     <div class="sidebar-button-panel">
+      <div class="flex flex-row justify-center">
+        <icon-select iconSelect="project_stage_planning-32.png" :iconList="borderEdgeIconList" @selectChange="borderEdgeChange"></icon-select>
+        <icon-select iconSelect="sketch-32.png" :iconList="lineStyleIconList" @selectChange="setLineStyle"></icon-select>
+      
+      </div>
         <div class="flex flex-row flex-start">
           <img src="@/assets/icons/thickness-32.png"
             class="text-accent cursor-pointer hover:bg-gray-600"
@@ -35,11 +40,8 @@
             </optgroup>
         </select>
       </div>
-      <div class="flex flex-row justify-center">
-        <icon-select iconSelect="project_stage_planning-32.png" :iconList="borderEdgeIconList" @selectChange="borderEdgeChange"></icon-select>
-        <icon-select iconSelect="sketch-32.png" :iconList="lineStyleIconList" @selectChange="setLineStyle"></icon-select>
+     
         <icon-select iconSelect="shadows-32.png" :iconList="shadowIconList" @selectChange="onShadowChange"></icon-select>
-      </div>
     </div>
   </div>
 

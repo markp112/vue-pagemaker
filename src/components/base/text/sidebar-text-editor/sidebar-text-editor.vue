@@ -28,10 +28,11 @@
         name="text" 
         v-model="textContent" 
         @change="textChange" 
-        class="text-sm w-32 mb-1 bg-gray-400"
+        class="text-sm w-32 mb-1"
         placeholder="Enter content"
       >
       <drop-down 
+        class="ml-1"
         :selectList="fontSizes"
         @onSelectChange="onFontSizeChange"
       >

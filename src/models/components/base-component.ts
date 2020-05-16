@@ -58,6 +58,31 @@ export class ComponentDefinition implements ComponentDefinitionInterface {
   }
 }
 
+export type ActionEventTypes = 'Navigation' | null;
+
+export interface ActionEventInterface {
+  actionType: ActionEventTypes;
+  eventAction: string;
+}
+
+export class ActionEvent implements ActionEventInterface {
+  private _actionType: ActionEventTypes;
+  private _eventAction: string;
+
+  constructor(actionType: ActionEventTypes, eventAction: string) {
+    this._actionType = actionType;
+    this._eventAction = eventAction;
+  }
+
+  get actionType(): ActionEventTypes {
+    return this._actionType;
+  }
+
+  get eventAction(): string {
+    return this._eventAction;
+  }
+}
+
 export interface ComponentContentInterface extends ComponentDefinitionInterface {
   content: ComponentTypes;     // for when a component needs data e.g. picture element, text etc
 }

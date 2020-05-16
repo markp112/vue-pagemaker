@@ -30,7 +30,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import Container from '@/components/page-builder-elements/generic/container.vue';
-import { PageData, ComponentContainer } from '@/models/page/page';
+import { PageData, ComponentContainer, PageElementBuilder } from '@/models/page/page';
 import { ComponentBuilder } from '@/classes/component-builder/component-builder';
 import EditDeleteOption from '@/components/page-builder-elements/utility/edit-delete-options/edit-delete-options.vue';
 import { PageModule } from '@/store/page/page';
@@ -39,7 +39,7 @@ import { ServicesModule } from '@/store/services/services';
 import { ComponentCounter } from '@/classes/component-counter/singleton-counter';
 
 const PARENT = 'ROOT';
-const PARENTCOMPONENT = new ComponentContainer();
+const PARENTCOMPONENT = new ComponentContainer(new PageElementBuilder());
 
 PARENTCOMPONENT.ref = PARENT;
 

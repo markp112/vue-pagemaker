@@ -3,7 +3,6 @@
     <div class="color-wrapper bg-gray-300 p-1">
       <colour-palette :hue="hue" @colour="setColour"></colour-palette>
       <colour-slider  @colour="setHue" style="margin-left:16px"></colour-slider>
-      <span class="text ml-4 border border-gray-600 text-center align-middle inline-block ">{{ colour }}</span>
     </div>
   </div>
 </template>
