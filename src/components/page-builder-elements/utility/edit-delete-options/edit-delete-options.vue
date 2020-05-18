@@ -1,7 +1,19 @@
 <template>
   <div class="bg-gray-500 w-24 h-8 flex flex-row justify-between absolute p-2 rounded-md z-10 right-0 top-0 shadow  shadow-xl" v-if="isVisible">
-    <font-awesome-icon icon="pencil-alt" prefix="fas" @click="editClick()" class="cursor-pointer hover:text-secondary-900"></font-awesome-icon>
-    <font-awesome-icon icon="trash-alt" prefix="fas" @click="trashClick()" class="cursor-pointer hover:text-secondary-900"></font-awesome-icon>
+    <font-awesome-icon
+      icon="pencil-alt"
+      prefix="fas"
+      @click="editClick()"
+      class="cursor-pointer hover:text-secondary-900"
+    >
+    </font-awesome-icon>
+    <font-awesome-icon
+      icon="trash-alt"
+      prefix="fas"
+      @click="trashClick()"
+      class="cursor-pointer hover:text-secondary-900"
+    >
+    </font-awesome-icon>
   </div>
 </template>
 
@@ -33,7 +45,6 @@ export default class EditDeleteOption extends Vue {
   trashClick(): void {
     PageModule.updateShowEditDelete(false);
     PageModule.deletePageElement();
-    return
   }
 
   get isVisible(): boolean {

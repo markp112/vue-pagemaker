@@ -23,11 +23,11 @@ import { Emit } from 'vue-property-decorator';
 
 @Component({
   props: {
-    icon:{
+    icon: {
       default: (): IconInterface => { return initIcon }
     },
     classDef: { default: "" },
-    id:{ default: "" },
+    id: { default: "" },
   }
 })
 export default class IconImage extends Vue {

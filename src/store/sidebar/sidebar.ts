@@ -27,6 +27,7 @@ export interface SidebarStateInterface {
   _sidebarElements: ComponentDefinitions,
   _showSidebar: boolean,
   _sidebarComponent: sidebarComponents,
+  _showTextModal: boolean,
 }
 
 @Module({ dynamic: true, name: 'sidebar', store })
@@ -34,6 +35,7 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
   _sidebarElements: ComponentDefinitions = new ComponentDefinitions();
   _showSidebar = false;
   _sidebarComponent: sidebarComponents = 'sidebar-components';
+  _showTextModal = false;
 
   @Mutation
   private addComponent(editorComponent: ComponentDefinitionInterface) {
@@ -53,6 +55,12 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
   @Mutation
   private setSidebarEditor(component: sidebarComponents) {
     this._sidebarComponent = component;
+  }
+
+  @Mutation
+  private setShowTextModal(show: boolean) {
+    console.log("Set called")
+    this._showTextModal = show;
   }
 
   @Action({ rawError: true })
@@ -115,7 +123,7 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
           this.context.commit('setSidebarEditor', 'image-editor' as sidebarComponents);
           break;
         case 'text':
-          this.context.commit('setSidebarEditor', 'text-editor' as sidebarComponents);
+          this.context.commit('setShowTextModal', true);
           break;
         case 'jumbo':
           this.context.commit('setSidebarEditor', 'container-editor' as sidebarComponents);
@@ -141,6 +149,11 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
     this.context.commit('setSidebarEditor', sidebarComponent);
   }
 
+  @Action 
+  public updateShowTextModal(show: boolean) {
+    this.context.commit("setShowTextModal", show);
+  }
+
   get getSidebarElements(): ComponentDefinitionInterface[] {
     return this._sidebarElements.componentDefinitions().filter(elem => elem.isContainer === false);
   }
@@ -159,12 +172,16 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
       this._sidebarElements.getComponent(componentName);
   }
 
-  public get showSidebar(): boolean {
+  get showSidebar(): boolean {
     return this._showSidebar;
   }
 
   get sidebarComponentType(): string {
     return this._sidebarComponent;
+  }
+
+  get showTextModal(): boolean {
+    return this._showTextModal;
   }
 }
 

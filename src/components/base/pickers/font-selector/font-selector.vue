@@ -58,6 +58,7 @@ export default class FontSelect extends Vue {
 
   @Emit('onFontClick')
   fontClicked(fontName: string) {
+    this.show();
     return fontName;
   }
 
