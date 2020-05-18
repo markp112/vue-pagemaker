@@ -4,7 +4,12 @@
       class="w-full sidebar-button-panel"
       ref="text-editor-toolbar"
     >
-    <span @click="reset" class="bg-gray-500 cursor-pointer hover:text-red-600">Reset</span>
+    <span
+      @click="reset"
+      class="bg-gray-500 cursor-pointer hover:text-red-600"
+    >
+      Reset
+    </span>
       <font-select @onFontClick="changeFont"></font-select>
     </div>
     <p
@@ -28,13 +33,39 @@ import FontSelect from '@/components/base/pickers/font-selector/font-selector.vu
 import { ComponentCounter } from '@/classes/component-counter/singleton-counter';
 import { Style } from '../../../../models/styles/styles';
 
-interface SelectedText {
-  text: string,
-  start: number,
-  end: number,
+interface NodeDataInterface {
+  type: HTMLTags,   // type of node to create
+  content: string,  // content for the node
+  attribute: Style | null, // style attributes e.g. font-family 
 }
 
-type HTMLTags = 'span'| 'p' | 'b' | 'u' | 'i';
+class NodeData implements NodeDataInterface {
+  _type: HTMLTags;
+  _content: string;
+  _attribute: Style | null;
+
+  constructor(type: HTMLTags, content: string, attribute?: Style) {
+    this._type = type;
+    this._content = content;
+    this._attribute = attribute === undefined ? null : attribute;
+  }
+
+  get type(): HTMLTags {
+    return this._type;
+  }
+
+  get content(): string {
+    return this._content;
+  }
+
+  get attribute(): Style | null {
+    return this._attribute;
+  }
+
+}
+
+
+type HTMLTags = 'span'| 'p' | 'b' | 'u' | 'i' | 'text';
 
 @Component({
   components: {
@@ -47,7 +78,7 @@ type HTMLTags = 'span'| 'p' | 'b' | 'u' | 'i';
 export default class TextEditor extends Vue {
   name = 'text-editor';
   localContent = '';
-  activeSelection: SelectedText | null = null;
+  // activeSelection: SelectedText | null = null;
   currentSelection: Selection | null = null;
   range: Range | null = null;
   componentCounter = new ComponentCounter();
@@ -106,6 +137,31 @@ export default class TextEditor extends Vue {
       return `${tag}-${this.componentCounter.getNextCounter()}`;
     }
 
+  splitRange(range: Range, htmlTag: HTMLTags, style: Style): NodeData[] {
+    const nodeData: NodeData[] = [];
+    if (range.commonAncestorContainer.textContent) {
+      const content = range.commonAncestorContainer.textContent;
+      if (range.startOffset === 0 && range.endOffset === content.length) {
+        const newNode: NodeData = new NodeData( htmlTag, content, style);
+        nodeData.push(newNode);
+      } else {
+        let newNode: NodeData;
+        const startOfContent = content.substring(0, range.startOffset);
+        newNode = new NodeData('text', startOfContent)
+        nodeData.push(newNode);
+        const styledContent: string = content.substring(range.startOffset, range.endOffset);
+        newNode = new NodeData(htmlTag, styledContent, style);
+        nodeData.push(newNode);
+        if (range.endOffset !== content.length) {
+          const endOfContent = content.substring(range.endOffset, content.length);
+          newNode = new NodeData('text', endOfContent);
+          nodeData.push(newNode);
+        }
+      }
+    }
+    return nodeData;
+  }
+
   createElement(HtmlTag: HTMLTags, range: Range, style: Style): HTMLElement | null {
     if (range) {
       const newElement: HTMLElement = document.createElement(HtmlTag);
@@ -153,39 +209,87 @@ export default class TextEditor extends Vue {
     return null;
   }
 
-  addElementToDom(nodeToAdd: Node, range: Range) {
+    getIndexToStyledNode(childNodes: NodeList, nodeToFind: Node): number {
+      let matchedIndex = -1;
+      childNodes.forEach((element: Node, index) => {
+        if (element.nodeValue === nodeToFind.nodeValue) {
+            matchedIndex = index;
+            
+        }
+      });
+      return matchedIndex;
+    }
+
+  createNodesInDom(nodeData: NodeData[], range: Range) {
+    console.log('%c⧭', 'color: #364cd9', nodeData)
+    if (nodeData.length === 0) return;
+
     const parentNode: Node | null = range.commonAncestorContainer.parentNode;
-    console.log('%c⧭', 'color: #00ff88', parentNode)
     if (parentNode) {
-      if ((parentNode as HTMLElement).id === 'texteditorcontent' && parentNode.childNodes.length === 1) {
-          const currentContent = (parentNode as HTMLElement).innerText;
-          const contentStart = currentContent.slice(0, range.startOffset);
-          const contentEnd = currentContent.slice(range.endOffset, currentContent.length);
-          (parentNode as HTMLElement).innerText = contentStart;
-          parentNode.appendChild(nodeToAdd);
-          const childNode = document.createTextNode(contentEnd);
-          parentNode.appendChild(childNode);
-        }
-      else {
-          const nodes: Node [] = [];
-          const selectedNode: Node = range.commonAncestorContainer;
-          
-          let selectedNodeIndex = -1;
-          parentNode.childNodes.forEach((element: Node, index) => {
-          console.log('%c%s', 'color: #994d75', element)
-
-            if (element.nodeValue === range.commonAncestorContainer.nodeValue) selectedNodeIndex = index;
-
-            // gte the index use this to insert before on the child nodes
-            // 
-          });
-          if (selectedNodeIndex !== -1) {
-            // parentNode.childNodes[selectedNodeIndex].remove;
-            parentNode.replaceChild(nodeToAdd, parentNode.childNodes[selectedNodeIndex] );
+      if (parentNode.childNodes.length > 0) {
+        let selectedIndex = this.getIndexToStyledNode(parentNode.childNodes, range.commonAncestorContainer);
+        console.log('%c%s', 'color: #33cc99', selectedIndex)
+        const childNode: ChildNode = parentNode.childNodes.item(selectedIndex);
+        parentNode.removeChild(childNode);
+        nodeData.forEach(node => {
+          const newNode: HTMLElement = document.createElement(node.type);
+          if (node.attribute) {
+            newNode.style.fontFamily = node.attribute.value;
           }
-        }
+          newNode.innerText = node.content;
+          parentNode.insertBefore(newNode,parentNode.childNodes[selectedIndex])
+          selectedIndex++;
+        })
+      } else {
+        nodeData.forEach(node => {
+          const newNode: HTMLElement = document.createElement(node.type);
+          if (node.attribute) {
+            newNode.style.fontFamily = node.attribute.value;
+          }
+          newNode.innerText = node.content;
+          parentNode.appendChild(newNode)
+        })
       }
     }
+  }
+
+
+  // addElementToDom(nodeToAdd: Node, range: Range) {
+  //   console.log('%c⧭', 'color: #e5de73', nodeToAdd, "childnode to add")
+  //   const parentNode: Node | null = range.commonAncestorContainer.parentNode;
+  //   console.log('%c⧭', 'color: #00ff88', parentNode, "parentNode")
+  //   if (parentNode) {
+  //     if ((parentNode as HTMLElement).id === 'texteditorcontent' && parentNode.childNodes.length === 1) {
+  //       console.log("parent node")
+  //         const currentContent = (parentNode as HTMLElement).innerText;
+  //         const contentStart = currentContent.slice(0, range.startOffset);
+  //         const contentEnd = currentContent.slice(range.endOffset, currentContent.length);
+  //         (parentNode as HTMLElement).innerText = contentStart;
+  //         parentNode.appendChild(nodeToAdd);
+  //         const childNode = document.createTextNode(contentEnd);
+  //         parentNode.appendChild(childNode);
+  //       }
+  //     else {
+  //       console.log("child nodes")
+  //         const selectedNode: Node = range.commonAncestorContainer;
+          
+  //         let selectedNodeIndex = -1;
+  //         parentNode.childNodes.forEach((element: Node, index) => {
+  //           console.log('%c%s', 'color: #994d75', element)
+
+  //           if (element.nodeValue === range.commonAncestorContainer.nodeValue) selectedNodeIndex = index;
+
+  //           // gte the index use this to insert before on the child nodes
+  //           // 
+  //         });
+  //           console.log('%c%s', 'color: #7f2200', selectedNodeIndex, "selectedNodeIndex")
+  //         if (selectedNodeIndex !== -1) {
+  //           // parentNode.childNodes[selectedNodeIndex].remove;
+  //           parentNode.replaceChild(nodeToAdd, parentNode.childNodes[selectedNodeIndex] );
+  //         }
+  //       }
+  //     }
+  //   }
     
 
   
@@ -240,10 +344,14 @@ changeFont(font: string) {
   const currentText = content.innerText;
 
   if (this.range) {
-    const element: HTMLElement | null = this.createElement('span', this.range, style);
-    const editorNode: Node | null = this.getTheTextEditorNode(this.range.commonAncestorContainer);
-    console.log("editor Node", editorNode)
-    this.addElementToDom((element as Node), this.range);
+
+    const nodeData: NodeData[] = this.splitRange(this.range, 'span', style);
+    this.createNodesInDom(nodeData, this.range);
+
+    // const element: HTMLElement | null = this.createElement('span', this.range, style);
+    // const editorNode: Node | null = this.getTheTextEditorNode(this.range.commonAncestorContainer);
+    // console.log("editor Node", editorNode)
+    // this.addElementToDom((element as Node), this.range);
 
     // const newContent: string | null = this.insertStyledContent(styledContent, this.range);
 
