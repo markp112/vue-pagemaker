@@ -149,6 +149,7 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
     this.context.commit('setSidebarEditor', sidebarComponent);
   }
 
+  
   @Action 
   public updateShowTextModal(show: boolean) {
     this.context.commit("setShowTextModal", show);

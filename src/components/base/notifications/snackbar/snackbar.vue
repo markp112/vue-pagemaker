@@ -1,5 +1,5 @@
 <template>
-  <div class="snackbar-wrapper  w-full" v-if="snackbarContent.show" :class="{'snackbar-show': snackbarContent.show, 'snackbar-hide': !snackbarContent.show }" >
+  <div class="snackbar-wrapper z-50 w-full" v-if="snackbarContent.show" :class="{'snackbar-show': snackbarContent.show, 'snackbar-hide': !snackbarContent.show }" >
     <div class= "flex flex-row w-4/12 shadow-xl border-gray-500 border" >
       <div class="w-2/12" :class="getIndicatorColour">.</div>
       <div class="w-8/12 p-2 flex flex-col">

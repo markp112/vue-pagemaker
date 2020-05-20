@@ -1,5 +1,5 @@
 <template>
-  <div class="w-9/12 h-32 border border-gray-100 z-50 shadow-lg">
+  <div class="w-9/12 h-32 border border-gray-100 z-50 shadow-lg" v-if="show">
     <div 
       class="w-full sidebar-button-panel"
       ref="text-editor-toolbar"
@@ -11,6 +11,7 @@
       Reset
     </span>
       <font-select @onFontClick="changeFont"></font-select>
+      <close-button @onClick="onCloseClick()"></close-button>
     </div>
     <p
       id="texteditorcontent"
@@ -30,7 +31,10 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import FontSelect from '@/components/base/pickers/font-selector/font-selector.vue';
+import ColourPicker from '@/components//base/pickers/colour-picker/colour-picker.vue';
+import CloseButton from '@/components/base/buttons/close-button/close-button.vue';
 import { Style } from '../../../../models/styles/styles';
+import { SidebarModule } from '@/store/sidebar/sidebar'
 
 interface NodeDataInterface {
   type: HTMLTags,   // type of node to create
@@ -68,7 +72,9 @@ type HTMLTags = 'span'| 'p' | 'b' | 'u' | 'i' | 'text';
 
 @Component({
   components: {
+    'close-button': CloseButton,
     'font-select': FontSelect,
+    'color-picker': ColourPicker,
   },
   props: {
     content: { default: '' },
@@ -83,6 +89,10 @@ export default class TextEditor extends Vue {
     this.localContent = this.$props.content;
     const textEditor: HTMLParagraphElement = this.$refs.texteditorcontent as HTMLParagraphElement;
     textEditor.innerText = this.localContent;
+  }
+
+  onCloseClick(): void {
+    SidebarModule.updateShowTextModal(false);
   }
 
   reset() {
@@ -135,17 +145,14 @@ export default class TextEditor extends Vue {
     const nodeList: NodeList = node.querySelectorAll(htmlTag);
     if (nodeList === null) return;
       nodeList.forEach(element => {
-      const node: HTMLElement = element as HTMLElement;
-      if (node.style.fontFamily){
-        // node.style.fontFamily = '';
+        const node: HTMLElement = element as HTMLElement;
         for (const key in node.style) {
           if (key === style.style) {
             node.style[key] = ''; 
             break;
           }
         }
-      }
-    })
+      });
   }
 
   createNodesFromFragment(range: Range, style: Style, htmlTag: HTMLTags) {
@@ -176,8 +183,28 @@ export default class TextEditor extends Vue {
     this.restoreSelection();
   }
 
+  onColourChange(rgbColour: string) {
+    const style: Style = {style: 'color', value: rgbColour}
+    if (this.range) {
+      this.createNodesFromFragment(this.range, style, 'span')
+    }
+    this.restoreSelection();
+    // if(this.textBackgroundorBorder !== 'border'){
+    //   const style: Style = { style: this.textBackgroundorBorder, value: rgbColour };
+    //   PageModule.updateEditedComponentStyles(style);
+    // } else {
+    //   this.borderColour = rgbColour;
+    //   if(this.borderDefintion){
+    //     this.setBorderStyle(this.buildBorder(this.borderDefintion));
+    //   }
+    // }
+  }
   get textContent(): string {
     return this.localContent;
+  }
+
+  get show(): boolean {
+    return SidebarModule.showTextModal;
   }
 }
 </script>
