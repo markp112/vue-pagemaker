@@ -49,6 +49,7 @@ export default class IconPicker extends Vue {
     this.icons.push(iconBuilder.buildImageIcon(`edit-text.png`, 'group'));
     this.icons.push(iconBuilder.buildImageIcon(`elephant.png`,`group`));
     this.icons.push(iconBuilder.buildImageIcon(`icons8-button-36.png`,`group`));
+    this.icons.push(iconBuilder.buildImageIcon(`check_mark-32.png`,`group`));
     this.icons.push(iconBuilder.buildImageIcon(`send_container-32.png`,`group`));
   }
 

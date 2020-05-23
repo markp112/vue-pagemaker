@@ -21,7 +21,7 @@
     name = "submit-cancel";
     
     @Emit('cancelClicked') cancelClick() {
-     return
+      return
     }
 
     @Emit('saveClicked') saveClick() {

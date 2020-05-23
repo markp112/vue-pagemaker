@@ -22,8 +22,8 @@ import ColourSlider from './colour-slider.vue';
 })
 export default class ColourPicker extends Vue {
   name = 'colour-picker';
-  public hue = '#000000';
-  public colour = '#ffeedd';
+  private hue = '#000000';
+  private colour = '#ffeedd';
 
 @Emit('colour')
 handleOkClick(){

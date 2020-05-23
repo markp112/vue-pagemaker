@@ -1,7 +1,16 @@
 <template>
-  <div class="snackbar-wrapper z-50 w-full" v-if="snackbarContent.show" :class="{'snackbar-show': snackbarContent.show, 'snackbar-hide': !snackbarContent.show }" >
+  <div
+    class="snackbar-wrapper z-50 w-full"
+    :class="{'snackbar-show': snackbarContent.show, 'snackbar-hide': !snackbarContent.show }" 
+    v-if="snackbarContent.show" 
+  >
     <div class= "flex flex-row w-4/12 shadow-xl border-gray-500 border" >
-      <div class="w-2/12" :class="getIndicatorColour">.</div>
+      <div
+        class="w-2/12"
+        :class="getIndicatorColour"
+      >
+      .
+      </div>
       <div class="w-8/12 p-2 flex flex-col">
         <div class="self-center font-semibold">
           {{ snackbarContent.title }}
@@ -38,7 +47,6 @@ export default class Snackbar extends Vue {
       SnackbarModule.hide();
     }, SnackbarModule.snackbarMessage.duration);
   }
-
 }
 </script>
 
@@ -65,7 +73,6 @@ export default class Snackbar extends Vue {
   -webkit-animation: fadeout 0.8s;
   animation: fadeout 0.8s;
 }
-
 
 .error {
   background-color: rgb(184, 65, 65);
