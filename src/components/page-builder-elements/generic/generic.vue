@@ -1,18 +1,20 @@
 <template>
   <div class="handle" 
-    v-if="!isImage"
+    v-if="isText"
+    ref="textElement"
     :style="getStyles()"
     :id="$props.thisComponent.ref"
     :class="getClasses()"
     @click.prevent="onClick($event)"
   >
-    {{ data.content }}
+    
     <resizeable
       :isActive="showBorder"
       :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"
       @onResize="onResize"
     ></resizeable>
   </div>
+  
   <div 
     v-else-if="isImage"
     class="handle" 
@@ -27,6 +29,20 @@
       class="h-full"
       @click.prevent="onClick($event)"
     />
+    <resizeable
+      :isActive="showBorder"
+      :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"
+      @onResize="onResize"
+    ></resizeable>
+  </div>
+  <div class="handle" 
+    v-else
+    :style="getStyles()"
+    :id="$props.thisComponent.ref"
+    :class="getClasses()"
+    @click.prevent="onClick($event)"
+  >
+    {{ data.content }}
     <resizeable
       :isActive="showBorder"
       :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"
@@ -76,6 +92,7 @@ export default class GenericComponent extends Vue {
   name = 'generic-component';
   showBorder = false;
   isImage = false;
+  isText = false;
   data: ComponentTypes;
   editorComponent = '';
   styles: Style[] = [];
@@ -85,6 +102,18 @@ export default class GenericComponent extends Vue {
     this.data = this.$props.thisComponent.data;
     if (this.$props.thisComponent.type === 'image') {
       this.isImage = true;
+      this.isText = false;
+    }
+    if (this.$props.thisComponent.type === 'text') {
+      this.isImage = false;
+      this.isText = true;
+    }
+  }
+
+  mounted() {
+    if (this.isText) {
+      const textElement: HTMLElement = (this.$refs.textElement as HTMLElement);
+      if (this.data) textElement.innerHTML = this.data.content ? this.data.content : '';
     }
   }
 

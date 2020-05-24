@@ -3,15 +3,16 @@
     <div class="flex flex-row justify-start relative w-16">
       <input
         v-model="selectedItem"
-        class="min-w-6 text-sm text-center"
+        class="min-w-6 text-sm text-center relative"
         @change="onInputChange"
       >
+        <slot class="absolute right-0"/>
       <img :src="getPath('down-24.png')" 
         class="w-4 h-4 cursor-pointer hover:bg-gray-800"
         @click="show()"
         >
     </div>
-    <div>
+  
       <ul class="border border-l-gray-500 bg-gray-200 flex flex-col items-center absolute z-10 w-12 shadow-lg h-32 overflow-y-scroll"
         v-if="toggleSelectOptions"
         @mouseleave="show"
@@ -25,7 +26,7 @@
           {{ item }}
         </li>
       </ul>
-    </div>
+  
   </div>
 </template>
 
@@ -43,7 +44,7 @@ import { Emit } from 'vue-property-decorator';
 })
 export default class DropDown extends Vue {
   toggleSelectOptions = false;
-  selectedItem = '';
+  selectedItem = '10';
 
   @Emit('onSelectChange')
   itemClicked(classElement: string): string {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="sidebar-button-panel">
+    <div class="sidebar-button-panel w-full">
       <font-select @onFontClick="onFontClick"></font-select>
       <icon-select
         iconSelect="font_bold-32.png"
@@ -20,23 +20,14 @@
         :class="{'bg-secondary-100': isFontUnderlined}"
         @click="onUnderlinedClick"
       />
-    </div>
-    <div class="sidebar-button-panel justify-center items-center mt-0">
-      <span class="text-sm mr-2">Label</span>
-      <input
-        type="text" 
-        name="text" 
-        v-model="textContent" 
-        @change="textChange" 
-        class="text-sm w-32 mb-1"
-        placeholder="Enter content"
-      >
       <drop-down 
-        class="ml-1"
+        class="ml-1 mt-1"
         :selectList="fontSizes"
         @onSelectChange="onFontSizeChange"
       >
+      px
       </drop-down>
+    
     </div>
   </div>
 </template>
@@ -50,11 +41,6 @@ import FontSelect from '@/components/base/pickers/font-selector/font-selector.vu
 import DropDown from '@/components/base/pickers/drop-down/drop-down.vue';
 
 @Component({
-  props: {
-    textValue: {
-      default: ''
-      },
-  },
   components: {
     'icon-select': IconSelect,
     'font-select': FontSelect,
@@ -62,7 +48,6 @@ import DropDown from '@/components/base/pickers/drop-down/drop-down.vue';
   },
 })
 export default class SideBarTextEditor extends Vue {
-  textContent = '';
   isFontItalic = false;
   isFontUnderlined = false;
   fontWeightIconList = [
@@ -78,22 +63,13 @@ export default class SideBarTextEditor extends Vue {
     ];
   fontSizes = [6, 8, 9, 10, 11, 12, 14, 16, 18, 20, 24, 26, 28, 36, 48, 72];
 
-  mounted() {
-    this.textContent = this.$props.textValue;
-  }
-
   @Emit('onFontWeightChange')
-  fontWeightChange(classDef: string):string {
+  fontWeightChange(classDef: string): string {
     return classDef;
   }
 
-  @Emit('onTextChange')
-  textChange(): string {
-    return this.textContent;
-  }
-
   @Emit('onItalicClick')
-  onItalicClick(){
+  onItalicClick() {
     this.isFontItalic = !this.isFontItalic;
     if(this.isFontItalic) {
       return 'italic';
@@ -102,7 +78,7 @@ export default class SideBarTextEditor extends Vue {
   }
 
   @Emit('onUnderlineClick')
-  onUnderlinedClick(){
+  onUnderlinedClick() {
     this.isFontUnderlined = !this.isFontUnderlined;
     if(this.isFontUnderlined) {
       return 'underline';

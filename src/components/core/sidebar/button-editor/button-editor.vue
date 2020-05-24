@@ -6,50 +6,100 @@
     <div class="mr-2 mt-4">
       <p>Set Colour</p>
       <p class="flex flex-row justify-evenly items-center w-10/12 mb-2">
-        <span :class="{'text-teal-400': textBackgroundorBorder==='background-color'}">background</span>
-        <input type="radio" name="bg-check" id="background" value="background" checked @click="onRadioChange('background')">
-        <span :class="{'text-teal-400': textBackgroundorBorder==='color'}"> font</span>
-        <input type="radio" name="bg-check" id="font" value="font" @click="onRadioChange('color')">
-        <span :class="{'text-teal-400': textBackgroundorBorder==='border'}"> border</span>
-        <input type="radio" name="bg-check" id="border" value="border" @click="onRadioChange('border')">
+        <span
+          :class="{
+            'text-teal-400': textBackgroundorBorder === 'background-color',
+          }"
+        >
+          background
+        </span>
+        <input
+          type="radio"
+          name="bg-check"
+          id="background"
+          value="background"
+          checked
+          @click="onRadioChange('background')"
+        />
+        <span
+          :class="{
+            'text-teal-400': textBackgroundorBorder === 'color',
+          }"
+        >
+          font
+        </span>
+        <input
+          type="radio"
+          name="bg-check"
+          id="font"
+          value="font"
+          @click="onRadioChange('color')"
+        />
+        <span
+          :class="{
+            'text-teal-400': textBackgroundorBorder === 'border',
+          }"
+        >
+          border
+        </span>
+        <input
+          type="radio"
+          name="bg-check"
+          id="border"
+          value="border"
+          @click="onRadioChange('border')"
+        />
       </p>
       <colour-picker @colour="onColourChange"></colour-picker>
-      <border-buttons 
+      <border-buttons
         class="mt-2"
         @onBorderChange="onBorderChange"
         @onRemoveStyle="onRemoveStyle"
         @onShadowChange="onShadowChange"
-        ></border-buttons>
-        <sidebar-text-editor
-          :textValue="data" 
-          class="mt-2" 
-          @onFontWeightChange="onFontWeightChange"
-          @onTextChange="onTextChange"
-          @onItalicClick="onItalicClick"
-          @onUnderlineClick="onUnderlineClick"
-          @onFontClick="onFontClick"
-          @onFontSizeChange="onFontSizeChange"
-        >
-        </sidebar-text-editor>
-        <actions-select onActionSelect="onActionSelect"></actions-select>
+      ></border-buttons>
+      <sidebar-text-editor
+        class="mt-2"
+        @onFontWeightChange="onFontWeightChange"
+        @onItalicClick="onItalicClick"
+        @onUnderlineClick="onUnderlineClick"
+        @onFontClick="onFontClick"
+        @onFontSizeChange="onFontSizeChange"
+      >
+      </sidebar-text-editor>
+      <text-input
+        class="mt-2" 
+        :textValue="data"
+        @onTextChange="onTextChange"
+      >
+      </text-input>
+      <actions-select 
+        onActionSelect="onActionSelect" 
+        class="mt-2"
+      >
+      </actions-select>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import Vue from 'vue';
 import Component from 'vue-class-component';
 import CloseButton from '@/components/base/buttons/close-button/close-button.vue';
 import ColourPicker from '@/components/base/pickers/colour-picker/colour-picker.vue';
 import ToggleSwitch from '@/components/base/buttons/switch/switch.vue';
 import BorderButtons from '@/components/base/buttons/borders/borders.vue';
 import SideBarTextEditor from '@/components/base/text/sidebar-text-editor/sidebar-text-editor.vue';
+import TextInput from '@/components/base/text/text-input/text-input.vue';
 import ActionsSelect from '@/components/base/pickers/actions-select/actions-select.vue';
 import { PageModule } from '@/store/page/page';
 import { SidebarModule } from '@/store//sidebar/sidebar';
-import { Style, BorderInterface, Border, BorderBuilder } from '@/models/styles/styles';
+import {
+  Style,
+  BorderInterface,
+  Border,
+  BorderBuilder,
+} from '@/models/styles/styles';
 import { StyleTypes } from '../../../../models/page/page';
-import { Page } from '../../../../models/pages/pages';
 import { ActionEvent } from '../../../../models/components/base-component';
 
 type BackgroundForeGround = 'background-color' | 'color' | 'border';
@@ -62,10 +112,11 @@ type BackgroundForeGround = 'background-color' | 'color' | 'border';
     'border-buttons': BorderButtons,
     'sidebar-text-editor': SideBarTextEditor,
     'actions-select': ActionsSelect,
+    'text-input': TextInput,
   },
 })
-export default class ContainerEditorSidebar extends Vue {
-  
+export default class ButtonEditor extends Vue {
+  name='button-editor'
   textBackgroundorBorder: BackgroundForeGround = 'background-color';
   isFontSelected = false;
   borderStyle: Style | null = null;
@@ -82,12 +133,15 @@ export default class ContainerEditorSidebar extends Vue {
   }
 
   onColourChange(rgbColour: string) {
-    if(this.textBackgroundorBorder !== 'border'){
-      const style: Style = { style: this.textBackgroundorBorder, value: rgbColour };
+    if (this.textBackgroundorBorder !== 'border') {
+      const style: Style = {
+        style: this.textBackgroundorBorder,
+        value: rgbColour,
+      };
       PageModule.updateEditedComponentStyles(style);
     } else {
       this.borderColour = rgbColour;
-      if(this.borderDefintion){
+      if (this.borderDefintion) {
         this.setBorderStyle(this.buildBorder(this.borderDefintion));
       }
     }
@@ -104,19 +158,19 @@ export default class ContainerEditorSidebar extends Vue {
       .build();
   }
 
-  setBorderStyle(border:Border): void {
+  setBorderStyle(border: Border): void {
     PageModule.updateEditedComponentStyles(border.getBorderStyle());
     PageModule.updateEditedComponentStyles(border.getBorderRadius());
   }
 
   onBorderChange(borderStyle: BorderInterface): void {
     const border: Border = this.buildBorder(borderStyle);
-    this.setBorderStyle(border); 
+    this.setBorderStyle(border);
   }
 
   onRemoveStyle(styleToRemove: StyleTypes): void {
     PageModule.deleteEditedComponentStyle(styleToRemove);
-  } 
+  }
 
   onShadowChange(classDef: string): void {
     PageModule.updateComponentClassProperties(classDef);
@@ -138,11 +192,17 @@ export default class ContainerEditorSidebar extends Vue {
   }
 
   onFontClick(fontName: string): void {
-    PageModule.updateEditedComponentStyles({ style: 'font-family', value: fontName });
+    PageModule.updateEditedComponentStyles({
+      style: 'font-family',
+      value: fontName,
+    });
   }
 
   onFontSizeChange(fontSize: number): void {
-    PageModule.updateEditedComponentStyles({ style: 'font-size', value: `${fontSize}px` });
+    PageModule.updateEditedComponentStyles({
+      style: 'font-size',
+      value: `${fontSize}px`,
+    });
   }
 
   onActionEvent(actionEvent: ActionEvent) {

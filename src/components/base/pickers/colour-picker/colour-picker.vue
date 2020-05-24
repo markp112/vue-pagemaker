@@ -25,19 +25,20 @@ export default class ColourPicker extends Vue {
   private hue = '#000000';
   private colour = '#ffeedd';
 
-@Emit('colour')
-handleOkClick(){
-  // event.stopPropagation();
-  return this.colour;
-}
-@Emit('colour')
-setColour(rgbColour: string) {
-  this.colour = rgbColour;
-}
+  @Emit('colour')
+  handleOkClick(){
+    // event.stopPropagation();
+    return this.colour;
+  }
 
-setHue(hue: string) {
-  this.hue = hue;
-}
+  @Emit('colour')
+  setColour(rgbColour: string) {
+    this.colour = rgbColour;
+  }
+
+  setHue(hue: string) {
+    this.hue = hue;
+  }
 
 }
 </script>
