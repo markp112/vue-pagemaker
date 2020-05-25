@@ -1,9 +1,6 @@
 <template>
   <div class="w-9/12 h-32 border border-gray-100 z-50 shadow-lg" v-if="show">
-    <div 
-      class="w-full sidebar-button-panel h-12"
-      ref="text-editor-toolbar"
-    >
+    <div class="w-full sidebar-button-panel h-12" ref="text-editor-toolbar">
       <span
         @click="reset"
         class="bg-gray-500 cursor-pointer hover:text-red-600"
@@ -43,6 +40,7 @@ import { Style } from '../../../../models/styles/styles';
 import { SidebarModule } from '@/store/sidebar/sidebar'
 import { RH } from '@/classes/dom/range';
 import { PageModule } from '../../../../store/page/page';
+import { IconPickerInterface } from '../../../../models/components/icon-picker-models';
 
 
 @Component({
@@ -140,8 +138,8 @@ export default class TextEditor extends Vue {
     this.setStyle('fontFamily', font);
   }
 
-  onFontWeightChange(classDef: string): void {
-    this.setStyle('fontWeight', '800');
+  onFontWeightChange(iconElement: IconPickerInterface): void {
+    this.setStyle('fontWeight', iconElement.domEquivalent);
   }
 
   onItalicClick(classDef: string): void {

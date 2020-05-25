@@ -101,6 +101,7 @@ import {
 } from '@/models/styles/styles';
 import { StyleTypes } from '../../../../models/page/page';
 import { ActionEvent } from '../../../../models/components/base-component';
+import { IconPickerInterface } from '../../../../models/components/icon-picker-models';
 
 type BackgroundForeGround = 'background-color' | 'color' | 'border';
 
@@ -116,7 +117,7 @@ type BackgroundForeGround = 'background-color' | 'color' | 'border';
   },
 })
 export default class ButtonEditor extends Vue {
-  name='button-editor'
+  name = 'button-editor'
   textBackgroundorBorder: BackgroundForeGround = 'background-color';
   isFontSelected = false;
   borderStyle: Style | null = null;
@@ -176,8 +177,8 @@ export default class ButtonEditor extends Vue {
     PageModule.updateComponentClassProperties(classDef);
   }
 
-  onFontWeightChange(classDef: string): void {
-    PageModule.updateComponentClassProperties(classDef);
+  onFontWeightChange(iconElement: IconPickerInterface): void {
+    PageModule.updateComponentClassProperties(iconElement.class);
   }
 
   onTextChange(text: string): void {

@@ -15,7 +15,7 @@
       >
         <li v-for="iconElement in $props.iconList"
           :key="iconElement.class" 
-          @click="iconClicked(iconElement.class)" 
+          @click="iconClicked(iconElement)" 
           class="cursor-pointer mb-2 relative "
           :class="{'bg-secondary-100': iconElement.class === selectedItem}">
           <img :src="getPath(iconElement.icon)"
@@ -36,6 +36,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Emit } from 'vue-property-decorator';
 import ToolTip from '@/components/base/notifications/tooltip/tooltip.vue';
+import { IconPickerInterface } from '../../../../models/components/icon-picker-models';
 
 @Component({
   props: {
@@ -54,10 +55,10 @@ export default class IconSelect extends Vue {
   showToolTip = '';
 
   @Emit('selectChange')
-  iconClicked(classElement: string): string {
-    this.selectedItem = classElement;
+  iconClicked(iconElement: IconPickerInterface): IconPickerInterface {
+    this.selectedItem = iconElement.class;
     this.show();
-    return  classElement;
+    return  iconElement;
   }
 
   show() {

@@ -1,5 +1,4 @@
 import { DimensionInterface } from '../components/box-dimension';
-import { __makeTemplateObject } from 'tslib';
 
 export interface Style {
   style: string;
@@ -37,24 +36,26 @@ export class Border implements BorderInterface {
     const width = `${this.width.value}${this.width.units}`;
     const color = `${this.colour}`
     const direction = this.borderDirection === 'border' ? this.borderDirection : `border-${this.borderDirection}`;
-    const border: Style = {style: direction, value: `${width} ${style} ${color}`};
+    const border: Style = { style: direction, value: `${width} ${style} ${color}` };
     return border;
   }
 
   getBorderRadius = () => {
-    const style: Style = { style: 'border-radius', value: `${this.borderRadius.value}${this.borderRadius.units}`};
+    const style: Style = {
+      style: 'border-radius',
+      value: `${this.borderRadius.value}${this.borderRadius.units}`
+    };
     return style;
-  }
+  };
 }
 
 export class BorderBuilder {
-  
   private _borderDirection: BorderDirections = null;
   private _colour = 'rgba(0,0,0,1)';
   private _style: BorderStyle = 'solid';
   private _width: DimensionInterface = { value: 1, units: 'px' };
   private _borderRadius: DimensionInterface = { value: 0, units: 'px' };
-  
+
   setBorderDirection(borderDirection: BorderDirections): BorderBuilder {
     this._borderDirection = borderDirection;
     return this;
@@ -81,11 +82,11 @@ export class BorderBuilder {
   }
 
   public build(): Border {
-    return  new Border(this)
+    return new Border(this);
   }
 
   get borderDirection(): BorderDirections {
-    return this._borderDirection
+    return this._borderDirection;
   }
 
   get colour(): string {
@@ -95,13 +96,12 @@ export class BorderBuilder {
   get borderRadius(): DimensionInterface {
     return this._borderRadius;
   }
-  
+
   get width(): DimensionInterface {
     return this._width;
   }
 
-  get style():BorderStyle {
+  get style(): BorderStyle {
     return this._style;
   }
 }
-

@@ -13,7 +13,7 @@
         >
     </div>
   
-      <ul class="border border-l-gray-500 bg-gray-200 flex flex-col items-center absolute z-10 w-12 shadow-lg h-32 overflow-y-scroll"
+      <ul class="border border-l-gray-500 bg-gray-200 flex flex-col items-center absolute z-10 w-12 shadow-lg h-40 overflow-y-scroll"
         v-if="toggleSelectOptions"
         @mouseleave="show"
         @blur="show"
@@ -40,11 +40,16 @@ import { Emit } from 'vue-property-decorator';
       selectList: { default: () => {
       return []
     }},
+    defaultValue: { default: '' },
   },
 })
 export default class DropDown extends Vue {
   toggleSelectOptions = false;
-  selectedItem = '10';
+  selectedItem = '';
+
+  mounted () {
+    this.selectedItem = this.$props.defaultValue;
+  }
 
   @Emit('onSelectChange')
   itemClicked(classElement: string): string {

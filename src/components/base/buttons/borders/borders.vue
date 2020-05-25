@@ -40,8 +40,7 @@
             </optgroup>
         </select>
       </div>
-     
-        <icon-select iconSelect="shadows-32.png" :iconList="shadowIconList" @selectChange="onShadowChange"></icon-select>
+      <icon-select iconSelect="shadows-32.png" :iconList="shadowIconList" @selectChange="onShadowChange"></icon-select>
     </div>
   </div>
 
@@ -52,8 +51,12 @@
   import Component from 'vue-class-component';
   import { Emit } from 'vue-property-decorator';
   import { Style, BorderDirections, BorderInterface, BorderStyle } from '@/models/styles/styles';
-  import  IconSelect  from  '@/components/base/pickers/icon-select/icon-select.vue'
-
+  import  IconSelect  from  '@/components/base/pickers/icon-select/icon-select.vue';
+  import {
+    IconPickerInterface,
+    shadowIconList,
+    lineStyleIconList,
+    borderEdgeIconList } from '@/models/components/icon-picker-models';
   @Component({
     components: {
       'icon-select': IconSelect,
@@ -73,35 +76,9 @@
       width: { value: 1, units: 'px' },
       borderRadius: { value: 0, units: 'px' },
     };
-    shadowIconList = [
-      { icon: 'check_box-32.png', class: 'shadow-sm', tooltip: 'small shadow' },
-      { icon: 'check_box-32.png', class: 'shadow-md', tooltip: 'medium shadow' },
-      { icon: 'check_box-32.png', class: 'shadow-lg', tooltip: 'large shadow' },
-      { icon: 'check_box-32.png', class: 'shadow-xl', tooltip: 'extra large shadow' },
-      { icon: 'check_box-32.png', class: 'shadow-2xl', tooltip: '2 times extra large shadow' },
-      { icon: 'check_box-32.png', class: 'shadow-inner', tooltip: 'inner shadow' },
-      { icon: 'check_box-32.png', class: 'shadow-outline', tooltip: 'outline shadow' },
-      { icon: 'uncheck_box-32.png', class: 'shadow-none', tooltip: 'remove shadow' },
-    ];
-    lineStyleIconList = [
-      { icon: 'solid-line-32.png', class: 'solid', tooltip: 'solid line' },
-      { icon: 'dotted-line-32.png', class: 'dotted', tooltip: 'dotted line' },
-      { icon: 'dashed-line-32.png', class: 'dashed', tooltip: 'dashed line' },
-      { icon: 'double-line-32.png', class: 'double', tooltip: 'double line' },
-      { icon: 'inset-32.png', class: 'inset', tooltip: 'inset' },
-      { icon: 'outset-32.png', class: 'outset', tooltip: 'outset' },
-      { icon: 'ridge-32.png', class: 'ridge', tooltip: 'ridge' },
-      { icon: 'groove-32.png', class: 'groove', tooltip: 'groove' },
-    ];
-    borderEdgeIconList = [
-      { icon: 'border_outside-32.png', class: 'border', tooltip: 'border all round' },
-      { icon: 'border_top-32.png', class: 'top', tooltip: 'border top' },
-      { icon: 'border_bottom-32.png', class: 'bottom', tooltip: 'border bottom' },
-      { icon: 'border_left-32.png', class: 'left', tooltip: 'border left' },
-      { icon: 'border_right-32.png', class: 'right', tooltip: 'border right' },
-      { icon: 'border_none-32.png', class: 'none', tooltip: 'border none' },
-      { icon: 'hidden-32.png', class: 'hidden', tooltip: 'hidden border' },
-    ];
+    shadowIconList = shadowIconList;
+    lineStyleIconList = lineStyleIconList;
+    borderEdgeIconList  = borderEdgeIconList;
 
     @Emit('onBorderChange')
     setBorder(): BorderInterface {
@@ -120,8 +97,8 @@
       }
     }
 
-    borderEdgeChange(edge: BorderDirections) {
-      console.log('%c%s', 'color: #73998c', edge)
+    borderEdgeChange(iconElement: IconPickerInterface) {
+      const edge: BorderDirections = iconElement.class as BorderDirections;
       this.selectedBorder = this.selectedBorder === edge ? null : edge;
       if (this.selectedBorder === edge) {
         this.setBorder();
@@ -140,7 +117,8 @@
       this.setBorder();
     }
 
-    setLineStyle(lineStyle: BorderStyle) {
+    setLineStyle(iconElement: IconPickerInterface) {
+      const lineStyle: BorderStyle = iconElement.class as BorderStyle;
       this.border.style = lineStyle;
       if (lineStyle === 'double') this.borderWeight = 3;
       this.setBorder();
@@ -151,8 +129,8 @@
     }
 
     @Emit('onShadowChange')
-    onShadowChange(classDef: string) {
-      return classDef;
+    onShadowChange(iconElement: IconPickerInterface) {
+      return iconElement.class;
     }
 
     @Emit('onBorderChange')

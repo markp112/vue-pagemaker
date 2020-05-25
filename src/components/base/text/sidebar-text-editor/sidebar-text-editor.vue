@@ -23,6 +23,7 @@
       <drop-down 
         class="ml-1 mt-1"
         :selectList="fontSizes"
+        :defaultValue="16"
         @onSelectChange="onFontSizeChange"
       >
       px
@@ -39,6 +40,10 @@ import { Emit } from 'vue-property-decorator';
 import IconSelect from '@/components/base/pickers/icon-select/icon-select.vue';
 import FontSelect from '@/components/base/pickers/font-selector/font-selector.vue'
 import DropDown from '@/components/base/pickers/drop-down/drop-down.vue';
+import {
+  IconPickerInterface,
+  fontWeightIconList 
+} from '@/models/components/icon-picker-models';
 
 @Component({
   components: {
@@ -50,22 +55,12 @@ import DropDown from '@/components/base/pickers/drop-down/drop-down.vue';
 export default class SideBarTextEditor extends Vue {
   isFontItalic = false;
   isFontUnderlined = false;
-  fontWeightIconList = [
-    { icon: '100-32.png', class: 'font-hairline', tooltip: 'font weight hairline' },
-    { icon: '200-32.png', class: 'font-thin', tooltip: 'font weight thin' },
-    { icon: '300-32.png', class: 'font-light', tooltip: 'font weight light' },
-    { icon: '400-32.png', class: 'font-normal', tooltip: 'font weight normal' },
-    { icon: '500-32.png', class: 'font-medium', tooltip: 'font weight medium' },
-    { icon: '600-32.png', class: 'font-semibold', tooltip: 'font weight semibold' },
-    { icon: '700-32.png', class: 'font-bold', tooltip: 'font weight bold' },
-    { icon: '800-32.png', class: 'font-extrabold', tooltip: 'font weight extrabold' },
-    { icon: '900-32.png', class: 'font-black', tooltip: 'font weight black' },
-    ];
   fontSizes = [6, 8, 9, 10, 11, 12, 14, 16, 18, 20, 24, 26, 28, 36, 48, 72];
+  fontWeightIconList = fontWeightIconList;
 
   @Emit('onFontWeightChange')
-  fontWeightChange(classDef: string): string {
-    return classDef;
+  fontWeightChange(iconElement: IconPickerInterface): IconPickerInterface {
+    return iconElement;
   }
 
   @Emit('onItalicClick')
