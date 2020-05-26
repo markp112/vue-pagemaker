@@ -1,9 +1,12 @@
 import { Style } from '@/models/styles/styles';
 import { Site } from '@/models/sites/site';
+import { text } from '@fortawesome/fontawesome-svg-core';
 
 type HTMLTags = 'span' | 'p' | 'b' | 'u' | 'i' | 'text' | 'undefined';
 type ComponentType = Vue | Element | Vue[] | Element[]
-
+interface KeyValueString {
+  [key: string]: HTMLTags;
+}
 export class RH {
   private _range: Range | null = null;
 
@@ -54,17 +57,19 @@ export class RH {
     if (!this._range) throw new Error('RH: Range not set');
     const fragment: DocumentFragment = this._range.extractContents();
     console.log(fragment);
-    const wrapperNode : HTMLElement  = this.getNewWrapperNode(htmlTag);
+    const hasChildNodes = this._range.commonAncestorContainer.hasChildNodes()
+    const wrapperNode: HTMLElement = this.getFragmentWrapperNode(htmlTag, fragment);
+    console.log('%c⧭', 'color: #ffa640', wrapperNode);
 
-    this.setStyle(wrapperNode, style.style, style.value);
     if ((fragment as ParentNode).childElementCount > 0 ) {
       const nodeList = fragment.querySelectorAll('span');
       nodeList.forEach(node => {
         this.clearExistingStyles(node, style.style, htmlTag);
       });
     }
+    this.setStyle(wrapperNode, style.style, style.value);
     // if (this._range.commonAncestorContainer.nodeName !== 'SPAN') {
-      wrapperNode.appendChild(fragment)
+    if (!hasChildNodes) wrapperNode.appendChild(fragment)
     // }
     this._range.insertNode(wrapperNode);
   }
@@ -81,7 +86,7 @@ export class RH {
     const nodeList: NodeList = fragment.querySelectorAll('span');
     console.log('%c⧭', 'color: #917399', wrapperNode);
 
-    if (nodeList.length === 1) {
+    if (nodeList.length > 0 ) {
       const element: HTMLElement = nodeList[0] as HTMLElement;
       console.log('%c%s', 'color: #0088cc', element.style.length);
       if (element.style.length < 1) {
@@ -96,7 +101,7 @@ export class RH {
     // const nodeList = fragment.querySelectorAll('span');
     // this.cleanEmptyTagsFromNodeList(nodeList);
     // this.mergeElementStyleContent(nodeList);
-    if (firstNodeType !== 'span' && parentNodeType !== 'span') {
+    if (firstNodeType !== 'span' && parentNodeType !== 'span' && firstNodeType !== 'p') {
       wrapperNode.appendChild(fragment);
     }
     this._range.insertNode(wrapperNode);
@@ -123,16 +128,13 @@ export class RH {
   }
 
   private getTypeOfNode(nodeName: string): HTMLTags  {
-    switch (nodeName) {
-      case '#text':
-        return 'text';
-      case 'SPAN':
-        return 'span';
-      case 'P':
-        return 'p';
-      default:
-        return 'undefined'
-    }
+    const nodeMap: KeyValueString = {
+      '#text': 'text',
+      'SPAN': 'span',
+      'P': 'p',
+    };
+    const value: HTMLTags = nodeMap[nodeName];
+    return value === undefined ? 'undefined' : value;
   }
 
   private getTheWrapperNode(firstNodeType: HTMLTags, parentNodeType: HTMLTags): HTMLElement {
@@ -143,9 +145,25 @@ export class RH {
     if (parentNodeType === 'span') {
       return this._range.commonAncestorContainer.parentNode as HTMLElement;
     }
+    if (firstNodeType === 'p' && (this._range.commonAncestorContainer as HTMLElement).firstElementChild?.nodeName ==='SPAN') {
+      return ((this._range.commonAncestorContainer as HTMLElement).firstElementChild as HTMLElement);
+    }
     return document.createElement('span');
   }
 
+  private getFragmentWrapperNode(htmlTag: HTMLTags, fragment: DocumentFragment): HTMLElement {
+    if(!this._range) throw new Error('Range not set');
+      const hasChildNodes = this._range.commonAncestorContainer.hasChildNodes();
+      if (hasChildNodes) {
+        const firstElementChild: NodeList = (fragment as ParentNode).querySelectorAll('span');
+        console.log('%c⧭', 'color: #00b300', firstElementChild);
+      if (firstElementChild) {
+        return firstElementChild[0] as HTMLElement;
+      }
+    }
+    return  document.createElement(htmlTag);
+
+  }
 
 
   private isExistingSpanNode(nodeList: NodeList): boolean {
@@ -163,7 +181,7 @@ export class RH {
           if (existingStyle !== styleName) {
             const style: Style = {
               style: existingStyle,
-              value: this.getStyleProperty(node, existingStyle)
+              value: this.getStyleProperty(node, existingStyle),
             }
             styles.push(style);
           }
@@ -223,6 +241,8 @@ export class RH {
     for (const key in element.style) {
       if (key === styleName) {
         element.style[key] = value;
+        console.log('%c⧭', 'color: #19aedb', element, styleName, value, key,element.style[key] );
+        
         break;
       }
     }
