@@ -2,7 +2,7 @@ import { Style } from '@/models/styles/styles';
 import { Site } from '@/models/sites/site';
 import { text } from '@fortawesome/fontawesome-svg-core';
 
-type HTMLTags = 'span' | 'p' | 'b' | 'u' | 'i' | 'text' | 'undefined';
+type HTMLTags = 'div' | 'span' | 'p' | 'b' | 'u' | 'i' | 'text' | 'undefined';
 type ComponentType = Vue | Element | Vue[] | Element[]
 interface KeyValueString {
   [key: string]: HTMLTags;
@@ -46,7 +46,7 @@ export class RH {
     if (!this._range.commonAncestorContainer.hasChildNodes() && firstNodeType === 'text') {
       return 'wrapper';
     }
-    if (parentNodeType === 'undefined' && firstNodeType === 'p') {
+    if (parentNodeType === 'div' && firstNodeType === 'p') {
       return 'wrapper';
     }
     return 'fragment';
@@ -101,6 +101,13 @@ export class RH {
     // const nodeList = fragment.querySelectorAll('span');
     // this.cleanEmptyTagsFromNodeList(nodeList);
     // this.mergeElementStyleContent(nodeList);
+    console.log('%c⧭', 'color: #731d1d', fragment);
+    if (parentNodeType ==='div' && firstNodeType ==='p') {
+      if(wrapperNode.hasChildNodes()) {
+        wrapperNode.insertBefore(fragment, wrapperNode.firstChild);
+
+      }
+    }
     if (firstNodeType !== 'span' && parentNodeType !== 'span' && firstNodeType !== 'p') {
       wrapperNode.appendChild(fragment);
     }
@@ -132,6 +139,7 @@ export class RH {
       '#text': 'text',
       'SPAN': 'span',
       'P': 'p',
+      'DIV': 'div',
     };
     const value: HTMLTags = nodeMap[nodeName];
     return value === undefined ? 'undefined' : value;
