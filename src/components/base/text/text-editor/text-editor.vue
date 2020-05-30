@@ -38,7 +38,7 @@ import CloseButton from '@/components/base/buttons/close-button/close-button.vue
 import SideBarTextEditor from '../sidebar-text-editor/sidebar-text-editor.vue';
 import { Style } from '../../../../models/styles/styles';
 import { SidebarModule } from '@/store/sidebar/sidebar'
-import { RH } from '@/classes/dom/range';
+import { RH } from '@/classes/dom/range/range'
 import { PageModule } from '../../../../store/page/page';
 import { IconPickerInterface } from '../../../../models/components/icon-picker-models';
 
@@ -58,7 +58,6 @@ export default class TextEditor extends Vue {
   localContent = '';
   range: Range | null = null;
   rangeHandler: RH = new RH();
-
   mounted() {
     this.localContent = this.$props.content;
     const textEditor: HTMLParagraphElement = this.$refs.texteditorcontent as HTMLParagraphElement;
@@ -129,7 +128,8 @@ export default class TextEditor extends Vue {
     const style: Style = { style: styleName, value: value };
     if (this.rangeHandler.range) {
       // this.createNodesFromFragment(this.range, style, 'span')
-      this.rangeHandler.applyStyle(style, 'span', this.getContentRef());
+      // this.rangeHandler.applyStyle(style, 'span', this.getContentRef());
+      this.rangeHandler.applyStyle('span', style);
     }
     this.restoreSelection();
   }

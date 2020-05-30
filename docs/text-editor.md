@@ -39,5 +39,6 @@ To apply a font wrap element in a span with style property of font-family
     startContainer = text 
       if start offset = length of the first container then ouur selection does not include the first element
       start offset is the point in the text where our selection starts and next element Sibling tells us the type of the selected node
-      if the start Offset is less than the lenght of the first container we are including elements of the first container in the selection.
-
+      if the start Offset is less than the length of the first container we are including elements of the first container in the selection.
+      then if the common ancestor firstElementchild is span we have an existing span in the range then if the selection = the inner text of the span span is at start else selection is outside of this range
+      
