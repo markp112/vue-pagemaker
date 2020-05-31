@@ -1,5 +1,5 @@
 <template>
-  <div class="w-9/12 h-32 border border-gray-100 z-50 shadow-lg" v-if="show">
+  <div class="w-9/12 h-32 border border-gray-100 z-50 shadow-lg m-0" v-if="show">
     <div class="w-full sidebar-button-panel h-12" ref="text-editor-toolbar">
       <span
         @click="reset"
@@ -14,19 +14,23 @@
         @onFontClick="onFontClick"
         @onFontSizeChange="onFontSizeChange"
       ></text-editor-controls>
+      <indent-outdent
+        @onIndentClick="onIndentClick"
+        @onOutdentClick="onOutdentClick">
+      </indent-outdent>
       <colour-select @onColourChange="onColourChange"></colour-select>
       <close-button @onClick="onCloseClick()"></close-button>
-      </div>
-      <p
-        id="texteditorcontent"
-        class="bg-white h-full"
-        contenteditable="plaintext-only"
-        ref="texteditorcontent"
-        data-editor="textContent"
-        @mouseup="getSelection"
-        @mouseout="getSelection"
-      >
-      </p>
+    </div>
+    <div
+      id="texteditorcontent"
+      class="bg-white h-full"
+      contenteditable="plaintext-only"
+      ref="texteditorcontent"
+      data-editor="textContent"
+      @mouseup="getSelection"
+      @mouseout="getSelection"
+      @keydown="onKeyDown">
+    </div>
   </div>
 </template>
 
@@ -36,32 +40,36 @@ import Component from 'vue-class-component';
 import ColourDropdown from '@/components/base/pickers/colour-picker/colour-dropdown.vue';
 import CloseButton from '@/components/base/buttons/close-button/close-button.vue';
 import SideBarTextEditor from '../sidebar-text-editor/sidebar-text-editor.vue';
+import IndentOutdent from '@/components/base//text/text-editor/indent/indent-outdent.vue';
 import { Style } from '../../../../models/styles/styles';
-import { SidebarModule } from '@/store/sidebar/sidebar'
-import { RH } from '@/classes/dom/range/range'
+import { SidebarModule } from '@/store/sidebar/sidebar';
+import { RH, Indents, Paragraph } from '@/classes/dom/range/rangev2';
 import { PageModule } from '../../../../store/page/page';
 import { IconPickerInterface } from '../../../../models/components/icon-picker-models';
-
 
 @Component({
   components: {
     'close-button': CloseButton,
     'text-editor-controls': SideBarTextEditor,
     'colour-select': ColourDropdown,
+    'indent-outdent': IndentOutdent,
   },
   props: {
     content: { default: '' },
-  }
+  },
 })
 export default class TextEditor extends Vue {
   name = 'text-editor';
   localContent = '';
-  range: Range | null = null;
-  rangeHandler: RH = new RH();
+  range: Range = new Range();
+
   mounted() {
     this.localContent = this.$props.content;
-    const textEditor: HTMLParagraphElement = this.$refs.texteditorcontent as HTMLParagraphElement;
-    textEditor.innerHTML = this.localContent;
+    const textEditor: HTMLDivElement = this.$refs.texteditorcontent as HTMLDivElement;
+    const paraNode = document.createElement('p');
+    paraNode.innerHTML = this.localContent;
+    // textEditor.innerHTML = this.localContent;
+    textEditor.appendChild(paraNode);
   }
 
   onCloseClick(): void {
@@ -71,53 +79,63 @@ export default class TextEditor extends Vue {
   }
 
   reset() {
-    const p = this.getContentRef();
-    p.innerHTML =  this.$props.content;
-    
+    const textEditor: HTMLDivElement = this.$refs.texteditorcontent as HTMLDivElement;
+    const paraNode = document.createElement('p');
+    paraNode.innerHTML = this.localContent;
+    textEditor.appendChild(paraNode);
   }
 
-  saveCurrentRange(){
-      const selection: Selection | null = window.getSelection ? window.getSelection() : document.getSelection();
-      const content: HTMLParagraphElement = this.getContentRef();
-      if (!selection || !content) {
-        return;
-      }
-      for (let i = 0; i < selection.rangeCount; i++) {
-        const range = selection.getRangeAt(0);
-        let start: Node | null = range.startContainer;
-        let end: Node | null= range.endContainer;
-        // for IE11 : node.contains(textNode) always return false
-        start = start.nodeType === Node.TEXT_NODE ? start.parentNode : start;
-        end = end.nodeType === Node.TEXT_NODE ? end.parentNode : end;
-        if (content.contains(start) && content.contains(end)) {
-          this.rangeHandler.range = range;
-          break;
-        }
+  onKeyDown(key: KeyboardEvent) {
+    if (key.code === 'Enter') {
+      const paragraph = new Paragraph(this.range);
+      paragraph.newLine();
+    }
+  }
+  saveCurrentRange() {
+    const selection: Selection | null = window.getSelection
+      ? window.getSelection()
+      : document.getSelection();
+    const content: HTMLParagraphElement = this.getContentRef();
+    if (!selection || !content) {
+      return;
+    }
+    for (let i = 0; i < selection.rangeCount; i++) {
+      const range = selection.getRangeAt(0);
+      let start: Node | null = range.startContainer;
+      let end: Node | null = range.endContainer;
+      // for IE11 : node.contains(textNode) always return false
+      start = start.nodeType === Node.TEXT_NODE ? start.parentNode : start;
+      end = end.nodeType === Node.TEXT_NODE ? end.parentNode : end;
+      if (content.contains(start) && content.contains(end)) {
+        this.range = range;
+        break;
       }
     }
+  }
 
-    restoreSelection() {
-      const selection: Selection | null = window.getSelection ? window.getSelection() : document.getSelection();
-      if (!selection) return;
-      selection.removeAllRanges();
-      if (this.rangeHandler.range) {
-        selection.addRange(this.rangeHandler.range);
-      }
-       // else {
-      //   const content = this.getContentRef();
-      //   const row = RH.prototype.newRow({br: true})
-      //   const range = document.createRange()
-      //   content.appendChild(row)
-      //   range.setStart(row, 0)
-      //   range.setEnd(row, 0)
-      //   selection.addRange(range)
-      //   this.range = range
-      // }
-    }
+  restoreSelection(range: Range) {
+    const selection: Selection | null = window.getSelection 
+      ? window.getSelection() : document.getSelection();
+    if (!selection) return;
+    selection.removeAllRanges();
+    selection.addRange(range);
+    // if (this.rangeHandler.range) {
+    //   selection.addRange(this.rangeHandler.range);
+    // }
+    // else {
+    //   const content = this.getContentRef();
+    //   const row = RH.prototype.newRow({br: true})
+    //   const range = document.createRange()
+    //   content.appendChild(row)
+    //   range.setStart(row, 0)
+    //   range.setEnd(row, 0)
+    //   selection.addRange(range)
+    //   this.range = range
+    // }
+  }
 
   getSelection() {
     this.saveCurrentRange();
-    // console.log("range", this.rangeHandler.range)
   }
 
   getContentRef(): HTMLParagraphElement {
@@ -126,12 +144,12 @@ export default class TextEditor extends Vue {
 
   setStyle(styleName: string, value: string): void {
     const style: Style = { style: styleName, value: value };
-    if (this.rangeHandler.range) {
-      // this.createNodesFromFragment(this.range, style, 'span')
-      // this.rangeHandler.applyStyle(style, 'span', this.getContentRef());
-      this.rangeHandler.applyStyle('span', style);
-    }
-    this.restoreSelection();
+    const rh = new RH(this.range);
+    rh.applyStyle('span', style);
+    // if (this.rangeHandler.range) {
+    //   this.rangeHandler.applyStyle('span', style);
+    // }
+    this.restoreSelection(rh.range);
   }
 
   onFontClick(font: string): void {
@@ -142,13 +160,12 @@ export default class TextEditor extends Vue {
     this.setStyle('fontWeight', iconElement.domEquivalent);
   }
 
-  onItalicClick(classDef: string): void {
+  onItalicClick(): void {
     this.setStyle('fontStyle', 'italic');
   }
-  onUnderlineClick(classDef: string): void {
+  onUnderlineClick(): void {
     this.setStyle('textDecoration', 'underline');
   }
-
 
   onFontSizeChange(fontSize: number): void {
     this.setStyle('fontSize', `${fontSize}px`);
@@ -158,6 +175,19 @@ export default class TextEditor extends Vue {
     this.setStyle('color', rgbColour);
   }
 
+  onIndentClick() {
+    // const indent = this.rangeHandler.applyIndent();
+    // this.rangeHandler.applyIndent(style)
+    const indent = new Indents(this.range);
+    indent.createIndent();
+  }
+
+  onOutdentClick() {
+    // const indent = this.rangeHandler.removeIndent();
+    const indent = new Indents(this.range);
+    indent.removeIndent();
+    // this.rangeHandler.applyIndent(style)
+  }
   get textContent(): string {
     return this.localContent;
   }
@@ -167,3 +197,9 @@ export default class TextEditor extends Vue {
   }
 }
 </script>
+
+<style lang="postcss" scoped>
+p {
+  margin: 0;
+}
+</style>
