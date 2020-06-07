@@ -88,4 +88,8 @@ export class Button implements Content {
 }
 
 export type ComponentTypes = Image | Text | Button | undefined;
-export const LOREMIPSUM = 'Lorem ipsum dolor sit amet'
+export const LOREMIPSUM = '<p class="text-editor">Lorem ipsum dolor sit amet</p> <p class="text-editor">,' 
+    + 'consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore </p>'
+    + '<p>et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco</p>'
+    + '<p>laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat</p>'
+    + '<p>nulla pariatur. Excepteur sint occaecat <span style="font-size:22px">cupidatat non proident</span>, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>';

@@ -23,7 +23,7 @@
     </div>
     <div
       id="texteditorcontent"
-      class="bg-white h-full"
+      class="bg-white h-full text-editor"
       contenteditable="plaintext-only"
       ref="texteditorcontent"
       data-editor="textContent"
@@ -43,7 +43,8 @@ import SideBarTextEditor from '../sidebar-text-editor/sidebar-text-editor.vue';
 import IndentOutdent from '@/components/base//text/text-editor/indent/indent-outdent.vue';
 import { Style } from '../../../../models/styles/styles';
 import { SidebarModule } from '@/store/sidebar/sidebar';
-import { RH, Indents, Paragraph } from '@/classes/dom/range/rangev2';
+// import { RH, Indents, Paragraph } from '@/classes/dom/range/rangev2';
+import { RH, Indents, Paragraph } from '@/classes/dom/range/rangev4';
 import { PageModule } from '../../../../store/page/page';
 import { IconPickerInterface } from '../../../../models/components/icon-picker-models';
 
@@ -66,10 +67,7 @@ export default class TextEditor extends Vue {
   mounted() {
     this.localContent = this.$props.content;
     const textEditor: HTMLDivElement = this.$refs.texteditorcontent as HTMLDivElement;
-    const paraNode = document.createElement('p');
-    paraNode.innerHTML = this.localContent;
-    // textEditor.innerHTML = this.localContent;
-    textEditor.appendChild(paraNode);
+    this.reset();
   }
 
   onCloseClick(): void {
@@ -82,7 +80,9 @@ export default class TextEditor extends Vue {
     const textEditor: HTMLDivElement = this.$refs.texteditorcontent as HTMLDivElement;
     const paraNode = document.createElement('p');
     paraNode.innerHTML = this.localContent;
-    textEditor.appendChild(paraNode);
+    textEditor.childNodes.forEach(node => node.remove());
+    // textEditor.appendChild(paraNode);
+    textEditor.innerHTML = this.localContent;
   }
 
   onKeyDown(key: KeyboardEvent) {
@@ -108,6 +108,7 @@ export default class TextEditor extends Vue {
       end = end.nodeType === Node.TEXT_NODE ? end.parentNode : end;
       if (content.contains(start) && content.contains(end)) {
         this.range = range;
+        console.log('%c⧭', 'color: #40fff2', range)
         break;
       }
     }
@@ -199,7 +200,17 @@ export default class TextEditor extends Vue {
 </script>
 
 <style lang="postcss" scoped>
+  .text-editor  {
+    margin-block-start: 0px;
+    margin-block-end: 0px;
+    line-height: 1em;
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
+
 p {
-  margin: 0;
+  margin-block-end: 0.2em;
+  margin-block-start: 0.2em;
+  line-height: 1em;
 }
 </style>
