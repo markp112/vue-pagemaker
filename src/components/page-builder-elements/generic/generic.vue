@@ -1,26 +1,25 @@
 <template>
-  <div class="handle" 
+  <div 
     v-if="isText"
-    ref="textElement"
     :style="getStyles()"
     :id="$props.thisComponent.ref"
+    class="handle" 
     :class="getClasses()"
     @click.prevent="onClick($event)"
   >
-    
+    <div v-html="getData"></div>
     <resizeable
       :isActive="showBorder"
       :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"
       @onResize="onResize"
     ></resizeable>
   </div>
-  
   <div 
     v-else-if="isImage"
     class="handle" 
+    :class="getClasses()"
     :style="getStyles()"
     :id="$props.thisComponent.ref"
-    :class="getClasses()"
     @click.prevent="onClick($event)"
   >
     <img
@@ -35,10 +34,11 @@
       @onResize="onResize"
     ></resizeable>
   </div>
-  <div class="handle" 
+  <div 
     v-else
     :style="getStyles()"
     :id="$props.thisComponent.ref"
+    class="handle" 
     :class="getClasses()"
     @click.prevent="onClick($event)"
   >
@@ -111,10 +111,7 @@ export default class GenericComponent extends Vue {
   }
 
   mounted() {
-    if (this.isText) {
-      const textElement: HTMLElement = (this.$refs.textElement as HTMLElement);
-      if (this.data) textElement.innerHTML = this.data.content ? this.data.content : '';
-    }
+    console.log('%c⧭', 'color: #e57373', this.$props.thisComponent.parent.boxDimensions)
   }
 
   getClasses(): string {
@@ -137,6 +134,11 @@ export default class GenericComponent extends Vue {
     }
     style += `${component.boxDimensions.heightAsStyle};${component.boxDimensions.widthAsStyle}`;
     return style;
+  }
+
+  get getData(): string | undefined {
+    return this.$props.thisComponent.data.content;
+    
   }
 
   onResize(newDimensions: ResizeDimensions | undefined) {

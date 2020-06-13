@@ -44,7 +44,8 @@ import IndentOutdent from '@/components/base//text/text-editor/indent/indent-out
 import { Style } from '../../../../models/styles/styles';
 import { SidebarModule } from '@/store/sidebar/sidebar';
 // import { RH, Indents, Paragraph } from '@/classes/dom/range/rangev2';
-import { RH, Indents, Paragraph } from '@/classes/dom/range/rangev4';
+import { Indents, Paragraph } from '@/classes/dom/range/range-base';
+import { RH } from '@/classes/dom/range/RH';
 import { PageModule } from '../../../../store/page/page';
 import { IconPickerInterface } from '../../../../models/components/icon-picker-models';
 
@@ -81,7 +82,6 @@ export default class TextEditor extends Vue {
     const paraNode = document.createElement('p');
     paraNode.innerHTML = this.localContent;
     textEditor.childNodes.forEach(node => node.remove());
-    // textEditor.appendChild(paraNode);
     textEditor.innerHTML = this.localContent;
   }
 
@@ -144,6 +144,7 @@ export default class TextEditor extends Vue {
   }
 
   setStyle(styleName: string, value: string): void {
+    console.log('%c%s', 'color: #00b300', 'setStyle')
     const style: Style = { style: styleName, value: value };
     const rh = new RH(this.range);
     rh.applyStyle('span', style);
@@ -200,17 +201,5 @@ export default class TextEditor extends Vue {
 </script>
 
 <style lang="postcss" scoped>
-  .text-editor  {
-    margin-block-start: 0px;
-    margin-block-end: 0px;
-    line-height: 1em;
-    margin-top: 0px;
-    margin-bottom: 0px;
-  }
-
-p {
-  margin-block-end: 0.2em;
-  margin-block-start: 0.2em;
-  line-height: 1em;
-}
+ 
 </style>

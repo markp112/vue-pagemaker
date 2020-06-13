@@ -88,8 +88,8 @@ export class Button implements Content {
 }
 
 export type ComponentTypes = Image | Text | Button | undefined;
-export const LOREMIPSUM = '<p class="text-editor">Lorem ipsum dolor sit amet</p> <p class="text-editor">,' 
-    + 'consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore </p>'
-    + '<p>et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco</p>'
-    + '<p>laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat</p>'
-    + '<p>nulla pariatur. Excepteur sint occaecat <span style="font-size:22px">cupidatat non proident</span>, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>';
+export const LOREMIPSUM = '<p class="text-editor">Lorem ipsum But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born</p>' 
+    + '<p>and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth</p>'
+    + '<p>No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, the master-builder of human happiness.</p>'
+    + '<p>but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful.</p>'
+    + '<p>Nor again is there anyone who loves or pursues or desires to obtain pain of itself <span style="font-size:22px">because it is pain</span>, but because occasionally circumstances occur.</p>';

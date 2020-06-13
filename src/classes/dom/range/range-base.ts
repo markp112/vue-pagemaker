@@ -1,5 +1,6 @@
 import { Style } from '@/models/styles/styles';
 
+
 interface RangeValuesInterface {
   start: number;
   end: number;
@@ -22,7 +23,7 @@ interface RHBaseInterface {
   getNodeType: (node: Node) => HTMLTags;
 }
 
-type HTMLTags = 'div' | 'span' | 'p' | 'b' | 'u' | 'i' | 'text' | 'br' | 'undefined';
+export type HTMLTags = 'div' | 'span' | 'p' | 'b' | 'u' | 'i' | 'text' | 'br' | 'undefined';
 interface KeyValueString {
   [key: string]: HTMLTags;
 }
@@ -68,10 +69,9 @@ export class RHBase implements RHBaseInterface {
     }
     if (this.range.commonAncestorContainer.firstChild)
         rv.firstChild = this.getNodeType(this.range.commonAncestorContainer.firstChild);
-    if (rv.ancestorNodeType === 'p') {
+    if (rv.ancestorNodeType === 'div') {
       rv.selectionSpansRows = true;
     }
- 
     return rv;
   }
 
@@ -86,71 +86,8 @@ export class RHBase implements RHBaseInterface {
     const value: HTMLTags = nodeMap[nodeName];
     return value === undefined ? 'undefined' : value;
   }
-}
-
-export class RH extends RHBase {
-  private fragment: DocumentFragment | null = null;
-
-  constructor(range: Range) {
-    super(range);
-  }
-
-  applyStyle(htmlTag: HTMLTags, style: Style): void {
-    if (!this.range) throw new Error('RH: Range not set');
-    console.log('%c%s', 'color: #5200cc', this.rangeValues.ancestorNodeType);
-    if (this.rangeValues.ancestorNodeType === 'div') {
-      this.processMultiRowSelection(htmlTag, style)
-    }
-  }
-
-  processMultiRowSelection(htmlTag: HTMLTags, style: Style): void {
-    if (!this.rangeValues) { throw new Error('RH: range values not set')};
-    this.fragment = this.range.extractContents();
-    this.clearStyleFromExistingSpans(style);
-    const node: Node = this.fragment as Node;
-    const nodeList: Node[] = [];
-    if (!node.hasChildNodes()){ return };
-    node.childNodes.forEach(childNode => {
-      const nodeType: HTMLTags = this.getNodeType(childNode)
-      if (nodeType === 'p') {
-        const updatedNode = this.insertSpanInPara(childNode, style);
-        nodeList.push(updatedNode);
-      }
-      if (nodeType === 'text') {
-        const spanNode = this.wrapTextNode(childNode, style);
-        nodeList.push(spanNode);
-      }
-    })
-
-    const nodeCount = nodeList.length - 1;
-    nodeList.forEach((node,index) => { 
-      console.log('%c⧭', 'color: #73998c', index);
-      if (index === 0 && this.rangeValues.selectionSpansRows) {
-        if (this.rangeValues.startContainerParent) {
-          this.rangeValues.startContainerParent.appendChild(node);
-        }
-      } else if ( index === nodeCount && this.rangeValues.selectionSpansRows) {
-        if (this.rangeValues.endContainerParent) {
-          this.rangeValues.endContainerParent.insertBefore(node, this.rangeValues.endContainerParent.childNodes[0]);
-        }
-      }
-      else {
-        this.range.insertNode(node)
-      }
-  })
-
-  }
-  public createWrapperNode(htmlTag: HTMLTags): Node {
-    return document.createElement(htmlTag);
-  }
-
-  clearStyleFromExistingSpans(style: Style): void {
-    if (!this.fragment) { throw new Error("fragment not set") }
-    const spanList: NodeList = this.fragment?.querySelectorAll('span');
-    spanList.forEach(span => this.clearExistingStyles(span, style))
-  }
-
-  private setStyle(node: Node, style: Style): void {
+  
+  public setStyle(node: Node, style: Style): void {
     const element = node as HTMLElement;
     for (const key in element.style) {
       if (key === style.style) {
@@ -159,8 +96,12 @@ export class RH extends RHBase {
       }
     }
   }
+  
+  public createWrapperNode(htmlTag: HTMLTags): Node {
+    return document.createElement(htmlTag);
+  }
 
-  private clearExistingStyles(node: Node, style: Style): void {
+  public clearExistingStyles(node: Node, style: Style): void {
     if (node.hasChildNodes()) {
       node.childNodes.forEach(node => {
         this.clearExistingStyles(node, style)
@@ -170,31 +111,12 @@ export class RH extends RHBase {
     if (node.nodeName === '#text') return;
     if (element.style) {
       if (element.style.length > 0) {
-        
         this.setStyle(element, style);
       }
     }
   }
-
-  insertSpanInPara(node: Node, style: Style): Node {
-    const spanNode = this.createWrapperNode('span');
-    this.setStyle(spanNode, style);
-    node.childNodes.forEach(childNode =>{
-      spanNode.appendChild(childNode);
-    })
-    node.childNodes.forEach(node => node.remove);
-    node.appendChild(spanNode);
-    return node;
-  }
-
-  wrapTextNode(node: Node, style: Style) {
-    const spanNode = this.createWrapperNode('span');
-    this.setStyle(spanNode, style);
-    spanNode.appendChild(node);
-    return spanNode;
-  }
-  
 }
+
 
 
 export class Indents extends RHBase {
@@ -241,7 +163,7 @@ export class Indents extends RHBase {
 }
 
 
-export class Paragraph extends RH{
+export class Paragraph extends RHBase{
 
   constructor(range: Range) {
     super(range);
@@ -249,6 +171,18 @@ export class Paragraph extends RH{
 
   public newLine() {
     if(!this.range) throw new Error('Range not set');
+    if (this.isRowMiddle()) {
+      const textToEndofLine: Text = this.getTextToEndOfLine(); 
+      const spanNode = this.createWrapperNode('span');
+      if (this.getParentNodeType(this.range.commonAncestorContainer) === 'span') {
+        
+        const node = this.getNodeStyles(this.range.commonAncestorContainer, spanNode);
+        const styles = (spanNode as HTMLSpanElement).style
+        if (styles.cssText !=='') spanNode.appendChild(textToEndofLine);
+
+      }
+      
+    }
     if (this.rangeValues.start === this.rangeValues.end) {
       const paraNode: Node = this.createWrapperNode('p');
       const element: HTMLElement = paraNode as HTMLElement;
@@ -257,7 +191,11 @@ export class Paragraph extends RH{
       element.style.lineHeight = '0.8em';
       const parentNode: Node | null = this.getNodeToAppendTo(this.range.commonAncestorContainer);
       if (parentNode) {
-        parentNode.appendChild(paraNode);
+        const insertAfterNode = this.range.commonAncestorContainer.parentNode 
+          ?  this.range.commonAncestorContainer.parentNode.nextSibling
+          : null;
+        // parentNode.appendChild(paraNode);
+        parentNode.insertBefore(paraNode, insertAfterNode);
         const newSelection = document.createRange();
         newSelection.setStart((paraNode as Node),0);
         newSelection.setEnd(paraNode as Node, 0);
@@ -265,14 +203,91 @@ export class Paragraph extends RH{
         selection?.removeAllRanges();
         selection?.addRange(newSelection);
         selection?.focusNode;
+        this.setParagrah(paraNode);
       }
     } else {
       throw new Error('Parent node not found');
     }
   }
 
+  private isRowMiddle(): boolean {
+    if(!this.range) throw new Error('Range not set');
+    if (this.range.collapsed) {
+      return !(this.range.startOffset === (this.range.commonAncestorContainer as Text).length)
+    } 
+    return false;
+  }
+
+  private getTextToEndOfLine(): Text {
+    return (this.range.commonAncestorContainer as Text).splitText(this.range.startOffset);
+  }
+
+  private getParentNodeType(node: Node): HTMLTags {
+    if (node.parentNode) {
+      return this.getNodeType(node.parentNode);
+    }
+    return 'undefined';
+  }
+
+  getNodeStyles(node: Node | null, spanNode: Node): Node {
+    if (!node) return spanNode;
+    console.log('%c%s', 'color: #735656', 'getNodeStyles');
+    if (this.getParentNodeType(node) === 'span') {
+      return this.getNodeStyles(node.parentNode, spanNode);
+    }
+    console.log((node as HTMLSpanElement).style)
+    const styles = (node as HTMLSpanElement).style;
+    
+    for (let index = 0; index < styles.length; index++) {
+      if(styles[index]) {
+        const style: Style = {
+          style: styles[index],
+          value: styles.getPropertyValue(styles[index]),
+        };
+        this.setStyle(spanNode, style);
+      } else {
+        break;
+      }
+    }
+    return spanNode;
+  }
+
+
   private getNodeToAppendTo(node: Node): Node | null {
     if (node.nodeName === 'DIV') return node;
     return node.parentNode ? this.getNodeToAppendTo(node.parentNode) : null;
+  }
+
+
+
+
+  private setParagrah(node: Node) {
+    // document.createRange() creates new range object
+const rangeobj = document.createRange();
+console.log('%c⧭', 'color: #bfffc8', rangeobj);
+
+// Here 'rangeobj' is created Range Object
+const selectobj = window.getSelection();
+
+// Here 'selectobj' is created object for window
+// get selected or caret current position.
+// Setting start position of a Range
+rangeobj.setStart(node, 1);
+
+// Setting End position of a Range
+rangeobj.setEnd(node, 1);
+
+// Collapses the Range to one of its
+// boundary points
+rangeobj.collapse(true);
+
+// Removes all ranges from the selection
+// except Anchor Node and Focus Node
+if (selectobj) {
+selectobj.removeAllRanges();
+
+// Adds a Range to a Selection
+selectobj.addRange(rangeobj);
+}
   }
 }
