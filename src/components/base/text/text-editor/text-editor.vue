@@ -66,6 +66,7 @@ export default class TextEditor extends Vue {
   name = 'text-editor';
   localContent = '';
   range: Range = new Range();
+  rangeClone: Range = new Range();
 
   mounted() {
     this.localContent = this.$props.content;
@@ -137,6 +138,7 @@ export default class TextEditor extends Vue {
     if (!selection) return;
     selection.removeAllRanges();
     selection.addRange(range);
+    this.range = this.rangeClone.cloneRange();
     // if (this.rangeHandler.range) {
     //   selection.addRange(this.rangeHandler.range);
     // }
@@ -164,10 +166,11 @@ export default class TextEditor extends Vue {
   setStyle(styleName: string, value: string): void {
     console.log('%c%s', 'color: #00b300', 'setStyle')
     const style: Style = { style: styleName, value: value };
+    this.rangeClone = this.range.cloneRange();
     const rh = new RH(this.range);
     rh.applyStyle('span', style);
   
-    // this.restoreSelection(rh.range);
+    this.restoreSelection(this.rangeClone);
   }
 
   onFontClick(font: string): void {
