@@ -87,6 +87,7 @@ export default class ColourPalette extends Vue {
   }
 
   onMouseMove(evt: MouseEvent) {
+    evt.stopPropagation();
     if (this.mousedown) {
       this.selectedPosition = { x: evt.offsetX, y: evt.offsetY };
       this.draw();

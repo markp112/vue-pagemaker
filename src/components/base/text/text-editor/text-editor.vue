@@ -28,8 +28,10 @@
       ref="texteditorcontent"
       data-editor="textContent"
       @mouseup="getSelection"
-      @mouseout="getSelection"
-      @keydown="onKeyDown">
+      
+      @keydown="onKeyDown"
+      
+      >
     </div>
   </div>
 </template>
@@ -85,12 +87,27 @@ export default class TextEditor extends Vue {
     textEditor.innerHTML = this.localContent;
   }
 
+  mouseOut(event: MouseEvent) {
+    console.log('%c%s', 'color: #ff0000', 'mouseOut')
+    event.stopPropagation();
+    this.getSelection();
+  }
+
   onKeyDown(key: KeyboardEvent) {
     if (key.code === 'Enter') {
+      this.getSelection();
       const paragraph = new Paragraph(this.range);
       paragraph.newLine();
     }
+    if ( key.code === 'ArrowLeft' 
+      || key.code === 'ArrowRight'
+      || key.code === 'ArrowUp'
+      || key.code === 'ArrowDown'
+      || key.code === 'End'
+      || key.code === 'Home'
+      ) this.getSelection();
   }
+
   saveCurrentRange() {
     const selection: Selection | null = window.getSelection
       ? window.getSelection()
@@ -136,6 +153,7 @@ export default class TextEditor extends Vue {
   }
 
   getSelection() {
+    console.log("getSelectionCalled")
     this.saveCurrentRange();
   }
 
@@ -148,10 +166,8 @@ export default class TextEditor extends Vue {
     const style: Style = { style: styleName, value: value };
     const rh = new RH(this.range);
     rh.applyStyle('span', style);
-    // if (this.rangeHandler.range) {
-    //   this.rangeHandler.applyStyle('span', style);
-    // }
-    this.restoreSelection(rh.range);
+  
+    // this.restoreSelection(rh.range);
   }
 
   onFontClick(font: string): void {

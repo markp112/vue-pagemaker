@@ -171,38 +171,24 @@ export class Paragraph extends RHBase{
 
   public newLine() {
     if(!this.range) throw new Error('Range not set');
+    let node: Node | Text | null = null;
     if (this.isRowMiddle()) {
-      const textToEndofLine: Text = this.getTextToEndOfLine(); 
-      const spanNode = this.createWrapperNode('span');
-      if (this.getParentNodeType(this.range.commonAncestorContainer) === 'span') {
-        
-        const node = this.getNodeStyles(this.range.commonAncestorContainer, spanNode);
-        const styles = (spanNode as HTMLSpanElement).style
-        if (styles.cssText !=='') spanNode.appendChild(textToEndofLine);
-
-      }
-      
+      node = this.getContent();
     }
     if (this.rangeValues.start === this.rangeValues.end) {
       const paraNode: Node = this.createWrapperNode('p');
       const element: HTMLElement = paraNode as HTMLElement;
-      element.contentEditable = 'plaintext-only';
-      element.innerText = ' ';
-      element.style.lineHeight = '0.8em';
-      const parentNode: Node | null = this.getNodeToAppendTo(this.range.commonAncestorContainer);
+      node !== null ? paraNode.appendChild(node) : element.innerText = ' ';
+      // element.style.lineHeight = '1em';
+      const parentNode: Node | null = this.findNextNodeofType(this.range.commonAncestorContainer, 'DIV');
       if (parentNode) {
-        const insertAfterNode = this.range.commonAncestorContainer.parentNode 
-          ?  this.range.commonAncestorContainer.parentNode.nextSibling
+        const node = this.range.commonAncestorContainer.parentNode 
+          ?  this.findNextNodeofType(this.range.commonAncestorContainer, 'P')
           : null;
+        const insertAfterNode: Node | null = node?.nextSibling ? node.nextSibling : null;
         // parentNode.appendChild(paraNode);
         parentNode.insertBefore(paraNode, insertAfterNode);
-        const newSelection = document.createRange();
-        newSelection.setStart((paraNode as Node),0);
-        newSelection.setEnd(paraNode as Node, 0);
-        const selection = window.getSelection ? window.getSelection() : document.getSelection();
-        selection?.removeAllRanges();
-        selection?.addRange(newSelection);
-        selection?.focusNode;
+        console.log('%c⧭', 'color: #cc0036', paraNode);
         this.setParagrah(paraNode);
       }
     } else {
@@ -218,6 +204,20 @@ export class Paragraph extends RHBase{
     return false;
   }
 
+  private getContent() {
+    const textNode: Text = this.getTextToEndOfLine(); 
+    const spanStyles: Style[] = [];
+    if (this.getParentNodeType(this.range.commonAncestorContainer) === 'span') {
+      const spanNode = this.createWrapperNode('span');
+      this.getNodeStyles(this.range.commonAncestorContainer, spanStyles);
+      this.applyStyles(spanNode, spanStyles);
+      spanNode.appendChild(textNode);
+      return spanNode;
+    }
+    return textNode;
+  }
+
+
   private getTextToEndOfLine(): Text {
     return (this.range.commonAncestorContainer as Text).splitText(this.range.startOffset);
   }
@@ -229,65 +229,59 @@ export class Paragraph extends RHBase{
     return 'undefined';
   }
 
-  getNodeStyles(node: Node | null, spanNode: Node): Node {
-    if (!node) return spanNode;
-    console.log('%c%s', 'color: #735656', 'getNodeStyles');
+  private getNodeStyles(node: Node | null, spanStyles: Style[]): void {
+    if (!node) return;
     if (this.getParentNodeType(node) === 'span') {
-      return this.getNodeStyles(node.parentNode, spanNode);
+      this.getNodeStyles(node.parentNode, spanStyles);
     }
-    console.log((node as HTMLSpanElement).style)
     const styles = (node as HTMLSpanElement).style;
-    
-    for (let index = 0; index < styles.length; index++) {
-      if(styles[index]) {
-        const style: Style = {
-          style: styles[index],
-          value: styles.getPropertyValue(styles[index]),
-        };
-        this.setStyle(spanNode, style);
-      } else {
-        break;
-      }
+    if (styles) {
+      for (let index = 0; index < styles.length; index++) {
+        if(styles[index]) {
+          const style: Style = {
+            style: styles[index],
+            value: styles.getPropertyValue(styles[index]),
+          };
+          if (style.style !=='') spanStyles.push(style);
+        } else {
+          break;
+        }
+      };
     }
-    return spanNode;
   }
 
-
-  private getNodeToAppendTo(node: Node): Node | null {
-    if (node.nodeName === 'DIV') return node;
-    return node.parentNode ? this.getNodeToAppendTo(node.parentNode) : null;
+  applyStyles(spanNode: Node, styles: Style[]) {
+    if (styles.length === 0) return
+      styles.forEach(style => {
+        this.cleanStyle(style);        
+        this.setStyle(spanNode, style);
+      })
   }
 
+  private cleanStyle(style: Style) {
+    if (!style.style.includes('-')) return;
+    const index = style.style.indexOf('-');
+    const  styleName = style.style.substring(0, index)
+      + style.style.replace('-','').charAt(index).toUpperCase()
+      + style.style.substring(index + 2);;
+    style.style = styleName;
+  }
 
+  private findNextNodeofType(node: Node, nodeType: string): Node | null {
+    if (node.nodeName === nodeType) return node;
+    return node.parentNode ? this.findNextNodeofType(node.parentNode, nodeType) : null;
+  }
 
 
   private setParagrah(node: Node) {
-    // document.createRange() creates new range object
-const rangeobj = document.createRange();
-console.log('%c⧭', 'color: #bfffc8', rangeobj);
-
-// Here 'rangeobj' is created Range Object
-const selectobj = window.getSelection();
-
-// Here 'selectobj' is created object for window
-// get selected or caret current position.
-// Setting start position of a Range
-rangeobj.setStart(node, 1);
-
-// Setting End position of a Range
-rangeobj.setEnd(node, 1);
-
-// Collapses the Range to one of its
-// boundary points
-rangeobj.collapse(true);
-
-// Removes all ranges from the selection
-// except Anchor Node and Focus Node
-if (selectobj) {
-selectobj.removeAllRanges();
-
-// Adds a Range to a Selection
-selectobj.addRange(rangeobj);
-}
+    console.log('%c⧭', 'color: #1d0957', node);
+    const range = document.createRange();
+    range.setStart(node, 0);
+    const end = node.childNodes.length ? node.childNodes.length : ((node as Text).length ? (node as Text).length : 0);
+    range.setEnd(node, end);
+    range.collapse(true);
+    const selection = window.getSelection() ? window.getSelection() : document.getSelection();
+    selection?.removeAllRanges();
+    selection?.addRange(range);
   }
 }

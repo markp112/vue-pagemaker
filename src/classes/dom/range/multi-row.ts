@@ -37,6 +37,7 @@ export class MultiRow extends RHBase {
       const nodeType: HTMLTags = this.getNodeType(childNode)
       if (nodeType === 'p') {
         this.insertSpanInPara(childNode, style);
+        // this.extractTextFragmentToSpan(childNode, style);
         continue;
       }
       if (nodeType === 'text') {
@@ -48,19 +49,21 @@ export class MultiRow extends RHBase {
 
   reInsertNodes() {
     const nodeCount = this.nodeList.length - 1;
+    let middleNodeOrder = nodeCount - 1;
     this.nodeList.forEach((node, index) => { 
-      if (index === 0 && this.rangeValues.selectionSpansRows) {
+      if (index === 0 ) {
         if (this.rangeValues.startContainerParent) {
-          console.log("Appending to parent")
           this.rangeValues.startContainerParent.appendChild(node);
         }
-      } else if ( index === nodeCount && this.rangeValues.selectionSpansRows) {
+      } else if (index === nodeCount) {
         if (this.rangeValues.endContainerParent) {
           this.rangeValues.endContainerParent.insertBefore(node, this.rangeValues.endContainerParent.childNodes[0]);
         }
       }
       else {
-        this.range.insertNode(node)
+        const nodeToInsert = this.nodeList[middleNodeOrder];
+        this.range.insertNode(nodeToInsert);
+        middleNodeOrder--;
       }
     })
   }
@@ -71,15 +74,16 @@ export class MultiRow extends RHBase {
     spanList.forEach(span => this.clearExistingStyles(span, style))
   }
 
-  insertSpanInPara(node: Node, style: Style) {
+  insertSpanInPara(node: Node, style: Style): void {
+    console.log('%c⧭', 'color: #607339', 'insertSpanInPara', node.childNodes);
     const spanNode = this.createWrapperNode('span');
     this.setStyle(spanNode, style);
-    node.childNodes.forEach(childNode =>{
-      spanNode.appendChild(childNode);
-    })
+    (spanNode as HTMLSpanElement).innerHTML = (node as HTMLElement).innerHTML;
+    (node as HTMLElement).innerHTML ='';
     node.childNodes.forEach(node => node.remove);
     node.appendChild(spanNode);
     this.nodeList.push(node);
+  
   }
 
   extractTextFragmentToSpan(node: Node, style: Style) {
