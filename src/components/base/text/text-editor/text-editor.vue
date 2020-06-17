@@ -18,6 +18,7 @@
         @onIndentClick="onIndentClick"
         @onOutdentClick="onOutdentClick">
       </indent-outdent>
+      <text-alignment @alignClick="textAlignClick"></text-alignment>
       <colour-select @onColourChange="onColourChange"></colour-select>
       <close-button @onClick="onCloseClick()"></close-button>
     </div>
@@ -43,6 +44,7 @@ import ColourDropdown from '@/components/base/pickers/colour-picker/colour-dropd
 import CloseButton from '@/components/base/buttons/close-button/close-button.vue';
 import SideBarTextEditor from '../sidebar-text-editor/sidebar-text-editor.vue';
 import IndentOutdent from '@/components/base//text/text-editor/indent/indent-outdent.vue';
+import TextAlignment from '@/components/base//text/text-editor/justify/justify.vue';
 import { Style } from '../../../../models/styles/styles';
 import { SidebarModule } from '@/store/sidebar/sidebar';
 // import { RH, Indents, Paragraph } from '@/classes/dom/range/rangev2';
@@ -50,6 +52,7 @@ import { Indents, Paragraph } from '@/classes/dom/range/range-base';
 import { RH } from '@/classes/dom/range/RH';
 import { PageModule } from '../../../../store/page/page';
 import { IconPickerInterface } from '../../../../models/components/icon-picker-models';
+import { AlignText } from '@/classes/dom/range/commands/align-text';
 
 @Component({
   components: {
@@ -57,6 +60,7 @@ import { IconPickerInterface } from '../../../../models/components/icon-picker-m
     'text-editor-controls': SideBarTextEditor,
     'colour-select': ColourDropdown,
     'indent-outdent': IndentOutdent,
+    'text-alignment': TextAlignment,
   },
   props: {
     content: { default: '' },
@@ -136,9 +140,11 @@ export default class TextEditor extends Vue {
     const selection: Selection | null = window.getSelection 
       ? window.getSelection() : document.getSelection();
     if (!selection) return;
+    // this.range.setStart(range.startContainer, range.startOffset);
+    // this.range.setEnd(range.endContainer, range.endOffset);
+    this.range = this.rangeClone;
     selection.removeAllRanges();
-    selection.addRange(range);
-    this.range = this.rangeClone.cloneRange();
+    selection.addRange(this.rangeClone);
     // if (this.rangeHandler.range) {
     //   selection.addRange(this.rangeHandler.range);
     // }
@@ -209,6 +215,13 @@ export default class TextEditor extends Vue {
     indent.removeIndent();
     // this.rangeHandler.applyIndent(style)
   }
+
+  textAlignClick(style: string) {
+    const align: AlignText = new AlignText();
+    const textEditor = this.$refs.texteditorcontent as HTMLDivElement;
+    align.alignText(style, textEditor);
+  }
+
   get textContent(): string {
     return this.localContent;
   }

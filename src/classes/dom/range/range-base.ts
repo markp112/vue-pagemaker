@@ -158,12 +158,8 @@ export class Indents extends RHBase {
     }
     return node;
   }
-  
-
 }
-
-
-export class Paragraph extends RHBase{
+export class Paragraph extends RHBase {
 
   constructor(range: Range) {
     super(range);

@@ -86,6 +86,33 @@ class PageStore extends VuexModule implements PageStateInterface {
     }
   }
 
+  /** Add a class to the component currently being edited 
+   * * classDef name of the Tailwind class to be added 
+  */
+  @Mutation
+  private setEditedComponentClass(classDef: string) {
+    if (this.editedComponentRef) {
+      const component: PageData = this.editedComponentRef as PageData;
+      if (component) {
+        component.addClass(classDef);
+      }
+    }
+  }
+
+  /** remove a class from the edited component class list
+   * classDef name of the Tailwind class to be removed - 
+   */
+  @Mutation
+  private removeEditedComponentClass(classDef: string) {
+    if (this.editedComponentRef) {
+      const component: PageData = this.editedComponentRef as PageData;
+      if (component) {
+        component.removeClass(classDef);
+      }
+    }
+
+  }
+
   @Mutation
   private clearPageElements(): void {
     this._pageElements = [];
@@ -177,12 +204,12 @@ class PageStore extends VuexModule implements PageStateInterface {
 
   @Action
   public updateComponentClassProperties(classDef: string): void {
-    if (this.editedComponentRef) {
-      const component: PageData = this.editedComponentRef as PageData;
-      if (component) {
-        component.addClass(classDef);
-      }
-    }
+    this.context.commit('setEditedComponentClass', classDef);
+  }
+
+  @Action
+  public deleteClassFromEditedComponent(classDef: string): void {
+    this.context.commit('removeEditedComponentClass', classDef);
   }
 
   @Action

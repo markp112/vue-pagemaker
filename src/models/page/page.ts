@@ -209,6 +209,13 @@ export class PageElement implements Partial<PageElementInterface> {
     }
   }
 
+  /** removeClass removes a class from the component, but it must be the full class name */
+  removeClass(classDef: string) {
+    if (this.classDefinition.includes(classDef)) {
+      this.classDefinition = this.classDefinition.split(' ').filter(word =>  word !== classDef).join(' ');
+    }
+  }
+
   private cutString(stringToCutFrom: string, wordToCut: string): string {
     const index =  stringToCutFrom.indexOf(wordToCut);
     if (index >= 0) {
