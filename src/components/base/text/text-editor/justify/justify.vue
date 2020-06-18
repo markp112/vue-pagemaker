@@ -8,10 +8,6 @@
         class=" cursor-pointer hover:bg-gray-800"
         @click="alignClick('center')"
     />
-    <img src="@/assets/icons/align_justify-text-32.png" 
-        class=" cursor-pointer hover:bg-gray-800"
-        @click="alignClick('justify')"
-    />
     <img src="@/assets/icons/align_right-32.png" 
         class=" cursor-pointer hover:bg-gray-800"
         @click="alignClick('right')"

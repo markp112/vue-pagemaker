@@ -55,7 +55,6 @@ import { ComponentCounter } from '@/classes/component-counter/singleton-counter'
 })
 
 export default class Container extends Vue {
-
   private showBorder = false;
   private isActive = false;
   private isSizing = false;

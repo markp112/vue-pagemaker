@@ -38,18 +38,18 @@ export interface PageContainerInterface extends PageElementInterface {
 export type PageData = PageElement | ComponentContainer;
 
 export class PageElement implements Partial<PageElementInterface> {
-  private _name: string; //name of the component
-  private _ref: ComponentRef; // unique ref of this component in the Dom
-  private _componentHTMLTag: string; // component tag
-  private _isContainer: boolean; // can contain  other elements
-  private _styles: Style[]; // css styles
-  private _parent!: ComponentContainer; // parent Object
-  private _parentRef: ComponentRef; // string ref to the parent
-  private _classDefinition: string;
-  private _type: ComponentTypesString; // what is this component as in image text etc
-  private _data: ComponentTypes;
-  private _boxDimensions: BoxDimensions;
-  private _actionEvent: ActionEvent;
+  private _name: string; //** name of the component  */
+  private _ref: ComponentRef; //**  unique ref of this component in the Dom */
+  private _componentHTMLTag: string; //** component tag */
+  private _isContainer: boolean; //** can contain  other elements */
+  private _styles: Style[]; //** css styles */
+  private _parent!: ComponentContainer; //** parent Object */
+  private _parentRef: ComponentRef; //** string ref to the parent */
+  private _classDefinition: string; //** String of tailwind classes to be applied to an element */
+  private _type: ComponentTypesString; //** what is this component as in image text etc */
+  private _data: ComponentTypes; //** holds associated user data i.e. the data the user inputs */
+  private _boxDimensions: BoxDimensions; 
+  private _actionEvent: ActionEvent; //** if this component support events ActionEvent defines the event type and action */
 
   constructor(pageElementBuilder: PageElementBuilder) {
     this._name = pageElementBuilder.name;
@@ -207,6 +207,9 @@ export class PageElement implements Partial<PageElementInterface> {
     if (classDef.includes('underline')) { 
       this.processUnderline(classDef);
     }
+    if(classDef.includes('text-')) {
+      this.processText(classDef);
+    }
   }
 
   /** removeClass removes a class from the component, but it must be the full class name */
@@ -283,6 +286,10 @@ export class PageElement implements Partial<PageElementInterface> {
     let tempClass: string = this.cutString(this.classDefinition,'underline');
     tempClass += ` ${classDef}`;
     this.classDefinition = tempClass;
+  }
+
+  private processText(classDef: string) {
+    this.classDefinition += ` ${classDef}`;
   }
 }
 

@@ -28,8 +28,8 @@
       contenteditable="plaintext-only"
       ref="texteditorcontent"
       data-editor="textContent"
+      :class="getClasses"
       @mouseup="getSelection"
-      
       @keydown="onKeyDown"
       
       >
@@ -53,6 +53,7 @@ import { RH } from '@/classes/dom/range/RH';
 import { PageModule } from '../../../../store/page/page';
 import { IconPickerInterface } from '../../../../models/components/icon-picker-models';
 import { AlignText } from '@/classes/dom/range/commands/align-text';
+import { PageElement } from '../../../../models/page/page';
 
 @Component({
   components: {
@@ -220,6 +221,11 @@ export default class TextEditor extends Vue {
     const align: AlignText = new AlignText();
     const textEditor = this.$refs.texteditorcontent as HTMLDivElement;
     align.alignText(style, textEditor);
+  }
+
+  get getClasses(): string {
+    const componentClassSpec = PageModule.editedComponentRef as PageElement;
+    return componentClassSpec.classDefinition;  
   }
 
   get textContent(): string {

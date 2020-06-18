@@ -20,7 +20,7 @@ export interface PageStateInterface {
   _pageElements: PageData[];
   _editedComponentRef: ComponentContainer | PageElement | undefined;
   _showEditDelete: boolean;
-  // _componentId: number;
+  _selectedComponent: string;
 }
 
 @Module({ name: 'pagestore', store, dynamic: true })
@@ -33,10 +33,10 @@ class PageStore extends VuexModule implements PageStateInterface {
     | ComponentContainer
     | PageElement
     | undefined = undefined;
-  // show the toolbar for selecting edit // delete
+    // show the toolbar for selecting edit // delete
   public _showEditDelete = false;
-  // unique number for each component always incremented and set to the max ref of the last component when loading
-  // public _componentId = 0;
+  // used to ensure only one component can be selected in the UI
+  public _selectedComponent = '';
 
   @Mutation
   private pushPageElement(element: PageData): void {
@@ -91,8 +91,8 @@ class PageStore extends VuexModule implements PageStateInterface {
   */
   @Mutation
   private setEditedComponentClass(classDef: string) {
-    if (this.editedComponentRef) {
-      const component: PageData = this.editedComponentRef as PageData;
+    if (this._editedComponentRef) {
+      const component: PageData = this._editedComponentRef as PageData;
       if (component) {
         component.addClass(classDef);
       }
@@ -104,15 +104,15 @@ class PageStore extends VuexModule implements PageStateInterface {
    */
   @Mutation
   private removeEditedComponentClass(classDef: string) {
-    if (this.editedComponentRef) {
-      const component: PageData = this.editedComponentRef as PageData;
+    if (this._editedComponentRef) {
+      const component: PageData = this._editedComponentRef as PageData;
       if (component) {
         component.removeClass(classDef);
       }
     }
-
   }
 
+  /**clearPageElements - clear out all components on the current page */
   @Mutation
   private clearPageElements(): void {
     this._pageElements = [];
@@ -121,6 +121,7 @@ class PageStore extends VuexModule implements PageStateInterface {
   @Mutation
   private setEditedComponentRef(ref: PageData): void {
     this._editedComponentRef = ref;
+    this._selectedComponent = ref.ref;
   }
 
   @Mutation
@@ -204,6 +205,7 @@ class PageStore extends VuexModule implements PageStateInterface {
 
   @Action
   public updateComponentClassProperties(classDef: string): void {
+    console.log('%c%s', 'color: #00a3cc', classDef);
     this.context.commit('setEditedComponentClass', classDef);
   }
 
@@ -222,13 +224,6 @@ class PageStore extends VuexModule implements PageStateInterface {
         }
       }
     }
-  }
-
-  @Action
-  getTheEditedComponentRef(): Promise<PageData> {
-    return new Promise(resolve => {
-      resolve(this._editedComponentRef);
-    });
   }
 
   @Action
@@ -257,6 +252,10 @@ class PageStore extends VuexModule implements PageStateInterface {
 
   public get pageElements(): PageData[] {
     return this._pageElements.sort(this.compare);
+  }
+
+  public get selectedComponent(): string {
+    return this._selectedComponent;
   }
 
   private compare(a: PageData, b: PageData) {

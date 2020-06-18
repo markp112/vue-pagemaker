@@ -9,7 +9,7 @@
   >
     <div v-html="getData"></div>
     <resizeable
-      :isActive="showBorder"
+      :isActive="isActive"
       :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"
       @onResize="onResize"
     ></resizeable>
@@ -29,7 +29,7 @@
       @click.prevent="onClick($event)"
     />
     <resizeable
-      :isActive="showBorder"
+      :isActive="isActive"
       :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"
       @onResize="onResize"
     ></resizeable>
@@ -44,7 +44,7 @@
   >
     {{ data.content }}
     <resizeable
-      :isActive="showBorder"
+      :isActive="isActive"
       :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"
       @onResize="onResize"
     ></resizeable>
@@ -110,10 +110,6 @@ export default class GenericComponent extends Vue {
     }
   }
 
-  mounted() {
-    console.log('%c⧭', 'color: #e57373', this.$props.thisComponent.parent.boxDimensions)
-  }
-
   getClasses(): string {
     let componentClassSpec = this.$props.thisComponent.classDefinition;
     if (this.showBorder) {
@@ -141,6 +137,10 @@ export default class GenericComponent extends Vue {
     
   }
 
+  get isActive(): boolean {
+    return PageModule.selectedComponent === (this.$props.thisComponent as PageElement).ref;
+  }
+
   onResize(newDimensions: ResizeDimensions | undefined) {
     if (newDimensions) {
       if (PageModule.editedComponentRef) {
@@ -162,7 +162,6 @@ export default class GenericComponent extends Vue {
     event.stopPropagation();
     PageModule.updateEditedComponentRef(this.$props.thisComponent);
     PageModule.updateShowEditDelete(true);
-    this.showBorder = !this.showBorder;
   }
 }
 </script>
