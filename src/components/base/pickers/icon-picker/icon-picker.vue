@@ -74,7 +74,7 @@ export default class IconPicker extends Vue {
 <style lang="postcss"  >
 
 .icon-list {
-  @apply w-6/12 text-lg text-accent p-2;
+  @apply w-6/12 text-lg text-accent-600 p-2;
 }
 
 .icon-picker {

@@ -7,9 +7,28 @@
 }
 
 .sidebar-button-panel {
-  @apply flex flex-row justify-evenly items-center flex-wrap bg-gray-300 h-10;
+  @apply flex flex-row justify-evenly items-center flex-wrap bg-secondary-200 h-10;
 }
 
+.dropdown-menu-background {
+  @apply  bg-secondary-700 cursor-pointer;
+}
+
+.dropdown-menu-item {
+  @apply text-accent-600;
+}
+
+.dropdown-menu-selected {
+  @apply  bg-secondary-400 text-primary-300;
+}
+
+.dropdown-menu-item:hover {
+  @apply  bg-secondary-200 text-secondary-400;
+}
+
+.app-input-field {
+  @apply bg-secondary-700 border-transparent text-accent-600;
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

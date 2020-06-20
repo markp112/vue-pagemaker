@@ -76,7 +76,7 @@ export default class PageBuilder extends Vue {
 
   created() {
     this.title = this.$route.params.title;
-    SidebarModule.toggleSidebar(true);
+    SidebarModule.setSidebarMenuTo('sidebar-components');
   }
 
   get layoutElements(): PageData[] {

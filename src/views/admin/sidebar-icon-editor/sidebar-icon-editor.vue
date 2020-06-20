@@ -115,7 +115,7 @@
         <input type="checkbox" name="isContainer" id="active" :value="editorComponent.isContainer" class="mt-5 w-1/12" v-model="editorComponent.isContainer">
         <submit-cancel v-on:cancelClicked="cancelClick()"  v-on:saveClicked="saveClick()" ></submit-cancel>
       </form>
-      <p class="w-full bg-gray-400 mt-2 p-2 text-accent text-center font-bold">Component Preview</p>
+      <p class="w-full bg-gray-400 mt-2 p-2 text-accent-600 text-center font-bold">Component Preview</p>
       <div class="relative bg-gray-300">
         <div class="mt-2 absolute" :class="classDef" :style="getStyles">Component</div>
         </div>

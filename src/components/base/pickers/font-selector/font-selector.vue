@@ -2,7 +2,7 @@
   <div>
     <div class="flex flex-row justify-start relative">
       <img src="@/assets/icons/alphabet_latin-32.png"
-            class="text-accent cursor-pointer hover:bg-gray-600"
+            class="text-accent-600 cursor-pointer hover:bg-gray-600"
       />
       <img src="@/assets/icons/down-24.png" 
         class="w-4 h-4 cursor-pointer hover:bg-gray-800"
@@ -17,16 +17,16 @@
         <span class="font-filter" @click="filterFonts('serif')">s</span>
         <span class="font-filter" @click="filterFonts('sans-serif')">ss</span>
       </div>
-      <ul class="border border-l-gray-500 bg-gray-200 flex flex-col items-start w-32 h-64 shadow-lg overflow-y-scroll"
+      <ul class="border border-l-gray-500  dropdown-menu-background flex flex-col items-start w-48 h-64 shadow-lg overflow-y-scroll"
         @mouseleave="show"
         @blur="show"
       >
         <li v-for="font in listOfFonts"
           :key="font.fontName" 
           @click="fontClicked(font.fontName)" 
-          class="cursor-pointer mb-2 relative z-auto text-sm w-full hover:bg-gray-600 hover:text-gray-200"
-          :class="{'bg-secondary-100': font.fontName === selectedItem}"
-          :style="{'font-family': font.fontName}"
+          class="dropdown-menu-item mb-2 relative z-auto text-sm w-full"
+          :class="{ 'bg-secondary-100': font.fontName === selectedItem }"
+          :style="{ 'font-family': font.fontName }"
           >
           {{ font.fontName }}
         </li>

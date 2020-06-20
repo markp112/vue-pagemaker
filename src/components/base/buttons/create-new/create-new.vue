@@ -3,7 +3,7 @@
     <font-awesome-icon 
       icon='plus-circle' 
       prefix="fas" 
-      class="text-accent ml-3 cursor-pointer hover:text-secondary-100" 
+      class="text-accent-600 ml-3 cursor-pointer hover:text-secondary-100" 
       @click="onClick()" />
   </p>
 </template>

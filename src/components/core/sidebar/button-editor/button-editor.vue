@@ -1,14 +1,14 @@
 <template>
-  <div class="mt-8 p-0">
+  <div class="mt-8 p-0 bg-secondary-800 h-full p-1">
     <span class="inline-block flex flex-row justify-end mr-2 mb-4">
       <close-button @onClick="closeButtonClick"></close-button>
     </span>
-    <div class="mr-2 mt-4">
+    <div class="mr-2 mt-4 text-accent-600">
       <p>Set Colour</p>
       <p class="flex flex-row justify-evenly items-center w-10/12 mb-2">
         <span
           :class="{
-            'text-teal-400': textBackgroundorBorder === 'background-color',
+            'text-teal-400': textBackgroundorBorder === 'background',
           }"
         >
           background
@@ -83,7 +83,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import Component from 'vue-class-component';
+import Component, { mixins } from 'vue-class-component';
 import CloseButton from '@/components/base/buttons/close-button/close-button.vue';
 import ColourPicker from '@/components/base/pickers/colour-picker/colour-picker.vue';
 import ToggleSwitch from '@/components/base/buttons/switch/switch.vue';
@@ -95,13 +95,10 @@ import { PageModule } from '@/store/page/page';
 import { SidebarModule } from '@/store//sidebar/sidebar';
 import {
   Style,
-  BorderInterface,
-  Border,
-  BorderBuilder,
 } from '@/models/styles/styles';
-import { StyleTypes } from '../../../../models/page/page';
 import { ActionEvent } from '../../../../models/components/base-component';
 import { IconPickerInterface } from '../../../../models/components/icon-picker-models';
+import  { BorderButtonsMixin } from '@/mixins/sidebar-Editors/border-buttons/border-buttons-mixin';
 
 type BackgroundForeGround = 'background-color' | 'color' | 'border';
 
@@ -116,13 +113,11 @@ type BackgroundForeGround = 'background-color' | 'color' | 'border';
     'text-input': TextInput,
   },
 })
-export default class ButtonEditor extends Vue {
+export default class ButtonEditor extends mixins(BorderButtonsMixin) {
   name = 'button-editor'
   textBackgroundorBorder: BackgroundForeGround = 'background-color';
   isFontSelected = false;
-  borderStyle: Style | null = null;
   borderColour = 'rgba(0, 0, 0, 1)';
-  borderDefintion: BorderInterface | null = null;
   data = PageModule.editComponentData;
 
   closeButtonClick(): void {
@@ -148,36 +143,7 @@ export default class ButtonEditor extends Vue {
     }
   }
 
-  buildBorder(borderStyle: BorderInterface): Border {
-    this.borderDefintion = borderStyle;
-    return new BorderBuilder()
-      .setStyle(borderStyle.style)
-      .setBorderDirection(borderStyle.borderDirection)
-      .setWidth(borderStyle.width)
-      .setBorderRadius(borderStyle.borderRadius)
-      .setColour(this.borderColour)
-      .build();
-  }
-
-  setBorderStyle(border: Border): void {
-    PageModule.updateEditedComponentStyles(border.getBorderStyle());
-    PageModule.updateEditedComponentStyles(border.getBorderRadius());
-  }
-
-  onBorderChange(borderStyle: BorderInterface): void {
-    const border: Border = this.buildBorder(borderStyle);
-    this.setBorderStyle(border);
-  }
-
-  onRemoveStyle(styleToRemove: StyleTypes): void {
-    PageModule.deleteEditedComponentStyle(styleToRemove);
-  }
-
-  onShadowChange(classDef: string): void {
-    PageModule.updateComponentClassProperties(classDef);
-  }
-
-  onFontWeightChange(iconElement: IconPickerInterface): void {
+onFontWeightChange(iconElement: IconPickerInterface): void {
     PageModule.updateComponentClassProperties(iconElement.class);
   }
 

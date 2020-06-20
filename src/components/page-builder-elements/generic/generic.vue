@@ -134,7 +134,6 @@ export default class GenericComponent extends Vue {
 
   get getData(): string | undefined {
     return this.$props.thisComponent.data.content;
-    
   }
 
   get isActive(): boolean {

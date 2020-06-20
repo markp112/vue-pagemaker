@@ -1,7 +1,6 @@
 <template>
   <canvas
     ref="canvas"
-    class="color-slider"
     width="40"
     height="250"
     @mousedown="onMouseDown"

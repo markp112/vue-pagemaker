@@ -21,6 +21,7 @@ export type sidebarComponents =
   'image-editor'
   | 'sidebar-components'
   | 'container-editor'
+  | 'sites-menu'
   | 'button-editor';
 
 export interface SidebarStateInterface {
@@ -114,6 +115,9 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
   }
 
   @Action({ rawError: true })
+  /** @description update the side bar menu with the editor linked to the component being edited
+   * requires that the PageModule.editedComponetRef is set
+   */
   public updateSidebarEditor() {
     const componentType: PageData | undefined = PageModule.editedComponentRef;
     if (componentType) {
@@ -144,12 +148,19 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
   }
 
   @Action
+  /** @description sets the side bar menu to the passed in string
+   * @params sidebarMenu = name of the menu to show based on type of sidebarComponents
+   */
+  public setSidebarMenuTo(sidebarMenu: sidebarComponents) {
+    this.context.commit('setSidebarEditor', sidebarMenu);
+  }
+
+  @Action
   public closeEditor() {
     const sidebarComponent: sidebarComponents = 'sidebar-components';
     this.context.commit('setSidebarEditor', sidebarComponent);
   }
-
-  
+ 
   @Action 
   public updateShowTextModal(show: boolean) {
     this.context.commit("setShowTextModal", show);

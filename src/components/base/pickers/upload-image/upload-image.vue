@@ -1,13 +1,13 @@
 <template>
-  <div class="flex flex-col justify-center align-middle w-full bg-white h-full text-xs">
+  <div class="flex flex-col justify-center align-middle w-full text-sm">
         <input
-          class="w-full "
+          class="w-full app-input-field text-accent"
           type="file"
           @change="setImage( $event.target.name, $event.target.files)"
           accept="image/png, image/jpeg"
           />
         <input
-            class="w-full"
+            class="w-full app-input-field text-sm text-accent-600"
             type="text"
             @input="getImageFromUrl"
             placeholder="or paste URL"
@@ -21,8 +21,13 @@
       @dragover.prevent="dragOver()"
       @dragleave.prevent="dragLeave()"
       @drop.prevent="drop($event)">
-      <h3 v-if="!hasFile" class="z-10 fixed font-bold text-accent flex-row flex-wrap justify-start">Upload a file by dropping it here</h3>
-      <img :src="getImage"  class="border object-contain  h-32" ref="imagePlaceholder"/>
+      <h3 
+        v-if="!hasFile" 
+        class="z-10 fixed font-bold text-accent-600 flex-row flex-wrap justify-start"
+      >
+        Upload a file by dropping it here
+      </h3>
+      <img :src="getImage"  class="border object-contain h-32" ref="imagePlaceholder"/>
     </div>
   </div>
 </template>

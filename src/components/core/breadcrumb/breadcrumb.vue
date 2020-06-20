@@ -1,6 +1,6 @@
 <template>
-  <div class="mt-1 ml-4 w-full">
-    <ul class="flex flex-row justify-start font-smaller text-accent">
+  <div class=" ml-4 w-full">
+    <ul class="flex flex-row justify-start font-smaller text-accent-600">
       <li v-for="(breadcrumb, idx) in getbreadCrumbList" :key="idx" @click="routeTo(idx)" class="ml-2 w-100" :class="{'linked': !!breadcrumb.link }">
         {{ breadcrumb.name }} <span v-if="!!breadcrumb.link">/</span>
       </li>

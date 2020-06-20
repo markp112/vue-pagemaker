@@ -25,7 +25,7 @@ export default class WidthsButtons extends Vue{
 
 <style lang="postcss" scoped>
 .circle-widths {
-  @apply rounded-full bg-secondary-900 text-accent h-8 w-8 flex items-center justify-center cursor-pointer;
+  @apply rounded-full bg-secondary-900 text-accent-600 h-8 w-8 flex items-center justify-center cursor-pointer;
 }
 .circle-widths:hover {
   @apply bg-secondary-100 text-accent1;

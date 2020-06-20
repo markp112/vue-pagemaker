@@ -1,49 +1,43 @@
 <template>
-  <div>
-  
-    <div class="sidebar-button-panel">
-      <div class="flex flex-row justify-center">
-        <icon-select iconSelect="project_stage_planning-32.png" :iconList="borderEdgeIconList" @selectChange="borderEdgeChange"></icon-select>
-        <icon-select iconSelect="sketch-32.png" :iconList="lineStyleIconList" @selectChange="setLineStyle"></icon-select>
-      
-      </div>
-        <div class="flex flex-row flex-start">
-          <img src="@/assets/icons/thickness-32.png"
-            class="text-accent cursor-pointer hover:bg-gray-600"
-            :class="{'bg-secondary-100': isThicknessSelected}"
-            @click="thicknessClick" />
-          <div class="flex flex-col items-center" v-if="isThicknessSelected">
-            <span class="icon-img minus h-4 inline-block w-4" @click="borderThicknessChange(-1)"></span>
-            <span class="icon-img plus h-4 inline-block w-4" @click="borderThicknessChange(1)"></span>
-          </div>
-        </div>
-        <div class="flex flex-row justify-start">
-          <img src="@/assets/icons/bezier-32.png"
-            class="text-accent cursor-pointer hover:bg-gray-600"
-            :class="{'bg-secondary-100': isBorderRadiusSelected}"
-            @click="onBorderRadiusChange" />
-          <input v-if="isBorderRadiusSelected"
-            type="number" 
-            v-model="border.borderRadius.value" 
-            size="3" class="w-8 bg-gray-300 border text-xs mb-1 ml-1" 
-            @change="onUnitsChange()" />
-          <select v-if="isBorderRadiusSelected"
-            id="units" 
-            class="bg-gray-300 border text-xs" 
-            @click="onUnitsChange" 
-            ref="unitSelect" 
-            v-model="border.borderRadius.units">
-            <optgroup>
-              <option :value="'px'">px</option>
-              <option :value="'%'">%</option>
-              <option :value="'em'">em</option>
-            </optgroup>
-        </select>
-      </div>
+  <section>
+    <div class="sidebar-button-panel h-12 items-start text-accent-600 p-1">
+      <p>Border Styles</p>
+      <icon-select iconSelect="project_stage_planning-32.png" :iconList="borderEdgeIconList" @selectChange="borderEdgeChange"></icon-select>
+      <icon-select iconSelect="sketch-32.png" :iconList="lineStyleIconList" @selectChange="setLineStyle"></icon-select>
       <icon-select iconSelect="shadows-32.png" :iconList="shadowIconList" @selectChange="onShadowChange"></icon-select>
     </div>
-  </div>
-
+    <div class="sidebar-button-panel h-12 justify-evenly">
+      <div class="flex flex-row justify-start">
+        <img
+          src="@/assets/icons/thickness-32.png"
+          class="text-accent-600 cursor-pointer hover:bg-gray-600"
+          :class="{'bg-secondary-100': isThicknessSelected}"
+          @click="thicknessClick" />
+        <div class="flex flex-col items-center" >
+          <span class="icon-img minus h-4 inline-block w-4" @click="borderThicknessChange(-1)"></span>
+          <span class="icon-img plus h-4 inline-block w-4" @click="borderThicknessChange(1)"></span>
+        </div>
+      </div>
+      <div class="flex flex-row items-center justify-between">
+        <img src="@/assets/icons/bezier-32.png"
+          class="text-accent-600 cursor-pointer hover:bg-gray-600"
+          :class="{'bg-secondary-100': isBorderRadiusSelected}"
+          />
+        <input
+          type="number" 
+          v-model="border.borderRadius.value" 
+          size="2" 
+          class="w-8 app-input-field text-sm mb-1 ml-1 mr-1 text-right" 
+          @change="onBorderRadiusChange()" />
+        <drop-down
+          :selectList="borderUnits"
+          defaultValue="px"
+          @onSelectChange="onUnitsChange"
+        >
+        </drop-down>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script lang="ts">
@@ -51,15 +45,18 @@
   import Component from 'vue-class-component';
   import { Emit } from 'vue-property-decorator';
   import { Style, BorderDirections, BorderInterface, BorderStyle } from '@/models/styles/styles';
-  import  IconSelect  from  '@/components/base/pickers/icon-select/icon-select.vue';
+  import IconSelect  from  '@/components/base/pickers/icon-select/icon-select.vue';
+  import DropDown  from '@/components/base/pickers/drop-down/drop-down.vue';
   import {
     IconPickerInterface,
     shadowIconList,
     lineStyleIconList,
     borderEdgeIconList } from '@/models/components/icon-picker-models';
+import { BoxUnits } from '../../../../models/components/box-dimension';
   @Component({
     components: {
       'icon-select': IconSelect,
+      'drop-down': DropDown,
     },
   })
   export default class BorderButtons extends Vue {
@@ -79,6 +76,7 @@
     shadowIconList = shadowIconList;
     lineStyleIconList = lineStyleIconList;
     borderEdgeIconList  = borderEdgeIconList;
+    borderUnits = ['px', 'em', '%'];
 
     @Emit('onBorderChange')
     setBorder(): BorderInterface {
@@ -124,18 +122,20 @@
       this.setBorder();
     }
 
-    onBorderRadiusChange() {
-      this.isBorderRadiusSelected = !this.isBorderRadiusSelected;
-    }
-
     @Emit('onShadowChange')
     onShadowChange(iconElement: IconPickerInterface) {
       return iconElement.class;
     }
 
     @Emit('onBorderChange')
-    onUnitsChange(){
-        return this.border;
+    onUnitsChange(borderUnits: BoxUnits) {
+      this.border.borderRadius.units = borderUnits;
+      return this.border;
+    }
+    
+    @Emit('onBorderChange')
+    onBorderRadiusChange(){
+      return this.border;
     }
 
   }

@@ -14,16 +14,38 @@
       </div>
       <li v-for="page in pageList" :key="page.name" class="">
         <div class="flex flex-row justify-start">
-          <span class="hover:bg-secondary-100 hover:text-accent w-11/12 p-1 mt-1 flex flex-row justify-evenly cursor-pointer rounded-md" @click="pageRowClick(page.name)">
+          <span
+            class="hover:bg-secondary-100 hover:text-accent-600 w-11/12 p-1 mt-1 flex flex-row justify-evenly cursor-pointer rounded-md"
+            @click="pageRowClick(page.name)"
+          >
             <span class="w-1/12">
-              <font-awesome-icon v-if="page.icon.icon !== ''" :icon="page.icon.icon" :prefix="page.icon.prefix"></font-awesome-icon>
+              <font-awesome-icon
+                v-if="page.icon.icon !== ''"
+                :icon="page.icon.icon"
+                :prefix="page.icon.prefix"
+              >
+              </font-awesome-icon>
             </span>
-            <span class="w-2/12">{{ page.name }}</span>
-            <span class="w-2/12">{{ page.created | dateFormat('DD MMM YYYY')  }}</span>
-            <span class="w-2/12">{{ page.edited | dateFormat('DD MMM YYYY') }}</span>
-            <span class="w-2/12 self-start"><input type="checkbox" value="page.active" readonly /> </span>
+            <span class="w-2/12">
+              {{ page.name }}
+            </span>
+            <span class="w-2/12">
+              {{ page.created | dateFormat('DD MMM YYYY')  }}
+            </span>
+            <span class="w-2/12">
+              {{ page.edited | dateFormat('DD MMM YYYY') }}
+            </span>
+            <span class="w-2/12 self-start">
+              <input type="checkbox" value="page.active" readonly />
+            </span>
           </span>
-          <font-awesome-icon icon="pencil-alt" prefix="fas" class="w-1/12 ml-2 hover:text-accent cursor-pointer" @click="editPencilClick(page.name)"></font-awesome-icon>
+          <font-awesome-icon
+            icon="pencil-alt"
+            prefix="fas"
+            class="w-1/12 ml-2 hover:text-accent-600 cursor-pointer"
+            @click="editPencilClick(page.name)"
+          >
+          </font-awesome-icon>
         </div>
       </li>
     </ul>
@@ -41,16 +63,16 @@ import { SitesModule } from '@/store/sites/sites';
 
 @Component({
   components: {
-    'create-new-button' : CreateNewButton,
-  }
+    'create-new-button': CreateNewButton,
+  },
 })
 export default class PageList extends Vue {
-  name = "pageList"
-  siteId ='';
+  name = 'pageList';
+  siteId = '';
 
   editPencilClick(pageName: string) {
     PagesModule.updateCurrentPage(pageName);
-    this.$router.push({name:'page-editor', params:{title:'Edit Page'}});
+    this.$router.push({ name: 'page-editor', params: { title: 'Edit Page' } });
   }
 
   created() {
@@ -59,11 +81,21 @@ export default class PageList extends Vue {
   }
 
   createNewPage() {
-    this.$router.push({ name:'page-editor', params:{ title: 'Create New Page' }});
+    this.$router.push({
+      name: 'page-editor',
+      params: {
+        title: 'Create New Page',
+      },
+    });
   }
 
   pageRowClick(pageName: string) {
-    this.$router.push({name:'page-builder', params:{title: pageName}})
+    this.$router.push({
+      name: 'page-builder',
+      params: {
+        title: pageName,
+      },
+    });
   }
 
   get pageList(): Page[] {

@@ -4,21 +4,22 @@
       <div class="text-sm w-6/6 ">Actions</div>
     </div>
     <div class="sidebar-button-panel h-16 justify-start w-full flex-wrap mt-0">
-      <div class="text-xs flex flex-row justify-start items-center relative">
+      <div class="text-xs flex flex-row justify-start items-center">
         <span class="mb-2 p-1"> Navigate To</span>
-        <div class="relative flex-row flex justify-start">
+        <div class="relative flex-row flex justify-start  ">
           <input
             v-model="selectedItem"
-            class="min-w-6 text-sm mb-3 ml-2"
+            class="min-w-6 text-sm mb-3 ml-2 app-input-field"
             placeholder="enter external URL or select from list"
           />
+          <div class="relative">
           <img
             :src="getPath('down-24.png')" 
             class="w-4 h-4 cursor-pointer hover:bg-gray-800"
             @click="show()"
           />
           <ul
-            class="border border-l-gray-500 bg-gray-200 flex flex-col items-center absolute w-12 shadow-lg max-h-32 top-0"
+            class="dropdown-menu-background flex flex-col items-center absolute bottom-0 right-0 w-24 shadow-lg max-h-32"
             v-if="toggleSelectOptions"
             @mouseleave="show"
             @blur="show"
@@ -27,11 +28,12 @@
               v-for="page in pages"
               :key="page" 
               @click="itemClicked(page)" 
-              class="drop-down-li"
+              class="dropdown-menu-item w-full text-left block p-1"
               :class="{'bg-secondary-100 text-gray-200': page === selectedItem}">
               {{ page }}
             </li>
           </ul>
+          </div>
         </div>
       </div> 
     </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="border-r-4 p-0 h-sidebar">
+  <div class="p-0 h-sidebar">
      <component :is="sidebarContent"></component>
   </div>
 </template>
@@ -13,11 +13,13 @@ import ImageEditorSidebar from '@/components/core/sidebar/image-editor/image-edi
 import ContainerEditorSidebar from '@/components/core/sidebar/container-editor/container-editor.vue';
 import TextEditorSidebar from '@/components/core/sidebar/text-editor//text-editor.vue';
 import ButtonEditor from '@/components/core/sidebar/button-editor/button-editor.vue';
+import SitesMenu from '@/components/core/sidebar/sites-menu/sites-menu.vue'
 import { SidebarModule } from '@/store//sidebar/sidebar';
 
 @Component({
   components:{
     'sidebar-components': sidebarComponentIcons,
+    'sites-menu' : SitesMenu,
     'image-editor': ImageEditorSidebar,
     'text-editor': TextEditorSidebar,
     'container-editor': ContainerEditorSidebar,

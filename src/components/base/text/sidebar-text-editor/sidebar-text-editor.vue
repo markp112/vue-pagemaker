@@ -10,13 +10,13 @@
       </icon-select>
       <img
         src="@/assets/icons/font_italic-32.png"
-        class="text-accent cursor-pointer hover:bg-gray-600"
+        class="text-accent-600 cursor-pointer hover:bg-gray-600"
         :class="{'bg-secondary-100': isFontItalic}"
         @click="onItalicClick" 
       />
       <img
         src="@/assets/icons/font_underlined-32.png"
-        class="text-accent cursor-pointer hover:bg-gray-600"
+        class="text-accent-600 cursor-pointer hover:bg-gray-600"
         :class="{'bg-secondary-100': isFontUnderlined}"
         @click="onUnderlinedClick"
       />

@@ -1,8 +1,8 @@
 <template>
   <transition name="fade">
     <div v-show="show" 
-      class="absolute text-xs z-20 tooltip-box bg-teal-100 border-t-4 border-teal
-          radius text-teal-darkest px-4 py-2 shadow tooltip-box"
+      class="absolute text-xs z-20 tooltip-box dropdown-menu-background border-t-4 border-secondary-300
+          radius py-2 shadow shadow-lg tooltip-box w-32 text-center text-secondary-200"
       role="alert"
     >
     {{ $props.tooltip }}
@@ -43,13 +43,11 @@ export default class ToolTip extends Vue {
 .fade-enter, .fade-leave-to  {
   opacity: 0;
 }
+
 .tooltip-box {
   height: auto; 
-  min-height: 200%; 
-  left: 115%;
+  right: -129px;
   top: 0%;
-  min-width: 200px;
-  @media screen and (min-width: 40em) {
-    min-width: 400px;
-  }
 }
+
+</style>

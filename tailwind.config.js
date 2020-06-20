@@ -128,13 +128,39 @@ module.exports = {
     },
     extend: {
       colors: {
-        primary: '#730217',
-        secondary:{
-          100: '#260259',
-          900: '#D3CCDD'
+        primary: {
+          100: '#FEC3CE',
+          200: '#FD9BAD',
+          300: '#FD728C',
+          400: '#FC4A6B',
+          500: '#FC224A',
+          600: '#B50323',
+          700: '#730217',
+          800: '#500210',
+          900: '#3C010C',
+        },
+        secondary: {
+          100: '#EAE7EF',
+          200: '#D4CEDE',
+          300: '#BFB6CE',
+          400: '#9F91B6',
+          500: '#7F6C9D',
+          600: '#61527A',
+          700: '#443956',
+          800: '#272131',
+          900: '#1D1825',
         } ,
-        
-        accent: '#F28322',
+        accent: {
+          100: '#FBDFC5',
+          200: '#F9C99F',
+          300: '#F7B378',
+          400: '#F59E51',
+          500: '#F28322',
+          600: '#EF811A',
+          700: '#D26D0F',
+          800: '#994F0B',
+          900: '#5F3207',
+        },
         accent1: '#D9C4B8',
         accent2: '#F2E3D5',
       }
@@ -284,8 +310,8 @@ module.exports = {
       auto: 'auto',
       ...theme('spacing'),
       full: '100%',
-      screen: '93.2vh',
-      sidebar: '80vh',
+      screen: '98.2vh',
+      sidebar: '100vh',
     }),
     inset: {
       '0': '0',

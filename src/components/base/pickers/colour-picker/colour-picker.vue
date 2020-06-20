@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="color-wrapper bg-gray-300 p-1">
+    <div class="color-wrapper bg-primary-800 p-1">
       <colour-palette :hue="hue" @colour="setColour"></colour-palette>
       <colour-slider  @colour="setHue" style="margin-left:16px"></colour-slider>
     </div>

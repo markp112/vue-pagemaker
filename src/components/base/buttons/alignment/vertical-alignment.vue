@@ -1,13 +1,13 @@
 <template>
   <div class="sidebar-button-panel">
     <img src="@/assets/icons/align_horizontal_top-32.png" 
-      class="text-accent cursor-pointer hover:bg-secondary-100" 
+      class="text-accent-600 cursor-pointer hover:bg-secondary-100" 
       @click="alignTopClick" />
     <img src="@/assets/icons/distribute_vertical_center.png" 
-      class="text-accent cursor-pointer hover:bg-secondary-100" 
+      class="text-accent-600 cursor-pointer hover:bg-secondary-100" 
       @click="alignVerticalCenterClick" />
     <img src="@/assets/icons/align_horizontal_bottom-32.png" 
-      class="text-accent cursor-pointer hover:bg-secondary-100" 
+      class="text-accent-600 cursor-pointer hover:bg-secondary-100" 
       @click="alignBottomClick" />
   
   </div>

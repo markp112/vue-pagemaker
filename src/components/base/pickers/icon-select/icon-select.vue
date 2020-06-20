@@ -8,7 +8,7 @@
         >
     </div>
     <div>
-      <ul class="border border-l-gray-500 bg-gray-200 flex flex-col items-center absolute w-12 shadow-lg z-20"
+      <ul class="dropdown-menu-background flex flex-col items-center absolute w-12 shadow-lg z-20"
         v-if="toggleSelectOptions"
         @mouseleave="show"
         @blur="show"
@@ -16,10 +16,10 @@
         <li v-for="iconElement in $props.iconList"
           :key="iconElement.class" 
           @click="iconClicked(iconElement)" 
-          class="cursor-pointer mb-2 relative "
+          class="dropdown-menu-item mb-2 relative "
           :class="{'bg-secondary-100': iconElement.class === selectedItem}">
           <img :src="getPath(iconElement.icon)"
-              class="w-8 h-8 hover:bg-gray-800"
+              class="w-8 h-8"
               :class="getClass(iconElement.class)"
               @mouseover="showToolTip=iconElement.class"
               @mouseleave="showToolTip=''"

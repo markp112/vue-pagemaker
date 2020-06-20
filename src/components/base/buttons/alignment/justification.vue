@@ -1,19 +1,19 @@
 <template>
   <div class="sidebar-button-panel">
     <img src="@/assets/icons/align_vertical_left-32.png" 
-      class="text-accent cursor-pointer hover:bg-secondary-100" 
+      class="text-accent-600 cursor-pointer hover:bg-secondary-100" 
       @click="alignStartClick" />
     <img src="@/assets/icons/align_horizontal_center-32.png" 
-      class="text-accent cursor-pointer hover:bg-secondary-100" 
+      class="text-accent-600 cursor-pointer hover:bg-secondary-100" 
       @click="alignCenterClick" />
     <img src="@/assets/icons/space_evenly_horizontal-32.png" 
-      class="text-accent cursor-pointer hover:bg-secondary-100" 
+      class="text-accent-600 cursor-pointer hover:bg-secondary-100" 
       @click="alignEvenlyClick" />
     <img src="@/assets/icons/icons8-add-white-space-32.png" 
-      class="text-accent cursor-pointer hover:bg-secondary-100" 
+      class="text-accent-600 cursor-pointer hover:bg-secondary-100" 
       @click="alignBetweenClick" />
     <img src="@/assets/icons/align_vertical_right-32.png" 
-      class="text-accent cursor-pointer hover:bg-secondary-100" 
+      class="text-accent-600 cursor-pointer hover:bg-secondary-100" 
       @click="alignEndClick" />
   </div>
 </template>

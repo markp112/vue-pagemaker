@@ -3,7 +3,7 @@
     <div class="flex flex-row justify-start relative w-16">
       <input
         v-model="selectedItem"
-        class="min-w-6 text-sm text-center relative"
+        class="min-w-6 text-sm text-center relative app-input-field"
         @change="onInputChange"
       >
         <slot class="absolute right-0"/>
@@ -12,21 +12,21 @@
         @click="show()"
         >
     </div>
-  
-      <ul class="border border-l-gray-500 bg-gray-200 flex flex-col items-center absolute z-10 w-12 shadow-lg h-40 overflow-y-scroll"
-        v-if="toggleSelectOptions"
-        @mouseleave="show"
-        @blur="show"
-      >
-        <li v-for="item in $props.selectList"
-          :key="item" 
-          @click="itemClicked(item)" 
-          class="drop-down-li"
-          :class="{'bg-secondary-100 text-gray-200': item === selectedItem}">
-          {{ item }}
-        </li>
-      </ul>
-  
+    <ul
+      class="dropdown-menu-background flex flex-col items-center absolute z-10 w-16 shadow-lg h-auto  overflow-auto"
+      v-if="toggleSelectOptions"
+      @mouseleave="show"
+      @blur="show"
+    >
+      <li
+        v-for="item in $props.selectList"
+        :key="item" 
+        @click="itemClicked(item)" 
+        class="dropdown-menu-item block w-full text-center"
+        :class="{'dropdown-menu-selected': item === selectedItem}">
+        {{ item }}
+      </li>
+    </ul>
   </div>
 </template>
 

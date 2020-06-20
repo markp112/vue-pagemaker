@@ -1,28 +1,34 @@
 
 
 <template>
-<div class="w-screen py-3 bg-primary shadow shadow-lg">
-  <nav class=" text-accent flex items-center justify-between">
-      <div class="ml-8">
-        <font-awesome-icon icon='language' prefix='fas' class="text-accent1 icon-size" />
+  <div class="w-screen py-3 bg-primary-800 shadow shadow-lg h-24 ">
+    <nav class=" text-accent-600 flex items-center justify-between">
+        <div class="ml-8">
+          <font-awesome-icon icon='language' prefix='fas' class="text-secondary-200 icon-size" />
+        </div>
+        <div class="mr-2 flex justify-between relative">
+          <font-awesome-icon 
+            icon='bars' 
+            prefix="fas" 
+            class="ml-2 text-secondary-200 cursor-pointer hamburger hover:text-primary-100" 
+            @click="toggleMenu = !toggleMenu"
+          />
+        <div class="flex justify-end toggleable z-10 absolute top-0 right-0 " v-if="toggleMenu">
+          <ul
+            class=" w-20 mr-1 dropdown-menu-background z-10 rounded-lg shadow-lg"
+            @mouseleave="toggleMenu = !toggleMenu"
+          >
+            <li v-for="(menuItem, idx) in menuItems" 
+              :key="idx" 
+              @click="menuItemClick(idx)" 
+              class="block p-1 text-left dropdown-menu-item rounded-lg ">
+            {{ menuItem.navText }}
+            </li>
+          </ul>
+        </div>
       </div>
-      <div class="mr-2 flex justify-between ">
-        <font-awesome-icon 
-          icon='bars' 
-          prefix="fas" 
-          class="ml-2 text-accent2 cursor-pointer hamburger hover:text-accent " 
-          @click="toggleMenu = !toggleMenu"
-        />
-      </div>
-  </nav>
-  <div class="flex justify-end toggleable z-10" v-if="toggleMenu">
-    <ul  class=" w-20 mt-1 mr-1 border bg-gray-200 z-10 rounded-lg shadow-lg">
-      <li v-for="(menuItem, idx) in menuItems" :key="idx" @click="menuItemClick(idx)" class="block p-1 cursor-pointer text-left hover:bg-accent hover:text-white rounded-lg ">
-      {{ menuItem.navText }}
-      </li>
-    </ul>
+    </nav>
   </div>
-</div>
 </template>
 
 <script lang='ts'>
@@ -46,7 +52,6 @@ export default class NavMenuComponent extends Vue {
     return  NavMenuItemsModule.navMenuItems;
   }
 }
-
 </script>
 
 <style  scoped >
@@ -63,8 +68,7 @@ export default class NavMenuComponent extends Vue {
     font-size: 0.9em;
     padding-left: 6px;
     position: absolute;
-    right: 7px;
-    top: 60px;
+    top: 40px;
     z-index: 5;
   }
 </style>

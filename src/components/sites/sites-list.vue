@@ -1,6 +1,6 @@
 <template>
   <section>
-    <div class="flex flex-row justify-between ml-12 mt-8 text-accent1">
+    <div class="flex flex-row justify-between text-accent1">
       <h2 class="page-heading">My Sites</h2>
       <create-new-button @onClick="createNewSite"></create-new-button>
     </div>
@@ -34,7 +34,7 @@ export default class SitesList extends Vue {
   
   created() {
     SitesModule.getSites();
-    SidebarModule.toggleSidebar(false);
+    SidebarModule.setSidebarMenuTo('sites-menu');
   }
 
   createNewSite(): void {
