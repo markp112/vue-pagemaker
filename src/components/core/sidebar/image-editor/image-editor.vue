@@ -23,8 +23,6 @@ import UploadImage from '@/components/base/pickers/upload-image/upload-image.vue
 import BorderButtons from '@/components/base/buttons/borders/borders.vue';
 import { PageModule } from '@/store/page/page';
 import { SidebarModule } from '@/store//sidebar/sidebar';
-
-import { StyleTypes } from '../../../../models/page/page';
 import  { BorderButtonsMixin } from '@/mixins/sidebar-Editors/border-buttons/border-buttons-mixin';
 
 @Component({

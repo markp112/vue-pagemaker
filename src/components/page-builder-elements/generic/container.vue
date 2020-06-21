@@ -8,31 +8,29 @@
     @dragover.prevent
     @drop.prevent="onDrop"
     @click.prevent="onClick"
-    @mouseup="handleMouseUp"
+    
     >
     <component :is="layout.componentHTMLTag" v-for="(layout,i) in $props.thisComponent.elements"
         :key="i"
         :index="i" 
         :thisComponent="layout"
-        @onClick.prevent="componentClick"
+        @onClick.prevent="componentClick($event)"
         z-index = "1"
         @dragover.prevent
         @drop.prevent="onDrop"
         >
     </component>
-    <div
-      class="triangle"
-      :class ="{'active': isActive, 'in-active': !isActive}"
-      @mousedown.stop.prevent="handleDown($event)"
-      @mouseup="handleMouseUp()"
-      @mousemove="handleMove($event)">
-    </div>
+    <resizeable
+      :isActive="isActive"
+      :parentContainerDimensions="getBoundingRect()"
+      @onResize="onResize"
+    ></resizeable>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import Component from 'vue-class-component';
+import Component, { mixins } from 'vue-class-component';
 import { ComponentBuilder } from '@/classes/component-builder/component-builder';
 import { Emit } from 'vue-property-decorator';
 import { PageData, ComponentContainer, PageElementBuilder } from '@/models/page/page';
@@ -42,6 +40,9 @@ import { PageModule } from '@/store/page/page';
 import { ServicesModule } from '@/store/services/services';
 import { SidebarModule } from '@/store/sidebar/sidebar';
 import { ComponentCounter } from '@/classes/component-counter/singleton-counter';
+import Resize from '@/components/base/resizeable/resize.vue';
+import { BoxDimensions, BoxDimensionsInterface, BoxUnits, Dimension } from '../../../models/components/box-dimension';
+import { GenericComponentMixins } from '@/components/page-builder-elements/generic/mixins/generic-components-mixin';
 
 @Component({
   props: {
@@ -51,12 +52,11 @@ import { ComponentCounter } from '@/classes/component-counter/singleton-counter'
   },
   components: {
     'generic-component': GenericComponent,
+    resizeable: Resize,
   },
 })
 
-export default class Container extends Vue {
-  private showBorder = false;
-  private isActive = false;
+export default class Container extends mixins(GenericComponentMixins) {
   private isSizing = false;
   private componentStyle = '';
   private componentCounter: ComponentCounter = ComponentCounter.getInstance();
@@ -69,36 +69,11 @@ export default class Container extends Vue {
     this.$props.thisComponent.boxDimensions.height = { value: this.$el.getBoundingClientRect().height, units: 'px' };
   }
 
-  getClasses(): string {
-    let componentClassSpec = this.$props.thisComponent.classDefinition;
-    if(this.showBorder) {
-      componentClassSpec += ' border1'
-    }
-    return componentClassSpec
-  }
-
-  getStyles(): string {
-    let style: string;
-    style = '';
-    const component: ComponentContainer = this.$props.thisComponent;
-    const styles: Style[] = component.styles;
-    if ( styles.length > 0 ){
-      styles.forEach(element => {
-          style += `${element.style}:${element.value};`
-      });
-    }
-    style += component.boxDimensions.getDimensionsAsStyleString;
-    return style;
-  }
-
   @Emit('componentClicked')
   onClick(ev: Event) {
-    console.log("ev",ev)
-    console.log("Component clicked =", this.$props.thisComponent.ref)
     PageModule.updateEditedComponentRef(this.$props.thisComponent);
     PageModule.updateShowEditDelete(true);
     this.showBorder = !this.showBorder;
-    this.isActive = !this.isActive;
     ev.stopPropagation();
     return
   }
@@ -109,7 +84,6 @@ export default class Container extends Vue {
 
   onDrop(event: DragEvent) {
     const componentBuilder = new ComponentBuilder();
-    console.log("onDrop")
     if (ServicesModule.dragDropEventHandled) { return }
     if (event) {
       const componentName = componentBuilder.getComponentName(event);
@@ -128,30 +102,31 @@ export default class Container extends Vue {
     return this.componentStyle;
   }
 
-  handleMouseUp() {
-    this.isSizing = false;
-    window.removeEventListener('mousemove',() => {this.handleMove(event as MouseEvent)});
-    window.removeEventListener('mouseup',() => {this.handleMouseUp()});
+  get isActive(): boolean {
+    return PageModule.selectedComponent === (this.$props.thisComponent as ComponentContainer).ref;
   }
 
-  handleDown(ev: MouseEvent) {
-    if (!this.isActive) return;
-    if(!this.isSizing) {
-      window.addEventListener('mousemove',() => {this.handleMove(event as MouseEvent)});
-      window.addEventListener('mouseup',() => {this.handleMouseUp()});
-      this.isSizing = true
-    }
-  }
-
-  handleMove(ev: MouseEvent) {
-    if(!this.isSizing) return;
-    // this.thisContainer = this.getElementBoxProperties();
-    const boxLeft = this.$el.getBoundingClientRect().left + pageXOffset;
-    const boxTop = this.$el.getBoundingClientRect().top + pageYOffset;
-    this.$props.thisComponent.boxDimensions.width.value = (ev.clientX - boxLeft);
-    this.$props.thisComponent.boxDimensions.width.units = 'px';
-    this.$props.thisComponent.boxDimensions.height.value = (ev.clientY - boxTop);
-    
+  getBoundingRect(): BoxDimensions | null {
+    if (!this.$el) return null;
+    if (!this.$el.parentElement) return null;
+    const parentElement = this.$el.parentElement;
+    const boxLeft: Dimension = {
+      value: parentElement.getBoundingClientRect().left + pageXOffset,
+      units: 'px',
+    };
+    const boxTop: Dimension = {
+      value: this.$el.getBoundingClientRect().top + pageYOffset,
+      units: 'px',
+    };
+    const boxWidth: Dimension = {
+      value: parentElement.getBoundingClientRect().width,
+      units: 'px',
+    };
+    const boxHeight: Dimension = {
+      value: this.$el.getBoundingClientRect().height,
+      units: 'px',
+    };
+    return new BoxDimensions(boxWidth, boxHeight, boxTop, boxLeft)
   }
 }
 </script>

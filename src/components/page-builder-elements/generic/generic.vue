@@ -53,7 +53,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import Component from 'vue-class-component';
+import Component, { mixins } from 'vue-class-component';
 import 
   {
     PageData,
@@ -70,10 +70,10 @@ import {
   BoxDimensions,
   BoxDimensionsInterface,
 } from '@/models/components/box-dimension';
-import { PageModule } from '@/store/page/page';
-import Resize,
-  { ResizeDimensions } from '@/components/base/resizeable/resize.vue';
+import Resize from '@/components/base/resizeable/resize.vue';
 import UploadImage from '@/components/base/pickers/upload-image/upload-image.vue';
+import { PageModule } from '@/store/page/page';
+import { GenericComponentMixins } from '@/components/page-builder-elements/generic/mixins/generic-components-mixin';
 
 @Component({
   props: {
@@ -88,14 +88,12 @@ import UploadImage from '@/components/base/pickers/upload-image/upload-image.vue
     resizeable: Resize,
   },
 })
-export default class GenericComponent extends Vue {
+export default class GenericComponent extends mixins(GenericComponentMixins) {
   name = 'generic-component';
-  showBorder = false;
   isImage = false;
   isText = false;
   data: ComponentTypes;
   editorComponent = '';
-  styles: Style[] = [];
   style = '';
 
   created() {
@@ -110,51 +108,12 @@ export default class GenericComponent extends Vue {
     }
   }
 
-  getClasses(): string {
-    let componentClassSpec = this.$props.thisComponent.classDefinition;
-    if (this.showBorder) {
-      componentClassSpec += ' border1';
-    }
-    return componentClassSpec;
-  }
-
-  getStyles(): string {
-    let style: string;
-    const component: ComponentContainer = this.$props.thisComponent;
-    style = '';
-    this.styles = component.styles;
-    if (this.styles.length > 0) {
-      this.styles.forEach(element => {
-        style += `${element.style}:${element.value};`;
-      });
-    }
-    style += `${component.boxDimensions.heightAsStyle};${component.boxDimensions.widthAsStyle}`;
-    return style;
-  }
-
   get getData(): string | undefined {
     return this.$props.thisComponent.data.content;
   }
 
   get isActive(): boolean {
     return PageModule.selectedComponent === (this.$props.thisComponent as PageElement).ref;
-  }
-
-  onResize(newDimensions: ResizeDimensions | undefined) {
-    if (newDimensions) {
-      if (PageModule.editedComponentRef) {
-        if (newDimensions.height !== undefined) {
-          const boxDimensions: BoxDimensionsInterface = 
-          { 
-            height: { value: newDimensions.height, units: 'px' },
-            width: { value: newDimensions.width, units: 'px' },
-            top: { value: 0, units: 'px' },
-            left: { value: 0, units: 'px' }
-          }
-          PageModule.updateBoxDimensionHeightandWidth(boxDimensions)
-        }
-      }
-    }
   }
 
   onClick(event: Event) {

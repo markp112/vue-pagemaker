@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-8 p-0 bg-secondary-800 h-full p-1">
+  <div class="sidebar-panel">
     <span class="inline-block flex flex-row justify-end mr-2 mb-4">
       <close-button @onClick="closeButtonClick"></close-button>
     </span>

@@ -2,6 +2,7 @@
 import store from '@/store';
 import { Module, Mutation, Action, VuexModule, getModule } from 'vuex-module-decorators';
 import {  PageData} from '@/models/page/page';
+import { SidebarComponents } from '@/classes/sidebar-toolbar/sidebar-toolbar-buidler';
 import {  
   ComponentDefinitions,
   ComponentDefinitionInterface,
@@ -14,20 +15,12 @@ import {
 import  { PageModule } from '@/store/page/page';
 import firebase from 'firebase';
 
-
 const SIDEBARCOLLECTION = 'component-definitions';
-
-export type sidebarComponents =
-  'image-editor'
-  | 'sidebar-components'
-  | 'container-editor'
-  | 'sites-menu'
-  | 'button-editor';
 
 export interface SidebarStateInterface {
   _sidebarElements: ComponentDefinitions,
   _showSidebar: boolean,
-  _sidebarComponent: sidebarComponents,
+  _sidebarComponent: SidebarComponents,
   _showTextModal: boolean,
 }
 
@@ -35,7 +28,7 @@ export interface SidebarStateInterface {
 class SidebarStore extends VuexModule implements SidebarStateInterface {
   _sidebarElements: ComponentDefinitions = new ComponentDefinitions();
   _showSidebar = false;
-  _sidebarComponent: sidebarComponents = 'sidebar-components';
+  _sidebarComponent: SidebarComponents = 'sidebar-components';
   _showTextModal = false;
 
   @Mutation
@@ -54,7 +47,7 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
   }
 
   @Mutation
-  private setSidebarEditor(component: sidebarComponents) {
+  private setSidebarEditor(component: SidebarComponents) {
     this._sidebarComponent = component;
   }
 
@@ -124,22 +117,22 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
       const whichComponentType: ComponentTypesString = componentType.type;
       switch (whichComponentType) {
         case 'image':
-          this.context.commit('setSidebarEditor', 'image-editor' as sidebarComponents);
+          this.context.commit('setSidebarEditor', 'image-editor' as SidebarComponents);
           break;
         case 'text':
           this.context.commit('setShowTextModal', true);
           break;
         case 'jumbo':
-          this.context.commit('setSidebarEditor', 'container-editor' as sidebarComponents);
+          this.context.commit('setSidebarEditor', 'container-editor' as SidebarComponents);
           break;
         case 'pageTemplate':
-          this.context.commit('setSidebarEditor', 'container-editor' as sidebarComponents);
+          this.context.commit('setSidebarEditor', 'container-editor' as SidebarComponents);
           break;
         case 'groupingContainer':
-          this.context.commit('setSidebarEditor', 'container-editor' as sidebarComponents);
+          this.context.commit('setSidebarEditor', 'container-editor' as SidebarComponents);
           break;
         case 'navBar':
-          this.context.commit('setSidebarEditor', 'container-editor' as sidebarComponents);
+          this.context.commit('setSidebarEditor', 'container-editor' as SidebarComponents);
           break;
         case 'button':
           this.context.commit('setSidebarEditor', 'button-editor')
@@ -149,15 +142,15 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
 
   @Action
   /** @description sets the side bar menu to the passed in string
-   * @params sidebarMenu = name of the menu to show based on type of sidebarComponents
+   * @params sidebarMenu = name of the menu to show based on type of SidebarComponents
    */
-  public setSidebarMenuTo(sidebarMenu: sidebarComponents) {
+  public setSidebarMenuTo(sidebarMenu: SidebarComponents) {
     this.context.commit('setSidebarEditor', sidebarMenu);
   }
 
   @Action
   public closeEditor() {
-    const sidebarComponent: sidebarComponents = 'sidebar-components';
+    const sidebarComponent: SidebarComponents = 'sidebar-components';
     this.context.commit('setSidebarEditor', sidebarComponent);
   }
  
@@ -188,7 +181,7 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
     return this._showSidebar;
   }
 
-  get sidebarComponentType(): string {
+  get sidebarComponentType(): SidebarComponents {
     return this._sidebarComponent;
   }
 

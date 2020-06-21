@@ -50,6 +50,7 @@ export class PageElement implements Partial<PageElementInterface> {
   private _data: ComponentTypes; //** holds associated user data i.e. the data the user inputs */
   private _boxDimensions: BoxDimensions; 
   private _actionEvent: ActionEvent; //** if this component support events ActionEvent defines the event type and action */
+  private classList: string [] = [];
 
   constructor(pageElementBuilder: PageElementBuilder) {
     this._name = pageElementBuilder.name;
@@ -64,6 +65,7 @@ export class PageElement implements Partial<PageElementInterface> {
     this._data = pageElementBuilder.data;
     this._boxDimensions = pageElementBuilder.boxDimensions;
     this._actionEvent = pageElementBuilder.actionEvent;
+    this.classList = pageElementBuilder.classDefinition.split(' ');
   }
 
   get name(): string {
@@ -189,110 +191,18 @@ export class PageElement implements Partial<PageElementInterface> {
   }
 
   addClass(classDef: string): void {
-    if (classDef.includes('flex')) {
-      this.processFlex(classDef);
-    }
-    if (classDef.includes('w-')) {
-      this.processWidths(classDef);
-    }
-    if (classDef.includes('shadow')) {
-      this.processShadow(classDef);
-    }
-    if (classDef.includes('font')) {
-      this.processfont(classDef);
-    }
-    if (classDef.includes('italic')) { 
-      this.processItalic(classDef);
-    }
-    if (classDef.includes('underline')) { 
-      this.processUnderline(classDef);
-    }
-    if(classDef.includes('text-')) {
-      this.processText(classDef);
-    }
+    const stem = classDef.substr(classDef.indexOf('-')) === '' ? classDef : classDef.substr(0, classDef.indexOf('-') + 1) ;
+    this.removeClass(stem);
+    this.classList.push(classDef);
+    this.classDefinition = this.classList.join(' ');
   }
 
   /** removeClass removes a class from the component, but it must be the full class name */
-  removeClass(classDef: string) {
-    if (this.classDefinition.includes(classDef)) {
-      this.classDefinition = this.classDefinition.split(' ').filter(word =>  word !== classDef).join(' ');
-    }
-  }
-
-  private cutString(stringToCutFrom: string, wordToCut: string): string {
-    const index =  stringToCutFrom.indexOf(wordToCut);
-    if (index >= 0) {
-      return  stringToCutFrom.split(' ').filter(word => !word.includes(wordToCut)).join(' ');
-    } else return stringToCutFrom;
-  }
-
-  private processWidths(classDef: string) {
-    const index = this.classDefinition.indexOf('w-');
-    if (index >= 0) {
-      let tempclass = this.classDefinition;
-      tempclass += ` ${classDef}`;
-      this.classDefinition = tempclass;
-    } else {
-      this.classDefinition += ` ${classDef}`;
-    }
-  }
-
-  private processFlex(classDef: string): void {
-    const index = this.classDefinition.indexOf('flex');
-    if (index >= 0) {
-      const tempclass = this.classDefinition;
-      if (classDef.indexOf('justify-') > 0) {
-        this.classDefinition = this.processFlexHorizontalAlignment(classDef, tempclass)
-      } else if (classDef.indexOf('items-') > 0) {
-        this.classDefinition = this.processFlexVerticalAlignment(classDef, tempclass)
-      }
-    } else {
-      this.classDefinition += ` ${classDef}`;
-    }
-  }
-
-  private processFlexHorizontalAlignment(classDef: string, tempclass: string): string {
-    tempclass = this.cutString(tempclass, 'flex');
-    tempclass = this.cutString(tempclass, 'justify');
-    tempclass += ` ${classDef}`;
-    return tempclass;
-  }
-
-  private processFlexVerticalAlignment(classDef: string, tempclass: string): string {
-      tempclass = this.cutString(tempclass, 'flex');
-      tempclass = this.cutString(tempclass, 'items');
-      tempclass += ` ${classDef}`;
-      return tempclass;
-  }
-
-  private processShadow(classDef: string) {
-    let tempClass: string = this.cutString(this.classDefinition,'shadow');
-    tempClass += ` ${classDef}`;
-    this.classDefinition = tempClass;
-  }
-  private processfont(classDef: string) {
-    let tempClass: string = this.cutString(this.classDefinition,'font');
-    tempClass += ` ${classDef}`;
-    this.classDefinition = tempClass;
-  }
-
-  private processItalic(classDef: string) {
-    let tempClass: string = this.cutString(this.classDefinition,'italic');
-    tempClass += ` ${classDef}`;
-    this.classDefinition = tempClass;
-  }
-
-  private processUnderline(classDef: string) {
-    let tempClass: string = this.cutString(this.classDefinition,'underline');
-    tempClass += ` ${classDef}`;
-    this.classDefinition = tempClass;
-  }
-
-  private processText(classDef: string) {
-    this.classDefinition += ` ${classDef}`;
+  removeClass(classDef: string): void {
+    const tempClassList = this.classList.filter(className => !className.includes(classDef))
+    this.classList = tempClassList;
   }
 }
-
 
 export class PageElementBuilder {
   private _name = ''; //name of the component

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="absolute triangle1 "
+    class="absolute triangle1"
     :class ="{'active': $props.isActive, 'in-active': !$props.isActive}"
     @mousedown.stop.prevent="handleDown($event)"
     @mouseup="handleMouseUp()"
@@ -12,19 +12,14 @@
 <script lang="ts">
 import Component from 'vue-class-component'
 import { Vue, Emit, Prop } from 'vue-property-decorator';
-import { BoxDimensions } from '@/models/components/box-dimension';
+import { BoxDimensions, ResizeDimensions } from '@/models/components/box-dimension';
 
 interface BoxProperties {
   width: number;
   height: number;
   top: number; 
   left: number;
-  };
-
-export interface ResizeDimensions {
-  height: number;
-  width: number;
-}
+};
 
 @Component({
   props: {
@@ -39,12 +34,26 @@ export interface ResizeDimensions {
     },
   }
 })
-export default class Resize extends  Vue {
+export default class Resize extends Vue {
   name = "resize";
   isSizing = false;
+  parentPadding = 0;
+
+  getPaddingOnParent(element: HTMLDivElement): number {
+    for (let index = 0; index < element.classList.length; index++) {
+      if (element.classList[index].includes('p-')) {
+        const padding = element.classList[index].substring(2);
+        return Number(padding);
+      }
+    }
+    return 0;
+  }
 
   getElementBoxProperties(): BoxProperties | null {
     const parent: HTMLDivElement | null = this.$el.parentElement as HTMLDivElement;
+    const parentContiner: HTMLDivElement = (parent as Node).parentNode as HTMLDivElement;
+    // padding is in rems 4 = 1rem = 16px
+    this.parentPadding = this.getPaddingOnParent(parentContiner) * 4;
     if (parent){
         const boundingRect: BoxProperties = {
         width: parent.getBoundingClientRect().width,
@@ -52,7 +61,7 @@ export default class Resize extends  Vue {
         top: parent.getBoundingClientRect().top,
         left: parent.getBoundingClientRect().left,
       };
-      return  boundingRect;
+      return boundingRect;
     }
     else return null;
   }
@@ -71,6 +80,7 @@ export default class Resize extends  Vue {
       this.isSizing = true
     }
   }
+
   @Emit('onResize')
   handleMove(ev: MouseEvent): ResizeDimensions | undefined {
     if(this.isSizing) { 
@@ -83,17 +93,17 @@ export default class Resize extends  Vue {
   }
 
   calcNewDimensions(element: BoxProperties, clientX: number, clientY: number): ResizeDimensions {
-    const parentDimensions = this.$props.parentContainerDimensions;
+    const parentDimensions: BoxDimensions = this.$props.parentContainerDimensions;
     const boxLeft = element.left + pageXOffset;
     const boxTop = element.top += pageYOffset;
     const resizeDimensions: ResizeDimensions = { height: 0, width: 0 }
     resizeDimensions.width = (clientX - boxLeft);
     resizeDimensions.height = (clientY - boxTop);
-    if(resizeDimensions.width  > parentDimensions.left.value + parentDimensions.width.value) {
-      resizeDimensions.width = parentDimensions.left.value + parentDimensions.width.value
+    if(resizeDimensions.width  >=  (parentDimensions.width.value - (this.parentPadding * 2))) {
+      resizeDimensions.width = parentDimensions.width.value - (this.parentPadding * 2);
     }
     if(resizeDimensions.height  > parentDimensions.top.value + parentDimensions.height.value) {
-      resizeDimensions.height = parentDimensions.top.value + parentDimensions.height.value
+      resizeDimensions.height = parentDimensions.top.value + parentDimensions.height.value;
     }
     return resizeDimensions;
   }
