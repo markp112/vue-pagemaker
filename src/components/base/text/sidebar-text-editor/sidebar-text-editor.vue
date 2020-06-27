@@ -1,5 +1,6 @@
 <template>
   <div>
+    <p>Text Styles</p>
     <div class="sidebar-button-panel w-full">
       <font-select @onFontClick="onFontClick"></font-select>
       <icon-select
@@ -20,15 +21,26 @@
         :class="{'bg-secondary-100': isFontUnderlined}"
         @click="onUnderlinedClick"
       />
+    
+    </div>
+    <div class="sidebar-button-panel w-full mt-2 items-center">
+      <span class="text-sm font-bold">Text</span>
+      <input
+        type="text"
+        name="text"
+        v-model="textContent"
+        @change="textChange"
+        class="text-sm w-32 app-input-field mb-2"
+        placeholder="Enter content"
+      />
       <drop-down 
-        class="ml-1 mt-1"
+        class="ml-1"
         :selectList="fontSizes"
         :defaultValue="16"
         @onSelectChange="onFontSizeChange"
       >
       px
       </drop-down>
-    
     </div>
   </div>
 </template>
@@ -46,6 +58,11 @@ import {
 } from '@/models/components/icon-picker-models';
 
 @Component({
+  props: {
+    textValue: {
+      default: '',
+    },
+  },
   components: {
     'icon-select': IconSelect,
     'font-select': FontSelect,
@@ -57,6 +74,11 @@ export default class SideBarTextEditor extends Vue {
   isFontUnderlined = false;
   fontSizes = [6, 8, 9, 10, 11, 12, 14, 16, 18, 20, 24, 26, 28, 36, 48, 72];
   fontWeightIconList = fontWeightIconList;
+  textContent = '';
+
+  mounted() {
+    this.textContent = this.$props.textValue;
+  }
 
   @Emit('onFontWeightChange')
   fontWeightChange(iconElement: IconPickerInterface): IconPickerInterface {
@@ -78,7 +100,7 @@ export default class SideBarTextEditor extends Vue {
     if(this.isFontUnderlined) {
       return 'underline';
     } 
-    return 'no-uunderline';
+    return 'no-underline';
   }
 
   @Emit('onFontClick')
@@ -89,6 +111,11 @@ export default class SideBarTextEditor extends Vue {
   @Emit('onFontSizeChange') 
   onFontSizeChange(fontSize: number): number {
     return fontSize;
+  }
+
+  @Emit('onTextChange')
+  textChange(): string {
+    return this.textContent;
   }
 }
 </script>

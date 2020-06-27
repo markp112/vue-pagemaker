@@ -1,7 +1,7 @@
 <template>
   <canvas
     ref="canvasPalette"
-    class="color-palette"
+    class="color-palette z-50"
     width="200"
     height="200"
     @mousedown="onMouseDown($event)"

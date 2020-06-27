@@ -10,7 +10,7 @@ import {
 } from '@/models/components/base-component';
 import {
   BoxDimensions,
-  BoxDimensionsInterface
+  BoxDimensionsInterface,
 } from '../components/box-dimension';
 import { Style } from '@/models/styles/styles';
 //interface for an html Style
@@ -191,7 +191,9 @@ export class PageElement implements Partial<PageElementInterface> {
   }
 
   addClass(classDef: string): void {
-    const stem = classDef.substr(classDef.indexOf('-')) === '' ? classDef : classDef.substr(0, classDef.indexOf('-') + 1) ;
+    const stem = !classDef.includes('-') 
+      ? classDef 
+      : classDef.substr(0, classDef.indexOf('-') + 1) ;
     this.removeClass(stem);
     this.classList.push(classDef);
     this.classDefinition = this.classList.join(' ');
@@ -199,7 +201,9 @@ export class PageElement implements Partial<PageElementInterface> {
 
   /** removeClass removes a class from the component, but it must be the full class name */
   removeClass(classDef: string): void {
-    const tempClassList = this.classList.filter(className => !className.includes(classDef))
+    const tempClassList = this.classList.filter(
+      className => !className.includes(classDef)
+    );
     this.classList = tempClassList;
   }
 }
@@ -294,7 +298,7 @@ export class PageElementBuilder {
   }
 
   public get parent(): ComponentContainer {
-    return this._parent
+    return this._parent;
   }
 
   public get parentRef(): ComponentRef {
@@ -317,7 +321,7 @@ export class PageElementBuilder {
     return this._boxDimensions;
   }
 
-  public get actionEvent() : ActionEvent {
+  public get actionEvent(): ActionEvent {
     return this._actionEvent;
   }
 
@@ -327,7 +331,7 @@ export class PageElementBuilder {
 
   public buildAButton(): PageElement {
     this._data = new Button();
-    this._data.content ='Click Me'
+    this._data.content = 'Click Me';
     return new PageElement(this);
   }
 
@@ -356,11 +360,15 @@ export class ComponentContainer extends PageElement {
   }
 
   addNewElement(newElement: PageData) {
-    const existingElement = this._elements.filter((element: PageData) => element.ref === newElement.ref)[0];
+    const existingElement = this._elements.filter(
+      (element: PageData) => element.ref === newElement.ref
+    )[0];
     if (!existingElement) {
       this._elements.push(newElement);
     } else {
-      this._elements = this._elements.filter((element: PageData) => element.ref !== newElement.ref);
+      this._elements = this._elements.filter(
+        (element: PageData) => element.ref !== newElement.ref
+      );
       this._elements.push(newElement);
     }
   }

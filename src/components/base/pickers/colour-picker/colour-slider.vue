@@ -3,12 +3,12 @@
     ref="canvas"
     width="40"
     height="250"
+    class="z-50"
     @mousedown="onMouseDown"
     @mousemove="onMouseMove"
     @mouseup="onMouseUp">
   </canvas>
 </template>
-
 
 <script lang="ts">
 import Vue from 'vue';

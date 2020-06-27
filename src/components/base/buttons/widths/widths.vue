@@ -17,7 +17,6 @@ import { Emit } from 'vue-property-decorator';
 @Component
 export default class WidthsButtons extends Vue{
   @Emit('setWidthClick') click(value: number){
-
     return value;
   }
 }

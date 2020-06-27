@@ -1,7 +1,12 @@
 <template>
   <div>
     <div class="flex flex-row flex-start relative">
-    <img :src="getPath('color-32.png')" />
+    <div 
+      class="w-8 h-8 border border-gray-200"
+      v-bind:style="{ backgroundColor: colour() }"
+      @click="emitColour()"
+    >
+    </div>
     <img
         :src="getPath('down-24.png')" 
         class="w-4 h-4 cursor-pointer hover:bg-gray-800"
@@ -10,7 +15,9 @@
     </div>
     <colour-picker 
       v-if="show"
-      @colour="onColourChange"
+      @colour="emitColour"
+      @mouseLeave="show=!show"
+      @mouseout="show=!show"
       class="absolute"
     >
     </colour-picker>
@@ -22,6 +29,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Emit } from 'vue-property-decorator';
 import ColourPicker from './colour-picker.vue';
+import { Colour } from '@/classes/colour/singleton-colour';
 
 @Component({
   components: {
@@ -29,19 +37,22 @@ import ColourPicker from './colour-picker.vue';
   },
 })
 export default class ColourDropdown extends Vue {
-  name='colour-dropdown'
-  private show = false
-
-  @Emit("onColourChange")
-  onColourChange(rgbColour: string): string {
-    console.log("called")
-    return rgbColour;
+  name='colour-dropdown';
+  private show = false;
+  colourStore: Colour =  Colour.getInstance();
+  
+  @Emit('onColourChange') 
+  emitColour(){
+    return this.colourStore.rgbColour;
   }
 
-  getPath(image: string): string {
+  colour(): string {
+    return this.colourStore.rgbColour;
+  }
+
+ getPath(image: string): string {
     const path = require.context('@/assets/icons',false,/\.png$/);
     return path(`./${image}`);
   }
-  
 }
 </script>

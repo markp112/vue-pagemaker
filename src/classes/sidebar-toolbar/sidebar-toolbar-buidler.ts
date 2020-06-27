@@ -1,7 +1,5 @@
 import {
-  SidebarIcon,
-  SidebarToolbarInterface,
-  SidebarPanelInterface,
+
   SidebarToolbar,
   SidebarPanel,
 } from '@/models/sidebar/button-definition/sidebar-buttons';

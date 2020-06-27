@@ -1,7 +1,7 @@
 export interface SidebarIconInterface {
   icon: string;
   className: string;
-  toolTip: string
+  toolTip: string;
 }
 
 /** @description consitutes an icon on the toolbar
@@ -13,7 +13,7 @@ export class SidebarIcon implements SidebarIconInterface {
   icon: string;
   className: string;
   toolTip: string;
-  
+
   constructor(icon: string, className: string, toolTip: string) {
     this.icon = icon;
     this.className = className;
@@ -22,12 +22,12 @@ export class SidebarIcon implements SidebarIconInterface {
 }
 
 export interface SidebarToolbarInterface {
-  toolbarIcons: SidebarIcon [];
+  toolbarIcons: SidebarIcon[];
 }
 /** @description contains the list of icons that make up a toolbar  */
 export class SidebarToolbar implements SidebarToolbarInterface {
   toolbarIcons: SidebarIcon[] = [];
-  
+
   addIcon(icon: string, className: string, tooltip = '') {
     const sidebarIcon = new SidebarIcon(icon, className, tooltip);
     this.toolbarIcons.push(sidebarIcon);

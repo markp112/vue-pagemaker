@@ -1,20 +1,23 @@
 <template>
   <div class="sidebar-button-panel">
-    <font-awesome-icon 
+    <font-awesome-icon
       icon="align-left"
-      prefix="fas" 
-      class="text-accent-600 cursor-pointer hover:text-secondary-100" 
-      @click="alignLeftClick" />
-    <font-awesome-icon 
-      icon='align-center' 
-      prefix="fas" 
-      class="text-accent-600 cursor-pointer hover:text-secondary-100" 
-      @click="alignCenterClick" />
-    <font-awesome-icon 
-      icon='align-right' 
-      prefix="fas" 
-      class="text-accent-600 cursor-pointer hover:text-secondary-100" 
-      @click="alignRightClick" />
+      prefix="fas"
+      class="text-accent-600 cursor-pointer hover:text-secondary-100"
+      @click="alignLeftClick"
+    />
+    <font-awesome-icon
+      icon='align-center'
+      prefix="fas"
+      class="text-accent-600 cursor-pointer hover:text-secondary-100"
+      @click="alignCenterClick"
+    />
+    <font-awesome-icon
+      icon='align-right'
+      prefix="fas"
+      class="text-accent-600 cursor-pointer hover:text-secondary-100"
+      @click="alignRightClick"
+    />
   </div>
 </template>
 
@@ -30,9 +33,11 @@
     @Emit('alignLeftClick') alignLeftClick() {
       return;
     }
+
     @Emit('alignCenterClick') alignCenterClick() {
       return;
     }
+
     @Emit('alignRightClick') alignRightClick() {
       return;
     }

@@ -1,6 +1,6 @@
 <template>
   <div class="mt-8 p-0">
-    <span class="inline-block flex flex-row justify-end mr-2 mb-4">
+    <span class="flex flex-row justify-end mr-2 mb-4">
       <close-button @onClick="closeButtonClick"></close-button>
     </span>
     <div class="mr-2 mt-4">

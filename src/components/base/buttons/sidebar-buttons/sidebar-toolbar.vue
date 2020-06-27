@@ -27,10 +27,6 @@
   export default class SidebarToolbarScreen extends Vue {
     name = 'SidebarToolbarScreen';
     
-    mounted() {
-       console.log('%c⧭', 'color: #e57373', this.$props.toolbarItems)
-    }
-
     @Emit('iconClick')
     iconClick($event: string) {
       return $event;
@@ -38,7 +34,6 @@
     
     getPath(image: string): string {
       const path = require.context('@/assets/icons',false,/\.png$/);
-       console.log('%c⧭', 'color: #997326', path(`./${image}`))
       return path(`./${image}`);
     }
   }

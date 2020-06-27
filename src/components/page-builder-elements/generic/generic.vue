@@ -42,7 +42,7 @@
     :class="getClasses()"
     @click.prevent="onClick($event)"
   >
-    {{ data.content }}
+    {{ data.content }} btn
     <resizeable
       :isActive="isActive"
       :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"

@@ -1,11 +1,9 @@
 <template>
   <div>
-    <div class="sidebar-button-panel h-4 justify-start w-full p-1">
-      <div class="text-sm w-6/6 ">Actions</div>
-    </div>
+    <P>Actions</P>
     <div class="sidebar-button-panel h-16 justify-start w-full flex-wrap mt-0">
-      <div class="text-xs flex flex-row justify-start items-center">
-        <span class="mb-2 p-1"> Navigate To</span>
+      <div class="text-sm flex flex-row justify-start items-center">
+        <span class="mb-2 p-1 font-semibold "> Navigate To</span>
         <div class="relative flex-row flex justify-start  ">
           <input
             v-model="selectedItem"

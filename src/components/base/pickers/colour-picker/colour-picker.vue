@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="color-wrapper bg-primary-800 p-1">
+    <div class="flex flex-row justify-start z-50" @mouseleave="mouseLeave()">
       <colour-palette :hue="hue" @colour="setColour"></colour-palette>
-      <colour-slider  @colour="setHue" style="margin-left:16px"></colour-slider>
+      <colour-slider  @colour="setHue"></colour-slider>
     </div>
   </div>
 </template>
@@ -13,6 +13,7 @@ import Component from 'vue-class-component';
 import { Emit } from 'vue-property-decorator';
 import ColourPalette from './colour-palette.vue';
 import ColourSlider from './colour-slider.vue';
+import { Colour } from '@/classes/colour/singleton-colour';
 
 @Component({
   components: {
@@ -24,16 +25,23 @@ export default class ColourPicker extends Vue {
   name = 'colour-picker';
   private hue = '#000000';
   private colour = '#ffeedd';
+  colourStore: Colour = Colour.getInstance();
 
   @Emit('colour')
   handleOkClick(){
-    // event.stopPropagation();
     return this.colour;
   }
-
-  @Emit('colour')
+ 
+  // @Emit('colour')
   setColour(rgbColour: string) {
-    this.colour = rgbColour;
+    this.colourStore.rgbColour = rgbColour;
+    // return rgbColour;
+  }
+
+  @Emit("mouseLeave")
+  mouseLeave()
+  {
+    return;
   }
 
   setHue(hue: string) {
@@ -49,10 +57,7 @@ export default class ColourPicker extends Vue {
   width: auto;
   padding: 16px;
 }
-.color-wrapper {
-  display: flex;
-  height: 250px;
-}
+
 
 .input-wrapper {
   margin-top: 16px;
