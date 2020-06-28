@@ -11,12 +11,12 @@ export class ComponentBuilder {
     return dataTransfer ? dataTransfer.getData('text') : '';
   }
 
-  buildComponent(component: ComponentDefinitionInterface, ref: string , parent: ComponentContainer): PageData {
+  buildComponent(component: ComponentDefinitionInterface, ref: string, parent: ComponentContainer): PageData {
     if(component.isContainer) return this.buildContainer(component, ref, parent)
     else return this.buildTheComponent(component, ref, parent);
   }
   
-  private buildContainer(component: ComponentDefinitionInterface ,ref: string, parent:  ComponentContainer) {
+  private buildContainer(component: ComponentDefinitionInterface, ref: string, parent:  ComponentContainer) {
     const container: ComponentContainer = new ComponentContainer(
         new PageElementBuilder()
           .setName(component.componentName)

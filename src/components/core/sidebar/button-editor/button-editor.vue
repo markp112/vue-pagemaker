@@ -51,13 +51,13 @@ import {
 import { ActionEvent } from '../../../../models/components/base-component';
 import { IconPickerInterface } from '../../../../models/components/icon-picker-models';
 import  { BorderButtonsMixin } from '@/mixins/sidebar-Editors/border-buttons/border-buttons-mixin';
+import { ButtonIconClassInterface } from '@/models/styles/button-icon/button-icon';
 
 type BackgroundForeGround = 'background-color' | 'color' | 'border';
 
 @Component({
   components: {
     'close-button': CloseButton,
-    'colour-picker': ColourDropdown,
     'colour-select': ColourSelect,
     'toggle-switch': ToggleSwitch,
     'border-buttons': BorderButtons,
@@ -103,8 +103,8 @@ export default class ButtonEditor extends mixins(BorderButtonsMixin) {
     }
   }
 
-  onFontWeightChange(iconElement: IconPickerInterface): void {
-    PageModule.updateComponentClassProperties(iconElement.class);
+  onFontWeightChange(iconElement: ButtonIconClassInterface): void {
+    PageModule.updateComponentClassProperties(iconElement.className);
   }
 
   onTextChange(text: string): void {

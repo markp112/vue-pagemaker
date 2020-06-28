@@ -38,11 +38,11 @@
     v-else
     :style="getStyles()"
     :id="$props.thisComponent.ref"
-    class="handle" 
+    class="handle items-center flex flex-row justify-center" 
     :class="getClasses()"
     @click.prevent="onClick($event)"
   >
-    {{ data.content }} btn
+    {{ data.content }}
     <resizeable
       :isActive="isActive"
       :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"

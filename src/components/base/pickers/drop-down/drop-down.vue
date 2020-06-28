@@ -19,10 +19,10 @@
       @blur="show"
     >
       <li
-        v-for="item in $props.selectList"
+        v-for="item in $props.thisIconButton.valuesList"
         :key="item" 
         @click="itemClicked(item)" 
-        class="dropdown-menu-item block w-full text-center"
+        class="dropdown-menu-item block w-full text-center mt-2"
         :class="{'dropdown-menu-selected': item === selectedItem}">
         {{ item }}
       </li>
@@ -34,21 +34,23 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Emit } from 'vue-property-decorator';
+import { ButtonIconNumeric, ButtonIconNumericBuilder } from '@/models/styles/button-icon/button-numeric-list/button-numeric-list';
 
 @Component({
-  props: {
-      selectList: { default: () => {
-      return []
-    }},
-    defaultValue: { default: '' },
-  },
+   props: {
+    thisIconButton: {
+        default: (): ButtonIconNumeric => {
+          return new ButtonIconNumericBuilder().build();
+        },
+      },
+    },
 })
 export default class DropDown extends Vue {
   toggleSelectOptions = false;
   selectedItem = '';
 
   mounted () {
-    this.selectedItem = this.$props.defaultValue;
+    this.selectedItem = this.$props.thisIconButton.defaultValue;
   }
 
   @Emit('onSelectChange')

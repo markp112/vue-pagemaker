@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="flex flex-row justify-start relative">
-      <img :src="getPath(iconSelect)" alt="">
+      <img :src="getPath($props.buttonIconClassList.iconImage)" alt="">
       <img :src="getPath('down-24.png')" 
         class="w-4 h-4 cursor-pointer hover:bg-gray-800"
         @click="show()"
@@ -13,18 +13,18 @@
         @mouseleave="show"
         @blur="show"
       >
-        <li v-for="iconElement in $props.iconList"
-          :key="iconElement.class" 
+        <li v-for="iconElement in $props.buttonIconClassList.classNames"
+          :key="iconElement.className" 
           @click="iconClicked(iconElement)" 
           class="dropdown-menu-item mb-2 relative "
-          :class="{'bg-secondary-100': iconElement.class === selectedItem}">
-          <img :src="getPath(iconElement.icon)"
+          :class="{'bg-secondary-100': iconElement.className === selectedItem}">
+          <img :src="getPath(iconElement.iconImage)"
               class="w-8 h-8"
-              :class="getClass(iconElement.class)"
-              @mouseover="showToolTip=iconElement.class"
+              :class="getClass(iconElement.className)"
+              @mouseover="showToolTip=iconElement.className"
               @mouseleave="showToolTip=''"
               >
-          <tool-tip :showToolTip="getShowToolTip(iconElement.class)" :tooltip="iconElement.tooltip"></tool-tip>
+          <tool-tip :showToolTip="getShowToolTip(iconElement.className)" :tooltip="iconElement.tooltip"></tool-tip>
         </li>
       </ul>
     </div>
@@ -37,9 +37,15 @@ import Component from 'vue-class-component';
 import { Emit } from 'vue-property-decorator';
 import ToolTip from '@/components/base/notifications/tooltip/tooltip.vue';
 import { IconPickerInterface } from '../../../../models/components/icon-picker-models';
+import { ButtonIconClassList } from '../../../../models/styles/button-icon/button-icon-class-list/button-icon-class-list';
+import { ButtonIconClassBuilder, ButtonIconBuilder, ButtonIconClassInterface } from '@/models/styles/button-icon/button-icon';
 
 @Component({
   props: {
+    buttonIconClassList: {
+      default: () => {
+        return  new ButtonIconBuilder().build('border-styles');
+      }},
     iconSelect: { default: '' },
     iconList: { default: () => {
       return []
@@ -55,8 +61,8 @@ export default class IconSelect extends Vue {
   showToolTip = '';
 
   @Emit('selectChange')
-  iconClicked(iconElement: IconPickerInterface): IconPickerInterface {
-    this.selectedItem = iconElement.class;
+  iconClicked(iconElement: ButtonIconClassInterface): ButtonIconClassInterface {
+    this.selectedItem = iconElement.className;
     this.show();
     return  iconElement;
   }
