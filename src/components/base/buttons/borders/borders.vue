@@ -12,23 +12,12 @@
         @onChange="borderThicknessChange"
       >
       </plus-minus-icon>
-      <div class="flex flex-row items-center justify-between">
-        <img src="@/assets/icons/bezier-32.png"
-          class="text-accent-600 cursor-pointer hover:bg-gray-600"
-        />
-        <input
-          type="number" 
-          v-model="borderRadius" 
-          size="2" 
-          class="w-8 app-input-field text-sm mb-1 ml-1 mr-1 text-right" 
-          @change="onBorderRadiusChange()" />
-        <drop-down
-          :selectList="borderUnits"
-          defaultValue="px"
-          @onSelectChange="onUnitsChange"
-        >
-        </drop-down>
-      </div>
+
+      <numeric-input-dropdown 
+        :thisIconButton="borderRadiusButton"
+        @inputChange="onBorderRadiusChange"
+        @dropdownChange="onUnitsChange"
+        ></numeric-input-dropdown>
     </div>
   </section>
 </template>
@@ -41,6 +30,7 @@
   import IconSelect  from  '@/components/base/pickers/icon-select/icon-select.vue';
   import DropDown  from '@/components/base/pickers/drop-down/drop-down.vue';
   import PlusMinusIcon from '@/components/base/buttons/plus-minus-icon/plus-minus-icon.vue'
+  import NumericInputDropdown from '@/components/base/buttons/numeric-input-drop-down/numeric-input-dropdown.vue'
   import {
     IconPickerInterface,
     shadowIconList,
@@ -51,12 +41,16 @@ import { ButtonIconDimensionBuilder, ButtonIconDimension } from '../../../../mod
 import { IconButtonBuilder } from '@/models/styles/button-icon/button-icon';
 import { ButtonIconClassList } from '@/models/styles/button-icon/button-icon-class-list/button-icon-class-list';
 import { ButtonIconBuilder, ButtonIconClassInterface } from '@/models/styles/button-icon/button-icon';
+import { ButtonIconNumeric, ButtonIconNumericBuilder } from '../../../../models/styles/button-icon/button-numeric-list/button-numeric-list';
+
 
   @Component({
     components: {
       'icon-select': IconSelect,
       'drop-down': DropDown,
       'plus-minus-icon': PlusMinusIcon,
+      'numeric-input-dropdown': NumericInputDropdown,
+      
     },
   })
   export default class BorderButtons extends Vue {
@@ -71,18 +65,21 @@ import { ButtonIconBuilder, ButtonIconClassInterface } from '@/models/styles/but
     shadowButton: ButtonIconClassList = new ButtonIconBuilder().build('Shadow');
     borderDirectionButton: ButtonIconClassList = new ButtonIconBuilder().build('border-direction');
     borderStyleButton: ButtonIconClassList = new ButtonIconBuilder().build('border-styles');
+    borderRadiusButton: ButtonIconNumeric = new ButtonIconNumericBuilder()
+      .withComponentName('drop-down')
+      .withIconIsOfType('style')
+      .withValuesList(['px', 'em', '%'])
+      .withDefaultValue('px')
+      .withStyle('border-radius','0px')
+      .withIconImage('bezier-32.png')
+      .build();
+
 
     @Emit('onBorderChange')
     setBorder() {
       return;
     }
     
-mounted() {
-    console.log('%c⧭', 'color: #bfffc8', this.shadowButton)
-
-}
-
-
     borderEdgeChange(iconElement: ButtonIconClassInterface) {
       const edge: BorderDirections = iconElement.className as BorderDirections;
       this.borderDefinition.borderDirection = edge;
@@ -104,13 +101,13 @@ mounted() {
       return iconElement.className;
     }
 
-    onUnitsChange(borderUnits: BoxUnits) {
-      this.borderDefinition.borderRadius.units = borderUnits;
+    onUnitsChange(borderUnits: string) {
+      this.borderDefinition.borderRadius.units = borderUnits as BoxUnits;
       this.setBorder();
     }
     
-    onBorderRadiusChange() {
-      this.borderDefinition.borderRadius.value = this.borderRadius;
+    onBorderRadiusChange(value: number) {
+      this.borderDefinition.borderRadius.value = value;
       this.setBorder();
     }
 

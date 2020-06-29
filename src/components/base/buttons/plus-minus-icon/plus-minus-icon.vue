@@ -28,17 +28,17 @@
   },
   })
   export default class PlusMinusIcon extends Vue {
-    name = 'PlusMinusIcon'
+    name = 'PlusMinusIcon';
 
-  @Emit("onChange")
-  borderThicknessChange(amount: number) {
-    this.$props.thisIconButton.eventClass.width = { value: amount, units: 'px' };
-  }
-
-  getPath(image: string): string {
-      const path = require.context('@/assets/icons',false,/\.png$/);
-      return path(`./${image}`);
+    @Emit("onChange")
+    borderThicknessChange(amount: number) {
+      this.$props.thisIconButton.eventClass.width = { value: amount, units: 'px' };
     }
+
+    getPath(image: string): string {
+        const path = require.context('@/assets/icons',false,/\.png$/);
+        return path(`./${image}`);
+      }
     
   }
 </script>
