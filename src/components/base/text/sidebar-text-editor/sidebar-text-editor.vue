@@ -45,8 +45,9 @@ import {
   fontWeightIconList 
 } from '@/models/components/icon-picker-models';
 import { ButtonIconClassList } from '@/models/styles/button-icon/button-icon-class-list/button-icon-class-list';
-import { ButtonIconBuilder, ButtonIconClassInterface, ButtonIconClassBuilder } from '@/models/styles/button-icon/button-icon';
-import { ButtonIconNumeric, ButtonIconNumericBuilder } from '@/models/styles/button-icon/button-numeric-list/button-numeric-list';
+import {  ButtonIconClassInterface, ButtonIconClassBuilder } from '@/models/styles/button-icon/button-icon';
+import { ButtonIconNumeric } from '@/models/styles/button-icon/button-numeric-list/button-numeric-list';
+import { ButtonFactory } from '@/models/styles/button-factory/button-factory';
 
 @Component({
   props: {
@@ -64,10 +65,10 @@ import { ButtonIconNumeric, ButtonIconNumericBuilder } from '@/models/styles/but
 export default class SideBarTextEditor extends Vue {
   isFontItalic = false;
   isFontUnderlined = false;
-  fontSizes = ['6', '8', '9', '10', '11', '12', '14', '16', '18', '20', '24', '26', '28', '36', '48', '72'];
+
   fontWeightIconList = fontWeightIconList;
   textContent = '';
-  fontWeightButton: ButtonIconClassList = new ButtonIconBuilder().build('font-weight');
+  fontWeightButton: ButtonIconClassList = new ButtonFactory().createButton('class-list', 'font-weight') as ButtonIconClassList;
   italicButton: ButtonIconClassInterface = new ButtonIconClassBuilder()
     .withClassName('italic')
     .withIconImage('font_italic-32.png')
@@ -82,15 +83,7 @@ export default class SideBarTextEditor extends Vue {
     .withComponentName('icon-toggle-button')
     .withIconIsTypeOf('class')
     .build();
-  fontSizeButton: ButtonIconNumeric = new ButtonIconNumericBuilder()
-    .withValuesList(this.fontSizes)
-    .withDefaultValue('16')
-    .withStyle('font-size','16')
-    .withComponentName('drop-down')
-    .withIconIsOfType('style')
-    .build();
-
-
+  fontSizeButton: ButtonIconNumeric = new ButtonFactory().createButton('numeric','font-size') as ButtonIconNumeric;
 
   mounted() {
     this.textContent = this.$props.textValue;

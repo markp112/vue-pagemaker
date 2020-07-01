@@ -34,7 +34,8 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Emit } from 'vue-property-decorator';
-import { ButtonIconNumeric, ButtonIconNumericBuilder } from '@/models/styles/button-icon/button-numeric-list/button-numeric-list';
+import { ButtonIconNumeric } from '@/models/styles/button-icon/button-numeric-list/button-numeric-list';
+import { ButtonIconNumericBuilder } from '@/models//styles/builders/button-icon-numeric';
 
 @Component({
    props: {

@@ -126,54 +126,6 @@ export class ButtonIconClassBuilder {
   }
 }
 
-export type ButtonListTypes = 
-  | 'Shadow'
-  | 'border-styles'
-  | 'border-direction'
-  | 'font-weight';
-
-export class ButtonIconBuilder {
-
-  build(whichButton: ButtonListTypes): ButtonIconClassList {
-    switch (whichButton) {
-      case 'Shadow' :
-        return this.buildIconList(shadowIconList, 'shadows', 'shadows-32.png');
-      case 'border-direction' :
-        return this.buildIconList(borderEdgeIconList, 'border edge', 'project_stage_planning-32.png');
-      case 'border-styles':
-        return this.buildIconList(lineStyleIconList, 'border style', 'sketch-32.png');
-      case 'font-weight':
-        return this.buildIconList(fontWeightIconList, 'font weight', 'font_bold-32.png' )
-      default:
-        throw new Error("BButtonIconBuilder: unknown Button List Type");     
-    }
-    return this.buildIconList([], '', '');
-  }
-
-  private buildIconList(
-      iconList: IconPickerInterface[],
-      toolTip: string,
-      iconImage: string
-    ): ButtonIconClassList {
-    const icons: ButtonIconClassInterface [] = [];
-    iconList.forEach(icon => {
-      const biCB: ButtonIconClassInterface = new ButtonIconClassBuilder()
-        .withClassName(icon.class)
-        .withIconImage(icon.icon)
-        .withToolTip(icon.tooltip)
-        .build();
-        icons.push(biCB);
-    })
-    return new ButtonIconClassListBuilder()
-      .withIconImage(iconImage)
-      .withToolTip(toolTip)
-      .withClassNames(icons)
-      .build();
-  }
-
-}
-
-
 export class IconButtonBuilder {
 
   // build(iconType: IconType): BorderButtonDimensionIcon {

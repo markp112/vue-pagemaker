@@ -40,9 +40,10 @@ import { BoxUnits } from '../../../../models/components/box-dimension';
 import { ButtonIconDimensionBuilder, ButtonIconDimension } from '../../../../models/styles/button-icon/buttonIconDimension';
 import { IconButtonBuilder } from '@/models/styles/button-icon/button-icon';
 import { ButtonIconClassList } from '@/models/styles/button-icon/button-icon-class-list/button-icon-class-list';
-import { ButtonIconBuilder, ButtonIconClassInterface } from '@/models/styles/button-icon/button-icon';
-import { ButtonIconNumeric, ButtonIconNumericBuilder } from '../../../../models/styles/button-icon/button-numeric-list/button-numeric-list';
-
+import { ButtonIconClassInterface } from '@/models/styles/button-icon/button-icon';
+import { ButtonIconBuilder } from '@/models/styles/builders/class-list-builder';
+import { ButtonIconNumeric } from '../../../../models/styles/button-icon/button-numeric-list/button-numeric-list';
+import { ButtonFactory } from '@/models/styles/button-factory/button-factory';
 
   @Component({
     components: {
@@ -62,18 +63,10 @@ import { ButtonIconNumeric, ButtonIconNumericBuilder } from '../../../../models/
     borderDefinition: Border = Border.getInstance();
     borderUnits = ['em', 'px', '%']
     buttonIconDimension: ButtonIconDimension = new IconButtonBuilder().buildDimension('thickness-32.png','border thickness');
-    shadowButton: ButtonIconClassList = new ButtonIconBuilder().build('Shadow');
-    borderDirectionButton: ButtonIconClassList = new ButtonIconBuilder().build('border-direction');
-    borderStyleButton: ButtonIconClassList = new ButtonIconBuilder().build('border-styles');
-    borderRadiusButton: ButtonIconNumeric = new ButtonIconNumericBuilder()
-      .withComponentName('drop-down')
-      .withIconIsOfType('style')
-      .withValuesList(['px', 'em', '%'])
-      .withDefaultValue('px')
-      .withStyle('border-radius','0px')
-      .withIconImage('bezier-32.png')
-      .build();
-
+    shadowButton: ButtonIconClassList = new ButtonFactory().createButton('class-list', 'Shadow') as ButtonIconClassList;
+    borderDirectionButton: ButtonIconClassList = new ButtonFactory().createButton('class-list', 'border-direction') as ButtonIconClassList;
+    borderStyleButton: ButtonIconClassList = new ButtonFactory().createButton('class-list', 'border-styles') as ButtonIconClassList;
+    borderRadiusButton: ButtonIconNumeric = new ButtonFactory().createButton('numeric','border-radius') as ButtonIconNumeric;
 
     @Emit('onBorderChange')
     setBorder() {

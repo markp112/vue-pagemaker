@@ -38,13 +38,15 @@ import { Emit } from 'vue-property-decorator';
 import ToolTip from '@/components/base/notifications/tooltip/tooltip.vue';
 import { IconPickerInterface } from '../../../../models/components/icon-picker-models';
 import { ButtonIconClassList } from '../../../../models/styles/button-icon/button-icon-class-list/button-icon-class-list';
-import { ButtonIconClassBuilder, ButtonIconBuilder, ButtonIconClassInterface } from '@/models/styles/button-icon/button-icon';
+import { ButtonIconClassBuilder, ButtonIconClassInterface } from '@/models/styles/button-icon/button-icon';
+import { ButtonFactory } from '@/models//styles/button-factory/button-factory';
+
 
 @Component({
   props: {
     buttonIconClassList: {
       default: () => {
-        return  new ButtonIconBuilder().build('border-styles');
+        return  new ButtonFactory().createButton('class-list','border-styles');
       }},
     iconSelect: { default: '' },
     iconList: { default: () => {
