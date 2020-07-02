@@ -37,11 +37,9 @@
     lineStyleIconList,
     borderEdgeIconList } from '@/models/components/icon-picker-models';
 import { BoxUnits } from '../../../../models/components/box-dimension';
-import { ButtonIconDimensionBuilder, ButtonIconDimension } from '../../../../models/styles/button-icon/buttonIconDimension';
-import { IconButtonBuilder } from '@/models/styles/button-icon/button-icon';
+import { ButtonIconDimension } from '@/models/styles/builders/buttonIconDimension';
 import { ButtonIconClassList } from '@/models/styles/button-icon/button-icon-class-list/button-icon-class-list';
 import { ButtonIconClassInterface } from '@/models/styles/button-icon/button-icon';
-import { ButtonIconBuilder } from '@/models/styles/builders/class-list-builder';
 import { ButtonIconNumeric } from '../../../../models/styles/button-icon/button-numeric-list/button-numeric-list';
 import { ButtonFactory } from '@/models/styles/button-factory/button-factory';
 
@@ -62,7 +60,7 @@ import { ButtonFactory } from '@/models/styles/button-factory/button-factory';
     borderRadius = 0;
     borderDefinition: Border = Border.getInstance();
     borderUnits = ['em', 'px', '%']
-    buttonIconDimension: ButtonIconDimension = new IconButtonBuilder().buildDimension('thickness-32.png','border thickness');
+    buttonIconDimension: ButtonIconDimension = new ButtonFactory().createButton('dimension', 'border-thickness') as ButtonIconDimension;
     shadowButton: ButtonIconClassList = new ButtonFactory().createButton('class-list', 'Shadow') as ButtonIconClassList;
     borderDirectionButton: ButtonIconClassList = new ButtonFactory().createButton('class-list', 'border-direction') as ButtonIconClassList;
     borderStyleButton: ButtonIconClassList = new ButtonFactory().createButton('class-list', 'border-styles') as ButtonIconClassList;

@@ -11,7 +11,8 @@
   import Vue from 'vue'
   import Component from 'vue-class-component';
   import { Emit } from 'vue-property-decorator';
-import { ButtonIconClassInterface, ButtonIconClassBuilder } from '../../../../models/styles/button-icon/button-icon';
+  import { ButtonIconClassInterface } from '../../../../models/styles/button-icon/button-icon';
+  import { ButtonIconClassBuilder } from '@/models/styles/builders/button-icon-class-builder';
 
   @Component({
   props: {

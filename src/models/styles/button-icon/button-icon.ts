@@ -1,6 +1,6 @@
 import { Style } from '../styles';
 import { Dimension } from '@/models/components/box-dimension';
-import { ButtonIconDimension, ButtonIconDimensionBuilder } from './buttonIconDimension';
+import { ButtonIconDimension, ButtonIconDimensionBuilder } from '../builders/buttonIconDimension';
 import { ButtonIconClassList, ButtonIconClassListBuilder } from './button-icon-class-list/button-icon-class-list';
 import { shadowIconList, IconPickerInterface, borderEdgeIconList, lineStyleIconList, fontWeightIconList } from '@/models/components/icon-picker-models';
 
@@ -81,80 +81,3 @@ export interface ButtonIconClassListInterface extends ButtonIconBaseInterface {
   classNames: ButtonIconClassInterface[];
 }
 
-
-
-export class ButtonIconClassBuilder {
-  _iconImage = '';
-  _tooltip = '';
-  _className = '';
-  _iconIsTypeOf: IconType = 'class';
-  _componentName: ComponentNames = 'icon-picker';
-  
-  build(): ButtonIconClassInterface {
-    return {
-      iconImage: this._iconImage,
-      tooltip: this._tooltip,
-      className: this._className,
-      componentName: this._componentName,
-      iconIsTypeOf: this._iconIsTypeOf,
-    }
-  }
-
-  withClassName(className: string) {
-    this._className = className;
-    return this;
-  }
-
-  withIconImage(iconImage: string) {
-    this._iconImage = iconImage;
-    return this;
-  }
-
-  withToolTip(tooltip: string){
-    this._tooltip = tooltip;
-    return this;
-  }
-
-  withIconIsTypeOf(iconType: IconType) {
-    this._iconIsTypeOf = iconType;
-    return this;
-  }
-
-  withComponentName(componentName: ComponentNames) {
-    this._componentName = componentName;
-    return this;
-  }
-}
-
-export class IconButtonBuilder {
-
-  // build(iconType: IconType): BorderButtonDimensionIcon {
-
-  //   switch (iconType) {
-  //     case 'dimension':
-  //       return this.buildDimension();
-  //       break;
-  //     default: 
-  //       throw new Error('unrecognised icon Type');
-  //       break;
-  //   }
-  // }
-
-  buildDimension(iconImage: string, toolTip: string): ButtonIconDimension {
-    return new ButtonIconDimensionBuilder()
-      .withComponentName('plus-minus')
-      .withDimension(0, 'px')
-      .withIconImage(iconImage)
-      .withToolTip(toolTip)
-      .build();
-  }
-
-  buildClassList(iconImage: string, classNames: ButtonIconClassInterface[], toolTip: string ): ButtonIconClassList {
-    return new ButtonIconClassListBuilder()
-      .withIconImage(iconImage)
-      .withClassNames(classNames)
-      .withToolTip(toolTip)
-      .build();
-  }
-
-}

@@ -1,11 +1,16 @@
 import { ButtonRequestTypes } from '@/models/styles/button-factory/button-factory';
 import { ButtonIconClassList, ButtonIconClassListBuilder } from '../button-icon/button-icon-class-list/button-icon-class-list';
-import { shadowIconList, borderEdgeIconList, lineStyleIconList, fontWeightIconList, IconPickerInterface } from '@/models/components/icon-picker-models';
-import { ButtonIconClassInterface, ButtonIconClassBuilder } from '../button-icon/button-icon';
-
+import {
+  shadowIconList,
+  borderEdgeIconList,
+  lineStyleIconList,
+  fontWeightIconList,
+  IconPickerInterface,
+} from '@/models/components/icon-picker-models';
+import { ButtonIconClassInterface } from '../button-icon/button-icon';
+import { ButtonIconClassBuilder } from './button-icon-class-builder';
 
 export class ButtonIconBuilder {
-
   build(whichButton: ButtonRequestTypes): ButtonIconClassList {
     switch (whichButton) {
       case 'Shadow' :
@@ -19,29 +24,26 @@ export class ButtonIconBuilder {
       default:
         throw new Error("BButtonIconBuilder: unknown Button List Type");     
     }
-    return this.buildIconList([], '', '');
   }
 
   private buildIconList(
-      iconList: IconPickerInterface[],
-      toolTip: string,
-      iconImage: string
-    ): ButtonIconClassList {
-      
-    const icons: ButtonIconClassInterface [] = [];
+    iconList: IconPickerInterface[],
+    toolTip: string,
+    iconImage: string
+  ): ButtonIconClassList {
+    const icons: ButtonIconClassInterface[] = [];
     iconList.forEach(icon => {
       const biCB: ButtonIconClassInterface = new ButtonIconClassBuilder()
         .withClassName(icon.class)
         .withIconImage(icon.icon)
         .withToolTip(icon.tooltip)
         .build();
-        icons.push(biCB);
-    })
+      icons.push(biCB);
+    });
     return new ButtonIconClassListBuilder()
       .withIconImage(iconImage)
       .withToolTip(toolTip)
       .withClassNames(icons)
       .build();
   }
-
 }

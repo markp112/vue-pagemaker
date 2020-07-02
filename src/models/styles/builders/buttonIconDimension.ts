@@ -1,4 +1,4 @@
-import { ButtonIconDimensionInterface, IconType, ComponentNames } from './button-icon';
+import { ButtonIconDimensionInterface, IconType, ComponentNames } from '../button-icon/button-icon';
 import { Dimension, BoxUnits } from '@/models/components/box-dimension';
 import { Border } from '../styles';
 
@@ -25,7 +25,7 @@ export class ButtonIconDimensionBuilder {
   _tooltip = '';
   _iconIsTypeOf: IconType = 'dimension';
   _componentName: ComponentNames = 'plus-minus';
-  _eventClass: Border =  Border.getInstance();
+  _eventClass: Border = Border.getInstance();
 
   withDimension(value: number, units: BoxUnits) {
     this._dimension.value = value;

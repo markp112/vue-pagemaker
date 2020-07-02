@@ -15,14 +15,15 @@
   import Vue from 'vue'
   import Component from 'vue-class-component';
   import { Emit } from 'vue-property-decorator';
-  import { ButtonIconDimension, ButtonIconDimensionBuilder } from '@/models/styles/button-icon/buttonIconDimension'
-  import { Dimension } from '../../../../models/components/box-dimension';
+  import { ButtonIconDimension } from '@/models/styles/builders/buttonIconDimension';
+  import { ButtonFactory } from '@/models/styles/button-factory/button-factory';
+  
 
   @Component({
   props: {
     thisIconButton: {
         default: (): ButtonIconDimension => {
-          return new ButtonIconDimensionBuilder().build();
+          return new ButtonFactory().createButton('dimension','border-thickness') as ButtonIconDimension;
         },
       },
   },

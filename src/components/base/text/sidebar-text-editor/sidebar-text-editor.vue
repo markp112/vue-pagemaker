@@ -45,7 +45,7 @@ import {
   fontWeightIconList 
 } from '@/models/components/icon-picker-models';
 import { ButtonIconClassList } from '@/models/styles/button-icon/button-icon-class-list/button-icon-class-list';
-import {  ButtonIconClassInterface, ButtonIconClassBuilder } from '@/models/styles/button-icon/button-icon';
+import {  ButtonIconClassInterface } from '@/models/styles/button-icon/button-icon';
 import { ButtonIconNumeric } from '@/models/styles/button-icon/button-numeric-list/button-numeric-list';
 import { ButtonFactory } from '@/models/styles/button-factory/button-factory';
 
@@ -69,20 +69,8 @@ export default class SideBarTextEditor extends Vue {
   fontWeightIconList = fontWeightIconList;
   textContent = '';
   fontWeightButton: ButtonIconClassList = new ButtonFactory().createButton('class-list', 'font-weight') as ButtonIconClassList;
-  italicButton: ButtonIconClassInterface = new ButtonIconClassBuilder()
-    .withClassName('italic')
-    .withIconImage('font_italic-32.png')
-    .withToolTip('italic')
-    .withComponentName('icon-toggle-button')
-    .withIconIsTypeOf('class')
-    .build();
-  underLineButton: ButtonIconClassInterface = new ButtonIconClassBuilder()
-    .withClassName('underline')
-    .withIconImage('font_underlined-32.png')
-    .withToolTip('underline')
-    .withComponentName('icon-toggle-button')
-    .withIconIsTypeOf('class')
-    .build();
+  italicButton: ButtonIconClassInterface = new ButtonFactory().createButton('class','italic-button') as ButtonIconClassInterface;
+  underLineButton: ButtonIconClassInterface = new ButtonFactory().createButton('class','underline-button') as ButtonIconClassInterface;
   fontSizeButton: ButtonIconNumeric = new ButtonFactory().createButton('numeric','font-size') as ButtonIconNumeric;
 
   mounted() {
