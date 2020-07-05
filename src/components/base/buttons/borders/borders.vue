@@ -26,7 +26,8 @@
   import Vue from 'vue';
   import Component from 'vue-class-component';
   import { Emit } from 'vue-property-decorator';
-  import { Style, BorderDirections, BorderInterface, BorderStyle, Border } from '@/models/styles/styles';
+  import { Style, BorderDirections, BorderInterface, BorderStyle } from '@/models/styles/styles';
+  import { Border } from '@/classes/borders/borders';
   import IconSelect  from  '@/components/base/pickers/icon-select/icon-select.vue';
   import DropDown  from '@/components/base/pickers/drop-down/drop-down.vue';
   import PlusMinusIcon from '@/components/base/buttons/plus-minus-icon/plus-minus-icon.vue'
@@ -38,7 +39,7 @@
     borderEdgeIconList } from '@/models/components/icon-picker-models';
 import { BoxUnits } from '../../../../models/components/box-dimension';
 import { ButtonIconDimension } from '@/models/styles/builders/buttonIconDimension';
-import { ButtonIconClassList } from '@/models/styles/button-icon/button-icon-class-list/button-icon-class-list';
+import { ButtonIconClassList } from '@/models/styles/builders/button-icon-class-list';
 import { ButtonIconClassInterface } from '@/models/styles/button-icon/button-icon';
 import { ButtonIconNumeric } from '../../../../models/styles/button-icon/button-numeric-list/button-numeric-list';
 import { ButtonFactory } from '@/models/styles/button-factory/button-factory';

@@ -17,7 +17,7 @@
             name="bg-check"
             id="background"
             value="background"
-            checked
+           
             @click="onRadioChange('background')"
           />
         </div>
@@ -35,6 +35,7 @@
             name="bg-check"
             id="font"
             value="font"
+            checked
             @click="onRadioChange('color')"
           />
         </div>
@@ -76,11 +77,10 @@ import { Emit } from 'vue-property-decorator';
   },
 })
 export default  class ColourSelect extends Vue {
-  textBackgroundorBorder: BackgroundBorderForeground = 'background-color';
+  textBackgroundorBorder: BackgroundBorderForeground = 'color';
   colour: Colour = Colour.getInstance();
 
   onRadioChange(bbf: BackgroundBorderForeground) {
-    console.log('%c%s', 'color: #d90000', bbf)
     this.textBackgroundorBorder = bbf;
     this.colour.backgroundBorderForeground = bbf;
   }

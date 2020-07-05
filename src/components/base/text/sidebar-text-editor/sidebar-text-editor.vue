@@ -44,10 +44,13 @@ import {
   IconPickerInterface,
   fontWeightIconList 
 } from '@/models/components/icon-picker-models';
-import { ButtonIconClassList } from '@/models/styles/button-icon/button-icon-class-list/button-icon-class-list';
-import {  ButtonIconClassInterface } from '@/models/styles/button-icon/button-icon';
+import { ButtonIconClassList } from '@/models/styles/builders/button-icon-class-list';
+import { ButtonIconClassInterface } from '@/models/styles/button-icon/button-icon';
 import { ButtonIconNumeric } from '@/models/styles/button-icon/button-numeric-list/button-numeric-list';
 import { ButtonFactory } from '@/models/styles/button-factory/button-factory';
+import { Style } from '@/models/styles/styles';
+import { SidebarButtonEventManager } from '../../../../classes/sidebarButtonEventManager/sidebarButtonEventManager';
+import { StyleElement } from '@/classes/text-attributes/text-attributes';
 
 @Component({
   props: {
@@ -65,49 +68,59 @@ import { ButtonFactory } from '@/models/styles/button-factory/button-factory';
 export default class SideBarTextEditor extends Vue {
   isFontItalic = false;
   isFontUnderlined = false;
-
   fontWeightIconList = fontWeightIconList;
   textContent = '';
-  fontWeightButton: ButtonIconClassList = new ButtonFactory().createButton('class-list', 'font-weight') as ButtonIconClassList;
+  fontWeightButton: ButtonIconClassList = new ButtonFactory().createButton('class-list', 'fontWeight') as ButtonIconClassList;
   italicButton: ButtonIconClassInterface = new ButtonFactory().createButton('class','italic-button') as ButtonIconClassInterface;
   underLineButton: ButtonIconClassInterface = new ButtonFactory().createButton('class','underline-button') as ButtonIconClassInterface;
-  fontSizeButton: ButtonIconNumeric = new ButtonFactory().createButton('numeric','font-size') as ButtonIconNumeric;
+  fontSizeButton: ButtonIconNumeric = new ButtonFactory().createButton('numeric','fontSize') as ButtonIconNumeric;
 
   mounted() {
     this.textContent = this.$props.textValue;
   }
 
   @Emit('onFontWeightChange')
-  fontWeightChange(iconElement: ButtonIconClassInterface): ButtonIconClassInterface {
-    return iconElement;
+  fontWeightChange( style: StyleElement): StyleElement {
+    const eventManager = SidebarButtonEventManager.getInstance();
+    eventManager.applyValue('text', style);
+    return style;
   }
 
   @Emit('onItalicClick')
-  onItalicClick(className: string) {
-    this.isFontItalic = !this.isFontItalic;
-    if(this.isFontItalic) {
-      return 'italic';
-    } 
-    return 'not-italic';
+  onItalicClick(style: StyleElement) {
+    const eventManager = SidebarButtonEventManager.getInstance();
+    eventManager.applyValue('text', style);
+
+    // this.isFontItalic = !this.isFontItalic;
+    // if(this.isFontItalic) {
+    //   return 'italic';
+    // } 
+    // return 'not-italic';
   }
 
   @Emit('onUnderlineClick')
-  onUnderlinedClick() {
-    this.isFontUnderlined = !this.isFontUnderlined;
-    if(this.isFontUnderlined) {
-      return 'underline';
-    } 
-    return 'no-underline';
+  onUnderlinedClick(style: StyleElement) {
+    const eventManager = SidebarButtonEventManager.getInstance();
+    eventManager.applyValue('text', style);
+    // this.isFontUnderlined = !this.isFontUnderlined;
+    // if(this.isFontUnderlined) {
+    //   return 'underline';
+    // } 
+    // return 'no-underline';
   }
 
   @Emit('onFontClick')
-  onFontClick(fontName: string): string {
-    return fontName;
+  onFontClick(style: StyleElement): StyleElement {
+    const eventManager = SidebarButtonEventManager.getInstance();
+    eventManager.applyValue('text', style);
+    return style;
   }
 
   @Emit('onFontSizeChange') 
-  onFontSizeChange(fontSize: number): number {
-    return fontSize;
+  onFontSizeChange(style: StyleElement): StyleElement {
+    const eventManager = SidebarButtonEventManager.getInstance();
+    eventManager.applyValue('text', style);
+    return style;
   }
 
   @Emit('onTextChange')

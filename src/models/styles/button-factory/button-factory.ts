@@ -1,4 +1,4 @@
-import { ButtonIconClassList } from '@/models//styles/button-icon/button-icon-class-list/button-icon-class-list';
+import { ButtonIconClassList } from '@/models/styles/builders/button-icon-class-list';
 import { ButtonIconBuilder } from '@/models/styles/builders/class-list-builder';
 import { ButtonIconNumericBuilderWrapper } from '../builders/button-icon-numeric';
 import { ButtonIconNumeric } from '../button-icon/button-numeric-list/button-numeric-list';
@@ -19,8 +19,8 @@ export type ButtonRequestTypes =
   | 'Shadow'
   | 'border-styles'
   | 'border-direction'
-  | 'font-weight'
-  | 'font-size'
+  | 'fontWeight'
+  | 'fontSize'
   | 'italic-button'
   | 'underline-button'
   | 'border-radius'

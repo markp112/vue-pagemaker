@@ -45,13 +45,13 @@ import ActionsSelect from '@/components/base/pickers/actions-select/actions-sele
 import { PageModule } from '@/store/page/page';
 import { SidebarModule } from '@/store//sidebar/sidebar';
 import { Colour } from '@/classes/colour/singleton-colour';
-import {
-  Style, Border,
-} from '@/models/styles/styles';
+import { Style } from '@/models/styles/styles';
+import { Border } from '@/classes/borders/borders';
 import { ActionEvent } from '../../../../models/components/base-component';
 import { IconPickerInterface } from '../../../../models/components/icon-picker-models';
 import  { BorderButtonsMixin } from '@/mixins/sidebar-Editors/border-buttons/border-buttons-mixin';
 import { ButtonIconClassInterface } from '@/models/styles/button-icon/button-icon';
+import { SidebarButtonEventManager } from '../../../../classes/sidebarButtonEventManager/sidebarButtonEventManager';
 
 type BackgroundForeGround = 'background-color' | 'color' | 'border';
 
@@ -89,7 +89,6 @@ export default class ButtonEditor extends mixins(BorderButtonsMixin) {
   }
 
   onColourChange(rgbColour: string) {
-    console.log('%c%s', 'color: #917399', rgbColour)
     if (this.colour.backgroundBorderForeground !=='border') {
       const style: Style = {
         style: this.colour.backgroundBorderForeground,
@@ -104,7 +103,9 @@ export default class ButtonEditor extends mixins(BorderButtonsMixin) {
   }
 
   onFontWeightChange(iconElement: ButtonIconClassInterface): void {
-    PageModule.updateComponentClassProperties(iconElement.className);
+    // PageModule.updateComponentClassProperties(iconElement.className);
+    const eventManager: SidebarButtonEventManager = SidebarButtonEventManager.getInstance();
+    eventManager.updateEditedComponent();
   }
 
   onTextChange(text: string): void {
@@ -112,24 +113,26 @@ export default class ButtonEditor extends mixins(BorderButtonsMixin) {
   }
 
   onItalicClick(classDef: string): void {
-    PageModule.updateComponentClassProperties(classDef);
+    const eventManager: SidebarButtonEventManager = SidebarButtonEventManager.getInstance();
+    eventManager.updateEditedComponent();
+   // PageModule.updateComponentClassProperties(classDef);
   }
   onUnderlineClick(classDef: string): void {
-    PageModule.updateComponentClassProperties(classDef);
+    const eventManager: SidebarButtonEventManager = SidebarButtonEventManager.getInstance();
+    eventManager.updateEditedComponent();
+    // PageModule.updateComponentClassProperties(classDef);
   }
 
-  onFontClick(fontName: string): void {
-    PageModule.updateEditedComponentStyles({
-      style: 'font-family',
-      value: fontName,
-    });
+  onFontClick(fontFamilyStyle: Style): void {
+    const eventManager: SidebarButtonEventManager = SidebarButtonEventManager.getInstance();
+    eventManager.updateEditedComponent();
+    // PageModule.updateEditedComponentStyles(fontFamilyStyle);
   }
 
-  onFontSizeChange(fontSize: number): void {
-    PageModule.updateEditedComponentStyles({
-      style: 'font-size',
-      value: `${fontSize}px`,
-    });
+  onFontSizeChange(fontSize: Style): void {
+    const eventManager: SidebarButtonEventManager = SidebarButtonEventManager.getInstance();
+    eventManager.updateEditedComponent();
+    // PageModule.updateEditedComponentStyles(fontSize);
   }
 
   onActionEvent(actionEvent: ActionEvent) {

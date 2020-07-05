@@ -94,7 +94,6 @@ export default class TextEditor extends Vue {
   }
 
   mouseOut(event: MouseEvent) {
-    console.log('%c%s', 'color: #ff0000', 'mouseOut')
     event.stopPropagation();
     this.getSelection();
   }
@@ -131,7 +130,6 @@ export default class TextEditor extends Vue {
       end = end.nodeType === Node.TEXT_NODE ? end.parentNode : end;
       if (content.contains(start) && content.contains(end)) {
         this.range = range;
-        console.log('%c⧭', 'color: #40fff2', range)
         break;
       }
     }
@@ -171,7 +169,6 @@ export default class TextEditor extends Vue {
   }
 
   setStyle(styleName: string, value: string): void {
-    console.log('%c%s', 'color: #00b300', 'setStyle')
     const style: Style = { style: styleName, value: value };
     this.rangeClone = this.range.cloneRange();
     const rh = new RH(this.range);
@@ -180,8 +177,8 @@ export default class TextEditor extends Vue {
     this.restoreSelection(this.rangeClone);
   }
 
-  onFontClick(font: string): void {
-    this.setStyle('fontFamily', font);
+  onFontClick(fontFamilyStyle: Style): void {
+    this.setStyle(fontFamilyStyle.style, fontFamilyStyle.value);
   }
 
   onFontWeightChange(iconElement: IconPickerInterface): void {

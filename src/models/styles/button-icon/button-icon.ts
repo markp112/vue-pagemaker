@@ -1,10 +1,9 @@
 import { Style } from '../styles';
 import { Dimension } from '@/models/components/box-dimension';
-import { ButtonIconDimension, ButtonIconDimensionBuilder } from '../builders/buttonIconDimension';
-import { ButtonIconClassList, ButtonIconClassListBuilder } from './button-icon-class-list/button-icon-class-list';
-import { shadowIconList, IconPickerInterface, borderEdgeIconList, lineStyleIconList, fontWeightIconList } from '@/models/components/icon-picker-models';
-
-
+import { TextStyleTypes } from '@/classes/text-attributes/text-attributes';
+// import { ButtonIconDimension, ButtonIconDimensionBuilder } from '@/models/styles/builders/buttonIconDimension';
+// import { ButtonIconClassList, ButtonIconClassListBuilder } from '@/models/styles/builders/button-icon-class-list';
+// import { shadowIconList, IconPickerInterface, borderEdgeIconList, lineStyleIconList, fontWeightIconList } from '@/models/components/icon-picker-models';
 
 export type IconType = 
   | 'class'
@@ -78,6 +77,7 @@ export interface ButtonIconClassInterface extends ButtonIconBaseInterface {
  * @property classNames - holds a list of the classes 
  */
 export interface ButtonIconClassListInterface extends ButtonIconBaseInterface {
+  classType: TextStyleTypes;
   classNames: ButtonIconClassInterface[];
 }
 

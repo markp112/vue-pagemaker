@@ -1,8 +1,8 @@
 import { PageData, ComponentContainer, PageElement, PageElementBuilder } from '@/models/page/page';
 import { ComponentDefinitionInterface, ComponentTypesString } from '@/models/components/base-component'
-import { Button, Text, LOREMIPSUM, Image } from '@/models/components/components';
 export const _componentClasses: ComponentDefinitionInterface[] = []
 
+/** Creates the components and containers a user constructs for their page */
 
 export class ComponentBuilder {
 

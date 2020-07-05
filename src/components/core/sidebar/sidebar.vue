@@ -42,7 +42,6 @@ export default class SideBar extends Vue {
   }
 
   get sidebarPanel(): SidebarPanel {
-    console.log("Called")
     const panelType: SidebarComponents = SidebarModule.sidebarComponentType;
     return new SidebarPanelBuilder('container-editor').sidebarPanel;
   }

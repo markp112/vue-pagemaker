@@ -40,6 +40,8 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Emit } from 'vue-property-decorator';
 import { Fonts, FontItemInterface } from '@/classes/fonts/fonts';
+import { Style } from '@/models/styles/styles';
+import { StyleElement } from '../../../../classes/text-attributes/text-attributes';
 
 @Component
 export default class FontSelect extends Vue {
@@ -57,9 +59,14 @@ export default class FontSelect extends Vue {
   }
 
   @Emit('onFontClick')
-  fontClicked(fontName: string) {
+  fontClicked(fontName: string): StyleElement {
     this.show();
-    return fontName;
+    const style: StyleElement = {
+      styleName: 'fontFamily',
+      value: fontName,
+      units: 'px',
+    }
+    return style;
   }
 
   filterFonts(filterBy: string) {

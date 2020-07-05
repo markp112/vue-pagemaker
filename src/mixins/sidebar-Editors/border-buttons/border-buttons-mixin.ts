@@ -1,9 +1,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { PageModule } from '@/store/page/page';
-import {
-  Border,
-} from '@/models/styles/styles';
+import { Border } from '@/classes/borders/borders';
 import { StyleTypes } from '@/models/page/page';
 
 @Component

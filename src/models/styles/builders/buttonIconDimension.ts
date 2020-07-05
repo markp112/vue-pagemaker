@@ -1,6 +1,6 @@
 import { ButtonIconDimensionInterface, IconType, ComponentNames } from '../button-icon/button-icon';
 import { Dimension, BoxUnits } from '@/models/components/box-dimension';
-import { Border } from '../styles';
+import { Border } from '@/classes/borders/borders';
 
 export class ButtonIconDimension implements ButtonIconDimensionInterface {
   dimension: Dimension = new Dimension(0, 'px') ;

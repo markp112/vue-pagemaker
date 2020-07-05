@@ -2,20 +2,21 @@ import { Style } from '../styles';
 import { IconType, ComponentNames } from '../button-icon/button-icon';
 import { ButtonIconNumeric } from '../button-icon/button-numeric-list/button-numeric-list';
 import { ButtonRequestTypes } from '../button-factory/button-factory';
+import { BoxUnits } from '@/models/components/box-dimension';
 
 export class ButtonIconNumericBuilder {
- 
  
   _valuesList: string[] = [];
   _defaultValue = '0';
   _style: Style = {
-      style: 'font-size',
+      style: 'fontSize',
       value: '0'
   };
   _iconImage = '';
   _tooltip= '';
   _iconIsTypeOf: IconType = 'style';
   _componentName: ComponentNames = 'drop-down';
+  _units: BoxUnits = 'px';
 
    withValuesList(valuesList: string[]) {
     this._valuesList = valuesList;
@@ -55,6 +56,11 @@ export class ButtonIconNumericBuilder {
     return this;
   }
 
+  withUnits(units: BoxUnits) {
+    this._units = units;
+    return this;
+  }
+
   build() {
     return new ButtonIconNumeric(this);
   }
@@ -67,20 +73,21 @@ export class ButtonIconNumericBuilderWrapper {
   build(whichButton: ButtonRequestTypes): ButtonIconNumeric {
     switch (whichButton) {
       case 'border-radius':
-        return this.buildButton('bezier-32.png',this.units, 'px', whichButton, '0px');
-      case 'font-size' :
-        return this.buildButton('', this.fontSizes, '16', whichButton, '16');
+        return this.buildButton('bezier-32.png', this.units, 'px', whichButton, '0px','px');
+      case 'fontSize' :
+        return this.buildButton('', this.fontSizes, '16', whichButton, '16','px');
       default:
         throw new Error('Unrecognised Numeric Button Type')
     }
   }
 
-  private buildButton(iconImage: string, valuesList: string[], defaultvalue: string, styleName: string, styleValue: string) {
+  private buildButton(iconImage: string, valuesList: string[], defaultvalue: string, styleName: string, styleValue: string, units: BoxUnits) {
     return new ButtonIconNumericBuilder()
     .withIconImage(iconImage)
     .withValuesList(valuesList)
     .withDefaultValue(defaultvalue)
     .withStyle(styleName, styleValue)
+    .withUnits(units)
     .build();
   }
 

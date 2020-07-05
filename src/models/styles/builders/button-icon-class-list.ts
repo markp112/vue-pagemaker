@@ -1,6 +1,8 @@
-import { ButtonIconClassListInterface, ButtonIconClassInterface, IconType, ComponentNames } from '../button-icon';
+import { ButtonIconClassListInterface, ButtonIconClassInterface, IconType, ComponentNames } from '../button-icon/button-icon';
+import { TextStyleTypes } from '@/classes/text-attributes/text-attributes';
 
 export class ButtonIconClassList implements ButtonIconClassListInterface {
+  classType: TextStyleTypes;
   classNames: ButtonIconClassInterface[];
   iconImage: string;
   tooltip: string;
@@ -8,6 +10,7 @@ export class ButtonIconClassList implements ButtonIconClassListInterface {
   componentName: ComponentNames;
 
   constructor(bICLBuilder: ButtonIconClassListBuilder) {
+    this.classType = bICLBuilder._classType;
     this.classNames = bICLBuilder._classNames;
     this.componentName = bICLBuilder._componentName;
     this.iconImage = bICLBuilder._iconImage;
@@ -17,11 +20,17 @@ export class ButtonIconClassList implements ButtonIconClassListInterface {
 }
 
 export class ButtonIconClassListBuilder {
+  _classType: TextStyleTypes = 'undefined';
   _classNames: ButtonIconClassInterface[] = [];
   _iconImage = '';
   _tooltip = '';
   _iconIsTypeOf: IconType = 'class-list';
   _componentName: ComponentNames = 'icon-picker';
+
+  withClassType(classType: TextStyleTypes) {
+    this._classType = classType;
+    return this;
+  }
 
   withClassNames(classNames: ButtonIconClassInterface[]) {
     this._classNames = classNames;
@@ -41,5 +50,4 @@ export class ButtonIconClassListBuilder {
   build(): ButtonIconClassList {
     return new ButtonIconClassList(this);
   }
-
 }

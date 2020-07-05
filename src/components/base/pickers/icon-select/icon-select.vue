@@ -36,10 +36,11 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Emit } from 'vue-property-decorator';
 import ToolTip from '@/components/base/notifications/tooltip/tooltip.vue';
-import { IconPickerInterface } from '../../../../models/components/icon-picker-models';
-import { ButtonIconClassList } from '../../../../models/styles/button-icon/button-icon-class-list/button-icon-class-list';
+import { IconPickerInterface } from '@/models/components/icon-picker-models';
+import { ButtonIconClassList } from '@/models/styles/builders/button-icon-class-list';
 import { ButtonIconClassInterface } from '@/models/styles/button-icon/button-icon';
 import { ButtonFactory } from '@/models//styles/button-factory/button-factory';
+import { StyleElement } from '@/classes/text-attributes/text-attributes';
 
 
 @Component({
@@ -63,10 +64,16 @@ export default class IconSelect extends Vue {
   showToolTip = '';
 
   @Emit('selectChange')
-  iconClicked(iconElement: ButtonIconClassInterface): ButtonIconClassInterface {
+  iconClicked(iconElement: ButtonIconClassInterface): StyleElement {
     this.selectedItem = iconElement.className;
+     const style: StyleElement = {
+      styleName: this.$props.buttonIconClassList.classType,
+      value: iconElement.className,
+      units: 'px',
+    }
+      console.log('%c⧭', 'color: #73998c',  this.$props.buttonIconClassList)
     this.show();
-    return  iconElement;
+    return style;
   }
 
   show() {

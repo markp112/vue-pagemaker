@@ -24,6 +24,7 @@
   import { Emit } from 'vue-property-decorator';
   import { ButtonIconNumeric } from '@/models/styles/button-icon/button-numeric-list/button-numeric-list';
   import { ButtonIconNumericBuilder } from '@/models//styles/builders/button-icon-numeric'
+  import { Style } from '@/models/styles/styles';
 
   @Component({
     components: {
@@ -42,8 +43,14 @@
     inputValue = 0;
 
     @Emit('dropdownChange')
-    onDropdownChange(value: string): string {
-      return value;
+    onDropdownChange(value: string): Style {
+      console.log('%c⧭', 'color: #00ff88', this.$props.thisIconButton)
+      const style: Style = {
+        style: this.$props.thisIconButton.style.style,
+        value: `${value}${this.$props.thisIconButton.units}`,
+      }
+      console.log('%c⧭', 'color: #7f7700', style)
+      return style;
     }
 
     @Emit('inputChange')

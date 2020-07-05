@@ -13,6 +13,7 @@
   import { Emit } from 'vue-property-decorator';
   import { ButtonIconClassInterface } from '../../../../models/styles/button-icon/button-icon';
   import { ButtonIconClassBuilder } from '@/models/styles/builders/button-icon-class-builder';
+import { StyleElement } from '../../../../classes/text-attributes/text-attributes';
 
   @Component({
   props: {
@@ -30,7 +31,12 @@
   @Emit("onChange")
   onClick(className: string) {
     this.isActive = !this.isActive;
-    return this.$props.thisIconButton.className;
+    const style: StyleElement = {
+      styleName: 'italic',
+      value: '',
+      units: 'px',
+    }
+    return style;
   }
 
   getPath(image: string): string {
