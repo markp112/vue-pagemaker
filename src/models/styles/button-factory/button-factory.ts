@@ -64,6 +64,7 @@ export class ButtonFactory {
       .withDimension(0, 'px')
       .withIconImage('thickness-32.png')
       .withToolTip('border thickness')
+      .withStyle('borderWidth', '')
       .build();
   }
 }

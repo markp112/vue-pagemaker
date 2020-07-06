@@ -1,9 +1,14 @@
 import { ButtonIconDimensionInterface, IconType, ComponentNames } from '../button-icon/button-icon';
 import { Dimension, BoxUnits } from '@/models/components/box-dimension';
 import { Border } from '@/classes/borders/borders';
+import { Style } from '../styles';
 
 export class ButtonIconDimension implements ButtonIconDimensionInterface {
   dimension: Dimension = new Dimension(0, 'px') ;
+  style: Style = {
+    style: '', 
+    value: '',
+  }
   iconImage = '';
   tooltip = '';
   iconIsTypeOf: IconType = 'dimension';
@@ -16,6 +21,7 @@ export class ButtonIconDimension implements ButtonIconDimensionInterface {
     this.iconImage = buttonIconDimensionBuilder._iconImage;
     this.tooltip = buttonIconDimensionBuilder._tooltip;
     this.eventClass = buttonIconDimensionBuilder._eventClass;
+    this.style = buttonIconDimensionBuilder._style;
   }
 }
 
@@ -26,6 +32,16 @@ export class ButtonIconDimensionBuilder {
   _iconIsTypeOf: IconType = 'dimension';
   _componentName: ComponentNames = 'plus-minus';
   _eventClass: Border = Border.getInstance();
+  _style: Style = {
+    style: '', 
+    value: '',
+  };
+  
+  withStyle(style: string, value: string) {
+    this._style.style = style;
+    this._style.value = value;
+    return this;
+  }
 
   withDimension(value: number, units: BoxUnits) {
     this._dimension.value = value;

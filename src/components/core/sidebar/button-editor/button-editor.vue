@@ -20,7 +20,6 @@
         @onUnderlineClick="onUnderlineClick"
         @onFontClick="onFontClick"
         @onFontSizeChange="onFontSizeChange"
-        @onColourChange="onFontColourChange"
       >
       </sidebar-text-editor>
       <actions-select 
@@ -80,16 +79,10 @@ export default class ButtonEditor extends mixins(BorderButtonsMixin) {
     this.textBackgroundorBorder = value;
   }
 
-  onFontColourChange(rgbColour: string) {
-    const style: Style = {
-        style: 'color',
-        value: rgbColour,
-      };
-      PageModule.updateEditedComponentStyles(style);
-  }
 
   onColourChange(rgbColour: string) {
-    if (this.colour.backgroundBorderForeground !=='border') {
+    
+    if (this.colour.backgroundBorderForeground !=='border-color') {
       const style: Style = {
         style: this.colour.backgroundBorderForeground,
         value: rgbColour,

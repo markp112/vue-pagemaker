@@ -17,6 +17,7 @@
   import { Emit } from 'vue-property-decorator';
   import { ButtonIconDimension } from '@/models/styles/builders/buttonIconDimension';
   import { ButtonFactory } from '@/models/styles/button-factory/button-factory';
+import { StyleElement } from '../../../../classes/text-attributes/text-attributes';
   
 
   @Component({
@@ -33,7 +34,13 @@
 
     @Emit("onChange")
     borderThicknessChange(amount: number) {
-      this.$props.thisIconButton.eventClass.width = { value: amount, units: 'px' };
+      const style: StyleElement = {
+        styleName: this.$props.thisIconButton.style.style,
+        value: amount.toString(),
+        units: 'px',
+      }
+      return style;
+      // this.$props.thisIconButton.eventClass.width = { value: amount, units: 'px' };
     }
 
     getPath(image: string): string {

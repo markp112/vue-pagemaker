@@ -3,6 +3,7 @@ import Component from 'vue-class-component';
 import { PageModule } from '@/store/page/page';
 import { Border } from '@/classes/borders/borders';
 import { StyleTypes } from '@/models/page/page';
+import { SidebarButtonEventManager } from '@/classes/sidebarButtonEventManager/sidebarButtonEventManager';
 
 @Component
 export class BorderButtonsMixin extends Vue {
@@ -11,8 +12,11 @@ export class BorderButtonsMixin extends Vue {
   borderDefintion:Border = Border.getInstance();
   
   setBorderStyle(): void {
-    PageModule.updateEditedComponentStyles(this.borderDefintion.getStyle());
-    PageModule.updateEditedComponentStyles(this.borderDefintion.getBorderRadius());
+    const eventManager = SidebarButtonEventManager.getInstance();
+    eventManager.updateEditedComponent();
+    
+    // PageModule.updateEditedComponentStyles(this.borderDefintion.getStyle());
+    // PageModule.updateEditedComponentStyles(this.borderDefintion.getBorderRadius());
   }
 
   onBorderChange(): void {
@@ -24,6 +28,7 @@ export class BorderButtonsMixin extends Vue {
   }
 
   onShadowChange(classDef: string): void {
-    PageModule.updateComponentClassProperties(classDef);
+    const eventManager = SidebarButtonEventManager.getInstance();
+    eventManager.updateEditedComponent();
   }
 }

@@ -90,23 +90,12 @@ export default class SideBarTextEditor extends Vue {
   onItalicClick(style: StyleElement) {
     const eventManager = SidebarButtonEventManager.getInstance();
     eventManager.applyValue('text', style);
-
-    // this.isFontItalic = !this.isFontItalic;
-    // if(this.isFontItalic) {
-    //   return 'italic';
-    // } 
-    // return 'not-italic';
   }
 
   @Emit('onUnderlineClick')
   onUnderlinedClick(style: StyleElement) {
     const eventManager = SidebarButtonEventManager.getInstance();
     eventManager.applyValue('text', style);
-    // this.isFontUnderlined = !this.isFontUnderlined;
-    // if(this.isFontUnderlined) {
-    //   return 'underline';
-    // } 
-    // return 'no-underline';
   }
 
   @Emit('onFontClick')

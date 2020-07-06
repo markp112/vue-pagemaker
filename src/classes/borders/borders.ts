@@ -1,26 +1,49 @@
 import { BorderInterface, BorderDirections, BorderStyle, Style } from '@/models/styles/styles';
 import { DimensionInterface } from '@/models/components/box-dimension';
+import { StyleElement } from '../text-attributes/text-attributes';
 
 export class Border implements BorderInterface {
   private static instance: Border;
   borderDirection: BorderDirections = 'border';
-  colour = '#0';
+  colour = '#000000';
   _style: BorderStyle = 'solid';
   _width: DimensionInterface = { value: 1, units: 'px' };
   borderRadius: DimensionInterface = { value: 1, units: 'px' };
+  shadow = ''
 
   public static getInstance(): Border {
     if (!Border.instance) {
       Border.instance = new Border();
-      Border.instance.borderDirection = 'border';
-      Border.instance.colour = '#0';
-      Border.instance.style = 'solid';
-      Border.instance._width = { value: 1, units: 'px' };
-      Border.instance.borderRadius = { value: 1, units: 'px' };
+      // Border.instance.borderDirection = 'border';
+      // Border.instance.colour = '#00000';
+      // Border.instance.style = 'solid';
+      // Border.instance._width = { value: 1, units: 'px' };
+      // Border.instance.borderRadius = { value: 1, units: 'px' };
     }
     return Border.instance;
   }
   
+  applyStyle(styleElement: StyleElement): void {
+   console.log('%c⧭', 'color: #cc7033', styleElement);
+   switch (styleElement.styleName) {
+     case 'borderEdge':
+       this.borderDirection = styleElement.value as BorderDirections;
+       break;
+    case 'borderStyle':
+      this.style = styleElement.value as BorderStyle;
+      break;
+    case 'borderWidth':
+      this.width = {
+        value: parseInt(styleElement.value),
+        units: styleElement.units,
+      }
+      break;
+    case 'shadow':
+      this.shadow = styleElement.value;
+      break;
+    }
+  }
+
   set width(amount: DimensionInterface) {
     if (this._width.value === 1 && amount.value === -1) {
       amount.value = -0.5;
@@ -68,4 +91,8 @@ export class Border implements BorderInterface {
     };
     return style;
   };
+
+  getShadow(): string {
+    return this.shadow;
+  }
 }

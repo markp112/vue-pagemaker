@@ -43,6 +43,8 @@ import { ButtonIconClassList } from '@/models/styles/builders/button-icon-class-
 import { ButtonIconClassInterface } from '@/models/styles/button-icon/button-icon';
 import { ButtonIconNumeric } from '../../../../models/styles/button-icon/button-numeric-list/button-numeric-list';
 import { ButtonFactory } from '@/models/styles/button-factory/button-factory';
+import { StyleElement } from '../../../../classes/text-attributes/text-attributes';
+import { SidebarButtonEventManager } from '@/classes/sidebarButtonEventManager/sidebarButtonEventManager';
 
   @Component({
     components: {
@@ -72,30 +74,37 @@ import { ButtonFactory } from '@/models/styles/button-factory/button-factory';
       return;
     }
     
-    borderEdgeChange(iconElement: ButtonIconClassInterface) {
-      const edge: BorderDirections = iconElement.className as BorderDirections;
-      this.borderDefinition.borderDirection = edge;
-      this.setBorder();
+    @Emit('onBorderChange')
+    borderEdgeChange(style: StyleElement) {
+      const eventManager = SidebarButtonEventManager.getInstance();
+      eventManager.applyValue('border', style);
+      return;
     }
 
-    borderThicknessChange() {
-      this.setBorder();
+    @Emit('onBorderChange')
+    borderThicknessChange(style: StyleElement) {
+      const eventManager = SidebarButtonEventManager.getInstance();
+      eventManager.applyValue('border', style);
+      return;
     }
 
-    setLineStyle(iconElement: ButtonIconClassInterface) {
-      const lineStyle: BorderStyle = iconElement.className as BorderStyle;
-      this.borderDefinition.style = lineStyle;
-      this.setBorder();
+    setLineStyle(style: StyleElement) {
+      const eventManager = SidebarButtonEventManager.getInstance();
+      eventManager.applyValue('border', style);
+      return;
     }
 
     @Emit('onShadowChange')
-    onShadowChange(iconElement: ButtonIconClassInterface) {
-      return iconElement.className;
+    onShadowChange(style: StyleElement) {
+      const eventManager = SidebarButtonEventManager.getInstance();
+      eventManager.applyValue('shadow', style);
+      return;
     }
 
-    onUnitsChange(borderUnits: string) {
-      this.borderDefinition.borderRadius.units = borderUnits as BoxUnits;
-      this.setBorder();
+    onUnitsChange(style: StyleElement) {
+      const eventManager = SidebarButtonEventManager.getInstance();
+      eventManager.applyValue('border', style);
+      return;
     }
     
     onBorderRadiusChange(value: number) {

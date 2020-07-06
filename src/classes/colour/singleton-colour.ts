@@ -1,5 +1,5 @@
 
-export type BackgroundBorderForeground = 'background-color' | 'color' | 'border';
+export type BackgroundBorderForeground = 'background-color' | 'color' | 'border-color';
 
 export interface ColourInterface {
   _rgbColour: string;

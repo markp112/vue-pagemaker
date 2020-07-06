@@ -1,8 +1,12 @@
 import { BoxUnits } from '@/models/components/box-dimension';
 
 export type TextStyleTypes =
+  | 'background-color'
+  | 'color'
+  | 'border-color'
   | 'borderEdge'  
   | 'borderStyle'
+  | 'borderWidth'
   | 'fontFamily'
   | 'fontSize'
   | 'fontWeight'
@@ -10,21 +14,6 @@ export type TextStyleTypes =
   | 'shadow'
   | 'underline'
   | 'undefined'
-
-// export interface FontSizeInterface {
-//   size: string,
-//   units: BoxUnits,
-// }
-
-// export interface TextAtrributesInterface {
-//   fontFamily: string;
-//   fontSize: FontSizeInterface;
-//   fontWeight: string;
-//   colour: string;
-//   italic: boolean;
-//   underline: boolean;
-//   text: string;
-// }
 
 export interface StyleElement {
   styleName: TextStyleTypes;

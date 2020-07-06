@@ -49,6 +49,7 @@ export interface ButtonIconStyleInterface extends ButtonIconBaseInterface {
  * @property dimension holds the value and current units e.g. px, em, %
  */
 export interface ButtonIconDimensionInterface extends ButtonIconBaseInterface {
+  style: Style;
   dimension: Dimension;
 }
 

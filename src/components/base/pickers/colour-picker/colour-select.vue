@@ -70,6 +70,8 @@ import Component, { mixins } from 'vue-class-component';
 import ColourDropdown from '@/components/base/pickers/colour-picker/colour-dropdown.vue';
 import { BackgroundBorderForeground, Colour } from '@/classes/colour/singleton-colour';
 import { Emit } from 'vue-property-decorator';
+import { StyleElement } from '../../../../classes/text-attributes/text-attributes';
+import { SidebarButtonEventManager } from '@/classes/sidebarButtonEventManager/sidebarButtonEventManager';
 
 @Component({
   components: {
@@ -86,7 +88,14 @@ export default  class ColourSelect extends Vue {
   }
 
   @Emit("onColourChange")
-  onColourChange(){
+  onColourChange() {
+    const style: StyleElement = {
+      styleName: this.textBackgroundorBorder,
+      value: this.colour.rgbColour,
+      units: 'px',
+    }
+    const eventManager = SidebarButtonEventManager.getInstance();
+    eventManager.applyValue('colour', style);
     return;
   }
 }
