@@ -31,9 +31,10 @@ import { StyleElement } from '../../../../classes/text-attributes/text-attribute
   @Emit("onChange")
   onClick(className: string) {
     this.isActive = !this.isActive;
+     const styleValue = this.isActive ? this.$props.thisIconButton.classNameActive : this.$props.thisIconButton.classNameInActive; 
     const style: StyleElement = {
-      styleName: 'italic',
-      value: '',
+      styleName: styleValue, 
+      value: styleValue ,
       units: 'px',
     }
     return style;

@@ -5,7 +5,8 @@ import { ButtonRequestTypes } from '../button-factory/button-factory';
 export class ButtonIconClassBuilder {
   _iconImage = '';
   _tooltip = '';
-  _className = '';
+  _classNameActive = '';
+  _classNameInActive = '';
   _iconIsTypeOf: IconType = 'class';
   _componentName: ComponentNames = 'icon-picker';
   
@@ -13,14 +14,20 @@ export class ButtonIconClassBuilder {
     return {
       iconImage: this._iconImage,
       tooltip: this._tooltip,
-      className: this._className,
+      classNameActive: this._classNameActive,
+      classNameInActive: this._classNameInActive,
       componentName: this._componentName,
       iconIsTypeOf: this._iconIsTypeOf,
     }
   }
 
-  withClassName(className: string) {
-    this._className = className;
+  withClassNameActive(className: string) {
+    this._classNameActive = className;
+    return this;
+  }
+
+  withClassNameInActive(className: string) {
+    this._classNameInActive = className;
     return this;
   }
 
@@ -54,7 +61,8 @@ export class ButtonIconClassWrapper {
     switch(whichButton) {
       case 'italic-button':
         return new ButtonIconClassBuilder()
-        .withClassName('italic')
+        .withClassNameActive('italic')
+        .withClassNameInActive('not-italic')
         .withIconImage('font_italic-32.png')
         .withToolTip('italic')
         .withComponentName('icon-toggle-button')
@@ -63,9 +71,10 @@ export class ButtonIconClassWrapper {
 
       case 'underline-button':
         return new ButtonIconClassBuilder()
-          .withClassName('underline')
-          .withIconImage('font_underlined-32.png')
-          .withToolTip('underline')
+        .withClassNameActive('underline')
+        .withClassNameInActive('no-underline')
+        .withIconImage('font_underlined-32.png')
+        .withToolTip('underline')
           .withComponentName('icon-toggle-button')
           .withIconIsTypeOf('class')
           .build();

@@ -5,14 +5,17 @@ export type TextStyleTypes =
   | 'color'
   | 'border-color'
   | 'borderEdge'  
+  | 'border-radius'
   | 'borderStyle'
   | 'borderWidth'
   | 'fontFamily'
   | 'fontSize'
   | 'fontWeight'
   | 'italic'
+  | 'not-italic'
   | 'shadow'
   | 'underline'
+  | 'no-underline'
   | 'undefined'
 
 export interface StyleElement {
@@ -38,6 +41,7 @@ export class TextAttributes  {
   }
 
   applyStyle(styleElement: StyleElement): void {
+    console.log('%c⧭', 'color: #917399', styleElement);
     this.styleName = styleElement.styleName;
     this.units = '';
     this.value = styleElement.value;
@@ -50,14 +54,16 @@ export class TextAttributes  {
         this.classOrStyle = 'class';
         break;
       case 'italic':
-        this.italic = !this.italic;
-        this.value = this.italic ? 'italic' : 'not-italic';
+        this.classOrStyle = 'class';
+        break
+      case 'not-italic':
         this.classOrStyle = 'class';
         break
       case 'underline':
-        this.underline = !this.underline;
         this.classOrStyle = 'class';
-        this.value = this.underline ? 'underline' : 'no-underline'
+        break;
+      case 'no-underline':
+        this.classOrStyle = 'class';
         break;
     }
   }

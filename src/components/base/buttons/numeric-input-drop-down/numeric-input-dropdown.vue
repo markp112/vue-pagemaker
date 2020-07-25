@@ -25,6 +25,7 @@
   import { ButtonIconNumeric } from '@/models/styles/button-icon/button-numeric-list/button-numeric-list';
   import { ButtonIconNumericBuilder } from '@/models//styles/builders/button-icon-numeric'
   import { Style } from '@/models/styles/styles';
+import { StyleElement } from '../../../../classes/text-attributes/text-attributes';
 
   @Component({
     components: {
@@ -42,20 +43,28 @@
     name = 'NumericInputDroDown';
     inputValue = 0;
 
-    @Emit('dropdownChange')
-    onDropdownChange(value: string): Style {
-      console.log('%c⧭', 'color: #00ff88', this.$props.thisIconButton)
-      const style: Style = {
-        style: this.$props.thisIconButton.style.style,
-        value: `${value}${this.$props.thisIconButton.units}`,
+    mounted() {
+      
+      console.log('%c⧭', 'color: #aa00ff', this.$props.thisIconButton)
+    }
+
+    @Emit('onChange') 
+    onChange() {
+      const style: StyleElement = {
+        styleName: this.$props.thisIconButton.style.style,
+        value: this.inputValue.toString(),
+        units: this.$props.thisIconButton.units,
       }
-      console.log('%c⧭', 'color: #7f7700', style)
       return style;
     }
 
-    @Emit('inputChange')
+    onDropdownChange(styleOutput: StyleElement) {
+      this.$props.thisIconButton.units = styleOutput.units;
+      this.onChange();
+    }
+
     onInputChange() {
-      return this.inputValue;
+      this.onChange();
     }
 
     getPath(image: string): string {

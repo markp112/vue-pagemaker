@@ -2,22 +2,22 @@
   <section>
       <p>Border Styles</p>
     <div class="sidebar-button-panel h-12 items-start text-accent-600 p-1">
-      <icon-select :buttonIconClassList="borderDirectionButton" @selectChange="borderEdgeChange"></icon-select>
-      <icon-select :buttonIconClassList="borderStyleButton"  @selectChange="setLineStyle"></icon-select>
-      <icon-select :buttonIconClassList="shadowButton" @selectChange="onShadowChange"></icon-select>
+      <icon-select :buttonIconClassList="borderDirectionButton" @selectChange="onItemChange($event, 'border')"></icon-select>
+      <icon-select :buttonIconClassList="borderStyleButton"  @selectChange="onItemChange($event, 'border')"></icon-select>
+      <icon-select :buttonIconClassList="shadowButton" @selectChange="onItemChange($event, 'shadow')"></icon-select>
     </div>
     <div class="sidebar-button-panel h-12 justify-evenly mt-2">
       <plus-minus-icon
         :thisIconButton="buttonIconDimension"
-        @onChange="borderThicknessChange"
+        @onChange="onItemChange($event, 'border')"
       >
       </plus-minus-icon>
 
       <numeric-input-dropdown 
         :thisIconButton="borderRadiusButton"
-        @inputChange="onBorderRadiusChange"
-        @dropdownChange="onUnitsChange"
-        ></numeric-input-dropdown>
+        @onChange="onItemChange($event, 'border') "
+        >
+      </numeric-input-dropdown>
     </div>
   </section>
 </template>
@@ -44,7 +44,7 @@ import { ButtonIconClassInterface } from '@/models/styles/button-icon/button-ico
 import { ButtonIconNumeric } from '../../../../models/styles/button-icon/button-numeric-list/button-numeric-list';
 import { ButtonFactory } from '@/models/styles/button-factory/button-factory';
 import { StyleElement } from '../../../../classes/text-attributes/text-attributes';
-import { SidebarButtonEventManager } from '@/classes/sidebarButtonEventManager/sidebarButtonEventManager';
+import { SidebarButtonEventManager, ImpactedAttributeTypes } from '@/classes/sidebarButtonEventManager/sidebarButtonEventManager';
 
   @Component({
     components: {
@@ -67,7 +67,7 @@ import { SidebarButtonEventManager } from '@/classes/sidebarButtonEventManager/s
     shadowButton: ButtonIconClassList = new ButtonFactory().createButton('class-list', 'Shadow') as ButtonIconClassList;
     borderDirectionButton: ButtonIconClassList = new ButtonFactory().createButton('class-list', 'border-direction') as ButtonIconClassList;
     borderStyleButton: ButtonIconClassList = new ButtonFactory().createButton('class-list', 'border-styles') as ButtonIconClassList;
-    borderRadiusButton: ButtonIconNumeric = new ButtonFactory().createButton('numeric','border-radius') as ButtonIconNumeric;
+    borderRadiusButton: ButtonIconNumeric = new ButtonFactory().createButton('numeric', 'border-radius') as ButtonIconNumeric;
 
     @Emit('onBorderChange')
     setBorder() {
@@ -75,42 +75,49 @@ import { SidebarButtonEventManager } from '@/classes/sidebarButtonEventManager/s
     }
     
     @Emit('onBorderChange')
-    borderEdgeChange(style: StyleElement) {
+    onItemChange( style: StyleElement, itemType: ImpactedAttributeTypes) {
       const eventManager = SidebarButtonEventManager.getInstance();
-      eventManager.applyValue('border', style);
+      eventManager.applyValue(itemType, style);
       return;
     }
 
-    @Emit('onBorderChange')
-    borderThicknessChange(style: StyleElement) {
-      const eventManager = SidebarButtonEventManager.getInstance();
-      eventManager.applyValue('border', style);
-      return;
-    }
+    // @Emit('onBorderChange')
+    // borderEdgeChange(style: StyleElement) {
+    //   const eventManager = SidebarButtonEventManager.getInstance();
+    //   eventManager.applyValue('border', style);
+    //   return;
+    // }
 
-    setLineStyle(style: StyleElement) {
-      const eventManager = SidebarButtonEventManager.getInstance();
-      eventManager.applyValue('border', style);
-      return;
-    }
+    // @Emit('onBorderChange')
+    // borderThicknessChange(style: StyleElement) {
+    //   const eventManager = SidebarButtonEventManager.getInstance();
+    //   eventManager.applyValue('border', style);
+    //   return;
+    // }
 
-    @Emit('onShadowChange')
-    onShadowChange(style: StyleElement) {
-      const eventManager = SidebarButtonEventManager.getInstance();
-      eventManager.applyValue('shadow', style);
-      return;
-    }
+    // setLineStyle(style: StyleElement) {
+    //   const eventManager = SidebarButtonEventManager.getInstance();
+    //   eventManager.applyValue('border', style);
+    //   return;
+    // }
 
-    onUnitsChange(style: StyleElement) {
-      const eventManager = SidebarButtonEventManager.getInstance();
-      eventManager.applyValue('border', style);
-      return;
-    }
+    // @Emit('onShadowChange')
+    // onShadowChange(style: StyleElement) {
+    //   const eventManager = SidebarButtonEventManager.getInstance();
+    //   eventManager.applyValue('shadow', style);
+    //   return;
+    // }
+
+    // onUnitsChange(style: StyleElement) {
+    //   const eventManager = SidebarButtonEventManager.getInstance();
+    //   eventManager.applyValue('border', style);
+    //   return;
+    // }
     
-    onBorderRadiusChange(value: number) {
-      this.borderDefinition.borderRadius.value = value;
-      this.setBorder();
-    }
+    // onBorderRadiusChange(value: number) {
+    //   this.borderDefinition.borderRadius.value = value;
+    //   this.setBorder();
+    // }
 
   }
   </script>

@@ -4,10 +4,10 @@
       <close-button @onClick="closeButtonClick"></close-button>
     </span>
     <div class="mr-2 mt-4 text-accent-600">
-      <colour-select  @onColourChange="onColourChange"></colour-select>
+      <colour-select  @onColourChange="onItemChange"></colour-select>
       <border-buttons
         class="mt-2"
-        @onBorderChange="onBorderChange"
+        @onBorderChange="onItemChange"
         @onRemoveStyle="onRemoveStyle"
         @onShadowChange="onShadowChange"
       ></border-buttons>
@@ -15,11 +15,11 @@
         class="mt-2"
           :textValue="data"
         @onTextChange="onTextChange"
-        @onFontWeightChange="onFontWeightChange"
-        @onItalicClick="onItalicClick"
-        @onUnderlineClick="onUnderlineClick"
-        @onFontClick="onFontClick"
-        @onFontSizeChange="onFontSizeChange"
+        @onFontWeightChange="onItemChange"
+        @onItalicClick="onItemChange"
+        @onUnderlineClick="onItemChange"
+        @onFontClick="onItemChange"
+        @onFontSizeChange="onItemChange"
       >
       </sidebar-text-editor>
       <actions-select 
@@ -79,53 +79,13 @@ export default class ButtonEditor extends mixins(BorderButtonsMixin) {
     this.textBackgroundorBorder = value;
   }
 
-
-  onColourChange(rgbColour: string) {
-    
-    if (this.colour.backgroundBorderForeground !=='border-color') {
-      const style: Style = {
-        style: this.colour.backgroundBorderForeground,
-        value: rgbColour,
-      };
-      PageModule.updateEditedComponentStyles(style);
-    } else {
-        this.borderDefintion = Border.getInstance();
-        this.borderDefintion.colour = rgbColour;
-        this.setBorderStyle();
-    }
-  }
-
-  onFontWeightChange(iconElement: ButtonIconClassInterface): void {
-    // PageModule.updateComponentClassProperties(iconElement.className);
+  onItemChange() {
     const eventManager: SidebarButtonEventManager = SidebarButtonEventManager.getInstance();
     eventManager.updateEditedComponent();
   }
 
   onTextChange(text: string): void {
     PageModule.updateEditedComponentData(text);
-  }
-
-  onItalicClick(classDef: string): void {
-    const eventManager: SidebarButtonEventManager = SidebarButtonEventManager.getInstance();
-    eventManager.updateEditedComponent();
-   // PageModule.updateComponentClassProperties(classDef);
-  }
-  onUnderlineClick(classDef: string): void {
-    const eventManager: SidebarButtonEventManager = SidebarButtonEventManager.getInstance();
-    eventManager.updateEditedComponent();
-    // PageModule.updateComponentClassProperties(classDef);
-  }
-
-  onFontClick(fontFamilyStyle: Style): void {
-    const eventManager: SidebarButtonEventManager = SidebarButtonEventManager.getInstance();
-    eventManager.updateEditedComponent();
-    // PageModule.updateEditedComponentStyles(fontFamilyStyle);
-  }
-
-  onFontSizeChange(fontSize: Style): void {
-    const eventManager: SidebarButtonEventManager = SidebarButtonEventManager.getInstance();
-    eventManager.updateEditedComponent();
-    // PageModule.updateEditedComponentStyles(fontSize);
   }
 
   onActionEvent(actionEvent: ActionEvent) {

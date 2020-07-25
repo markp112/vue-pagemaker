@@ -36,7 +36,7 @@ export class ButtonIconBuilder {
     const icons: ButtonIconClassInterface[] = [];
     iconList.forEach(icon => {
       const biCB: ButtonIconClassInterface = new ButtonIconClassBuilder()
-        .withClassName(icon.class)
+        .withClassNameActive(icon.class)
         .withIconImage(icon.icon)
         .withToolTip(icon.tooltip)
         .build();

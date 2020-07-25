@@ -69,7 +69,8 @@ export interface ButtonIconStyleList extends ButtonIconBaseInterface {
  * @property className - holds the css class name to be returned
  */
 export interface ButtonIconClassInterface extends ButtonIconBaseInterface {
-  className: string;
+  classNameActive: string;
+  classNameInActive: string;
 }
 
 /**

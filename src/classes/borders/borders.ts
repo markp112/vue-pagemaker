@@ -24,7 +24,7 @@ export class Border implements BorderInterface {
   }
   
   applyStyle(styleElement: StyleElement): void {
-   console.log('%c⧭', 'color: #cc7033', styleElement);
+   console.log('%c⧭', 'color: #cc7033', styleElement, "here");
    switch (styleElement.styleName) {
      case 'borderEdge':
        this.borderDirection = styleElement.value as BorderDirections;
@@ -37,6 +37,11 @@ export class Border implements BorderInterface {
         value: parseInt(styleElement.value),
         units: styleElement.units,
       }
+      break;
+    case 'border-radius':
+      console.log("StyleElement", styleElement)
+      this.borderRadius.units = styleElement.units;
+      this.borderRadius.value = Number(styleElement.value);
       break;
     case 'shadow':
       this.shadow = styleElement.value;

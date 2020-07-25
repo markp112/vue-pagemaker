@@ -65,13 +65,12 @@ export default class IconSelect extends Vue {
 
   @Emit('selectChange')
   iconClicked(iconElement: ButtonIconClassInterface): StyleElement {
-    this.selectedItem = iconElement.className;
+    this.selectedItem = iconElement.classNameActive;
      const style: StyleElement = {
       styleName: this.$props.buttonIconClassList.classType,
-      value: iconElement.className,
+      value: iconElement.classNameActive,
       units: 'px',
     }
-      console.log('%c⧭', 'color: #73998c',  this.$props.buttonIconClassList)
     this.show();
     return style;
   }

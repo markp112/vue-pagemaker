@@ -43,7 +43,7 @@
           <label for="border"
           class="mt-1"
           :class="{
-              'text-secondary-600': textBackgroundorBorder === 'border',
+              'text-secondary-600': textBackgroundorBorder === 'border-color',
             }"
           >
             border
@@ -52,8 +52,8 @@
             type="radio"
             name="bg-check"
             id="border"
-            value="border"
-            @click="onRadioChange('border')"
+            value="border-color"
+            @click="onRadioChange('border-color')"
           />
         </div>
       </div>
