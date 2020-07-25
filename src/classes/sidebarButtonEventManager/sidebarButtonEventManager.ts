@@ -47,8 +47,10 @@ export class SidebarButtonEventManager {
   }
 
  updateEditedComponent() {
+   console.log('%c%s', 'color: #00bf00', this.impactedAtrribute);
     switch (this.impactedAtrribute) {
       case 'text':
+
         this.applyTextStyle();
         break;
       case 'border':
@@ -74,6 +76,7 @@ export class SidebarButtonEventManager {
       style: textAttribute.styleName,
       value: `${textAttribute.value}${textAttribute.units}`,
     }
+    console.log('%c⧭', 'color: #f78e17', style);
     switch (textAttribute.classOrStyle) {
       case 'class':
         PageModule.updateComponentClassProperties(textAttribute.value);

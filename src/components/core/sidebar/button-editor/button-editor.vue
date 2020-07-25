@@ -7,19 +7,13 @@
       <colour-select  @onColourChange="onItemChange"></colour-select>
       <border-buttons
         class="mt-2"
-        @onBorderChange="onItemChange"
-        @onRemoveStyle="onRemoveStyle"
-        @onShadowChange="onShadowChange"
+      
       ></border-buttons>
       <sidebar-text-editor
         class="mt-2"
           :textValue="data"
         @onTextChange="onTextChange"
-        @onFontWeightChange="onItemChange"
-        @onItalicClick="onItemChange"
-        @onUnderlineClick="onItemChange"
-        @onFontClick="onItemChange"
-        @onFontSizeChange="onItemChange"
+     
       >
       </sidebar-text-editor>
       <actions-select 
@@ -73,15 +67,6 @@ export default class ButtonEditor extends mixins(BorderButtonsMixin) {
 
   closeButtonClick(): void {
     SidebarModule.closeEditor();
-  }
-
-  onRadioChange(value: BackgroundForeGround) {
-    this.textBackgroundorBorder = value;
-  }
-
-  onItemChange() {
-    const eventManager: SidebarButtonEventManager = SidebarButtonEventManager.getInstance();
-    eventManager.updateEditedComponent();
   }
 
   onTextChange(text: string): void {

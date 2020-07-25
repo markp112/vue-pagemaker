@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-row items-center justify-between">
+  <div class="flex flex-row items-center justify-between md:flex-wrap md:justify-start">
     <img :src="getPath($props.thisIconButton.iconImage)"
       class="text-accent-600 cursor-pointer hover:bg-gray-600"
     />

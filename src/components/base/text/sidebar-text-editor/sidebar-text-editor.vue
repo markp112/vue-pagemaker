@@ -1,35 +1,44 @@
 <template>
-  <div>
+  <section class="mt-2">
     <p>Text Styles</p>
-    <div class="sidebar-button-panel w-full">
-      <font-select @onFontClick="onFontClick" onChange="onItalicClick"></font-select>
-      <icon-select
-        :buttonIconClassList="fontWeightButton"
-        @selectChange="fontWeightChange"
-      >
-      </icon-select>
-      <icon-toggle-button :thisIconButton="italicButton" @onChange="onItalicClick" ></icon-toggle-button>
-      <icon-toggle-button :thisIconButton="underLineButton" @onChange="onUnderlinedClick" ></icon-toggle-button>
-    </div>
-    <div class="sidebar-button-panel w-full mt-2 items-center">
-      <span class="text-sm font-bold">Text</span>
+    <div class="sidebar-button-panel">
+      <div class="sidebar-button-container">
+        <font-select @onFontClick="onItemChange"></font-select>
+      </div>
+       <div class="sidebar-button-container">
+        <icon-select
+          :buttonIconClassList="fontWeightButton"
+          @selectChange="onItemChange"
+        >
+        </icon-select>
+       </div>
+       <div class="sidebar-button-container">
+        <icon-toggle-button :thisIconButton="italicButton" @onChange="onItemChange" ></icon-toggle-button>
+       </div>
+      <div class="sidebar-button-container">
+        <icon-toggle-button :thisIconButton="underLineButton" @onChange="onItemChange" ></icon-toggle-button>
+      </div>
+   
+    <div class="sidebar-button-container w-3/4">
+      <span class="text-sm font-bold p-2">Text</span>
       <input
         type="text"
         name="text"
         v-model="textContent"
         @change="textChange"
-        class="text-sm w-32 app-input-field mb-2"
+        class="text-sm w-6/12 app-input-field mb-2 text-accent-100"
         placeholder="Enter content"
       />
       <drop-down 
         class="ml-1"
         :thisIconButton="fontSizeButton"
-        @onSelectChange="onFontSizeChange"
+        @onSelectChange="onItemChange"
       >
       px
       </drop-down>
     </div>
-  </div>
+    </div>
+  </section>
 </template>
 
 <script lang="ts">
@@ -79,37 +88,10 @@ export default class SideBarTextEditor extends Vue {
     this.textContent = this.$props.textValue;
   }
 
-  @Emit('onFontWeightChange')
-  fontWeightChange( style: StyleElement): StyleElement {
+  onItemChange(style: StyleElement) {
     const eventManager = SidebarButtonEventManager.getInstance();
     eventManager.applyValue('text', style);
-    return style;
-  }
-
-  @Emit('onItalicClick')
-  onItalicClick(style: StyleElement) {
-    const eventManager = SidebarButtonEventManager.getInstance();
-    eventManager.applyValue('text', style);
-  }
-
-  @Emit('onUnderlineClick')
-  onUnderlinedClick(style: StyleElement) {
-    const eventManager = SidebarButtonEventManager.getInstance();
-    eventManager.applyValue('text', style);
-  }
-
-  @Emit('onFontClick')
-  onFontClick(style: StyleElement): StyleElement {
-    const eventManager = SidebarButtonEventManager.getInstance();
-    eventManager.applyValue('text', style);
-    return style;
-  }
-
-  @Emit('onFontSizeChange') 
-  onFontSizeChange(style: StyleElement): StyleElement {
-    const eventManager = SidebarButtonEventManager.getInstance();
-    eventManager.applyValue('text', style);
-    return style;
+    eventManager.updateEditedComponent();
   }
 
   @Emit('onTextChange')

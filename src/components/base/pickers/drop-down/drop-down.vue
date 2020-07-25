@@ -61,7 +61,7 @@ export default class DropDown extends Vue {
     const style: StyleElement = {
       styleName: this.$props.thisIconButton.style.style,
       value: classElement,
-      units: classElement as BoxUnits,
+      units: this.$props.thisIconButton.units,
     }
     this.selectedItem = classElement;
     this.show();

@@ -1,23 +1,34 @@
 <template>
   <section>
-      <p>Border Styles</p>
-    <div class="sidebar-button-panel h-12 items-start text-accent-600 p-1">
-      <icon-select :buttonIconClassList="borderDirectionButton" @selectChange="onItemChange($event, 'border')"></icon-select>
-      <icon-select :buttonIconClassList="borderStyleButton"  @selectChange="onItemChange($event, 'border')"></icon-select>
-      <icon-select :buttonIconClassList="shadowButton" @selectChange="onItemChange($event, 'shadow')"></icon-select>
-    </div>
-    <div class="sidebar-button-panel h-12 justify-evenly mt-2">
-      <plus-minus-icon
-        :thisIconButton="buttonIconDimension"
-        @onChange="onItemChange($event, 'border')"
-      >
-      </plus-minus-icon>
-
-      <numeric-input-dropdown 
-        :thisIconButton="borderRadiusButton"
-        @onChange="onItemChange($event, 'border') "
+    <p class="mt-8">Border Styles</p>
+    <div class="sidebar-button-panel text-accent-600">
+      <div class="sidebar-button-container">
+        <icon-select 
+          :buttonIconClassList="borderDirectionButton" 
+          @selectChange="onItemChange($event, 'border')"
         >
-      </numeric-input-dropdown>
+      </icon-select>
+      </div>
+      <div class="sidebar-button-container">
+        <icon-select :buttonIconClassList="borderStyleButton"  @selectChange="onItemChange($event, 'border')"></icon-select>
+      </div>
+      <div class="sidebar-button-container">
+        <icon-select :buttonIconClassList="shadowButton" @selectChange="onItemChange($event, 'shadow')"></icon-select>
+      </div>
+      <div class="sidebar-button-container">
+        <plus-minus-icon
+          :thisIconButton="buttonIconDimension"
+          @onChange="onItemChange($event, 'border')"
+        >
+        </plus-minus-icon>
+      </div>
+      <div class="sidebar-button-container w-3/4">
+        <numeric-input-dropdown 
+          :thisIconButton="borderRadiusButton"
+          @onChange="onItemChange($event, 'border') "
+          >
+        </numeric-input-dropdown>
+      </div>
     </div>
   </section>
 </template>
@@ -52,7 +63,6 @@ import { SidebarButtonEventManager, ImpactedAttributeTypes } from '@/classes/sid
       'drop-down': DropDown,
       'plus-minus-icon': PlusMinusIcon,
       'numeric-input-dropdown': NumericInputDropdown,
-      
     },
   })
   export default class BorderButtons extends Vue {
@@ -69,56 +79,11 @@ import { SidebarButtonEventManager, ImpactedAttributeTypes } from '@/classes/sid
     borderStyleButton: ButtonIconClassList = new ButtonFactory().createButton('class-list', 'border-styles') as ButtonIconClassList;
     borderRadiusButton: ButtonIconNumeric = new ButtonFactory().createButton('numeric', 'border-radius') as ButtonIconNumeric;
 
-    @Emit('onBorderChange')
-    setBorder() {
-      return;
-    }
-    
-    @Emit('onBorderChange')
     onItemChange( style: StyleElement, itemType: ImpactedAttributeTypes) {
       const eventManager = SidebarButtonEventManager.getInstance();
       eventManager.applyValue(itemType, style);
-      return;
+      eventManager.updateEditedComponent();
     }
-
-    // @Emit('onBorderChange')
-    // borderEdgeChange(style: StyleElement) {
-    //   const eventManager = SidebarButtonEventManager.getInstance();
-    //   eventManager.applyValue('border', style);
-    //   return;
-    // }
-
-    // @Emit('onBorderChange')
-    // borderThicknessChange(style: StyleElement) {
-    //   const eventManager = SidebarButtonEventManager.getInstance();
-    //   eventManager.applyValue('border', style);
-    //   return;
-    // }
-
-    // setLineStyle(style: StyleElement) {
-    //   const eventManager = SidebarButtonEventManager.getInstance();
-    //   eventManager.applyValue('border', style);
-    //   return;
-    // }
-
-    // @Emit('onShadowChange')
-    // onShadowChange(style: StyleElement) {
-    //   const eventManager = SidebarButtonEventManager.getInstance();
-    //   eventManager.applyValue('shadow', style);
-    //   return;
-    // }
-
-    // onUnitsChange(style: StyleElement) {
-    //   const eventManager = SidebarButtonEventManager.getInstance();
-    //   eventManager.applyValue('border', style);
-    //   return;
-    // }
-    
-    // onBorderRadiusChange(value: number) {
-    //   this.borderDefinition.borderRadius.value = value;
-    //   this.setBorder();
-    // }
-
   }
   </script>
 

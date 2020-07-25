@@ -1,9 +1,9 @@
 <template>  
   <section>
-    <p>Colours</p>
-    <div class="sidebar-button-panel flex-wrap text-accent-600 h-16"> 
+    <p class="mb-3">Colours</p>
+    <div class="sidebar-button-panel"> 
       <div class="flex flex-col justify-evenly flex-no-wrap w-8/12 h-10 p-1 mt-0 leading-none">
-        <div class="flex flex-row justify-between">
+        <div class="sidebar-radio-container">
           <label for="background"
             class="mt-1" 
             :class="{
@@ -17,11 +17,10 @@
             name="bg-check"
             id="background"
             value="background"
-           
             @click="onRadioChange('background')"
           />
         </div>
-        <div class="flex flex-row justify-between">
+        <div class="sidebar-radio-container">
           <label for="font"
           class="mt-1"
             :class="{
@@ -39,7 +38,7 @@
             @click="onRadioChange('color')"
           />
         </div>
-        <div class="flex flex-row justify-evenly">
+        <div class="sidebar-radio-container">
           <label for="border"
           class="mt-1"
           :class="{
@@ -57,7 +56,7 @@
           />
         </div>
       </div>
-      <div class="flex justify-evenly flex-col flex-no-wrap w-4/12">
+      <div class=" w-4/12">
        <colour-picker @onColourChange="onColourChange"></colour-picker>
       </div>
     </div>
@@ -96,6 +95,7 @@ export default  class ColourSelect extends Vue {
     }
     const eventManager = SidebarButtonEventManager.getInstance();
     eventManager.applyValue('colour', style);
+    eventManager.updateEditedComponent();
     return;
   }
 }

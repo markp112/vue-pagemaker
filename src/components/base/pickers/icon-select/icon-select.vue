@@ -21,10 +21,10 @@
           <img :src="getPath(iconElement.iconImage)"
               class="w-8 h-8"
               :class="getClass(iconElement.className)"
-              @mouseover="showToolTip=iconElement.className"
+              @mouseover="showToolTip=iconElement.classNameActive"
               @mouseleave="showToolTip=''"
               >
-          <tool-tip :showToolTip="getShowToolTip(iconElement.className)" :tooltip="iconElement.tooltip"></tool-tip>
+          <tool-tip :showToolTip="getShowToolTip(iconElement.classNameActive)" :tooltip="iconElement.tooltip"></tool-tip>
         </li>
       </ul>
     </div>
@@ -62,6 +62,7 @@ export default class IconSelect extends Vue {
   toggleSelectOptions = false;
   selectedItem = '';
   showToolTip = '';
+
 
   @Emit('selectChange')
   iconClicked(iconElement: ButtonIconClassInterface): StyleElement {

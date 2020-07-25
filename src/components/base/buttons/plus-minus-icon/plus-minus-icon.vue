@@ -40,7 +40,6 @@ import { StyleElement } from '../../../../classes/text-attributes/text-attribute
         units: 'px',
       }
       return style;
-      // this.$props.thisIconButton.eventClass.width = { value: amount, units: 'px' };
     }
 
     getPath(image: string): string {

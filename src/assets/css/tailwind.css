@@ -7,12 +7,70 @@
 }
 
 .sidebar-panel {
-  @apply mt-8 bg-secondary-800 h-full p-1;
+  @apply mt-8;
+  @apply bg-secondary-800;
+  @apply h-full; 
+  @apply p-1;
+  @apply flex;
+  @apply flex-col;
+  @apply justify-start;
 }
 
 .sidebar-button-panel {
-  @apply flex flex-row justify-evenly items-center flex-wrap bg-secondary-200 h-10;
+  @apply flex;
+  @apply flex-row;
+  @apply justify-evenly;
+  @apply items-center;
+  @apply flex-wrap;
+  @apply p-2;
+  @apply mt-2;
 }
+
+.sidebar-button-container {
+  @apply bg-secondary-100;
+  @apply w-12;
+  @apply h-10;
+  @apply flex;
+  @apply flex-row;
+  @apply justify-center;
+  @apply items-center;
+}
+
+.sidebar-radio-container {
+  @apply bg-secondary-100;
+  @apply h-auto;
+  @apply flex;
+  @apply flex-row;
+  @apply justify-between;
+  @apply items-center;
+  @apply mt-1;
+  @apply p-1;
+  @apply w-3/4;
+}
+
+.sidebar-radio-container input {
+  @apply w-4;
+}
+
+
+@screen md {
+  .sidebar-button-panel {
+    @apply justify-start ml-2 mt-1;
+  }
+  .sidebar-button-container {
+    @apply mr-1 mt-1;
+  }
+}
+
+@screen sm {
+  .sidebar-button-panel {
+    @apply justify-start ml-1 mt-1;
+  }
+  .sidebar-button-container {
+    @apply mr-1 mt-2;
+  }
+}
+
 
 .dropdown-menu-background {
   @apply  bg-secondary-700 cursor-pointer;

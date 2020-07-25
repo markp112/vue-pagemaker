@@ -41,7 +41,6 @@ export class TextAttributes  {
   }
 
   applyStyle(styleElement: StyleElement): void {
-    console.log('%c⧭', 'color: #917399', styleElement);
     this.styleName = styleElement.styleName;
     this.units = '';
     this.value = styleElement.value;
