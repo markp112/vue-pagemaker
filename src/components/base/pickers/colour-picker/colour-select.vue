@@ -1,13 +1,13 @@
 <template>  
   <section>
     <p class="mb-3">Colours</p>
-    <div class="sidebar-button-panel"> 
-      <div class="flex flex-col justify-evenly flex-no-wrap w-8/12 h-10 p-1 mt-0 leading-none">
+    <div class="sidebar-button-panel colour-select"> 
+      <div class="colour-select-radios">
         <div class="sidebar-radio-container">
           <label for="background"
             class="mt-1" 
             :class="{
-              'text-secondary-600': textBackgroundorBorder === 'background', 
+              'text-secondary-300': textBackgroundorBorder === 'background', 
             }"
           >
             background
@@ -24,7 +24,7 @@
           <label for="font"
           class="mt-1"
             :class="{
-              'text-secondary-600': textBackgroundorBorder === 'color',
+              'text-secondary-300': textBackgroundorBorder === 'color',
             }"
           >
             font
@@ -42,7 +42,7 @@
           <label for="border"
           class="mt-1"
           :class="{
-              'text-secondary-600': textBackgroundorBorder === 'border-color',
+              'text-secondary-300': textBackgroundorBorder === 'border-color',
             }"
           >
             border
@@ -56,7 +56,7 @@
           />
         </div>
       </div>
-      <div class=" w-4/12">
+      <div class="w-3/12">
        <colour-picker @onColourChange="onColourChange"></colour-picker>
       </div>
     </div>
@@ -100,3 +100,41 @@ export default  class ColourSelect extends Vue {
   }
 }
 </script>
+
+<style lang="postcss" scoped>
+  .colour-select {
+    
+  }
+
+  .colour-select-radios {
+    @apply flex;
+    @apply flex-col;
+    @apply justify-start;
+    @apply flex-no-wrap;
+    @apply w-9/12;
+    @apply p-1;
+    @apply mt-0;
+    @apply leading-none;
+  }
+
+  @screen md {
+     .colour-select {
+      @apply flex-col;
+      @apply justify-start;
+     }
+
+     .colour-select-radios {
+       @apply w-full;
+     }
+  @screen lg {
+    .colour-select {
+      @apply flex-row;
+      @apply justify-start;
+     }
+
+     .colour-select-radios {
+       @apply w-9/12;
+     }
+  }
+  }
+</style>

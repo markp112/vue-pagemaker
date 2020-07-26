@@ -2,33 +2,23 @@
   <section>
     <p class="mt-8">Border Styles</p>
     <div class="sidebar-button-panel text-accent-600">
-      <div class="sidebar-button-container">
         <icon-select 
           :buttonIconClassList="borderDirectionButton" 
           @selectChange="onItemChange($event, 'border')"
         >
       </icon-select>
-      </div>
-      <div class="sidebar-button-container">
         <icon-select :buttonIconClassList="borderStyleButton"  @selectChange="onItemChange($event, 'border')"></icon-select>
-      </div>
-      <div class="sidebar-button-container">
         <icon-select :buttonIconClassList="shadowButton" @selectChange="onItemChange($event, 'shadow')"></icon-select>
-      </div>
-      <div class="sidebar-button-container">
         <plus-minus-icon
           :thisIconButton="buttonIconDimension"
           @onChange="onItemChange($event, 'border')"
         >
         </plus-minus-icon>
-      </div>
-      <div class="sidebar-button-container w-3/4">
-        <numeric-input-dropdown 
-          :thisIconButton="borderRadiusButton"
-          @onChange="onItemChange($event, 'border') "
-          >
-        </numeric-input-dropdown>
-      </div>
+      <numeric-input-dropdown 
+        :thisIconButton="borderRadiusButton"
+        @onChange="onItemChange($event, 'border') "
+        >
+      </numeric-input-dropdown>
     </div>
   </section>
 </template>

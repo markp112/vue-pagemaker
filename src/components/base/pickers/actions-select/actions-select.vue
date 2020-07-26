@@ -1,23 +1,22 @@
 <template>
   <div>
     <P>Actions</P>
-    <div class="sidebar-button-panel h-16 justify-start w-full flex-wrap mt-0">
-      <div class="text-sm flex flex-row justify-start items-center">
+    <div class="sidebar-button-panel ">
+      <div class="sidebar-button-container w-full actions-layout">
         <span class="mb-2 p-1 font-semibold "> Navigate To</span>
         <div class="relative flex-row flex justify-start  ">
           <input
             v-model="selectedItem"
-            class="min-w-6 text-sm mb-3 ml-2 app-input-field"
+            class="min-w-12 w-auto text-sm mb-3 ml-2 app-input-field p-1"
             placeholder="enter external URL or select from list"
           />
-          <div class="relative">
           <img
             :src="getPath('down-24.png')" 
-            class="w-4 h-4 cursor-pointer hover:bg-gray-800"
+            class="w-4 h-4 cursor-pointer hover:bg-gray-800 absolute"
             @click="show()"
           />
           <ul
-            class="dropdown-menu-background flex flex-col items-center absolute bottom-0 right-0 w-24 shadow-lg max-h-32"
+            class="dropdown-menu-background flex flex-col items-center absolute bottom-0 left-0 w-24 shadow-lg max-h-32"
             v-if="toggleSelectOptions"
             @mouseleave="show"
             @blur="show"
@@ -34,7 +33,6 @@
           </div>
         </div>
       </div> 
-    </div>
   </div>
 </template>
 
@@ -74,3 +72,17 @@ export default class ActionsSelect extends Vue {
   }
 }
 </script>
+
+<style lang="postcss" scoped>
+  .actions-layout {
+    @apply h-16 justify-start w-full flex-wrap mt-0 text-sm;
+  }
+
+  @screen md {
+    .actions-layout {
+      @apply flex-row;
+      @apply flex-wrap;
+
+    }
+  }
+</style>

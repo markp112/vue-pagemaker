@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-row justify-start">
+  <div class="sidebar-button-container">
     <img
       :src="getPath($props.thisIconButton.iconImage)"
       class="text-accent-600 cursor-pointer hover:bg-gray-600"

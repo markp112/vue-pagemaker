@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex flex-row justify-start relative">
+    <div class="sidebar-button-container relative">
       <img :src="getPath($props.buttonIconClassList.iconImage)" alt="">
       <img :src="getPath('down-24.png')" 
         class="w-4 h-4 cursor-pointer hover:bg-gray-800"

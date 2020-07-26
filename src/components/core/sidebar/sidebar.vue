@@ -59,7 +59,7 @@ export default class SideBar extends Vue {
   }
 
   .icon:hover {
-    @apply shadow  shadow-xl -translate-x-1 -translate-y-1;
+    @apply shadow-xl -translate-x-1 -translate-y-1;
   }
 
   @screen md {

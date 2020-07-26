@@ -2,31 +2,22 @@
   <section class="mt-2">
     <p>Text Styles</p>
     <div class="sidebar-button-panel">
-      <div class="sidebar-button-container">
-        <font-select @onFontClick="onItemChange"></font-select>
-      </div>
-       <div class="sidebar-button-container">
-        <icon-select
-          :buttonIconClassList="fontWeightButton"
-          @selectChange="onItemChange"
-        >
-        </icon-select>
-       </div>
-       <div class="sidebar-button-container">
-        <icon-toggle-button :thisIconButton="italicButton" @onChange="onItemChange" ></icon-toggle-button>
-       </div>
-      <div class="sidebar-button-container">
-        <icon-toggle-button :thisIconButton="underLineButton" @onChange="onItemChange" ></icon-toggle-button>
-      </div>
-   
-    <div class="sidebar-button-container w-3/4">
-      <span class="text-sm font-bold p-2">Text</span>
+      <font-select @onFontClick="onItemChange"></font-select>
+      <icon-select
+        :buttonIconClassList="fontWeightButton"
+        @selectChange="onItemChange"
+      >
+      </icon-select>
+      <icon-toggle-button :thisIconButton="italicButton" @onChange="onItemChange" ></icon-toggle-button>
+      <icon-toggle-button :thisIconButton="underLineButton" @onChange="onItemChange" ></icon-toggle-button>
+    <div class="sidebar-button-container text-input">
+      <span class="font-bold">Text</span>
       <input
         type="text"
         name="text"
         v-model="textContent"
         @change="textChange"
-        class="text-sm w-6/12 app-input-field mb-2 text-accent-100"
+        class="app-input-field w-6/12 text-accent-100"
         placeholder="Enter content"
       />
       <drop-down 
@@ -100,3 +91,40 @@ export default class SideBarTextEditor extends Vue {
   }
 }
 </script>
+
+<style lang="postcss" scoped>
+  .text-input {
+   @apply text-sm;
+   @apply items-center;
+  }
+
+  @screen lg {
+    .text-input {
+      @apply flex-wrap;
+      @apply justify-start;
+    }
+    
+    .text-input span {
+      @apply inline-block;
+      @apply mb-2;
+    }
+
+  .text-input input {
+      @apply self-center;
+      
+    }
+
+  }
+
+  @screen xl {
+    .text-input {
+      @apply flex-no-wrap;
+      @apply justify-start;
+    }
+     .text-input span {
+      @apply mb-0;
+      @apply mr-1;
+    }
+    
+  }
+</style>

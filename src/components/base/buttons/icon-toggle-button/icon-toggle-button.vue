@@ -1,10 +1,12 @@
 <template>
-  <img
-    :src="getPath($props.thisIconButton.iconImage)"
-    class="text-accent-600 cursor-pointer hover:bg-gray-600"
-    :class="{ 'bg-secondary-100': isActive }"
-    @click="onClick" 
-  />
+ <div class="sidebar-button-container">
+    <img
+      :src="getPath($props.thisIconButton.iconImage)"
+      class="text-accent-600 cursor-pointer hover:bg-gray-600"
+      :class="{ 'bg-secondary-100': isActive }"
+      @click="onClick" 
+    />
+ </div>
 </template>
 
 <script lang="ts">

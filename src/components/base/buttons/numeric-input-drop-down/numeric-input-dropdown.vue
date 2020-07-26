@@ -1,19 +1,21 @@
 <template>
-  <div class="flex flex-row items-center justify-between md:flex-wrap md:justify-start">
-    <img :src="getPath($props.thisIconButton.iconImage)"
-      class="text-accent-600 cursor-pointer hover:bg-gray-600"
-    />
-    <input
-      type="number" 
-      v-model="inputValue" 
-      size="2" 
-      class="w-10 app-input-field text-sm mb-1 ml-1 mr-1 text-right" 
-      @change="onInputChange()" />
-    <drop-down
-      :thisIconButton="$props.thisIconButton"
-      @onSelectChange="onDropdownChange"
-    >
-    </drop-down>
+  <div class="sidebar-button-container numeric-input-layout">
+      <img :src="getPath($props.thisIconButton.iconImage)"
+        class="text-accent-600 cursor-pointer hover:bg-gray-600"
+      />
+      <input
+        type="number" 
+        v-model="inputValue" 
+        size="2" 
+        class="w-10 app-input-field text-sm text-right self-center md:w-8 md:mt-1 md:mb-1" 
+        @change="onInputChange()" />
+      <drop-down
+        class="md:ml-1"
+        :thisIconButton="$props.thisIconButton"
+        @onSelectChange="onDropdownChange"
+      >
+      </drop-down>
+   
   </div>
 </template>
 
@@ -43,11 +45,6 @@ import { StyleElement } from '../../../../classes/text-attributes/text-attribute
     name = 'NumericInputDroDown';
     inputValue = 0;
 
-    mounted() {
-      
-      console.log('%c⧭', 'color: #aa00ff', this.$props.thisIconButton)
-    }
-
     @Emit('onChange') 
     onChange() {
       const style: StyleElement = {
@@ -74,3 +71,30 @@ import { StyleElement } from '../../../../classes/text-attributes/text-attribute
   }
   
   </script>
+
+<style scoped>
+  .numeric-input-layout {
+    @apply  w-full;
+    @apply justify-evenly;
+  }
+
+  @screen md {
+    .numeric-input-layout {
+      @apply flex-col;
+      @apply h-auto;
+      @apply w-16;
+      @apply justify-start;
+      @apply items-center;
+      @apply p-1;
+    }
+  }
+
+  @screen lg {
+    .numeric-input-layout {
+      @apply flex-row;
+      @apply h-12;
+      @apply w-3/4;
+      @apply justify-evenly;
+     }
+  }
+</style>

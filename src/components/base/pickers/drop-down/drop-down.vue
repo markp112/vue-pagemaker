@@ -1,19 +1,18 @@
 <template>
   <div>
-    <div class="flex flex-row justify-start relative w-16">
+    <div class="flex flex-row justify-between relative w-12 text-sm">
       <input
         v-model="selectedItem"
-        class="min-w-6 text-sm text-center relative app-input-field"
+        class="min-w-6 text-center relative app-input-field"
         @change="onInputChange"
       >
-        <slot class="absolute right-0"/>
       <img :src="getPath('down-24.png')" 
-        class="w-4 h-4 cursor-pointer hover:bg-gray-800"
+        class="w-4 h-4 cursor-pointer hover:bg-gray-800 absolute left-0"
         @click="show()"
         >
     </div>
     <ul
-      class="dropdown-menu-background flex flex-col items-center absolute z-10 w-16 shadow-lg h-auto  overflow-auto"
+      class="dropdown-menu-background flex flex-col items-center absolute z-10 w-16 shadow-lg h-auto overflow-auto"
       v-if="toggleSelectOptions"
       @mouseleave="show"
       @blur="show"
