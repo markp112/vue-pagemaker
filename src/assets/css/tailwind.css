@@ -30,13 +30,12 @@
   @apply justify-evenly;
   @apply items-center;
   @apply flex-wrap;
-  @apply p-2;
-  @apply mt-2;
   @apply w-full;
 }
 
 .sidebar-button-container {
   @apply h-10;
+  @apply ml-2;
   @apply flex;
   @apply flex-row;
   @apply justify-center;

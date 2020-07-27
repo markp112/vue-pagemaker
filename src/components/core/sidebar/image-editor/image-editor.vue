@@ -1,15 +1,14 @@
 <template>
-  <div class="mt-8 bg-secondary-800 h-full p-1">
-    <span class="inline-block flex flex-row justify-end mr-2 mb-4">
+  <div class="sidebar-panel">
+    <span class=" flex flex-row justify-end mr-2 mb-4">
       <close-button @onClick="closeButtonClick"></close-button>
     </span>
     <upload-image @image-url="urlChanged"></upload-image>
-  <div class="mt-8 p-0 bg-secondary-800 h-full p-1">
+  <div class="mt-8 bg-secondary-800 h-full p-1 ">
+    <colour-select  @onColourChange="onItemChange"></colour-select>
     <border-buttons
         class="mt-2"
-        @onBorderChange="onBorderChange"
         @onRemoveStyle="onRemoveStyle"
-        @onShadowChange="onShadowChange"
       ></border-buttons>
     </div>
   </div>
@@ -23,16 +22,16 @@ import UploadImage from '@/components/base/pickers/upload-image/upload-image.vue
 import BorderButtons from '@/components/base/buttons/borders/borders.vue';
 import { PageModule } from '@/store/page/page';
 import { SidebarModule } from '@/store//sidebar/sidebar';
-import  { BorderButtonsMixin } from '@/mixins/sidebar-Editors/border-buttons/border-buttons-mixin';
-
+import ColourSelect from '@/components/base/pickers/colour-picker/colour-select.vue';
 @Component({
   components: {
     'upload-image': UploadImage,
     'border-buttons': BorderButtons,
     'close-button': CloseButton,
+    'colour-select': ColourSelect,
   }
 })
-export default class ImageEditorSidebar extends mixins(BorderButtonsMixin) {
+export default class ImageEditorSidebar extends Vue {
   name = 'ImageEditorSidebar';
 
   urlChanged(url: string ) {

@@ -1,13 +1,13 @@
 <template>
   <div class="sidebar-button-container numeric-input-layout">
       <img :src="getPath($props.thisIconButton.iconImage)"
-        class="text-accent-600 cursor-pointer hover:bg-gray-600"
+        class="text-accent-600 cursor-pointer hover:bg-gray-600 mr-2"
       />
       <input
         type="number" 
         v-model="inputValue" 
         size="2" 
-        class="w-10 app-input-field text-sm text-right self-center md:w-8 md:mt-1 md:mb-1" 
+        class="w-10 app-input-field text-sm text-right self-center md:w-8 md:mt-1 md:mb-1 mr-2" 
         @change="onInputChange()" />
       <drop-down
         class="md:ml-1"
@@ -94,7 +94,7 @@ import { StyleElement } from '../../../../classes/text-attributes/text-attribute
       @apply flex-row;
       @apply h-12;
       @apply w-3/4;
-      @apply justify-evenly;
+      @apply justify-start;
      }
   }
 </style>
