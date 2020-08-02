@@ -23,7 +23,6 @@ export class Colour implements ColourInterface {
     }
 
     applyStyle(style: StyleElement) {
-      console.log('%c⧭', 'color: #aa00ff', style);
       this._rgbColour = style.value;
       this._backgroundBorderForeground = style.styleName as BackgroundBorderForeground;
     }

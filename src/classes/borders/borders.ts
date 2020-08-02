@@ -38,7 +38,6 @@ export class Border implements BorderInterface {
       }
       break;
     case 'border-radius':
-      console.log("StyleElement", styleElement)
       this.borderRadius.units = styleElement.units;
       this.borderRadius.value = Number(styleElement.value);
       break;

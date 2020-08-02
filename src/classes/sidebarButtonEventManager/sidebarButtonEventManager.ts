@@ -47,7 +47,6 @@ export class SidebarButtonEventManager {
   }
 
  updateEditedComponent() {
-   console.log('%c%s', 'color: #00bf00', this.impactedAtrribute);
     switch (this.impactedAtrribute) {
       case 'text':
 

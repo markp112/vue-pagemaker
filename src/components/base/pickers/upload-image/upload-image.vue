@@ -1,19 +1,19 @@
 <template>
   <div class="flex flex-col justify-center align-middle w-full text-sm">
-        <input
-          class="w-full app-input-field text-accent"
-          type="file"
-          @change="setImage( $event.target.name, $event.target.files)"
-          accept="image/png, image/jpeg"
-          />
-        <input
-            class="w-full app-input-field text-sm text-accent-600"
-            type="text"
-           @input="getImageFromUrl"
-            placeholder="or paste URL"
-            name="url"
-            v-model="url"
-        />
+    <input
+      class="w-full app-input-field text-accent-600 mb-1"
+      type="file"
+      @change="setImage( $event.target.name, $event.target.files)"
+      accept="image/png, image/jpeg"
+      />
+    <input
+        class="w-full app-input-field text-sm text-accent-600 mb-1"
+        type="text"
+        @input="getImageFromUrl"
+        placeholder="or paste URL"
+        name="url"
+        v-model="url"
+    />
     <div 
       class="image-drop flex flex-col justify-start" 
       :class="{'is-dragging': isDragging}"
@@ -23,15 +23,15 @@
       @drop.prevent="drop($event)">
       <h3 
         v-if="!hasFile" 
-        class="z-10 fixed font-bold text-accent-600 flex-row flex-wrap justify-start"
+        class="z-10 fixed font-bold text-accent-600 flex-row flex-wrap justify-start p-1 mb-1 block"
       >
         Upload a file by dropping it here
       </h3>
       <img
         :src="getImage"
-        class="border object-contain h-32"
+        class="border object-contain h-32 mt-2"
         ref="imagePlaceholder"
-        @load="onLoad()"
+        @load="onImageLoad()"
       />
     </div>
     <div class="flex flex-row justify-start w-full items-center h-8">
@@ -52,14 +52,14 @@ import Component from 'vue-class-component';
 import { Emit } from 'vue-property-decorator';
 import { ServicesModule } from '@/store/services/services';
 import { Image, Dimensions } from '@/models/components/components';
-import { Units } from '../../../../models/enums/units/units';
+import { Units } from '@/models/enums/units/units';
 
 @Component ({
   props: {
     urlEdited: {
       default: ''
-    }
-  }
+    },
+  },
 })
 export default class UploadImage extends Vue {
   url = '';
@@ -69,7 +69,7 @@ export default class UploadImage extends Vue {
   maintainRatio = true;
 
   mounted() {
-    this.url = this.$props.urlEdited !== '' ? this.$props.urlEdited : '';
+    this.url = this.$props.urlEdited;
   }
 
   created() {
@@ -86,7 +86,7 @@ export default class UploadImage extends Vue {
     this.isDragging = false
   }
 
-  onLoad() {
+  onImageLoad() {
      this.updateImage();
   }
 
@@ -131,7 +131,6 @@ export default class UploadImage extends Vue {
   
   getImageFromUrl() {
     this.hasFile = this.url !== '';
-    // this.updateImage();
   }
 
   @Emit('image-url')
@@ -146,23 +145,21 @@ export default class UploadImage extends Vue {
       units: Units.px,
     };
     image.naturalSize = dimensions;
-    console.log('%c⧭', 'color: #f279ca', dimensions)
     return image;
-    
-    
   }
 
   get getImage() {
       if (this.url === '') {
-        return require('@/assets/images/imageplaceholder-100x83.png');
-      } else { return this.url };
+        this.url = this.$props.urlEdited;
+        return this.url === '' ? require('@/assets/images/imageplaceholder-100x83.png') : this.url;
+      } else { 
+        return this.url 
+      };
     }
 
   get getClasses(){
       return {isDragging: this.isDragging};
-    }
-
-  
+  }
 }
 </script>
 
@@ -170,12 +167,12 @@ export default class UploadImage extends Vue {
 
 .image-drop {
   width: 100%;
-  height: 100%;
+  @apply h-full;
   background-color: #eee;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color .2s ease-in-out;
+  @apply flex;
+  @apply flex-row;
+  @apply justify-center;
+  
 }
 
 .is-dragging{

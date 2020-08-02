@@ -3,7 +3,7 @@
     <span class=" flex flex-row justify-end mr-2 mb-4">
       <close-button @onClick="closeButtonClick"></close-button>
     </span>
-    <upload-image @image-url="urlChanged" :urlEdited="currentImageUrl"></upload-image>
+    <upload-image :urlEdited="currentImageUrl" @image-url="urlChanged" ></upload-image>
     <div class="mt-8 bg-secondary-800 h-full p-1">
       <colour-select></colour-select>
       <border-buttons
@@ -38,8 +38,6 @@ export default class ImageEditorSidebar extends Vue {
   currentImageUrl = '';
 
   mounted() {
-
-    console.log('%c⧭', 'color: #7f7700', (PageModule.editedComponentRef as PageElement).data)
     if ((PageModule.editedComponentRef as PageElement).data !== undefined) {
       const editedComponentData: Image = (PageModule.editedComponentRef as PageElement)
         .data as Image;
@@ -54,5 +52,6 @@ export default class ImageEditorSidebar extends Vue {
   closeButtonClick(): void {
     SidebarModule.closeEditor();
   }
+
 }
 </script>

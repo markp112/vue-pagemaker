@@ -139,28 +139,12 @@ export default class TextEditor extends Vue {
     const selection: Selection | null = window.getSelection 
       ? window.getSelection() : document.getSelection();
     if (!selection) return;
-    // this.range.setStart(range.startContainer, range.startOffset);
-    // this.range.setEnd(range.endContainer, range.endOffset);
     this.range = this.rangeClone;
     selection.removeAllRanges();
     selection.addRange(this.rangeClone);
-    // if (this.rangeHandler.range) {
-    //   selection.addRange(this.rangeHandler.range);
-    // }
-    // else {
-    //   const content = this.getContentRef();
-    //   const row = RH.prototype.newRow({br: true})
-    //   const range = document.createRange()
-    //   content.appendChild(row)
-    //   range.setStart(row, 0)
-    //   range.setEnd(row, 0)
-    //   selection.addRange(range)
-    //   this.range = range
-    // }
   }
 
   getSelection() {
-    console.log("getSelectionCalled")
     this.saveCurrentRange();
   }
 
@@ -201,17 +185,13 @@ export default class TextEditor extends Vue {
   }
 
   onIndentClick() {
-    // const indent = this.rangeHandler.applyIndent();
-    // this.rangeHandler.applyIndent(style)
     const indent = new Indents(this.range);
     indent.createIndent();
   }
 
   onOutdentClick() {
-    // const indent = this.rangeHandler.removeIndent();
     const indent = new Indents(this.range);
     indent.removeIndent();
-    // this.rangeHandler.applyIndent(style)
   }
 
   textAlignClick(style: string) {

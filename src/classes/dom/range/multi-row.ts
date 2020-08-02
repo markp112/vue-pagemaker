@@ -75,7 +75,6 @@ export class MultiRow extends RHBase {
   }
 
   insertSpanInPara(node: Node, style: Style): void {
-    console.log('%c⧭', 'color: #607339', 'insertSpanInPara', node.childNodes);
     const spanNode = this.createWrapperNode('span');
     this.setStyle(spanNode, style);
     (spanNode as HTMLSpanElement).innerHTML = (node as HTMLElement).innerHTML;
