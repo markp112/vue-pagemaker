@@ -1,5 +1,7 @@
 import { Units } from '../enums/units/units';
 
+export type ImageScaleDirection = 'width' | 'height';
+
 export interface Dimensions {
   height: number;
   width: number;
@@ -17,9 +19,12 @@ export interface Content {
 }
 
 export interface ImageInterface extends Content {
-  size: Dimensions;
+  naturalSize: Dimensions; /** @description natural size of imgage */
+  scaledSize: Dimensions; /** @description image size after user resizing */
+  ratio: number;
+  maintainRatio: boolean;
+  parentDimensions: Dimensions;
 }
-
 
 export interface TextInterface  extends Content{
   content: string;
@@ -31,27 +36,86 @@ export interface ButtonInterface extends Content {
 
 export class Image implements ImageInterface {
   private _content: string;
-  private _size: Dimensions;
+  private _naturalSize: Dimensions;
+  private _scaledSize: Dimensions;
+  private _ratio: number;
+  private _maintainRatio: boolean;
+  private _parentDimensions: Dimensions;
 
   constructor() {
-    this._size = initDimensions;
+    this._naturalSize = initDimensions;
+    this._scaledSize = initDimensions;
     this._content = 'https://firebasestorage.googleapis.com/v0/b/page-maker-69fb1.appspot.com/o/assets%2Fimages%2Fimageplaceholder.png?alt=media&token=149d3e60-0fc4-49de-9e23-5fea91458240';
+    this._ratio = this.naturalSize.width / this.naturalSize.height;
+    this._maintainRatio = true;
+    this._parentDimensions = initDimensions;
   }
 
   get content(): string {
-    return this._content
+    return this._content;
   }
 
   set content(url: string) {
-    this._content = url
+    this._content = url;
   }
 
-  get size():Dimensions {
-    return this._size
+  get naturalSize(): Dimensions {
+    return this._naturalSize;
+  }
+  
+  set naturalSize(size: Dimensions){
+    this._naturalSize = size;
+    this._scaledSize = size; /** @description when image size changes the scaled size should be reset */
+    this._ratio = this._naturalSize.width / this._naturalSize.height;
   }
 
-  set size(size: Dimensions){
-    this._size = size
+  get scaledSize() {
+    return this._scaledSize;
+  }
+
+  get ratio(): number {
+    return this.ratio;
+  }
+
+  get maintainRatio() {
+    return this._maintainRatio;
+  }
+
+  set maintainRatio(maintainRatio: boolean) {
+    this._maintainRatio = maintainRatio;
+  }
+
+  get parentDimensions(): Dimensions {
+    return this._parentDimensions;
+  }
+
+  set parentDimensions(dimensions: Dimensions) {
+    this._parentDimensions = dimensions;
+  }
+
+  calcScalingRatio(direction: ImageScaleDirection, changedDimension: number ): Dimensions {
+    if (this._maintainRatio) {
+      if (direction === 'width') {
+        this._scaledSize.width = changedDimension;
+        this._scaledSize.height = changedDimension / this._ratio;
+        if (this._scaledSize.height >= this.parentDimensions.height) {
+          this._scaledSize.height = this.parentDimensions.height;
+          if (this._scaledSize.width > this._scaledSize.height * this._ratio) {
+            this._scaledSize.width = this._scaledSize.height * this._ratio;
+          }
+        }
+      } else {
+        this._scaledSize.width = changedDimension * this._ratio;
+        this._scaledSize.height = changedDimension;
+        if (this._scaledSize.width > this._parentDimensions.width) {
+          this._scaledSize.width = this._parentDimensions.width;
+          if (this._scaledSize.height > this._scaledSize.width / this._ratio) {
+            this._scaledSize.height = this._scaledSize.width / this._ratio;
+          }
+        }
+      }
+    }
+    return this._scaledSize;
   }
 }
 
@@ -59,15 +123,15 @@ export class Text implements Content {
   private _content: string;
 
   constructor() {
-    this._content = ''
+    this._content = '';
   }
 
   get content(): string {
-    return this._content
+    return this._content;
   }
 
   set content(content: string) {
-    this._content = content
+    this._content = content;
   }
 }
 
@@ -75,15 +139,15 @@ export class Button implements Content {
   private _content: string;
 
   constructor() {
-    this._content = ''
+    this._content = '';
   }
 
   get content(): string {
-    return this._content
+    return this._content;
   }
 
   set content(content: string) {
-    this._content = content
+    this._content = content;
   }
 }
 

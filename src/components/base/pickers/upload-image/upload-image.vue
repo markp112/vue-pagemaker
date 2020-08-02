@@ -9,7 +9,7 @@
         <input
             class="w-full app-input-field text-sm text-accent-600"
             type="text"
-            @input="getImageFromUrl"
+           @input="getImageFromUrl"
             placeholder="or paste URL"
             name="url"
             v-model="url"
@@ -27,7 +27,21 @@
       >
         Upload a file by dropping it here
       </h3>
-      <img :src="getImage"  class="border object-contain h-32" ref="imagePlaceholder"/>
+      <img
+        :src="getImage"
+        class="border object-contain h-32"
+        ref="imagePlaceholder"
+        @load="onLoad()"
+      />
+    </div>
+    <div class="flex flex-row justify-start w-full items-center h-8">
+      <label for="maintain-ratio" class="w-6/12">Maintain Ratio</label>
+      <input
+        type="checkbox"
+        class="w-2/12"
+        @click="maintainClick"
+        :checked="maintainRatio"
+        id="maintain-ratio"/>
     </div>
   </div>
 </template>
@@ -37,16 +51,26 @@ import Vue from 'vue'
 import Component from 'vue-class-component';
 import { Emit } from 'vue-property-decorator';
 import { ServicesModule } from '@/store/services/services';
-
+import { Image, Dimensions } from '@/models/components/components';
+import { Units } from '../../../../models/enums/units/units';
 
 @Component ({
+  props: {
+    urlEdited: {
+      default: ''
+    }
+  }
 })
 export default class UploadImage extends Vue {
-
   url = '';
   isDragging!: boolean;
   wrongFile!: boolean;
   hasFile = false;
+  maintainRatio = true;
+
+  mounted() {
+    this.url = this.$props.urlEdited !== '' ? this.$props.urlEdited : '';
+  }
 
   created() {
     this.isDragging = false;
@@ -62,7 +86,15 @@ export default class UploadImage extends Vue {
     this.isDragging = false
   }
 
-  @Emit('image-url')
+  onLoad() {
+     this.updateImage();
+  }
+
+  maintainClick() {
+    this.maintainRatio = !this.maintainRatio;
+    this.updateImage();
+  }
+  
   drop(e: DragEvent) {
     if(e.dataTransfer !== null) {
       const files = e.dataTransfer.files
@@ -75,34 +107,53 @@ export default class UploadImage extends Vue {
             .then(result => {
               this.hasFile = true;
               this.url = result.message;
-              resolve(result.message);
+              this.updateImage();
+              resolve();
               })
             })
         }
       }
   }
-
-  @Emit('image-url')
+  
   setImage(targetName:string, file: File[]) {
     const url = file[0];
     return new Promise((resolve, reject) => {
       ServicesModule.firestoreSaveFile(file[0])
         .then(result => {
           this.url = result.message;
-          resolve(result.message);
+          this.updateImage();
+          resolve();
         })
         .catch(err => reject(err))
     })
   }
 
-  @Emit('image-url')
+  
   getImageFromUrl() {
-    this.hasFile = this.url !=='';
-    return this.url;
+    this.hasFile = this.url !== '';
+    // this.updateImage();
+  }
+
+  @Emit('image-url')
+  updateImage(): Image {
+    const img = this.$refs.imagePlaceholder as HTMLImageElement;
+    const image = new Image();
+    image.maintainRatio = this.maintainRatio;
+    image.content = this.url;
+     const dimensions: Dimensions = {
+      width: img.naturalWidth,
+      height: img.naturalHeight,
+      units: Units.px,
+    };
+    image.naturalSize = dimensions;
+    console.log('%c⧭', 'color: #f279ca', dimensions)
+    return image;
+    
+    
   }
 
   get getImage() {
-      if(this.url === '') {
+      if (this.url === '') {
         return require('@/assets/images/imageplaceholder-100x83.png');
       } else { return this.url };
     }
@@ -110,6 +161,8 @@ export default class UploadImage extends Vue {
   get getClasses(){
       return {isDragging: this.isDragging};
     }
+
+  
 }
 </script>
 

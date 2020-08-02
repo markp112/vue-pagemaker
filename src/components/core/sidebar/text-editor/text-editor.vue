@@ -36,7 +36,7 @@ import { SidebarModule } from '@/store//sidebar/sidebar';
 export default class TextEditorSidebar extends Vue {
 
   urlChanged(url: string ) {
-    PageModule.updateComponentImage(url);
+    // PageModule.updateComponentImage(url);
   }
 
   closeButtonClick(): void {

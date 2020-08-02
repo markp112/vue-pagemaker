@@ -24,7 +24,6 @@ export class Border implements BorderInterface {
   }
   
   applyStyle(styleElement: StyleElement): void {
-   console.log('%c⧭', 'color: #cc7033', styleElement, "here");
    switch (styleElement.styleName) {
      case 'borderEdge':
        this.borderDirection = styleElement.value as BorderDirections;

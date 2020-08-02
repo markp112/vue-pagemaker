@@ -74,7 +74,7 @@ export default class Resize extends Vue {
 
   handleDown(ev: MouseEvent) {
     if (!this.$props.isActive) return;
-    if(!this.isSizing) {
+    if (!this.isSizing) {
       window.addEventListener('mousemove', () => { this.handleMove(event as MouseEvent) });
       window.addEventListener('mouseup', () => { this.handleMouseUp() });
       this.isSizing = true
@@ -83,10 +83,11 @@ export default class Resize extends Vue {
 
   @Emit('onResize')
   handleMove(ev: MouseEvent): ResizeDimensions | undefined {
-    if(this.isSizing) { 
+    if (this.isSizing) { 
       const thisElement: BoxProperties | null = this.getElementBoxProperties();
-      if(thisElement){
-        return this.calcNewDimensions(thisElement, ev.clientX, ev.clientY);
+      if (thisElement) {
+        const newDimensions: ResizeDimensions = this.calcNewDimensions(thisElement, ev.clientX, ev.clientY);
+        return newDimensions;
       } 
     } 
     return undefined;
@@ -95,14 +96,14 @@ export default class Resize extends Vue {
   calcNewDimensions(element: BoxProperties, clientX: number, clientY: number): ResizeDimensions {
     const parentDimensions: BoxDimensions = this.$props.parentContainerDimensions;
     const boxLeft = element.left + pageXOffset;
-    const boxTop = element.top += pageYOffset;
-    const resizeDimensions: ResizeDimensions = { height: 0, width: 0 }
+    const boxTop = element.top + pageYOffset;
+    const resizeDimensions: ResizeDimensions = { height: 0, width: 0, }
     resizeDimensions.width = (clientX - boxLeft);
     resizeDimensions.height = (clientY - boxTop);
-    if(resizeDimensions.width  >=  (parentDimensions.width.value - (this.parentPadding * 2))) {
+    if (resizeDimensions.width >= (parentDimensions.width.value - (this.parentPadding * 2))) {
       resizeDimensions.width = parentDimensions.width.value - (this.parentPadding * 2);
     }
-    if(resizeDimensions.height  > parentDimensions.top.value + parentDimensions.height.value) {
+    if (resizeDimensions.height > parentDimensions.top.value + parentDimensions.height.value) {
       resizeDimensions.height = parentDimensions.top.value + parentDimensions.height.value;
     }
     return resizeDimensions;
@@ -125,6 +126,8 @@ export default class Resize extends Vue {
     border-top: 10px solid transparent;
     border-bottom: 10px solid transparent;
     border-left: 10px solid rgb(56, 55, 56);
+    color: rgb(56, 55, 56);
+    mix-blend-mode: difference;
     transform:rotate(45deg);
   }
     
