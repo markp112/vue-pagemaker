@@ -1,5 +1,5 @@
 import { Style } from '@/models/styles/styles';
-import { RHBase, HTMLTags } from './range-base';
+import { RHBase, HTMLTags, ClassOrStyle } from './range-base';
 
 export class RangeRow extends RHBase {
   private fragment: DocumentFragment | null = null;
@@ -8,7 +8,7 @@ export class RangeRow extends RHBase {
     super(range);
   }
 
-  process(htmlTag: HTMLTags, style: Style, classOrStyle: 'class' | 'style') {
+  process(htmlTag: HTMLTags, style: Style, classOrStyle: ClassOrStyle) {
     if (!this.range) throw new Error('RH: Range not set');
     if (!this.rangeValues.ancestorHasChildren) {
       this.createWrapperNoChildren(htmlTag, style, classOrStyle);
@@ -23,7 +23,7 @@ export class RangeRow extends RHBase {
     return (node as Text).length;
   }
 
-  private createWrapperNoChildren(htmlTag: HTMLTags, style: Style, classOrStyle: 'class' | 'style') {
+  private createWrapperNoChildren(htmlTag: HTMLTags, style: Style, classOrStyle: ClassOrStyle) {
     if(!this.range) throw new Error('Range not set');
     this.fragment = this.range.extractContents();
     const wrapperNode: Node = this.createWrapperNode(htmlTag);
@@ -36,7 +36,7 @@ export class RangeRow extends RHBase {
     this.insertNode(wrapperNode);
   }
 
-  private createWrapperWithChildren(htmlTag: HTMLTags, style: Style, classOrStyle: 'class' | 'style') {
+  private createWrapperWithChildren(htmlTag: HTMLTags, style: Style, classOrStyle: ClassOrStyle) {
     if(!this.range) throw new Error('Range not set');
     if (this.range.commonAncestorContainer === this.range.startContainer) {
       this.createNodeFromFragment(htmlTag, style, classOrStyle)
@@ -52,7 +52,7 @@ export class RangeRow extends RHBase {
     this.createNewNodeAsWrapper(htmlTag, style, classOrStyle);
   }
 
-  createNodeFromFragment(htmlTag: HTMLTags, style: Style, classOrStyle: 'class' | 'style') {
+  createNodeFromFragment(htmlTag: HTMLTags, style: Style, classOrStyle: ClassOrStyle) {
     if(!this.range) throw new Error('Range not set');
     this.fragment = this.range.extractContents();
     const wrapperNode: Node | null = this.fragment ? this.fragment.querySelector('span') : this.createWrapperNode(htmlTag);
@@ -71,7 +71,7 @@ export class RangeRow extends RHBase {
     }
   }
 
-  private createNewNodeAsWrapper(htmlTag: HTMLTags, style: Style, classOrStyle: 'class' | 'style') {
+  private createNewNodeAsWrapper(htmlTag: HTMLTags, style: Style, classOrStyle: ClassOrStyle) {
     if(!this.range) throw new Error('Range not set');
     const wrapperNode = this.createWrapperNode(htmlTag);
     const fragmentNode: Node = this.fragment as Node;
