@@ -1,8 +1,10 @@
 import { IconType, ComponentNames, ButtonIconClassInterface } from '../button-icon/button-icon';
 import { ButtonRequestTypes } from '../button-factory/button-factory';
+import { ImpactedAttributeTypes } from '@/classes/sidebarButtonEventManager/sidebarButtonEventManager';
 
 
 export class ButtonIconClassBuilder {
+  _styledElement: ImpactedAttributeTypes = 'undefined';
   _iconImage = '';
   _tooltip = '';
   _classNameActive = '';
@@ -12,6 +14,7 @@ export class ButtonIconClassBuilder {
   
   build(): ButtonIconClassInterface {
     return {
+      styledElement: this._styledElement,
       iconImage: this._iconImage,
       tooltip: this._tooltip,
       classNameActive: this._classNameActive,
@@ -19,6 +22,11 @@ export class ButtonIconClassBuilder {
       componentName: this._componentName,
       iconIsTypeOf: this._iconIsTypeOf,
     }
+  }
+
+  withStyledElement(styledElement: ImpactedAttributeTypes) {
+    this._styledElement = styledElement;
+    return this;
   }
 
   withClassNameActive(className: string) {
@@ -61,6 +69,7 @@ export class ButtonIconClassWrapper {
     switch(whichButton) {
       case 'italic-button':
         return new ButtonIconClassBuilder()
+        .withStyledElement('text')
         .withClassNameActive('italic')
         .withClassNameInActive('not-italic')
         .withIconImage('font_italic-32.png')
@@ -71,6 +80,7 @@ export class ButtonIconClassWrapper {
 
       case 'underline-button':
         return new ButtonIconClassBuilder()
+        .withStyledElement('text')
         .withClassNameActive('underline')
         .withClassNameInActive('no-underline')
         .withIconImage('font_underlined-32.png')

@@ -3,9 +3,10 @@ import { IconType, ComponentNames } from '../button-icon/button-icon';
 import { ButtonIconNumeric } from '../button-icon/button-numeric-list/button-numeric-list';
 import { ButtonRequestTypes } from '../button-factory/button-factory';
 import { BoxUnits } from '@/models/components/box-dimension';
+import { ImpactedAttributeTypes } from '@/classes/sidebarButtonEventManager/sidebarButtonEventManager';
 
 export class ButtonIconNumericBuilder {
- 
+  _styledElement: ImpactedAttributeTypes = 'undefined';
   _valuesList: string[] = [];
   _defaultValue = '0';
   _style: Style = {
@@ -17,6 +18,11 @@ export class ButtonIconNumericBuilder {
   _iconIsTypeOf: IconType = 'style';
   _componentName: ComponentNames = 'drop-down';
   _units: BoxUnits = 'px';
+
+  withStyledElement(styledElement: ImpactedAttributeTypes) {
+    this._styledElement = styledElement;
+    return this;
+  }
 
    withValuesList(valuesList: string[]) {
     this._valuesList = valuesList;

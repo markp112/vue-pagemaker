@@ -21,6 +21,13 @@
       </indent-outdent>
       <text-alignment @alignClick="textAlignClick"></text-alignment>
       <colour-select @onColourChange="onColourChange"></colour-select>
+       <drop-down 
+        class="ml-1"
+        :thisIconButton="fontSizeButton"
+        @onSelectChange="onFontSizeChange"
+      >
+      px
+      </drop-down>
       <close-button @onClick="onCloseClick()"></close-button>
     </div>
     <div
@@ -66,6 +73,7 @@ import { ButtonIconClassList } from '@/models/styles/builders/button-icon-class-
 import { ButtonIconClassInterface } from '@/models/styles/button-icon/button-icon';
 import { ButtonFactory } from '@/models/styles/button-factory/button-factory';
 import { ButtonIconNumeric } from '@/models/styles/button-icon/button-numeric-list/button-numeric-list';
+import { StyleElement, TextAttributes } from '@/classes/text-attributes/text-attributes';
 
 @Component({
   components: {
@@ -174,35 +182,36 @@ export default class TextEditor extends Vue {
     return this.$refs.texteditorcontent as HTMLParagraphElement;
   }
 
-  setStyle(styleName: string, value: string): void {
+  setStyle(styleName: string, value: string, classOrStyle: 'class' | 'style'): void {
     const style: Style = { style: styleName, value: value };
     this.rangeClone = this.range.cloneRange();
     const rh = new RH(this.range);
-    rh.applyStyle('span', style);
+    rh.applyStyle('span', style, classOrStyle);
     this.restoreSelection(this.rangeClone);
   }
 
-  onFontClick(fontFamilyStyle: Style): void {
-    this.setStyle(fontFamilyStyle.style, fontFamilyStyle.value);
+  onFontClick(fontFamilyStyle: StyleElement): void {
+    this.setStyle(fontFamilyStyle.styleName, fontFamilyStyle.value, 'style');
   }
 
-  onFontWeightChange(iconElement: IconPickerInterface): void {
-    this.setStyle('fontWeight', iconElement.domEquivalent);
+  onFontWeightChange(iconElement:  StyleElement): void {
+    const textAttributes: TextAttributes = TextAttributes.getInstance();
+    this.setStyle('fontWeight', iconElement.value, 'class');
   }
 
-  onItalicClick(): void {
-    this.setStyle('fontStyle', 'italic');
+  onItalicClick(style: StyleElement): void {
+    this.setStyle('fontStyle', style.value, 'class');
   }
   onUnderlineClick(): void {
-    this.setStyle('textDecoration', 'underline');
+    this.setStyle('textDecoration', 'underline', 'class');
   }
 
-  onFontSizeChange(fontSize: number): void {
-    this.setStyle('fontSize', `${fontSize}px`);
+  onFontSizeChange(style: StyleElement): void {
+    this.setStyle(style.styleName, `${style.value}px`, 'style');
   }
 
   onColourChange(rgbColour: string) {
-    this.setStyle('color', rgbColour);
+    this.setStyle('color', rgbColour, 'style');
   }
 
   onIndentClick() {

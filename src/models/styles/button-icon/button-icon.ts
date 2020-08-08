@@ -1,6 +1,7 @@
 import { Style } from '../styles';
 import { Dimension } from '@/models/components/box-dimension';
-import { TextStyleTypes } from '@/classes/text-attributes/text-attributes';
+import { StyleTypes } from '@/classes/text-attributes/text-attributes';
+import { ImpactedAttributeTypes } from '@/classes/sidebarButtonEventManager/sidebarButtonEventManager';
 // import { ButtonIconDimension, ButtonIconDimensionBuilder } from '@/models/styles/builders/buttonIconDimension';
 // import { ButtonIconClassList, ButtonIconClassListBuilder } from '@/models/styles/builders/button-icon-class-list';
 // import { shadowIconList, IconPickerInterface, borderEdgeIconList, lineStyleIconList, fontWeightIconList } from '@/models/components/icon-picker-models';
@@ -30,6 +31,7 @@ export type ComponentNames =
  * @property componentName - name of the component which will display this icon
 */
 export interface ButtonIconBaseInterface {
+  styledElement: ImpactedAttributeTypes;
   iconImage: string;
   tooltip: string;
   iconIsTypeOf: IconType;
@@ -79,7 +81,7 @@ export interface ButtonIconClassInterface extends ButtonIconBaseInterface {
  * @property classNames - holds a list of the classes 
  */
 export interface ButtonIconClassListInterface extends ButtonIconBaseInterface {
-  classType: TextStyleTypes;
+  classType: StyleTypes;
   classNames: ButtonIconClassInterface[];
 }
 

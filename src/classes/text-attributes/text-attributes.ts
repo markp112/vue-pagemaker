@@ -1,6 +1,6 @@
 import { BoxUnits } from '@/models/components/box-dimension';
 
-export type TextStyleTypes =
+export type StyleTypes =
   | 'background-color'
   | 'color'
   | 'border-color'
@@ -19,7 +19,7 @@ export type TextStyleTypes =
   | 'undefined'
 
 export interface StyleElement {
-  styleName: TextStyleTypes;
+  styleName: StyleTypes;
   value: string;
   units: BoxUnits;
 }

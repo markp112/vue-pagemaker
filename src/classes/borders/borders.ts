@@ -14,11 +14,6 @@ export class Border implements BorderInterface {
   public static getInstance(): Border {
     if (!Border.instance) {
       Border.instance = new Border();
-      // Border.instance.borderDirection = 'border';
-      // Border.instance.colour = '#00000';
-      // Border.instance.style = 'solid';
-      // Border.instance._width = { value: 1, units: 'px' };
-      // Border.instance.borderRadius = { value: 1, units: 'px' };
     }
     return Border.instance;
   }

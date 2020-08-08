@@ -12,7 +12,8 @@ import {
 } from '@/models/components/icon-picker-models';
 import { ButtonIconClassInterface } from '../button-icon/button-icon';
 import { ButtonIconClassBuilder } from './button-icon-class-builder';
-import { TextStyleTypes } from '@/classes/text-attributes/text-attributes';
+import { StyleTypes } from '@/classes/text-attributes/text-attributes';
+import { ImpactedAttributeTypes } from '@/classes/sidebarButtonEventManager/sidebarButtonEventManager';
 
 export class ButtonIconBuilder {
   build(whichButton: ButtonRequestTypes): ButtonIconClassList {
@@ -20,12 +21,14 @@ export class ButtonIconBuilder {
       case 'Shadow':
         return this.buildIconList(
           'shadow',
+          'shadow',
           shadowIconList,
           'shadows',
           'shadows-32.png'
         );
       case 'border-direction':
         return this.buildIconList(
+          'border',
           'borderEdge',
           borderEdgeIconList,
           'border edge',
@@ -33,6 +36,7 @@ export class ButtonIconBuilder {
         );
       case 'border-styles':
         return this.buildIconList(
+          'border',
           'borderStyle',
           lineStyleIconList,
           'border style',
@@ -40,6 +44,7 @@ export class ButtonIconBuilder {
         );
       case 'fontWeight':
         return this.buildIconList(
+          'text',
           'fontWeight',
           fontWeightIconList,
           'font weight',
@@ -51,7 +56,8 @@ export class ButtonIconBuilder {
   }
 
   private buildIconList(
-    classType: TextStyleTypes,
+    styledElement: ImpactedAttributeTypes,
+    classType: StyleTypes,
     iconList: IconPickerInterface[],
     toolTip: string,
     iconImage: string
@@ -66,6 +72,7 @@ export class ButtonIconBuilder {
       icons.push(biCB);
     });
     return new ButtonIconClassListBuilder()
+      .withStyledElement(styledElement)
       .withClassType(classType)
       .withIconImage(iconImage)
       .withToolTip(toolTip)

@@ -35,10 +35,10 @@ export class SidebarButtonEventManager {
       case 'border':
         border.applyStyle(styleElement);
         break;
-        case 'shadow': 
+      case 'shadow': 
         border.applyStyle(styleElement);
         break;
-      case'colour':
+      case 'colour':
         colour.applyStyle(styleElement);
         break;
       default:

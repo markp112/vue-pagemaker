@@ -2,8 +2,10 @@ import { ButtonIconDimensionInterface, IconType, ComponentNames } from '../butto
 import { Dimension, BoxUnits } from '@/models/components/box-dimension';
 import { Border } from '@/classes/borders/borders';
 import { Style } from '../styles';
+import { ImpactedAttributeTypes } from '@/classes/sidebarButtonEventManager/sidebarButtonEventManager';
 
 export class ButtonIconDimension implements ButtonIconDimensionInterface {
+  styledElement: ImpactedAttributeTypes = 'undefined';
   dimension: Dimension = new Dimension(0, 'px') ;
   style: Style = {
     style: '', 
@@ -16,6 +18,7 @@ export class ButtonIconDimension implements ButtonIconDimensionInterface {
   eventClass: Border;
 
   constructor(buttonIconDimensionBuilder: ButtonIconDimensionBuilder) {
+    this.styledElement = buttonIconDimensionBuilder._styledElement;
     this.dimension = buttonIconDimensionBuilder._dimension;
     this.componentName = buttonIconDimensionBuilder._componentName;
     this.iconImage = buttonIconDimensionBuilder._iconImage;
@@ -26,6 +29,7 @@ export class ButtonIconDimension implements ButtonIconDimensionInterface {
 }
 
 export class ButtonIconDimensionBuilder {
+  _styledElement: ImpactedAttributeTypes = 'undefined';
   _dimension: Dimension = new Dimension(0, 'px') ;
   _iconImage = '';
   _tooltip = '';
@@ -37,6 +41,11 @@ export class ButtonIconDimensionBuilder {
     value: '',
   };
   
+  withStyledElement(styledElement: ImpactedAttributeTypes) {
+    this._styledElement = styledElement;
+    return this;
+  }
+
   withStyle(style: string, value: string) {
     this._style.style = style;
     this._style.value = value;
