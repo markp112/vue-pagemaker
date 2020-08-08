@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebar-button-panel">
+  <div class="flex flex-row justify-start">
     <img src="@/assets/icons/align_left-32.png" 
           class=" cursor-pointer hover:bg-gray-800"
           @click="alignClick('left')"

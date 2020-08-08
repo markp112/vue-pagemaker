@@ -32,7 +32,6 @@ class SnackbarStore extends VuexModule implements SnackbarStateInterface{
   }
 
   public get snackbarMessage(): SnackbarMessage {
-    console.log("SnackbarMessage Called")
     return this.snackbar === undefined ? initSnackbarMessage : this.snackbar;
   }
 }

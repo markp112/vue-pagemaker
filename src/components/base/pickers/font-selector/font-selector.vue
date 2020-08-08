@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="flex flex-row justify-start relative">
+  <div class="sidebar-button-container relative" >
+    <div class="flex flex-row justify-start ">
       <img src="@/assets/icons/alphabet_latin-32.png"
             class="text-accent-600 cursor-pointer hover:bg-gray-600"
       />
@@ -9,7 +9,12 @@
         @click="show()"
         >
     </div>
-    <div v-if="toggleSelectOptions" class="absolute z-20">
+    <div
+      v-if="toggleSelectOptions"
+      class="absolute z-20 left-0 top-auto"
+      @mouseleave="show"
+      @blur="show"
+    >
       <div class="flex flex-row justify-start">
         <span class="font-filter" @click="filterFonts('display')">d</span>
         <span class="font-filter" @click="filterFonts('handwriting')">h</span>
@@ -17,10 +22,7 @@
         <span class="font-filter" @click="filterFonts('serif')">s</span>
         <span class="font-filter" @click="filterFonts('sans-serif')">ss</span>
       </div>
-      <ul class="border border-l-gray-500  dropdown-menu-background flex flex-col items-start w-48 h-64 shadow-lg overflow-y-scroll"
-        @mouseleave="show"
-        @blur="show"
-      >
+      <ul class="dropdown-menu-background flex flex-col items-start w-48 h-64 shadow-lg overflow-y-scroll">
         <li v-for="font in listOfFonts"
           :key="font.fontName" 
           @click="fontClicked(font.fontName)" 
@@ -40,6 +42,8 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Emit } from 'vue-property-decorator';
 import { Fonts, FontItemInterface } from '@/classes/fonts/fonts';
+import { Style } from '@/models/styles/styles';
+import { StyleElement } from '../../../../classes/text-attributes/text-attributes';
 
 @Component
 export default class FontSelect extends Vue {
@@ -57,9 +61,14 @@ export default class FontSelect extends Vue {
   }
 
   @Emit('onFontClick')
-  fontClicked(fontName: string) {
+  fontClicked(fontName: string): StyleElement {
     this.show();
-    return fontName;
+    const style: StyleElement = {
+      styleName: 'fontFamily',
+      value: fontName,
+      units: '',
+    }
+    return style;
   }
 
   filterFonts(filterBy: string) {
@@ -74,7 +83,7 @@ export default class FontSelect extends Vue {
 
 <style lang="postcss">
 .font-filter {
-  @apply w-2/6 h-8 bg-gray-500 text-gray-300 inline-block p-1;
+  @apply w-2/6 h-8 bg-gray-700 text-gray-300 inline-block p-1;
 }
 
 .font-filter:hover {

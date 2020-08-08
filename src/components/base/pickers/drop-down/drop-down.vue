@@ -1,28 +1,27 @@
 <template>
   <div>
-    <div class="flex flex-row justify-start relative w-16">
+    <div class="flex flex-row justify-between relative w-12 text-sm">
       <input
         v-model="selectedItem"
-        class="min-w-6 text-sm text-center relative app-input-field"
+        class="min-w-6 text-center relative app-input-field"
         @change="onInputChange"
       >
-        <slot class="absolute right-0"/>
       <img :src="getPath('down-24.png')" 
-        class="w-4 h-4 cursor-pointer hover:bg-gray-800"
+        class="w-4 h-4 cursor-pointer hover:bg-gray-800 absolute left-0"
         @click="show()"
         >
     </div>
     <ul
-      class="dropdown-menu-background flex flex-col items-center absolute z-10 w-16 shadow-lg h-auto  overflow-auto"
+      class="dropdown-menu-background flex flex-col items-center absolute z-10 w-16 shadow-lg h-auto overflow-auto"
       v-if="toggleSelectOptions"
       @mouseleave="show"
       @blur="show"
     >
       <li
-        v-for="item in $props.selectList"
+        v-for="item in $props.thisIconButton.valuesList"
         :key="item" 
         @click="itemClicked(item)" 
-        class="dropdown-menu-item block w-full text-center"
+        class="dropdown-menu-item block w-full text-center mt-2"
         :class="{'dropdown-menu-selected': item === selectedItem}">
         {{ item }}
       </li>
@@ -34,28 +33,38 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Emit } from 'vue-property-decorator';
+import { ButtonIconNumeric } from '@/models/styles/button-icon/button-numeric-list/button-numeric-list';
+import { ButtonIconNumericBuilder } from '@/models//styles/builders/button-icon-numeric';
+import { StyleElement } from '@/classes/text-attributes/text-attributes';
+import { BoxUnits } from '../../../../models/components/box-dimension';
 
 @Component({
-  props: {
-      selectList: { default: () => {
-      return []
-    }},
-    defaultValue: { default: '' },
-  },
+   props: {
+    thisIconButton: {
+        default: (): ButtonIconNumeric => {
+          return new ButtonIconNumericBuilder().build();
+        },
+      },
+    },
 })
 export default class DropDown extends Vue {
   toggleSelectOptions = false;
   selectedItem = '';
 
   mounted () {
-    this.selectedItem = this.$props.defaultValue;
+    this.selectedItem = this.$props.thisIconButton.defaultValue;
   }
 
   @Emit('onSelectChange')
-  itemClicked(classElement: string): string {
+  itemClicked(classElement: string): StyleElement {
+    const style: StyleElement = {
+      styleName: this.$props.thisIconButton.style.style,
+      value: classElement,
+      units: this.$props.thisIconButton.units,
+    }
     this.selectedItem = classElement;
     this.show();
-    return  classElement;
+    return style;
   }
 
   @Emit('onSelectChange')

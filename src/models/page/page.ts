@@ -1,4 +1,4 @@
-import { ComponentTypes, Button,  Text, LOREMIPSUM, Image } from '../components/components';
+import { ComponentTypes, Button,  Text, LOREMIPSUM, Image, Dimensions } from '../components/components';
 import {
   ComponentRef,
   top,
@@ -166,8 +166,22 @@ export class PageElement implements Partial<PageElementInterface> {
   }
 
   updateBoxHeightandWidth(boxDimensions: BoxDimensionsInterface): void {
-    this._boxDimensions.height = boxDimensions.height;
-    this._boxDimensions.width = boxDimensions.width;
+        
+    if (this._type === 'image') {
+      const image: Image = this._data as Image;
+      let newDimensions: Dimensions;
+      if (image.maintainRatio) {
+        if (boxDimensions.height.value !== image.scaledSize.height) {
+           newDimensions = image.calcScalingRatio('height', boxDimensions.height.value);
+        } else {
+          newDimensions = image.calcScalingRatio('width', boxDimensions.width.value);
+        }
+        boxDimensions.height.value = newDimensions.height;
+        boxDimensions.width.value = newDimensions.width;
+      }
+    }
+   this._boxDimensions.height = boxDimensions.height;
+   this._boxDimensions.width = boxDimensions.width;
   }
 
   addStyle(newStyle: Style) {

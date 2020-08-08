@@ -1,8 +1,8 @@
 import { PageData, ComponentContainer, PageElement, PageElementBuilder } from '@/models/page/page';
 import { ComponentDefinitionInterface, ComponentTypesString } from '@/models/components/base-component'
-import { Button, Text, LOREMIPSUM, Image } from '@/models/components/components';
 export const _componentClasses: ComponentDefinitionInterface[] = []
 
+/** Creates the components and containers a user constructs for their page */
 
 export class ComponentBuilder {
 
@@ -11,12 +11,12 @@ export class ComponentBuilder {
     return dataTransfer ? dataTransfer.getData('text') : '';
   }
 
-  buildComponent(component: ComponentDefinitionInterface, ref: string , parent: ComponentContainer): PageData {
+  buildComponent(component: ComponentDefinitionInterface, ref: string, parent: ComponentContainer): PageData {
     if(component.isContainer) return this.buildContainer(component, ref, parent)
     else return this.buildTheComponent(component, ref, parent);
   }
   
-  private buildContainer(component: ComponentDefinitionInterface ,ref: string, parent:  ComponentContainer) {
+  private buildContainer(component: ComponentDefinitionInterface, ref: string, parent:  ComponentContainer) {
     const container: ComponentContainer = new ComponentContainer(
         new PageElementBuilder()
           .setName(component.componentName)

@@ -1,5 +1,6 @@
+import { StyleElement } from '../text-attributes/text-attributes';
 
-export type BackgroundBorderForeground = 'background-color' | 'color' | 'border';
+export type BackgroundBorderForeground = 'background-color' | 'color' | 'border-color';
 
 export interface ColourInterface {
   _rgbColour: string;
@@ -20,6 +21,12 @@ export class Colour implements ColourInterface {
         }
         return Colour.instance;
     }
+
+    applyStyle(style: StyleElement) {
+      this._rgbColour = style.value;
+      this._backgroundBorderForeground = style.styleName as BackgroundBorderForeground;
+    }
+
 
     set rgbColour(colour: string) {
         this._rgbColour = colour;

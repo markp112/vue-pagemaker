@@ -28,15 +28,17 @@ interface KeyValueString {
   [key: string]: HTMLTags;
 }
 
+export type ClassOrStyle = 'class' | 'style';
+
 export class RHBase implements RHBaseInterface {
   range: Range;
   rangeValues: RangeValuesInterface;
 
   constructor(range: Range) {
+    // console.clear();
     this.range = range;
+    console.log('%c⧭', 'color: #eeff00', range);
     this.rangeValues = this.setSelection();
-    console.clear();
-    console.log('%c⧭', 'color: #eeff00', this.range);
     console.log('%c⧭', 'color: #cc7033', this.rangeValues);
 
   }
@@ -46,9 +48,9 @@ export class RHBase implements RHBaseInterface {
     const rv: RangeValuesInterface = {
       start: this.range.startOffset,
       end: this.range.endOffset,
-      startContent:'', 
-      endContent:'', 
-      ancestorHasChildren: this.range.commonAncestorContainer.hasChildNodes(),
+      startContent: '', 
+      endContent: '', 
+      ancestorHasChildren: (this.range.commonAncestorContainer as HTMLParagraphElement).hasChildNodes(),
       ancestorNodeType: this.getNodeType(this.range.commonAncestorContainer),
       startContainerNodeType: this.getNodeType(this.range.startContainer),
       startContainerParent: this.range.startContainer.parentNode,
@@ -61,8 +63,7 @@ export class RHBase implements RHBaseInterface {
     };
     rv.startContent = this.range.startContainer.textContent ? this.range.startContainer.textContent?.substring(this.range.startOffset) : '';
     rv.endContent = this.range.endContainer.textContent ? this.range.endContainer.textContent.substring(0, this.range.endOffset) : '';
-
-    if (this.range.commonAncestorContainer.childNodes.length > 0) {
+    if (this.range.commonAncestorContainer.hasChildNodes()) {
       this.range.commonAncestorContainer.childNodes.forEach(node => {
         if (this.getNodeType(node) === 'span') rv.ancestorContainsSpan = true;
       })
@@ -87,6 +88,18 @@ export class RHBase implements RHBaseInterface {
     return value === undefined ? 'undefined' : value;
   }
   
+  public isStyleTag(classOrStyle: ClassOrStyle): boolean {
+    return classOrStyle === 'style';
+  }
+
+  public setStyleOrClass(node: Node, style: Style, classOrStyle: ClassOrStyle ) {
+    if (this.isStyleTag(classOrStyle)) {
+      this.setStyle(node, style);
+    } else {
+      this.setClass(node, style);
+    }
+  }
+
   public setStyle(node: Node, style: Style): void {
     const element = node as HTMLElement;
     for (const key in element.style) {
@@ -96,6 +109,39 @@ export class RHBase implements RHBaseInterface {
       }
     }
   }
+  
+  public setClass(node: Node, style: Style): void {
+    const element = node as HTMLElement;
+    element.className = `${style.style} ${style.value}`;
+  }
+  
+  public clearExistingClasses(node: Node, style: Style) {
+    if (node.hasChildNodes()) {
+      node.childNodes.forEach(node => {
+        this.clearExistingClasses(node, style);
+      })
+    }
+    // each class will have a style name (which does nothing)
+    // followed by the actual Tailwind class
+    // style.style is used to identify if there is already 
+    // a style defined of the same class family e.g. font weight
+    const element: HTMLElement = node as HTMLElement;
+    if (element.className) {
+      if (element.className.includes(style.style)) {
+        const classes = element.className.split(' ');
+          let itemPos = 0;
+          classes.forEach((item, index) => {
+            if (item === style.style) {
+              itemPos = index;
+            }
+          })
+          classes[itemPos] = '';
+          classes[itemPos + 1] = '';
+          element.className = classes.filter(item => item !== '').join(' ');
+      }
+    }
+  }
+    
   
   public createWrapperNode(htmlTag: HTMLTags): Node {
     return document.createElement(htmlTag);

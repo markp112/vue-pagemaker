@@ -1,4 +1,4 @@
-export type BoxUnits = 'px' | '%' | 'em';
+export type BoxUnits = 'px' | '%' | 'em' | '';
 export interface ResizeDimensions {
   height: number;
   width: number;

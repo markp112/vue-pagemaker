@@ -2,7 +2,7 @@
   <transition name="fade">
     <div v-show="show" 
       class="absolute text-xs z-20 tooltip-box dropdown-menu-background border-t-4 border-secondary-300
-          radius py-2 shadow shadow-lg tooltip-box w-32 text-center text-secondary-200"
+          radius py-2 shadow-lg tooltip-box w-32 text-center text-secondary-200"
       role="alert"
     >
     {{ $props.tooltip }}

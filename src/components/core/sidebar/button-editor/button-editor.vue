@@ -4,23 +4,12 @@
       <close-button @onClick="closeButtonClick"></close-button>
     </span>
     <div class="mr-2 mt-4 text-accent-600">
-      <colour-select  @onColourChange="onColourChange"></colour-select>
-      <border-buttons
-        class="mt-2"
-        @onBorderChange="onBorderChange"
-        @onRemoveStyle="onRemoveStyle"
-        @onShadowChange="onShadowChange"
-      ></border-buttons>
+      <colour-select></colour-select>
+      <border-buttons class="mt-2"></border-buttons>
       <sidebar-text-editor
         class="mt-2"
           :textValue="data"
         @onTextChange="onTextChange"
-        @onFontWeightChange="onFontWeightChange"
-        @onItalicClick="onItalicClick"
-        @onUnderlineClick="onUnderlineClick"
-        @onFontClick="onFontClick"
-        @onFontSizeChange="onFontSizeChange"
-        @onColourChange="onFontColourChange"
       >
       </sidebar-text-editor>
       <actions-select 
@@ -36,100 +25,33 @@
 import Vue from 'vue';
 import Component, { mixins } from 'vue-class-component';
 import CloseButton from '@/components/base/buttons/close-button/close-button.vue';
-import ColourDropdown from '@/components/base/pickers/colour-picker/colour-dropdown.vue';
 import ColourSelect from '@/components/base/pickers/colour-picker/colour-select.vue';
-import ToggleSwitch from '@/components/base/buttons/switch/switch.vue';
 import BorderButtons from '@/components/base/buttons/borders/borders.vue';
 import SideBarTextEditor from '@/components/base/text/sidebar-text-editor/sidebar-text-editor.vue';
 import ActionsSelect from '@/components/base/pickers/actions-select/actions-select.vue';
 import { PageModule } from '@/store/page/page';
 import { SidebarModule } from '@/store//sidebar/sidebar';
-import { Colour } from '@/classes/colour/singleton-colour';
-import {
-  Style, Border,
-} from '@/models/styles/styles';
 import { ActionEvent } from '../../../../models/components/base-component';
-import { IconPickerInterface } from '../../../../models/components/icon-picker-models';
-import  { BorderButtonsMixin } from '@/mixins/sidebar-Editors/border-buttons/border-buttons-mixin';
-
-type BackgroundForeGround = 'background-color' | 'color' | 'border';
 
 @Component({
   components: {
     'close-button': CloseButton,
-    'colour-picker': ColourDropdown,
     'colour-select': ColourSelect,
-    'toggle-switch': ToggleSwitch,
     'border-buttons': BorderButtons,
     'sidebar-text-editor': SideBarTextEditor,
     'actions-select': ActionsSelect,
   },
 })
-export default class ButtonEditor extends mixins(BorderButtonsMixin) {
+export default class ButtonEditor extends Vue {
   name = 'button-editor'
-  textBackgroundorBorder: BackgroundForeGround = 'background-color';
-  isFontSelected = false;
   data = PageModule.editComponentData;
-  colour: Colour = Colour.getInstance();
 
   closeButtonClick(): void {
     SidebarModule.closeEditor();
   }
 
-  onRadioChange(value: BackgroundForeGround) {
-    this.textBackgroundorBorder = value;
-  }
-
-  onFontColourChange(rgbColour: string) {
-    const style: Style = {
-        style: 'color',
-        value: rgbColour,
-      };
-      PageModule.updateEditedComponentStyles(style);
-  }
-
-  onColourChange(rgbColour: string) {
-    console.log('%c%s', 'color: #917399', rgbColour)
-    if (this.colour.backgroundBorderForeground !=='border') {
-      const style: Style = {
-        style: this.colour.backgroundBorderForeground,
-        value: rgbColour,
-      };
-      PageModule.updateEditedComponentStyles(style);
-    } else {
-        this.borderDefintion = Border.getInstance();
-        this.borderDefintion.colour = rgbColour;
-        this.setBorderStyle();
-    }
-  }
-
-  onFontWeightChange(iconElement: IconPickerInterface): void {
-    PageModule.updateComponentClassProperties(iconElement.class);
-  }
-
   onTextChange(text: string): void {
     PageModule.updateEditedComponentData(text);
-  }
-
-  onItalicClick(classDef: string): void {
-    PageModule.updateComponentClassProperties(classDef);
-  }
-  onUnderlineClick(classDef: string): void {
-    PageModule.updateComponentClassProperties(classDef);
-  }
-
-  onFontClick(fontName: string): void {
-    PageModule.updateEditedComponentStyles({
-      style: 'font-family',
-      value: fontName,
-    });
-  }
-
-  onFontSizeChange(fontSize: number): void {
-    PageModule.updateEditedComponentStyles({
-      style: 'font-size',
-      value: `${fontSize}px`,
-    });
   }
 
   onActionEvent(actionEvent: ActionEvent) {

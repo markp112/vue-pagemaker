@@ -11,8 +11,5 @@ import Component from 'vue-class-component';
 @Component({
   
 })
-export default class SitesMenu extends Vue {
-
-
-}
+export default class SitesMenu extends Vue { }
 </script>

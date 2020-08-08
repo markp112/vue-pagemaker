@@ -109,7 +109,6 @@ export class Fonts {
   }
 
   private initialiseWebFont() {
-    console.log("load webfonts")
     WebFont.load({
       google: {
         families: this.fontNamesList,

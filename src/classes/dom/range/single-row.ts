@@ -8,13 +8,13 @@ export class RangeRow extends RHBase {
     super(range);
   }
 
-  process(htmlTag: HTMLTags, style: Style) {
+  process(htmlTag: HTMLTags, style: Style, classOrStyle: 'class' | 'style') {
     if (!this.range) throw new Error('RH: Range not set');
     if (!this.rangeValues.ancestorHasChildren) {
-      this.createWrapperNoChildren(htmlTag, style);
+      this.createWrapperNoChildren(htmlTag, style, classOrStyle);
     }
     if (this.rangeValues.ancestorHasChildren) {
-        this.createWrapperWithChildren(htmlTag, style);
+        this.createWrapperWithChildren(htmlTag, style, classOrStyle);
     }
   }
 
@@ -23,49 +23,66 @@ export class RangeRow extends RHBase {
     return (node as Text).length;
   }
 
-  private createWrapperNoChildren(htmlTag: HTMLTags, style: Style) {
+  private createWrapperNoChildren(htmlTag: HTMLTags, style: Style, classOrStyle: 'class' | 'style') {
     if(!this.range) throw new Error('Range not set');
     this.fragment = this.range.extractContents();
     const wrapperNode: Node = this.createWrapperNode(htmlTag);
-    this.setStyle(wrapperNode, style);
+    if (classOrStyle === 'style') {
+       this.setStyle(wrapperNode, style);
+    } else {
+      this.setClass(wrapperNode, style);
+    }
     if (this.fragment) wrapperNode.appendChild(this.fragment)
     this.insertNode(wrapperNode);
   }
 
-  private createWrapperWithChildren(htmlTag: HTMLTags, style: Style) {
+  private createWrapperWithChildren(htmlTag: HTMLTags, style: Style, classOrStyle: 'class' | 'style') {
     if(!this.range) throw new Error('Range not set');
     if (this.range.commonAncestorContainer === this.range.startContainer) {
-      this.createNodeFromFragment(htmlTag, style)
+      this.createNodeFromFragment(htmlTag, style, classOrStyle)
       return;
     }
     const firstNodeLength = this.getTextNodeLength(this.range.commonAncestorContainer.childNodes[0]);
     if (this.rangeValues.start === firstNodeLength) {
-      this.createNodeFromFragment(htmlTag, style)
+      this.createNodeFromFragment(htmlTag, style, classOrStyle)
       return;
     }
+    console.log("passed the ifs")
     this.fragment = this.range.extractContents();
-    this.createNewNodeAsWrapper(htmlTag, style);
+    this.createNewNodeAsWrapper(htmlTag, style, classOrStyle);
   }
 
-  createNodeFromFragment(htmlTag: HTMLTags, style: Style) {
+  createNodeFromFragment(htmlTag: HTMLTags, style: Style, classOrStyle: 'class' | 'style') {
     if(!this.range) throw new Error('Range not set');
     this.fragment = this.range.extractContents();
     const wrapperNode: Node | null = this.fragment ? this.fragment.querySelector('span') : this.createWrapperNode(htmlTag);
     if (wrapperNode) {
-      this.clearExistingStyles(wrapperNode, style)
-      this.setStyle(wrapperNode, style);
-      wrapperNode.childNodes.forEach(node => {this.removeNodesWithEmptyStyles(node);})
+      if (classOrStyle === 'style') {
+        this.clearExistingStyles(wrapperNode, style)
+        this.setStyle(wrapperNode, style);
+        wrapperNode.childNodes.forEach(node => {
+          this.removeNodesWithEmptyStyles(node);
+        })
+      } else {
+        this.clearExistingClasses(wrapperNode, style);
+        this.setClass(wrapperNode, style);
+      }
       this.insertNode(wrapperNode);
     }
   }
 
-  private createNewNodeAsWrapper(htmlTag: HTMLTags, style: Style) {
+  private createNewNodeAsWrapper(htmlTag: HTMLTags, style: Style, classOrStyle: 'class' | 'style') {
     if(!this.range) throw new Error('Range not set');
     const wrapperNode = this.createWrapperNode(htmlTag);
-    this.setStyle(wrapperNode, style);
     const fragmentNode: Node = this.fragment as Node;
-    this.clearExistingStyles(fragmentNode, style)
-    this.removeNodesWithEmptyStyles(fragmentNode);
+    if (classOrStyle === 'style') {
+      this.setStyle(wrapperNode, style);
+      this.clearExistingStyles(fragmentNode, style)
+      this.removeNodesWithEmptyStyles(fragmentNode);
+    } else {
+      this.setClass(wrapperNode, style);
+      this.clearExistingClasses(fragmentNode, style);
+    }
     if (fragmentNode) wrapperNode.appendChild(fragmentNode);
     this.insertNode(wrapperNode);
   }

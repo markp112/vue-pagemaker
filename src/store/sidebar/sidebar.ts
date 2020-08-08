@@ -1,13 +1,19 @@
 // Controls the sidebar
 import store from '@/store';
-import { Module, Mutation, Action, VuexModule, getModule } from 'vuex-module-decorators';
-import {  PageData} from '@/models/page/page';
+import {
+  Module,
+  Mutation,
+  Action,
+  VuexModule,
+  getModule
+} from 'vuex-module-decorators';
+import { PageData} from '@/models/page/page';
 import { SidebarComponents } from '@/classes/sidebar-toolbar/sidebar-toolbar-buidler';
 import {  
   ComponentDefinitions,
   ComponentDefinitionInterface,
   ComponentTypesString
-} from '@/models/components/base-component'
+} from '@/models/components/base-component';
 import {
   Notification,
   notificationDefault,
@@ -18,10 +24,10 @@ import firebase from 'firebase';
 const SIDEBARCOLLECTION = 'component-definitions';
 
 export interface SidebarStateInterface {
-  _sidebarElements: ComponentDefinitions,
-  _showSidebar: boolean,
-  _sidebarComponent: SidebarComponents,
-  _showTextModal: boolean,
+  _sidebarElements: ComponentDefinitions;
+  _showSidebar: boolean;
+  _sidebarComponent: SidebarComponents;
+  _showTextModal: boolean;
 }
 
 @Module({ dynamic: true, name: 'sidebar', store })
@@ -53,7 +59,6 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
 
   @Mutation
   private setShowTextModal(show: boolean) {
-    console.log("Set called")
     this._showTextModal = show;
   }
 
@@ -68,7 +73,8 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
     const notification: Notification = notificationDefault;
     return new Promise((resolve, reject) => {
       this.context.commit('clearComponents');
-      firestore.collection(SIDEBARCOLLECTION)
+      firestore
+        .collection(SIDEBARCOLLECTION)
         .get()
         .then(collection => {
           this.context.commit('clearComponents');
@@ -92,18 +98,19 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
     return new Promise((resolve, reject) => {
       const firestore = firebase.firestore();
       const data = editorComponent;
-      firestore.collection(SIDEBARCOLLECTION)
+      firestore
+        .collection(SIDEBARCOLLECTION)
         .doc(data.componentName)
         .set(data)
           .then(() => {
-            this.context.commit('addComponent',editorComponent);
+            this.context.commit('addComponent', editorComponent);
             resolve(notification);
           })
           .catch(err => {
             notification.status = 'Error';
             notification.message = err;
             reject(notification);
-          })
+          });
     })
   }
 
@@ -135,8 +142,9 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
           this.context.commit('setSidebarEditor', 'container-editor' as SidebarComponents);
           break;
         case 'button':
-          this.context.commit('setSidebarEditor', 'button-editor')
-      };
+          this.context.commit('setSidebarEditor', 'button-editor');
+          break;
+      }
     }
   }
 
@@ -154,7 +162,7 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
     this.context.commit('setSidebarEditor', sidebarComponent);
   }
  
-  @Action 
+  @Action
   public updateShowTextModal(show: boolean) {
     this.context.commit("setShowTextModal", show);
   }
@@ -171,7 +179,8 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
     return this._sidebarElements.componentDefinitions();
   }
 
-  get getComponentDefinition(): (componentName: string)
+  get getComponentDefinition():
+    (componentName: string)
     => ComponentDefinitionInterface | undefined {
     return (componentName: string) =>
       this._sidebarElements.getComponent(componentName);

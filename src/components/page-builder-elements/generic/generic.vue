@@ -11,8 +11,9 @@
     <resizeable
       :isActive="isActive"
       :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"
-      @onResize="onResize"
-    ></resizeable>
+      @onResize="onResize($event)"
+    >
+    </resizeable>
   </div>
   <div 
     v-else-if="isImage"
@@ -23,7 +24,7 @@
     @click.prevent="onClick($event)"
   >
     <img
-      :src="data.content"
+      :src="getData"
       :style="getStyles()"
       class="h-full"
       @click.prevent="onClick($event)"
@@ -31,18 +32,18 @@
     <resizeable
       :isActive="isActive"
       :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"
-      @onResize="onResize"
+      @onResize="onResize($event)"
     ></resizeable>
   </div>
   <div 
     v-else
     :style="getStyles()"
     :id="$props.thisComponent.ref"
-    class="handle" 
+    class="handle items-center flex flex-row justify-center" 
     :class="getClasses()"
     @click.prevent="onClick($event)"
   >
-    {{ data.content }} btn
+    {{ data.content }}
     <resizeable
       :isActive="isActive"
       :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"

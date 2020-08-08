@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebar-button-panel">
+  <div class="flex flex-row justify-start">
     <img src="@/assets/icons/increase_indent-32.png" 
           class=" cursor-pointer hover:bg-gray-800"
           @click="indentClick()"
@@ -10,7 +10,6 @@
         >
   </div>
 </template>
-
 
 <script lang="ts">
 import Vue from 'vue';

@@ -19,6 +19,7 @@ import { SidebarModule } from '@/store/sidebar/sidebar';
 import { SidebarPanel } from '../../../models/sidebar/button-definition/sidebar-buttons';
 
 
+
 @Component({
   components:{
     'sidebar-components': sidebarComponentIcons,
@@ -42,7 +43,6 @@ export default class SideBar extends Vue {
   }
 
   get sidebarPanel(): SidebarPanel {
-    console.log("Called")
     const panelType: SidebarComponents = SidebarModule.sidebarComponentType;
     return new SidebarPanelBuilder('container-editor').sidebarPanel;
   }
@@ -60,7 +60,7 @@ export default class SideBar extends Vue {
   }
 
   .icon:hover {
-    @apply shadow  shadow-xl -translate-x-1 -translate-y-1;
+    @apply shadow-xl -translate-x-1 -translate-y-1;
   }
 
   @screen md {
