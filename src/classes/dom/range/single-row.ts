@@ -11,7 +11,7 @@ export class RangeRow extends RHBase {
 
   process(htmlTag: HTMLTags, style: Style, classOrStyle: ClassOrStyle) {
     if (!this.range) throw new Error('RH: Range not set');
-    return;
+    
     if (!this.rangeValues.ancestorHasChildren) {
       this.createWrapperNoChildren(htmlTag, style, classOrStyle);
     }
