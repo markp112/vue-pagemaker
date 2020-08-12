@@ -35,7 +35,7 @@ export class RHBase implements RHBaseInterface {
   rangeValues: RangeValuesInterface;
 
   constructor(range: Range) {
-    // console.clear();
+    console.clear();
     this.range = range;
     console.log('%c⧭', 'color: #eeff00', range);
     this.rangeValues = this.setSelection();
@@ -50,7 +50,7 @@ export class RHBase implements RHBaseInterface {
       end: this.range.endOffset,
       startContent: '', 
       endContent: '', 
-      ancestorHasChildren: (this.range.commonAncestorContainer as HTMLParagraphElement).hasChildNodes(),
+      ancestorHasChildren: (this.range.commonAncestorContainer as HTMLElement).hasChildNodes(),
       ancestorNodeType: this.getNodeType(this.range.commonAncestorContainer),
       startContainerNodeType: this.getNodeType(this.range.startContainer),
       startContainerParent: this.range.startContainer.parentNode,
@@ -141,7 +141,6 @@ export class RHBase implements RHBaseInterface {
       }
     }
   }
-    
   
   public createWrapperNode(htmlTag: HTMLTags): Node {
     return document.createElement(htmlTag);
@@ -160,6 +159,11 @@ export class RHBase implements RHBaseInterface {
         this.setStyle(element, style);
       }
     }
+  }
+
+  public findNextNodeofType(node: Node, nodeType: string): Node | null {
+    if (node.nodeName === nodeType) return node;
+    return node.parentNode ? this.findNextNodeofType(node.parentNode, nodeType) : null;
   }
 }
 
@@ -230,7 +234,6 @@ export class Paragraph extends RHBase {
         const insertAfterNode: Node | null = node?.nextSibling ? node.nextSibling : null;
         // parentNode.appendChild(paraNode);
         parentNode.insertBefore(paraNode, insertAfterNode);
-        console.log('%c⧭', 'color: #cc0036', paraNode);
         this.setParagrah(paraNode);
       }
     } else {
@@ -309,11 +312,7 @@ export class Paragraph extends RHBase {
     style.style = styleName;
   }
 
-  private findNextNodeofType(node: Node, nodeType: string): Node | null {
-    if (node.nodeName === nodeType) return node;
-    return node.parentNode ? this.findNextNodeofType(node.parentNode, nodeType) : null;
-  }
-
+  
 
   private setParagrah(node: Node) {
     console.log('%c⧭', 'color: #1d0957', node);

@@ -1,6 +1,4 @@
-import { RHBase } from "../range-base";
-import { Style } from '@/models/styles/styles';
-import { text } from '@fortawesome/fontawesome-svg-core';
+
 import { PageModule } from '@/store/page/page';
 
 export class AlignText {

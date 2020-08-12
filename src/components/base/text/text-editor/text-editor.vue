@@ -202,8 +202,8 @@ export default class TextEditor extends Vue {
   onItalicClick(style: StyleElement): void {
     this.setStyle('fontStyle', style.value, 'class');
   }
-  onUnderlineClick(): void {
-    this.setStyle('textDecoration', 'underline', 'class');
+  onUnderlineClick(style: StyleElement): void {
+    this.setStyle('textDecoration', style.value, 'class');
   }
 
   onFontSizeChange(style: StyleElement): void {
