@@ -3,7 +3,6 @@ import { RHBase, HTMLTags, ClassOrStyle } from './range-base';
 import { Underline } from './commands/underline';
 
 export class RangeRow extends RHBase {
-  private fragment: DocumentFragment | null = null;
 
   constructor(range: Range) {
     super(range);
@@ -11,13 +10,16 @@ export class RangeRow extends RHBase {
 
   process(htmlTag: HTMLTags, style: Style, classOrStyle: ClassOrStyle) {
     if (!this.range) throw new Error('RH: Range not set');
-    
-    if (!this.rangeValues.ancestorHasChildren) {
-      this.createWrapperNoChildren(htmlTag, style, classOrStyle);
+    if (classOrStyle === 'class') {
+      if (style.value.includes('underline')) {
+        const underLine = new Underline(this.range);
+        underLine.process(htmlTag);
+        return
+      }
     }
-    if (this.rangeValues.ancestorHasChildren) {
-        this.createWrapperWithChildren(htmlTag, style, classOrStyle);
-    }
+    this.rangeValues.ancestorHasChildren 
+      ? this.createWrapperWithChildren(htmlTag, style, classOrStyle)
+      : this.createWrapperNoChildren(htmlTag, style, classOrStyle);
   }
 
   private getTextNodeLength(node: Node): number {
@@ -26,30 +28,15 @@ export class RangeRow extends RHBase {
   }
 
   private createWrapperNoChildren(htmlTag: HTMLTags, style: Style, classOrStyle: ClassOrStyle) {
-    console.log('%c%s', 'color: #aa00ff', 'createWrapperNoChildren');
     if(!this.range) throw new Error('Range not set');
     this.fragment = this.range.extractContents();
     const wrapperNode: Node = this.createWrapperNode(htmlTag);
     this.setStyleOrClass(wrapperNode, style, classOrStyle);
-    let hasUnderLine = false;
-    if (classOrStyle === 'class') {
-      console.log('%c⧭', 'color: #e50000', classOrStyle);
-      if (style.value === 'no-underline') {
-        hasUnderLine = this.isExistingUnderline(style);
-        console.log('%c%s', 'color: #007300', hasUnderLine);
-      }
-    }
     // add back the content contained when the fragment was extracted
     if (this.fragment) {
       wrapperNode.appendChild(this.fragment)
     }
-    if (style.value === 'no-underline') {
-      const underLine = new Underline(this.range, wrapperNode);
-      underLine.insertNoUnderlineNode(this.rangeValues.startContainerParent)
-    } else {
-      this.insertNode(wrapperNode);
-    }
-  
+    this.insertNode(wrapperNode);
   }
 
   private createWrapperWithChildren(htmlTag: HTMLTags, style: Style, classOrStyle: ClassOrStyle) {
@@ -73,7 +60,6 @@ export class RangeRow extends RHBase {
     if(!this.range) throw new Error('Range not set');
     this.fragment = this.range.extractContents();
     const wrapperNode: Node | null = this.fragment ? this.fragment.querySelector('span') : this.createWrapperNode(htmlTag);
-    let hasUnderLine = false;
     if (wrapperNode) {
       if (classOrStyle === 'style') {
         this.clearExistingStyles(wrapperNode, style)
@@ -82,19 +68,10 @@ export class RangeRow extends RHBase {
           this.removeNodesWithEmptyStyles(node);
         })
       } else {
-        if (style.value === 'no-underline') {
-          hasUnderLine = this.isExistingUnderline(style);
-        }
         this.clearExistingClasses(wrapperNode, style);
         this.setClass(wrapperNode, style);
       }
-      console.log('%c%s', 'color: #00bf00', hasUnderLine);
-      if (style.value === 'no-underline') {
-        const underLine = new Underline(this.range, wrapperNode);
-        underLine.insertNoUnderlineNode(this.rangeValues.startContainerParent)
-      } else {
         this.insertNode(wrapperNode);
-      }
     }
   }
 
@@ -103,24 +80,15 @@ export class RangeRow extends RHBase {
     const wrapperNode = this.createWrapperNode(htmlTag);
     const fragmentNode: Node = this.fragment as Node;
     this.setStyleOrClass(wrapperNode, style, classOrStyle);
-    let hasUnderLine = false;
     if (classOrStyle === 'style') {
       this.clearExistingStyles(fragmentNode, style)
       this.removeNodesWithEmptyStyles(fragmentNode);
     } else {
-      if (style.value === 'no-underline') {
-        hasUnderLine = this.isExistingUnderline(style);
-      }
       this.clearExistingClasses(fragmentNode, style);
     }
     if (fragmentNode) wrapperNode.appendChild(fragmentNode);
-    console.log('%c%s', 'color: #32b3f3', hasUnderLine);
-    if (style.value === 'no-underline') {
-      const underLine = new Underline(this.range, wrapperNode);
-      underLine.insertNoUnderlineNode(this.rangeValues.startContainerParent)
-    } else {
-      this.insertNode(wrapperNode);
-    }
+    this.insertNode(wrapperNode);
+    
   }
 
   private removeNodesWithEmptyStyles(node: Node) {

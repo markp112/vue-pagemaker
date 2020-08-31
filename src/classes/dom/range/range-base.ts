@@ -33,6 +33,7 @@ export type ClassOrStyle = 'class' | 'style';
 export class RHBase implements RHBaseInterface {
   range: Range;
   rangeValues: RangeValuesInterface;
+  fragment: DocumentFragment | null = null;
 
   constructor(range: Range) {
     console.clear();
@@ -61,8 +62,8 @@ export class RHBase implements RHBaseInterface {
       selectionLength: -1,
       selectionSpansRows: false,
     };
-    rv.startContent = this.range.startContainer.textContent ? this.range.startContainer.textContent?.substring(this.range.startOffset) : '';
-    rv.endContent = this.range.endContainer.textContent ? this.range.endContainer.textContent.substring(0, this.range.endOffset) : '';
+    rv.startContent = this.range.startContainer.textContent ? this.range.startContainer.textContent?.substring(0,this.range.startOffset) : '';
+    rv.endContent = this.range.endContainer.textContent ? this.range.endContainer.textContent.substring(this.range.endOffset) : '';
     if (this.range.commonAncestorContainer.hasChildNodes()) {
       this.range.commonAncestorContainer.childNodes.forEach(node => {
         if (this.getNodeType(node) === 'span') rv.ancestorContainsSpan = true;

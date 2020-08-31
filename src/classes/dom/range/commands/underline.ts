@@ -1,8 +1,7 @@
-import { RHBase } from '../range-base';
+import { RHBase, HTMLTags } from '../range-base';
 import { Style } from '@/models/styles/styles';
 
 export class Underline extends RHBase {
-  private _underLineNode: Node;
 
   private noUnderline: Style = {
     style: 'textDecoration',
@@ -14,9 +13,53 @@ export class Underline extends RHBase {
     value: 'underline',
   };
 
-  constructor(range: Range, underlineNode: Node ) {
+  constructor(range: Range) {
     super(range);
-    this._underLineNode = underlineNode;
+  }
+
+  private hasClassUnderline(node: Node): boolean {
+    const spanElement = node as HTMLSpanElement;
+    const className = spanElement.className;
+    if (className) {
+      return className.includes('underline');
+    }
+    return false;
+  }
+
+  isUnderlined(node: Node | null) {
+    if (node === null) {
+      return false;
+    }
+    if (node.nodeName === 'P') {
+      return false;
+    }
+    if (node.nodeName === 'Span') {
+      if (this.hasClassUnderline(node)) {
+        return true;
+      }
+    }
+    this.isUnderlined(node.parentNode)
+  }
+
+  removeUnderline() {
+    return;
+  }
+
+  addUnderline(htmlTag: HTMLTags) {
+    this.fragment = this.range.extractContents();
+    const wrapperNode: Node | null = this.fragment
+      ? this.fragment.querySelector('span')
+      : this.createWrapperNode(htmlTag);
+    return;
+  }
+
+  process(htmlTag: HTMLTags) {
+    const isUnderline = this.isUnderlined(this.rangeValues.startContainerParent);
+    if (isUnderline) {
+      this.removeUnderline();
+    } else {
+      this.addUnderline(htmlTag);
+    }
   }
 
   // Notes - we need to know where the selected text sits within the sentence
@@ -29,12 +72,12 @@ export class Underline extends RHBase {
     if (!parentNode) {
       throw new Error('Class underline: invalid parent node');
     }
-  const pNode = this.findNextNodeofType(parentNode,'P');
-  console.log('%c⧭', 'color: #e57373', pNode);
-  pNode?.insertBefore(this._underLineNode, parentNode.nextSibling);
-  const newUnderLineSpan = this.createWrapperNode('span');
-  this.setClass(newUnderLineSpan, this.underline);
-  pNode?.insertBefore(newUnderLineSpan, this._underLineNode.nextSibling);
+    // const pNode = this.findNextNodeofType(parentNode,'P');
+    // console.log('%c⧭', 'color: #e57373', pNode);
+    // pNode?.insertBefore(this._underLineNode, parentNode.nextSibling);
+    // const newUnderLineSpan = this.createWrapperNode('span');
+    // this.setClass(newUnderLineSpan, this.underline);
+    // pNode?.insertBefore(newUnderLineSpan, this._underLineNode.nextSibling);
 
   }
 
