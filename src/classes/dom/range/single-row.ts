@@ -22,10 +22,6 @@ export class RangeRow extends RHBase {
       : this.createWrapperNoChildren(htmlTag, style, classOrStyle);
   }
 
-  private getTextNodeLength(node: Node): number {
-    if (node.nodeName !=='#text') return -1;
-    return (node as Text).length;
-  }
 
   private createWrapperNoChildren(htmlTag: HTMLTags, style: Style, classOrStyle: ClassOrStyle) {
     if(!this.range) throw new Error('Range not set');
@@ -89,28 +85,6 @@ export class RangeRow extends RHBase {
     if (fragmentNode) wrapperNode.appendChild(fragmentNode);
     this.insertNode(wrapperNode);
     
-  }
-
-  private removeNodesWithEmptyStyles(node: Node) {
-    if (!node.hasChildNodes()) return;
-    node.childNodes.forEach(childNode => {
-      if (childNode.hasChildNodes()) this.removeNodesWithEmptyStyles(childNode);
-      if (childNode.nodeName === '#text') return;
-      const element: HTMLElement = childNode as HTMLElement;
-      if (!element) return;
-      if (element.style.length > 0) return;
-        const innerText: string = element.innerText;
-        if (element.previousSibling) {
-          element.previousSibling.textContent += innerText;
-        } else if (element.parentNode) {
-          element.parentNode.textContent += innerText;
-        }
-        childNode.remove();
-    })
-  }
-
-  private insertNode(wrapperNode: Node) {
-    this.range?.insertNode(wrapperNode);
   }
 
   private findNodebyTag(tag: string, startNode: Node): Node | null {

@@ -147,6 +147,33 @@ export class RHBase implements RHBaseInterface {
     return document.createElement(htmlTag);
   }
 
+  public getTextNodeLength(node: Node): number {
+    if (node.nodeName !=='#text') return -1;
+    return (node as Text).length;
+  }
+
+  public insertNode(wrapperNode: Node) {
+    this.range?.insertNode(wrapperNode);
+  }
+
+  public removeNodesWithEmptyStyles(node: Node) {
+    if (!node.hasChildNodes()) return;
+    node.childNodes.forEach(childNode => {
+      if (childNode.hasChildNodes()) this.removeNodesWithEmptyStyles(childNode);
+      if (childNode.nodeName === '#text') return;
+      const element: HTMLElement = childNode as HTMLElement;
+      if (!element) return;
+      if (element.style.length > 0) return;
+        const innerText: string = element.innerText;
+        if (element.previousSibling) {
+          element.previousSibling.textContent += innerText;
+        } else if (element.parentNode) {
+          element.parentNode.textContent += innerText;
+        }
+        childNode.remove();
+    })
+  }
+
   public clearExistingStyles(node: Node, style: Style): void {
     if (node.hasChildNodes()) {
       node.childNodes.forEach(node => {
@@ -194,6 +221,7 @@ export class Indents extends RHBase {
     else currentIndent === 0 ? currentIndent : currentIndent -= this.INDENT;
     (paraStartNode as HTMLElement).style.marginLeft = `${currentIndent}em`;
   }
+
   private getCurrentIndent(node: Node) {
     const currentMargin = (node as HTMLElement).style.marginLeft;
     if (currentMargin === '') return 0;

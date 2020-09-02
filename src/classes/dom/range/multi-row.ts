@@ -2,7 +2,6 @@ import { Style } from '@/models/styles/styles';
 import { RHBase, HTMLTags, ClassOrStyle } from './range-base';
 
 export class MultiRow extends RHBase {
-  private fragment: DocumentFragment | null = null;
   private nodeList: Node[] = [];
 
   constructor(range: Range) {
