@@ -154,6 +154,6 @@ export class Button implements Content {
 export type ComponentTypes = Image | Text | Button | undefined;
 export const LOREMIPSUM = '<p class="text-editor">Lorem ipsum But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born</p>' 
     + '<p>and I will give you a complete account of the system,<span class="italic"> and expound the <span class="not-italic">actual</span> teachings of the great</span> explorer of the truth</p>'
-    + '<p>No one rejects, dislikes, <span class="textDecoration underline"> or avoids pleasure</span><span class="textDecoration no-underline"> itself </span><span class="textDecoration underline"> because it is pleasure</span>, the master-builder of human happiness.</p>'
+    + '<p>No one rejects, dislikes, <span class="textDecoration underline"> or avoids pleasure</span><span> itself </span><span class="textDecoration underline"> because it is pleasure</span>, the master-builder of human happiness.</p>'
     + '<p>but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful.</p>'
     + '<p>Nor again is there anyone who loves or pursues or desires to obtain pain of itself <span style="font-size:22px">because it is pain</span>, but because occasionally circumstances occur.</p>';

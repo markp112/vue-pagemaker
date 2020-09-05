@@ -4,6 +4,7 @@ import { Style } from '@/models/styles/styles';
 interface RangeValuesInterface {
   start: number;
   end: number;
+  selectedContent: string;
   startContent: string,
   endContent: string;
   selectionLength: number;
@@ -51,6 +52,7 @@ export class RHBase implements RHBaseInterface {
       end: this.range.endOffset,
       startContent: '', 
       endContent: '', 
+      selectedContent: '',
       ancestorHasChildren: (this.range.commonAncestorContainer as HTMLElement).hasChildNodes(),
       ancestorNodeType: this.getNodeType(this.range.commonAncestorContainer),
       startContainerNodeType: this.getNodeType(this.range.startContainer),
@@ -62,8 +64,7 @@ export class RHBase implements RHBaseInterface {
       selectionLength: -1,
       selectionSpansRows: false,
     };
-    rv.startContent = this.range.startContainer.textContent ? this.range.startContainer.textContent?.substring(0,this.range.startOffset) : '';
-    rv.endContent = this.range.endContainer.textContent ? this.range.endContainer.textContent.substring(this.range.endOffset) : '';
+    this.getSelectedTextElements(rv);
     if (this.range.commonAncestorContainer.hasChildNodes()) {
       this.range.commonAncestorContainer.childNodes.forEach(node => {
         if (this.getNodeType(node) === 'span') rv.ancestorContainsSpan = true;
@@ -76,6 +77,20 @@ export class RHBase implements RHBaseInterface {
     }
     return rv;
   }
+
+  private getSelectedTextElements(rv: RangeValuesInterface) {
+    const startContainer = this.range.startContainer;
+    const startContainerText = startContainer.textContent ? startContainer.textContent : '';
+    const endContainerText = this.range.endContainer.textContent ? this.range.endContainer.textContent : '';
+    const textLengthStart = this.range.startOffset === 0 ? startContainerText.length : this.range.startOffset;
+    rv.startContent = startContainerText.substring(0, textLengthStart);
+    rv.endContent = endContainerText.substring(this.range.endOffset);
+    rv.selectedContent = startContainerText.substring(this.range.startOffset, this.range.endOffset);
+    if (this.range.endOffset > rv.selectedContent.length && this.range.endOffset > startContainerText.length) {
+      rv.selectedContent = `${rv.selectedContent}${endContainerText.substring(0, this.range.endOffset)}`;
+    }
+  }
+
 
   public getNodeType(node: Node): HTMLTags {
     const nodeName = node.nodeName;
@@ -143,6 +158,19 @@ export class RHBase implements RHBaseInterface {
     }
   }
   
+  public checkForEmptySpan(node: Node): boolean {
+    if (node.nodeName !== 'SPAN') return false;
+    const spanElement = node as HTMLSpanElement;
+    return spanElement.className === '' && spanElement.style.length === 0;
+  }
+
+  public removeEmptySpan(node: Node): Node {
+    const content = node.textContent;
+    const newNode = this.createWrapperNode('text');
+    newNode.textContent = content;
+    return newNode;
+  }
+
   public createWrapperNode(htmlTag: HTMLTags): Node {
     return document.createElement(htmlTag);
   }

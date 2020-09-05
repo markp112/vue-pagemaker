@@ -3,26 +3,76 @@ import { Style } from '@/models/styles/styles';
 
 export class Underline extends RHBase {
 
-  private noUnderline: Style = {
-    style: 'textDecoration',
-    value: 'no-underline',
-  };
-
   private underline: Style = {
     style: 'textDecoration',
     value: 'underline',
   };
 
+  private isElementUnderlined = {
+    startContent: false,
+    selectedContent: false,
+    endContent: false,
+  }
+  
   constructor(range: Range) {
     super(range);
   }
+  
+  setElementUnderlineStatus() {
+    const rv = this.rangeValues;
+    const startParentNodeType = rv.startContainerParent ? rv.startContainerParent.nodeName : '';
+    if (rv.startContainerNodeType === 'text' 
+    && rv.endContainerNodeType === 'text'
+    && startParentNodeType !== 'SPAN') {
+      this.isElementUnderlined.startContent = false;
+      this.isElementUnderlined.endContent = false;
+      this.isElementUnderlined.selectedContent = false;
+      return;
+    }
+    const startParentHasUnderlineClass = this.isUnderlined(rv.startContainerParent);
+    const endParentHasUnderlineClass = this.isUnderlined(rv.endContainerParent);
+    this.isElementUnderlined.startContent = startParentHasUnderlineClass;
+    this.isElementUnderlined.endContent = endParentHasUnderlineClass;
+    if (startParentNodeType === 'P' || startParentNodeType === 'SPAN') {
+      const startNodeIndex = this.findChildNodeIndex(this.range.commonAncestorContainer, this.range.startContainer);
+      console.log('%c%s', 'color: #73998c', startNodeIndex);
+      if (startNodeIndex !== -1) {
+        // look at the child nodes if there is a span between the start and end containers then the selected content is not underlined
+        // if the end node is reached it is underlined
+        for (let index = startNodeIndex + 1; index < this.range.commonAncestorContainer.childNodes.length; index++) {
+          const childNode = this.range.commonAncestorContainer.childNodes[index]
+          if (childNode.textContent === this.range.endContainer.textContent) {
+            this.isElementUnderlined.selectedContent = true;
+            break;
+          }
+          if (childNode.nodeName === 'SPAN' || childNode.nodeName === '#text') {
+            this.isElementUnderlined.selectedContent = false;
+            break;
+          }
+        }
+
+      } else {
+        this.isElementUnderlined.selectedContent = this.isElementUnderlined.startContent;
+      }
+    }
+  }
+  
+  private findChildNodeIndex(parentNode: Node, childNode: Node): number {
+    for (let index = 0; index < parentNode.childNodes.length; index++) {
+      if (parentNode.childNodes[index].textContent === childNode.textContent) {
+        return index;
+      }
+    }
+    return -1;
+  }
 
   public process(htmlTag: HTMLTags) {
-    console.log('%c⧭', 'color: #bfffc8', htmlTag, 'Process - underline');
-    const isUnderline = this.isUnderlined(this.rangeValues.startContainerParent);
-    console.log('%c%s', 'color: #5e98f0', isUnderline);
+    this.setElementUnderlineStatus();
+    
+    console.log('%c⧭', 'color: #994d75', this.isElementUnderlined);
+    const isUnderline = this.isElementUnderlined.startContent && this.isElementUnderlined.selectedContent && this.isElementUnderlined.endContent;
     if (isUnderline) {
-      this.removeUnderline();
+      this.removeUnderline(htmlTag);
     } else {
       this.addUnderline(htmlTag);
     }
@@ -37,7 +87,7 @@ export class Underline extends RHBase {
     return false;
   }
 
-  private isUnderlined(node: Node | null) {
+  private isUnderlined(node: Node | null): boolean {
     if (node === null) {
       return false;
     }
@@ -45,23 +95,33 @@ export class Underline extends RHBase {
       return false;
     }
     if (node.nodeName === 'SPAN') {
-      if (this.hasClassUnderline(node)) {
-        return true;
-      }
+      return this.hasClassUnderline(node)
     }
-    this.isUnderlined(node.parentNode)
+    return this.isUnderlined(node.parentNode)
   }
 
   // remove the underline if present
   private removeUnderline(htmlTag: HTMLTags) {
     console.log('%c%s', 'color: #f279ca', 'removeUnderline');
     console.log("Range:", this.range, this.rangeValues);
-    const underlineNode = this.getNodeWithUnderline(this.range.commonAncestorContainer);
+    const underlineNode = this.getNodeWithUnderline(this.range.startContainer);
     if (!underlineNode) throw new Error('removeUnderline no underline class found');
-    console.log('%c⧭', 'color: #99adcc', underlineNode);
+    console.log('%c⧭', 'color: #0864f0', underlineNode);
+    //const rv = this.rangeValues;
+    // if (rv.startContent === '')
     this.fragment = this.range.extractContents();
     const wrapperNode = this.createWrapperNode(htmlTag);
-    wrapperNode.appendChild(this.fragment);
+    if (this.fragment) {
+      // if (this.checkForEmptySpan(this.fragment)) {
+      //   const node = this.removeEmptySpan(this.fragment);
+      //   if (node.textContent !=='') {
+
+      //     wrapperNode.appendChild(node);
+      //   }
+      // } else {
+        wrapperNode.appendChild(this.fragment);
+      // }
+    }
     const endNode = this.createWrapperNode(htmlTag);
     endNode.textContent = this.rangeValues.endContent;
     this.setClass(endNode, this.underline);
@@ -73,14 +133,16 @@ export class Underline extends RHBase {
     if (!parentNode) throw new Error('removeUnderline no underline parent of underline found');
     // append the wrapper node after the underline node
     parentNode.insertBefore(wrapperNode, underlineNode.nextSibling);
-    // append the end node after wrapper node
-    parentNode.insertBefore(endNode, wrapperNode.nextSibling);
+    // append the end node after wrapper node if it was part of the original selection
+    if (this.rangeValues.endContent !== '') {
+      parentNode.insertBefore(endNode, wrapperNode.nextSibling);
+    }
   }
 
   private getNodeWithUnderline(node: Node): Node | null {
     if (node.nodeName === 'SPAN') {
       const element: HTMLSpanElement = node as HTMLSpanElement;
-      if (element.className.includes('underline')) {
+      if (element.className.includes('underline') || element.innerHTML.includes('underline')) {
         return node;
       }
     }
@@ -90,13 +152,50 @@ export class Underline extends RHBase {
     return null;
   }
 
-
+  private underlineChildNode(node: ChildNode) {
+    let hasStyleOrClass = false;
+    if (node.nodeName === 'SPAN') {
+      const element = node as HTMLSpanElement;
+      hasStyleOrClass = element.className === '' && element.style.length === 0;
+    }
+    console.log('%c%s', 'color: #514080', hasStyleOrClass);
+    if (!hasStyleOrClass) {
+      const startText =  this.range.startContainer.textContent ?  this.range.startContainer.textContent : '';
+      const nodeText = node.textContent ? node.textContent : '';
+      console.log('%c%s', 'color: #8c0038', nodeText);
+      this.range.startContainer.textContent = `${startText}${nodeText}`;
+      node.remove();
+    } else {
+      this.range.startContainer.appendChild(node);
+      this.range.commonAncestorContainer.removeChild(node);
+    }
+  }
+  
 
   // add underline if not present
   private addUnderline(htmlTag: HTMLTags) {
-    this.rangeValues.ancestorHasChildren 
-      ? this.createWrapperWithChildren(htmlTag)
-      : this.createWrapperNoChildren(htmlTag);
+    // start of content is underlined and end content is underlined middle is not
+    if (this.isElementUnderlined.startContent && this.isElementUnderlined.endContent) {
+      const startNodeIndex = this.findChildNodeIndex(this.range.commonAncestorContainer, this.range.startContainer);
+      const endNodeIndex = this.findChildNodeIndex(this.range.commonAncestorContainer, this.range.endContainer);
+      for (let index = startNodeIndex + 1; index < endNodeIndex; index++) {
+        const childNodes = this.range.commonAncestorContainer.childNodes;
+        const node = childNodes[index];
+        this.underlineChildNode(node);
+      }
+    }
+    if (this.isElementUnderlined.startContent && !this.isElementUnderlined.endContent) {
+      const endNodeIndex = this.findChildNodeIndex(this.range.commonAncestorContainer, this.range.endContainer);
+      const node = this.range.commonAncestorContainer.childNodes[endNodeIndex];
+      this.underlineChildNode(node);
+    }
+    if (!this.isElementUnderlined.startContent 
+      && !this.isElementUnderlined.selectedContent
+      && !this.isElementUnderlined.endContent ) {
+        this.rangeValues.ancestorHasChildren 
+          ? this.createWrapperWithChildren(htmlTag)
+          : this.createWrapperNoChildren(htmlTag);
+      }
   }
 
   private createWrapperWithChildren(htmlTag: HTMLTags) {
@@ -109,7 +208,6 @@ export class Underline extends RHBase {
       this.createNodeFromFragment(htmlTag)
       return;
     }
-    console.log("passed Ifs")
     this.fragment = this.range.extractContents();
     this.createNewNodeAsWrapper(htmlTag, this.underline, 'class');
   }
@@ -135,7 +233,7 @@ export class Underline extends RHBase {
       this.insertNode(wrapperNode);
     }
 
-    private createWrapperNoChildren(htmlTag: HTMLTags){
+    private createWrapperNoChildren(htmlTag: HTMLTags) {
       this.fragment = this.range.extractContents();
       const wrapperNode = this.createWrapperNode(htmlTag);
       const fragmentNode: Node = this.fragment as Node;
@@ -146,27 +244,4 @@ export class Underline extends RHBase {
         this.range?.insertNode(wrapperNode);
       }
     }
-
- 
-
-  // Notes - we need to know where the selected text sits within the sentence
-
-  insertNoUnderlineNode(parentNode: Node | null) {
-    console.log('%c⧭', 'color: #997326', parentNode);
-    // check if parent is a span if so traverse tree until we get to a P tag as a no underline needs to be inserted
-    // into the child nodes of the P tag for it to take off the underline, if it is nested inside of an underline tag
-    // it has no effect;
-    if (!parentNode) {
-      throw new Error('Class underline: invalid parent node');
-    }
-    // const pNode = this.findNextNodeofType(parentNode,'P');
-    // console.log('%c⧭', 'color: #e57373', pNode);
-    // pNode?.insertBefore(this._underLineNode, parentNode.nextSibling);
-    // const newUnderLineSpan = this.createWrapperNode('span');
-    // this.setClass(newUnderLineSpan, this.underline);
-    // pNode?.insertBefore(newUnderLineSpan, this._underLineNode.nextSibling);
-
-  }
-
-
 }
