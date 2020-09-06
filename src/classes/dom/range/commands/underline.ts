@@ -166,26 +166,22 @@ export class Underline extends RHBase {
       this.range.commonAncestorContainer.removeChild(node);
     }
   }
-  
 
   // add underline if not present anywhere in the selection
   private addUnderline(htmlTag: HTMLTags) {
     // start of content is underlined and end content is underlined middle is not
     if (this.isElementUnderlined.startContent && this.isElementUnderlined.endContent) {
       const startNodeIndex = this.findChildNodeIndex(this.range.commonAncestorContainer, this.range.startContainer);
-      console.log('%c%s', 'color: #00736b', startNodeIndex);
       let endNodeIndex = this.findChildNodeIndex(this.range.commonAncestorContainer, this.range.endContainer);
-      console.log('%c%s', 'color: #d0bfff', endNodeIndex);
       const childNodes = this.range.commonAncestorContainer.childNodes;
       for (let index = startNodeIndex + 1; index < endNodeIndex; index++) {
         const node = childNodes[index];
         this.underlineChildNode(node);
       }
       // remove the underline class from the end node index
+      // re-find the index of the end node as this may have changed if nodes have been removed
       endNodeIndex = this.findChildNodeIndex(this.range.commonAncestorContainer, this.range.endContainer);
       this.clearExistingClasses(childNodes[endNodeIndex], this.underline);
-      console.log('%c⧭', 'color: #f27999', childNodes[endNodeIndex]);
-
       this.underlineChildNode(childNodes[endNodeIndex])
       return;
     }
