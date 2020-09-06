@@ -81,7 +81,9 @@ export class RHBase implements RHBaseInterface {
   private getSelectedTextElements(rv: RangeValuesInterface) {
     const startContainer = this.range.startContainer;
     const startContainerText = startContainer.textContent ? startContainer.textContent : '';
+    console.log('%c%s', 'color: #cc0036', startContainerText);
     const endContainerText = this.range.endContainer.textContent ? this.range.endContainer.textContent : '';
+    console.log('%c%s', 'color: #ff6600', endContainerText);
     const textLengthStart = this.range.startOffset === 0 ? startContainerText.length : this.range.startOffset;
     rv.startContent = startContainerText.substring(0, textLengthStart);
     rv.endContent = endContainerText.substring(this.range.endOffset);
