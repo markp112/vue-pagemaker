@@ -77,13 +77,12 @@ export class RHBase implements RHBaseInterface {
     }
     return rv;
   }
-
+  
+  // needs work to take into account spans between start and end container plus multi row selections
   private getSelectedTextElements(rv: RangeValuesInterface) {
     const startContainer = this.range.startContainer;
     const startContainerText = startContainer.textContent ? startContainer.textContent : '';
-    console.log('%c%s', 'color: #cc0036', startContainerText);
     const endContainerText = this.range.endContainer.textContent ? this.range.endContainer.textContent : '';
-    console.log('%c%s', 'color: #ff6600', endContainerText);
     const textLengthStart = this.range.startOffset === 0 ? startContainerText.length : this.range.startOffset;
     rv.startContent = startContainerText.substring(0, textLengthStart);
     rv.endContent = endContainerText.substring(this.range.endOffset);
@@ -92,7 +91,6 @@ export class RHBase implements RHBaseInterface {
       rv.selectedContent = `${rv.selectedContent}${endContainerText.substring(0, this.range.endOffset)}`;
     }
   }
-
 
   public getNodeType(node: Node): HTMLTags {
     const nodeName = node.nodeName;

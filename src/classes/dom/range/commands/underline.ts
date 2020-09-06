@@ -1,6 +1,8 @@
 import { RHBase, HTMLTags, ClassOrStyle } from '../range-base';
 import { Style } from '@/models/styles/styles';
 
+type StringOrNull = string | null;
+
 export class Underline extends RHBase {
 
   private underline: Style = {
@@ -34,32 +36,43 @@ export class Underline extends RHBase {
     this.isElementUnderlined.startContent = startParentHasUnderlineClass;
     this.isElementUnderlined.endContent = endParentHasUnderlineClass;
     if (startParentNodeType === 'P' || startParentNodeType === 'SPAN') {
-      const startNodeIndex = this.findChildNodeIndex(this.range.commonAncestorContainer, this.range.startContainer);
-      console.log('%c%s', 'color: #73998c', startNodeIndex);
-      if (startNodeIndex !== -1) {
-        // look at the child nodes if there is a span between the start and end containers then the selected content is not underlined
-        // if the end node is reached it is underlined
-        for (let index = startNodeIndex + 1; index < this.range.commonAncestorContainer.childNodes.length; index++) {
-          const childNode = this.range.commonAncestorContainer.childNodes[index]
-          if (childNode.textContent === this.range.endContainer.textContent) {
-            this.isElementUnderlined.selectedContent = true;
-            break;
-          }
-          if (childNode.nodeName === 'SPAN' || childNode.nodeName === '#text') {
-            this.isElementUnderlined.selectedContent = false;
-            break;
-          }
-        }
-
-      } else {
-        this.isElementUnderlined.selectedContent = this.isElementUnderlined.startContent;
-      }
+      this.isElementUnderlined.selectedContent = 
+        this.isSpanTextNodeSandwiched(
+          this.range.commonAncestorContainer.parentNode,
+          this.range.startContainer.textContent,
+          this.range.endContainer.textContent);
+    } else {
+      this.isElementUnderlined.selectedContent = this.isElementUnderlined.startContent;
     }
   }
+
+  isSpanTextNodeSandwiched(ancestorNode: Node | null, startText: StringOrNull, endText: StringOrNull): boolean {
+    if (!ancestorNode) { 
+      throw new Error('isSpanTextNodeSandwiched: ancestor node is null');
+    }
+    console.log('%c%s', 'color: #807160', endText);
+    console.log('%c%s', 'color: #731d1d', startText);
+    const startNodeIndex = this.findChildNodeIndex(ancestorNode, startText);
+    console.log('%c%s', 'color: #007300', startNodeIndex);
+    if (startNodeIndex !== -1) {
+      // look at the child nodes if there is a span / text node between the start and end containers then the selected content is not underlined
+      // if the end node is reached it is underlined
+      for (let index = startNodeIndex + 1; index < ancestorNode.childNodes.length; index++) {
+        const childNode = ancestorNode.childNodes[index]
+        if (childNode.textContent === endText) {
+          return true;
+        }
+        if (childNode.nodeName === 'SPAN' || childNode.nodeName === '#text') {
+          return false;
+        }
+      }
+    }
+    return false;
+  }
   
-  private findChildNodeIndex(parentNode: Node, childNode: Node): number {
-    for (let index = 0; index < parentNode.childNodes.length; index++) {
-      if (parentNode.childNodes[index].textContent === childNode.textContent) {
+  private findChildNodeIndex(searchNode: Node, contentToMatch: StringOrNull): number {
+    for (let index = 0; index < searchNode.childNodes.length; index++) {
+      if (searchNode.childNodes[index].textContent === contentToMatch) {
         return index;
       }
     }
@@ -68,9 +81,10 @@ export class Underline extends RHBase {
 
   public process(htmlTag: HTMLTags) {
     this.setElementUnderlineStatus();
-    
-    console.log('%c⧭', 'color: #994d75', this.isElementUnderlined);
-    const isUnderline = this.isElementUnderlined.startContent && this.isElementUnderlined.selectedContent && this.isElementUnderlined.endContent;
+    const isUnderline = 
+      this.isElementUnderlined.startContent 
+      && this.isElementUnderlined.selectedContent 
+      && this.isElementUnderlined.endContent;
     if (isUnderline) {
       this.removeUnderline(htmlTag);
     } else {
@@ -102,16 +116,16 @@ export class Underline extends RHBase {
 
   // remove the underline if present
   private removeUnderline(htmlTag: HTMLTags) {
-    console.log('%c%s', 'color: #f279ca', 'removeUnderline');
-    console.log("Range:", this.range, this.rangeValues);
+    console.log('%c%s', 'color: #f200e2', 'removeUnderline');
     const underlineNode = this.getNodeWithUnderline(this.range.startContainer);
     if (!underlineNode) throw new Error('removeUnderline no underline class found');
-    console.log('%c⧭', 'color: #0864f0', underlineNode);
     this.fragment = this.range.extractContents();
     const wrapperNode = this.createWrapperNode(htmlTag);
     if (this.fragment) {
-        wrapperNode.appendChild(this.fragment);
+      wrapperNode.appendChild(this.fragment);
     }
+    // get the parent of the underline node
+    // const parentNode = underlineNode.parentNode;
     const parentNode = underlineNode.parentNode;
     if (!parentNode) throw new Error('removeUnderline no underline parent of underline found');
     // if end content is empty the user has selected the entire underline block
@@ -123,11 +137,7 @@ export class Underline extends RHBase {
     endNode.textContent = this.rangeValues.endContent;
     this.setClass(endNode, this.underline);
     underlineNode.textContent = this.rangeValues.startContent;
-    // get the parent of the underline node
-    // const parentNode = underlineNode.parentNode;
-    if (!parentNode) throw new Error('removeUnderline no underline parent of underline found');
     // append the wrapper node after the underline node
-    console.log('%c⧭', 'color: #99614d', wrapperNode);
     parentNode.insertBefore(wrapperNode, underlineNode.nextSibling);
     // append the end node after wrapper node if it was part of the original selection
     if (this.rangeValues.endContent !== '') {
@@ -156,9 +166,7 @@ export class Underline extends RHBase {
     }
     if (!hasStyleOrClass) {
       const startText = this.range.startContainer.textContent ?  this.range.startContainer.textContent : '';
-      console.log('%c%s', 'color: #40fff2', startText);
       const nodeText = node.textContent ? node.textContent : '';
-      console.log('%c%s', 'color: #5200cc', nodeText);
       this.range.startContainer.textContent = `${startText}${nodeText}`;
       node.remove();
     } else {
@@ -171,8 +179,8 @@ export class Underline extends RHBase {
   private addUnderline(htmlTag: HTMLTags) {
     // start of content is underlined and end content is underlined middle is not
     if (this.isElementUnderlined.startContent && this.isElementUnderlined.endContent) {
-      const startNodeIndex = this.findChildNodeIndex(this.range.commonAncestorContainer, this.range.startContainer);
-      let endNodeIndex = this.findChildNodeIndex(this.range.commonAncestorContainer, this.range.endContainer);
+      const startNodeIndex = this.findChildNodeIndex(this.range.commonAncestorContainer, this.range.startContainer.textContent);
+      let endNodeIndex = this.findChildNodeIndex(this.range.commonAncestorContainer, this.range.endContainer.textContent);
       const childNodes = this.range.commonAncestorContainer.childNodes;
       for (let index = startNodeIndex + 1; index < endNodeIndex; index++) {
         const node = childNodes[index];
@@ -180,13 +188,13 @@ export class Underline extends RHBase {
       }
       // remove the underline class from the end node index
       // re-find the index of the end node as this may have changed if nodes have been removed
-      endNodeIndex = this.findChildNodeIndex(this.range.commonAncestorContainer, this.range.endContainer);
+      endNodeIndex = this.findChildNodeIndex(this.range.commonAncestorContainer, this.range.endContainer.textContent);
       this.clearExistingClasses(childNodes[endNodeIndex], this.underline);
       this.underlineChildNode(childNodes[endNodeIndex])
       return;
     }
     if (this.isElementUnderlined.startContent && !this.isElementUnderlined.endContent) {
-      const endNodeIndex = this.findChildNodeIndex(this.range.commonAncestorContainer, this.range.endContainer);
+      const endNodeIndex = this.findChildNodeIndex(this.range.commonAncestorContainer, this.range.endContainer.textContent);
       const node = this.range.commonAncestorContainer.childNodes[endNodeIndex];
       this.underlineChildNode(node);
     }
