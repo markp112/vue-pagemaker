@@ -46,6 +46,10 @@
 </template>
 
 <script lang="ts">
+/**
+ * @description Primary text editor
+ */
+
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import ColourDropdown from '@/components/base/pickers/colour-picker/colour-dropdown.vue';
@@ -55,7 +59,6 @@ import IndentOutdent from '@/components/base/text/text-editor/indent/indent-outd
 import TextAlignment from '@/components/base/text/text-editor/justify/justify.vue';
 import { Style } from '../../../../models/styles/styles';
 import { SidebarModule } from '@/store/sidebar/sidebar';
-// import { RH, Indents, Paragraph } from '@/classes/dom/range/rangev2';
 import { Indents, Paragraph } from '@/classes/dom/range/range-base';
 import { RH } from '@/classes/dom/range/RH';
 import { PageModule } from '../../../../store/page/page';
@@ -74,7 +77,7 @@ import { ButtonIconClassInterface } from '@/models/styles/button-icon/button-ico
 import { ButtonFactory } from '@/models/styles/button-factory/button-factory';
 import { ButtonIconNumeric } from '@/models/styles/button-icon/button-numeric-list/button-numeric-list';
 import { StyleElement, TextAttributes } from '@/classes/text-attributes/text-attributes';
-
+import { TextModule } from '@/store/text-editor/text-editor';
 @Component({
   components: {
     'close-button': CloseButton,
@@ -99,12 +102,13 @@ export default class TextEditor extends Vue {
   isFontUnderlined = false;
   fontWeightIconList = fontWeightIconList;
   fontWeightButton: ButtonIconClassList = new ButtonFactory().createButton('class-list', 'fontWeight') as ButtonIconClassList;
-  italicButton: ButtonIconClassInterface = new ButtonFactory().createButton('class','italic-button') as ButtonIconClassInterface;
-  underLineButton: ButtonIconClassInterface = new ButtonFactory().createButton('class','underline-button') as ButtonIconClassInterface;
-  fontSizeButton: ButtonIconNumeric = new ButtonFactory().createButton('numeric','fontSize') as ButtonIconNumeric;
+  italicButton: ButtonIconClassInterface = new ButtonFactory().createButton('class', 'italic-button') as ButtonIconClassInterface;
+  underLineButton: ButtonIconClassInterface = new ButtonFactory().createButton('class', 'underline-button') as ButtonIconClassInterface;
+  fontSizeButton: ButtonIconNumeric = new ButtonFactory().createButton('numeric', 'fontSize') as ButtonIconNumeric;
 
   mounted() {
     this.localContent = this.$props.content;
+    TextModule.buildParagraphs(this.localContent);
     const textEditor: HTMLDivElement = this.$refs.texteditorcontent as HTMLDivElement;
     this.reset();
   }
@@ -131,8 +135,12 @@ export default class TextEditor extends Vue {
   onKeyDown(key: KeyboardEvent) {
     if (key.code === 'Enter') {
       this.getSelection();
-      const paragraph = new Paragraph(this.range);
-      paragraph.newLine();
+      const id = TextModule.createParagraph()
+        .then(id => {
+          const paragraph = new Paragraph(this.range, id);
+          paragraph.newLine();
+          return;
+        })
     }
     if ( key.code === 'ArrowLeft' 
       || key.code === 'ArrowRight'
@@ -169,8 +177,8 @@ export default class TextEditor extends Vue {
     const selection: Selection | null = window.getSelection 
       ? window.getSelection() : document.getSelection();
     if (!selection) return;
-    this.range = this.rangeClone;
-    selection.removeAllRanges();
+    // this.range = this.rangeClone;
+    // selection.removeAllRanges();
     selection.addRange(this.rangeClone);
   }
 
@@ -246,5 +254,10 @@ export default class TextEditor extends Vue {
 </script>
 
 <style lang="postcss" scoped>
- 
+ div p {
+   margin-block-start: 1em;
+   margin-block-end: 1em;
+   margin-inline-start: 0px;
+   margin-inline-end: 0px;
+ }
 </style>

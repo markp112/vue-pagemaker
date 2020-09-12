@@ -267,9 +267,10 @@ export class Indents extends RHBase {
   }
 }
 export class Paragraph extends RHBase {
-
-  constructor(range: Range) {
+  id = '';
+  constructor(range: Range, id ='') {
     super(range);
+    this.id = id;
   }
 
   public newLine() {
@@ -281,6 +282,8 @@ export class Paragraph extends RHBase {
     if (this.rangeValues.start === this.rangeValues.end) {
       const paraNode: Node = this.createWrapperNode('p');
       const element: HTMLElement = paraNode as HTMLElement;
+      element.id = this.id;
+      console.log('%c%s', 'color: #994d75', this.id);
       node !== null ? paraNode.appendChild(node) : element.innerText = ' ';
       // element.style.lineHeight = '1em';
       const parentNode: Node | null = this.findNextNodeofType(this.range.commonAncestorContainer, 'DIV');
@@ -318,7 +321,6 @@ export class Paragraph extends RHBase {
     }
     return textNode;
   }
-
 
   private getTextToEndOfLine(): Text {
     return (this.range.commonAncestorContainer as Text).splitText(this.range.startOffset);

@@ -20,22 +20,38 @@ export class Underline extends RHBase {
     super(range);
   }
   
+  public process(htmlTag: HTMLTags) {
+    this.setElementUnderlineStatus();
+    const isUnderline = 
+    this.isElementUnderlined.startContent 
+    && this.isElementUnderlined.selectedContent 
+    && this.isElementUnderlined.endContent;
+    console.log('%c%s', 'color: #997326', isUnderline);
+    return;
+    if (isUnderline) {
+      this.removeUnderline(htmlTag);
+    } else {
+      this.addUnderline(htmlTag);
+    }
+  }
+
   setElementUnderlineStatus() {
     const rv = this.rangeValues;
     const startParentNodeType = rv.startContainerParent ? rv.startContainerParent.nodeName : '';
     if (rv.startContainerNodeType === 'text' 
-    && rv.endContainerNodeType === 'text'
-    && startParentNodeType !== 'SPAN') {
-      this.isElementUnderlined.startContent = false;
-      this.isElementUnderlined.endContent = false;
-      this.isElementUnderlined.selectedContent = false;
-      return;
+      && rv.endContainerNodeType === 'text'
+      && startParentNodeType !== 'SPAN') {
+        this.isElementUnderlined.startContent = false;
+        this.isElementUnderlined.endContent = false;
+        this.isElementUnderlined.selectedContent = false;
+        return;
     }
     const startParentHasUnderlineClass = this.isUnderlined(rv.startContainerParent);
     const endParentHasUnderlineClass = this.isUnderlined(rv.endContainerParent);
     this.isElementUnderlined.startContent = startParentHasUnderlineClass;
     this.isElementUnderlined.endContent = endParentHasUnderlineClass;
     if (startParentNodeType === 'P' || startParentNodeType === 'SPAN') {
+      console.log('%c%s', 'color: #13f130', startParentNodeType);
       this.isElementUnderlined.selectedContent = 
         this.isSpanTextNodeSandwiched(
           this.range.commonAncestorContainer.parentNode,
@@ -67,7 +83,8 @@ export class Underline extends RHBase {
         }
       }
     }
-    return false;
+    // if there are no child nodes return the status of the first node.
+    return this.isElementUnderlined.startContent;
   }
   
   private findChildNodeIndex(searchNode: Node, contentToMatch: StringOrNull): number {
@@ -79,18 +96,6 @@ export class Underline extends RHBase {
     return -1;
   }
 
-  public process(htmlTag: HTMLTags) {
-    this.setElementUnderlineStatus();
-    const isUnderline = 
-      this.isElementUnderlined.startContent 
-      && this.isElementUnderlined.selectedContent 
-      && this.isElementUnderlined.endContent;
-    if (isUnderline) {
-      this.removeUnderline(htmlTag);
-    } else {
-      this.addUnderline(htmlTag);
-    }
-  }
 
   private hasClassUnderline(node: Node): boolean {
     const spanElement = node as HTMLSpanElement;

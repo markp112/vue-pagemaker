@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit",
+    "test": "jest",
     "lint": "vue-cli-service lint",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
@@ -67,6 +67,7 @@
     "tailwindcss": "^1.2.0",
     "typescript": "~3.7.5",
     "vue-template-compiler": "^2.6.11",
+    "vue-testing-library": "^0.17.0",
     "vuex-module-decorators": "^0.16.1"
   }
 }

@@ -38,7 +38,6 @@ firebaseApp.firestore().enablePersistence()
 // Subsequent queries will use persistence, if it was enabled successfully
 const fontsService = Fonts.getInstance();
 
-
 Vue.config.productionTip = false;
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.use(firestorePlugin);

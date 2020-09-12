@@ -7,7 +7,7 @@ import {
   VuexModule,
   getModule
 } from 'vuex-module-decorators';
-import { PageData} from '@/models/page/page';
+import { PageData } from '@/models/page/page';
 import { SidebarComponents } from '@/classes/sidebar-toolbar/sidebar-toolbar-buidler';
 import {  
   ComponentDefinitions,

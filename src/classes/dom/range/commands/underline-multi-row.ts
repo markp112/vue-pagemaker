@@ -24,7 +24,7 @@ import { Style } from '@/models/styles/styles';
 
     public process(htmlTag: HTMLTags) {
       if (!this.rangeValues) { throw new Error('RH: range values not set')};
-       this.fragment = this.range.extractContents();
+      this.fragment = this.range.extractContents();
       const node: ParentNode = this.fragment as ParentNode;
       console.log('%c⧭', 'color: #733d00', node);
      

@@ -15,7 +15,7 @@ export class MultiRow extends MultiRowBase {
     if (style.value.includes('underline')) {
       console.log('%c%s', 'color: #cc7033', style.value);
       const multiRowUnderline = new MultiRowUnderline(this.range);
-      multiRowUnderline.process(htmlTag);
+      // multiRowUnderline.process(htmlTag);
     } else {
       this.processMultiRowSelection(htmlTag, style, classorStyle);
     }
