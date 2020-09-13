@@ -180,7 +180,7 @@ export class Underline extends RHBase {
     }
   }
 
-  // add underline if not present anywhere in the selection
+  // add underline to anything not present in teh s
   private addUnderline(htmlTag: HTMLTags) {
     // start of content is underlined and end content is underlined middle is not
     if (this.isElementUnderlined.startContent && this.isElementUnderlined.endContent) {

@@ -1,4 +1,5 @@
 import { Style } from '@/models/styles/styles';
+import { ClassOrStyle } from '../range/range-base';
 
 export type HTMLTags = 'div' | 'span' | 'p' | 'b' | 'u' | 'i' | 'text' | 'br' | 'undefined';
 interface KeyValueString {
@@ -50,5 +51,41 @@ export class RangeBase {
     const element = node as HTMLElement;
     element.className = `${style.style} ${style.value}`;
     return node;
+  }
+
+  /**
+   * @description check the parent hierarchy for the existence of class 
+   * @param node node to start search from
+   * @param className name of class to search for
+   * @returns null if no parent found or parent node is P tag i.e. the start of the line
+   */
+  public findParentNodeWithClass(node: Node | null, className: string): Node | null {
+    if (!node) return node;
+    if (node.nodeName === 'P') return null;
+    if (node.nodeName === 'SPAN') {
+      const element: HTMLSpanElement = node as HTMLSpanElement;
+      if (element.className.includes('underline')) {
+        return node;
+      } 
+    }
+    if (node.parentNode) {
+      return this.findParentNodeWithClass(node.parentNode, className);
+    }
+    return null;
+  }
+
+  public isNodeOfType(node: Node | ChildNode | null, type: HTMLTags): boolean {
+    if (!node) throw new Error('isNodeOfType: Ancestor Node is null')
+    console.log("called", node.nodeName)
+    return node.nodeName === type.toUpperCase();
+  }
+
+  public isSelectedRangeASingleParagraph(commonAncestorNode: Node | ChildNode | null): boolean {
+    if (!commonAncestorNode) throw new Error('isSelectedRangeASingleParagraph: Ancestor Node is null');
+    return !this.isNodeOfType(commonAncestorNode, 'div');
+  }
+
+  public isStyleTag(classOrStyle: ClassOrStyle): boolean {
+    return classOrStyle === 'style';
   }
 }
