@@ -1,7 +1,7 @@
 .page-heading {
   @apply text-3xl;
   @apply font-bold;
-  @apply text-accent-400;
+  @apply text-siteOnPrimary;
 }
 
 .form-page-wrapper {
@@ -14,14 +14,16 @@
 }
 
 .sidebar-panel {
-  @apply mt-8;
-  @apply bg-secondary-800;
+  @apply mt-3;
+  @apply bg-siteDark;
   @apply h-full; 
-  @apply p-1;
+  @apply p-2;
+  @apply px-2;
   @apply flex;
   @apply flex-col;
   @apply justify-start;
-  @apply text-accent-400;
+  @apply text-siteOnPrimary;
+  @apply shadow-lg;
 }
 
 .sidebar-button-panel {
@@ -79,26 +81,29 @@
 }
 
 .dropdown-menu-background {
-  @apply bg-accent-900;
+  @apply bg-primary-400;
   @apply cursor-pointer;
 }
 
 .dropdown-menu-item {
-  @apply text-accent-600;
+  @apply text-siteOnPrimary;
 }
 
 .dropdown-menu-selected {
-  @apply  bg-secondary-400 text-primary-300;
+  @apply  bg-primary-200;
+  @apply text-siteOnPrimary;
 }
 
 .dropdown-menu-item:hover {
-  @apply  bg-secondary-200 text-secondary-400;
+  @apply  bg-secondary-200;
+  @apply  text-siteOnPrimary;
+
 }
 
 .app-input-field {
-  @apply bg-secondary-700;
+  @apply bg-primary-200;
   @apply border-transparent;
-  @apply text-accent-600;
+  @apply text-siteOnPrimary;
 }
 
 @tailwind base;

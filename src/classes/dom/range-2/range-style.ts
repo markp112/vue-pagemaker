@@ -36,7 +36,9 @@ export class RangeStyle extends RangeBase {
   removeStyleFromChildNodes(node: expectedNodeTypes, style: Style ):  Node | ChildNode {
     if (!node) throw new Error ("appyStyle: Cannot apply style to Null");
     if (node.hasChildNodes()) {
-      this.removeStyleFromChildNodes(node, style);
+      node.childNodes.forEach(childNode => {
+        this.removeStyleFromChildNodes(childNode, style);
+      })
     }
     return this.removeStyleFromANode(node, style);
   }

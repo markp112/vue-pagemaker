@@ -3,7 +3,7 @@
     <span class="flex flex-row justify-end mr-2 mb-4">
       <close-button @onClick="closeButtonClick"></close-button>
     </span>
-    <div class="mr-2 mt-4 text-accent-600">
+    <div class="mr-2 mt-1 text-siteOnPrimary">
       <colour-select></colour-select>
       <border-buttons class="mt-2"></border-buttons>
       <sidebar-text-editor

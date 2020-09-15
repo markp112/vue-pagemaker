@@ -1,6 +1,6 @@
 <template>
-  <div class="bg-secondary-800 h-full p-1">
-    <p class="text-gray-500 mt-3">Containers</p>
+  <div class="sidebar-panel">
+    <p class=" mt-3 text-lg">Containers</p>
       <ul class='flex flex-row flex-wrap text-4xl justify-evenly w-full mt-4 ml-2 mr-2'>
         <li v-for="element in sidebarContainers" :key="element.componentName" >
           <draggable-icon draggable="true" :id="element.componentName">
@@ -8,7 +8,7 @@
           </draggable-icon>
         </li>
       </ul>
-      <p class="text-gray-500 mt-3 text-lg">Elements</p>
+      <p class="mt-3 text-lg">Elements</p>
       <ul class='flex flex-row flex-wrap text-4xl justify-evenly w-full mt-4 ml-2 mr-2'>
         <li v-for="element in sidebarElements" :key="element.componentName" >
           <draggable-icon draggable="true" :id="element.componentName">

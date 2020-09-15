@@ -1,7 +1,7 @@
 
 
 <template>
-  <div class="w-screen py-3 bg-primary-800 shadow shadow-lg h-24 ">
+  <div class="w-screen py-3 bg-sitePrimary shadow-lg h-24 ">
     <nav class=" text-accent-600 flex items-center justify-between">
         <div class="ml-8">
           <font-awesome-icon icon='language' prefix='fas' class="text-secondary-200 icon-size" />
