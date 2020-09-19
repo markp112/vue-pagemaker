@@ -3,7 +3,7 @@
     <p class="page-heading">Editing: {{ title }} Page</p>
     <div
       :id="id"
-      class="w-full h-full relative p-4 border border-gray-400 relative"
+      class="w-full h-full relative p-4 border border-gray-400"
       :class="getClass()"
       ref="mainDiv"
       @dragover.prevent="bgColour = 'bg-gray-600'"

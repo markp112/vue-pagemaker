@@ -32,10 +32,10 @@ export default class ColourPicker extends Vue {
     return this.colour;
   }
  
-  // @Emit('colour')
+  @Emit('colour')
   setColour(rgbColour: string) {
     this.colourStore.rgbColour = rgbColour;
-    // return rgbColour;
+     return rgbColour;
   }
 
   @Emit("mouseLeave")

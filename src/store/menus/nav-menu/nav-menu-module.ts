@@ -28,6 +28,7 @@ class NavMenuItemsStore extends VuexModule implements NavMenuStateInterface {
     this.context.commit('addNav',menuItem);
     menuItem = new NavMenuItem(1, 'Register', '/register');
     this.context.commit('addNav',menuItem);
+  
   }
 
   @Action

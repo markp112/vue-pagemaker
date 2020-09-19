@@ -2,15 +2,15 @@
 
 <template>
   <div class="w-screen py-3 bg-sitePrimary shadow-lg h-24 ">
-    <nav class=" text-accent-600 flex items-center justify-between">
+    <nav class=" text-siteOnPrimary flex items-center justify-between">
         <div class="ml-8">
-          <font-awesome-icon icon='language' prefix='fas' class="text-secondary-200 icon-size" />
+          <font-awesome-icon icon='language' prefix='fas' class="text-primary-200 icon-size" />
         </div>
         <div class="mr-2 flex justify-between relative">
           <font-awesome-icon 
             icon='bars' 
             prefix="fas" 
-            class="ml-2 text-secondary-200 cursor-pointer hamburger hover:text-primary-100" 
+            class="ml-2 text-primary-200 cursor-pointer hamburger hover:text-primary-100" 
             @click="toggleMenu = !toggleMenu"
           />
         <div class="flex justify-end toggleable z-10 absolute top-0 right-0 " v-if="toggleMenu">

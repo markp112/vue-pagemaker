@@ -1,17 +1,18 @@
 <template>
   <div class="sidebar-panel">
-    <span class="inline-block flex flex-row justify-end mr-2 mb-4">
+    <span class="inline-block flex-row justify-end mr-2 mb-4">
       <close-button @onClick="closeButtonClick"></close-button>
     </span>
     <div class="mr-2 mt-4">
       <div
         v-for="(toolbar, index) in $props.toolbarPanel.sidebarPanels"
         :key="index"
-        >
+      >
         <sidebar-toolbar
           :toolbarItems="toolbar"
           @iconClick="iconClick($event)"
-        ></sidebar-toolbar>
+        >
+        </sidebar-toolbar>
       </div>
     </div>
   </div>

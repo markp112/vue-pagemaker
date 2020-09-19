@@ -67,6 +67,9 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
     this.context.commit('setSidebarVisibility', toggle);
   }
 
+  /**
+   * @description loads the icons for the page builder side bar e.g. button, jumbo etc
+   */
   @Action({ rawError: true })
   public loadSideBarElements(): Promise<Notification> {
     const firestore = firebase.firestore();

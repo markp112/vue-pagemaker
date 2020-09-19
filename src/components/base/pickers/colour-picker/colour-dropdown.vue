@@ -15,7 +15,7 @@
     </div>
     <colour-picker 
       v-if="show"
-      @colour="emitColour"
+      @colour="emitColour()"
       @mouseLeave="show=!show"
       @mouseout="show=!show"
       class="absolute"
@@ -42,7 +42,7 @@ export default class ColourDropdown extends Vue {
   colourStore: Colour =  Colour.getInstance();
   
   @Emit('onColourChange') 
-  emitColour(){
+  emitColour(): string {
     return this.colourStore.rgbColour;
   }
 
