@@ -7,7 +7,7 @@
       >
         Reset
       </span>
-      <font-select @onFontClick="onFontClick"></font-select>
+      <font-select @onChange="onChange"></font-select>
       <icon-select
         :buttonIconClassList="fontWeightButton"
         @selectChange="onFontWeightChange"
@@ -21,7 +21,7 @@
       </indent-outdent>
       <text-alignment @alignClick="textAlignClick"></text-alignment>
       <colour-select @onColourChange="onColourChange"></colour-select>
-       <drop-down 
+      <drop-down 
         class="ml-1"
         :thisIconButton="fontSizeButton"
         @onSelectChange="onFontSizeChange"
@@ -198,7 +198,7 @@ export default class TextEditor extends Vue {
     this.restoreSelection(this.rangeClone);
   }
 
-  onFontClick(fontFamilyStyle: StyleElement): void {
+  onChange(fontFamilyStyle: StyleElement): void {
     this.setStyle(fontFamilyStyle.styleName, fontFamilyStyle.value, 'style');
   }
 

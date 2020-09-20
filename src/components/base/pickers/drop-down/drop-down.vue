@@ -4,6 +4,7 @@
       <input
         v-model="selectedItem"
         class="min-w-6 text-center relative app-input-field"
+        :class="$props.surface"
         @change="onInputChange"
       >
       <img :src="getPath('down-24.png')" 
@@ -45,14 +46,24 @@ import { BoxUnits } from '../../../../models/components/box-dimension';
           return new ButtonIconNumericBuilder().build();
         },
       },
+    surface: {
+      default: 'bg-primary-200 text-siteOnPrimary',
     },
+  },
 })
 export default class DropDown extends Vue {
   toggleSelectOptions = false;
   selectedItem = '';
 
   mounted () {
+    console.log('%c%s', 'color: #00a3cc', this.$props.surface)
+
     this.selectedItem = this.$props.thisIconButton.defaultValue;
+  }
+
+  getSurface(): string {
+    console.log('%c%s', 'color: #00a3cc', this.$props.surface)
+    return this.$props.surface; 
   }
 
   @Emit('onSelectChange')

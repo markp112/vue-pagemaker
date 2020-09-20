@@ -134,6 +134,9 @@ module.exports = {
         siteDark: '#26265c',
         siteLight: '#39407f',
         siteOnPrimary: '#ffffee',
+        siteBackground: '#ffeeff',
+        siteSurface: '#ffffff',
+        onSurface: '#000001',
         primary: {
           100: '#e8eaf2',
           200: '#a0a7c8',

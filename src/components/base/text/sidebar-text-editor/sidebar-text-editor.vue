@@ -2,7 +2,7 @@
   <section class="mt-2">
     <p>Text Styles</p>
     <div class="sidebar-button-panel">
-      <font-select @onFontClick="onItemChange"></font-select>
+      <font-select @onChange="onItemChange"></font-select>
       <icon-select
         :buttonIconClassList="fontWeightButton"
         @selectChange="onItemChange"

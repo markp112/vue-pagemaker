@@ -60,7 +60,7 @@ export default class FontSelect extends Vue {
     this.toggleSelectOptions = !this.toggleSelectOptions;
   }
 
-  @Emit('onFontClick')
+  @Emit('onChange')
   fontClicked(fontName: string): StyleElement {
     this.show();
     const style: StyleElement = {

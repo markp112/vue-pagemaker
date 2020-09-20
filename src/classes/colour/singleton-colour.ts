@@ -27,7 +27,6 @@ export class Colour implements ColourInterface {
       this._backgroundBorderForeground = style.styleName as BackgroundBorderForeground;
     }
 
-
     set rgbColour(colour: string) {
         this._rgbColour = colour;
     }

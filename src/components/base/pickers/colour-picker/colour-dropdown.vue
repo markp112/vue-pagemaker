@@ -35,11 +35,16 @@ import { Colour } from '@/classes/colour/singleton-colour';
   components: {
     'colour-picker': ColourPicker,
   },
+  props: {
+    colourProp: {
+      default: '',
+    }
+  }
 })
 export default class ColourDropdown extends Vue {
   name='colour-dropdown';
-  private show = false;
   colourStore: Colour =  Colour.getInstance();
+  private show = false;
   
   @Emit('onColourChange') 
   emitColour(): string {
@@ -47,7 +52,7 @@ export default class ColourDropdown extends Vue {
   }
 
   colour(): string {
-    return this.colourStore.rgbColour;
+    return this.$props.colourProp !=='' ? this.$props.colourProp : this.colourStore.rgbColour;
   }
 
  getPath(image: string): string {

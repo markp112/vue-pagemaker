@@ -101,7 +101,6 @@
 }
 
 .app-input-field {
-  @apply bg-primary-200;
   @apply border-transparent;
   @apply text-siteOnPrimary;
 }
