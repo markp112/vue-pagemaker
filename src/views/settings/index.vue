@@ -1,8 +1,6 @@
 <template>
  <div class="flex flex-col justify-start mt-4 w-full">
-    <div class="text-primary-800 text-3xl mb-8">
-      Site Settings
-    </div>
+ 
     <component :is='settingsPage'></component>
  </div>
 </template>

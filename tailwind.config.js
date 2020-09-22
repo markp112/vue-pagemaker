@@ -194,6 +194,9 @@ module.exports = {
       '48': '12rem',
       '56': '14rem',
       '64': '16rem',
+      '72': '18rem',
+      '84': '20rem',
+      '96': '22rem',
     },
     backgroundColor: theme => theme('colors'),
     backgroundPosition: {
@@ -325,6 +328,9 @@ module.exports = {
     inset: {
       '0': '0',
       auto: 'auto',
+      '1/3': '33%',
+      '1/2': '50%',
+      '1' : '-1rem',
     },
     letterSpacing: {
       tighter: '-0.05em',

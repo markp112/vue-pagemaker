@@ -5,7 +5,7 @@
       :colourProp="$props.colour"
       @onColourChange="onChange($event)"
     ></colour-dropdown>
-    <span class="border border-gray-500 inline-block ml-1 w-2/12 text-sm h-8">
+    <span class="border border-gray-500 inline-block ml-1 w-2/12 text-sm h-6">
       {{ $props.colour }}
     </span>
   </div>

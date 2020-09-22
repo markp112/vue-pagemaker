@@ -6,9 +6,15 @@
           :buttonIconClassList="borderDirectionButton" 
           @selectChange="onItemChange($event, 'border')"
         >
-      </icon-select>
-        <icon-select :buttonIconClassList="borderStyleButton"  @selectChange="onItemChange($event, 'border')"></icon-select>
-        <icon-select :buttonIconClassList="shadowButton" @selectChange="onItemChange($event, 'shadow')"></icon-select>
+        </icon-select>
+        <icon-select
+          :buttonIconClassList="borderStyleButton"
+          @selectChange="onItemChange($event, 'border')"
+        ></icon-select>
+        <icon-select
+          :buttonIconClassList="shadowButton"
+          @selectChange="onItemChange($event, 'shadow')"
+        ></icon-select>
         <plus-minus-icon
           :thisIconButton="buttonIconDimension"
           @onChange="onItemChange($event, 'border')"

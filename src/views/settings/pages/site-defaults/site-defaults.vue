@@ -1,4 +1,8 @@
 <template>
+  <div>
+    <div class="text-primary-800 text-3xl mb-8">
+      Site Settings
+    </div>
   <div class="flex flex-row justify-start text-siteLight leading-8 ml-4 ">
     <section class="w-full flex flex-row ">
       <div class="w-5/12">
@@ -55,10 +59,40 @@
             :colour="siteDefaults.colours.secondaryDark"
             @onChange="siteDefaults.colours.secondaryDark=$event"
           ></colour-option>
-           <colour-option
+          <colour-option
             heading="Text on Secondary"
             :colour="siteDefaults.colours.textOnSecondary"
             @onChange="siteDefaults.colours.textOnSecondary=$event"
+          ></colour-option>
+          <colour-option
+            heading="Background"
+            :colour="siteDefaults.colours.background"
+            @onChange="siteDefaults.colours.background=$event"
+          ></colour-option>
+          <colour-option
+            heading="Text on background"
+            :colour="siteDefaults.colours.textOnBackground"
+            @onChange="siteDefaults.colours.textOnBackground=$event"
+          ></colour-option>
+          <colour-option
+            heading="Surface"
+            :colour="siteDefaults.colours.surface"
+            @onChange="siteDefaults.colours.surface=$event"
+          ></colour-option>
+          <colour-option
+            heading="Text on surface"
+            :colour="siteDefaults.colours.textOnSurface"
+            @onChange="siteDefaults.colours.textOnSurface=$event"
+          ></colour-option>
+          <colour-option
+            heading="Accent"
+            :colour="siteDefaults.colours.accent"
+            @onChange="siteDefaults.colours.accent=$event"
+          ></colour-option>
+          <colour-option
+            heading="Error"
+            :colour="siteDefaults.colours.error"
+            @onChange="siteDefaults.colours.error=$event"
           ></colour-option>
       </div>
       <div class="w-7/12">
@@ -66,6 +100,7 @@
       </div>
 
     </section>
+  </div>
   </div>
 </template>
 

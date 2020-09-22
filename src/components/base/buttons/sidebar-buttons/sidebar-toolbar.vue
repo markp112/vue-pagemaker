@@ -3,13 +3,18 @@
     <div
       v-for="toolbarItem in $props.toolbarItems.toolbarIcons" 
       :key="toolbarItem.className"
-      class="m-2"
+      class="m-2 relative"
     >
       <img 
         :src="getPath(toolbarItem.icon)" 
-        class="cursor-pointer hover:bg-secondary-100" 
-        @click="iconClick(toolbarItem.className)" />
-        <tooltip :tooltip="toolbarItem.toolTip" showToolTip="true"></tooltip>
+        class="cursor-pointer  hover:bg-secondary-100" 
+        @click="iconClick(toolbarItem.className)"
+        @mouseover="showToolTip=toolbarItem.classNameActive"
+        @mouseleave="showToolTip=''" />
+        <tooltip
+          :tooltip="toolbarItem.toolTip"
+          :showToolTip="getShowToolTip(toolbarItem.classNameActive)" 
+        ></tooltip>
       </div>
   </section>
 </template>
@@ -35,6 +40,7 @@
   })
   export default class SidebarToolbarScreen extends Vue {
     name = 'SidebarToolbarScreen';
+    showToolTip = '';
     
     @Emit('iconClick')
     iconClick($event: string) {
@@ -44,6 +50,10 @@
     getPath(image: string): string {
       const path = require.context('@/assets/icons',false,/\.png$/);
       return path(`./${image}`);
+    }
+
+    get getShowToolTip(): (classDef: string) => boolean {
+      return (classDef: string) => this.showToolTip === classDef;
     }
   }
 </script>
