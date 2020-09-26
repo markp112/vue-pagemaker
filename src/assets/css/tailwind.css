@@ -1,7 +1,7 @@
 .page-heading {
   @apply text-3xl;
   @apply font-bold;
-  @apply text-siteOnPrimary;
+  @apply text-onPrimary;
 }
 
 .form-page-wrapper {
@@ -22,7 +22,7 @@
   @apply flex;
   @apply flex-col;
   @apply justify-start;
-  @apply text-siteOnPrimary;
+  @apply text-onPrimary;
   @apply shadow-lg;
 }
 
@@ -86,23 +86,23 @@
 }
 
 .dropdown-menu-item {
-  @apply text-siteOnPrimary;
+  @apply text-onPrimary;
 }
 
 .dropdown-menu-selected {
   @apply  bg-primary-200;
-  @apply text-siteOnPrimary;
+  @apply text-onPrimary;
 }
 
 .dropdown-menu-item:hover {
   @apply  bg-secondary-200;
-  @apply  text-siteOnPrimary;
+  @apply  text-onPrimary;
 
 }
 
 .app-input-field {
   @apply border-transparent;
-  @apply text-siteOnPrimary;
+  @apply text-onPrimary;
 }
 
 @tailwind base;

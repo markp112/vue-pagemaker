@@ -64,7 +64,7 @@
     "eslint-plugin-vue": "^6.2.2",
     "prettier": "^1.19.1",
     "tailwind": "^4.0.0",
-    "tailwindcss": "^1.2.0",
+    "tailwindcss": "^1.8.10",
     "typescript": "~3.7.5",
     "vue-template-compiler": "^2.6.11",
     "vue-testing-library": "^0.17.0",

@@ -2,7 +2,7 @@
 
 <template>
   <div class="w-screen py-3 bg-sitePrimary shadow-lg h-24 ">
-    <nav class=" text-siteOnPrimary flex items-center justify-between">
+    <nav class=" text-onPrimary flex items-center justify-between">
         <div class="ml-8">
           <font-awesome-icon icon='language' prefix='fas' class="text-primary-200 icon-size" />
         </div>
@@ -19,8 +19,9 @@
             @mouseleave="toggleMenu = !toggleMenu"
           >
             <li v-for="(menuItem, idx) in menuItems" 
-              :key="idx" 
-              @click="menuItemClick(idx)" 
+              :key="idx"
+              @click="menuItemClick(idx, menuItem.isVisible)" 
+              v-show="getIsVisible(menuItem.isVisible)"
               class="block p-1 text-left dropdown-menu-item rounded-lg ">
             {{ menuItem.navText }}
             </li>
@@ -34,16 +35,20 @@
 <script lang='ts'>
 
 import Vue from 'vue';
-import { NavMenuItem } from '../../../models/menus/nav-menu';
+import { IsVisible, NavMenuItem } from '../../../models/menus/nav-menu';
 import Component from 'vue-class-component';
 import { NavMenuItemsModule } from '@/store/menus/nav-menu/nav-menu-module';
+import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
 
 @Component
 export default class NavMenuComponent extends Vue {
       name = 'NavMenuComponent'
       toggleMenu = false;
+      siteDefaults = SiteDefaults.getInstance();
 
-  menuItemClick(id: number) {
+  menuItemClick(id: number, isVisbile: IsVisible) {
+    console.log('%c%s', 'color: #00b300', isVisbile())
+
     this.$router.push(this.menuItems[id].navLink);
     this.toggleMenu = !this.toggleMenu;
   }
@@ -51,6 +56,13 @@ export default class NavMenuComponent extends Vue {
   get menuItems () {
     return  NavMenuItemsModule.navMenuItems;
   }
+
+  get getIsVisible(): (isVisible: IsVisible) => boolean {
+    return (isVisible) =>{
+      console.log('%c⧭', 'color: #1d5673', isVisible)
+       return isVisible();
+       }
+  }  
 }
 </script>
 

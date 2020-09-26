@@ -22,6 +22,8 @@ import { SidebarModule } from '@/store/sidebar//sidebar';
 import { dateParse } from 'vue-filter-date-parse';
 import CreateNewButton from '@/components/base/buttons/create-new/create-new.vue';
 import SiteCard from '@/components/base/cards/site-card/site-card.vue';
+import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
+import { AuthModule } from '@/store/auth/auth';
 
 @Component({
   components :{
@@ -39,11 +41,6 @@ export default class SitesList extends Vue {
 
   createNewSite(): void {
     this.$router.push({ name:'newSite', params: { title: 'New Site' }});
-  }
-
-  siteClicked(siteId: string) {
-    SitesModule.updateCurrentSiteId(siteId);
-    this.$router.push({name: 'pageList' , params: { id: siteId }});
   }
 
   isPublished(datePublished: string): string {

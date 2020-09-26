@@ -17,6 +17,7 @@ import Component from 'vue-class-component';
 import { Vue,  Emit, Prop } from 'vue-property-decorator';
 import { Site, initSite} from '@/models/sites/site';
 import { SitesModule } from '@/store/sites/sites';
+import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
 
 @Component({
     props: {
@@ -34,7 +35,12 @@ export default class SiteCard extends Vue{
   }
 
   goClick() {
-    SitesModule.updateCurrentSiteId(this.$props.site.siteId);
+    const siteId = this.$props.site.siteId;
+    SitesModule.updateCurrentSiteId(siteId);
+    const siteDefaultSettings = SiteDefaults.getInstance();
+    const userId = this.$store.getters.currentUser.id;
+    siteDefaultSettings.loadDefaults(siteId, userId);
+    console.log("SiteDefaults is loaded", siteDefaultSettings.isLoaded)
     this.$router.push({name:"pageList"});
   }
 

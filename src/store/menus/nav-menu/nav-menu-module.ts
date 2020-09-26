@@ -1,6 +1,14 @@
 import store from '@/store';
 import { Module, Mutation, Action, VuexModule, getModule } from 'vuex-module-decorators';
 import { NavMenuItem } from '@/models/menus/nav-menu';
+import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
+
+const isSiteLoaded = (): boolean => {
+  const sitedefaults = SiteDefaults.getInstance();
+  console.log('%c%s', 'color: #ffa640', sitedefaults.isLoaded);
+  return sitedefaults.isLoaded;
+  
+} 
 
 export interface NavMenuStateInterface {
   menuItems: NavMenuItem[],
@@ -22,7 +30,7 @@ class NavMenuItemsStore extends VuexModule implements NavMenuStateInterface {
   }
 
   @Action
-  public createNavMenuSignedOut(){
+  public createNavMenuSignedOut() {
     this.context.commit('clear');
     let menuItem: NavMenuItem = new NavMenuItem(0, 'Login', '/login');
     this.context.commit('addNav',menuItem);
@@ -32,19 +40,22 @@ class NavMenuItemsStore extends VuexModule implements NavMenuStateInterface {
   }
 
   @Action
-  public createNavMenuSignedIn(){
+  public createNavMenuSignedIn() {
     this.context.commit('clearNav');
     let menuItem: NavMenuItem = new NavMenuItem(0, 'Profile', '/profile');
     this.context.commit('addNav',menuItem);
-    menuItem = new NavMenuItem(1, 'Settings', '/settings');
+    menuItem = new NavMenuItem(1, 'Settings', '/settings', isSiteLoaded);
     this.context.commit('addNav',menuItem);
     menuItem = new NavMenuItem(1, 'Admin', '/iconeditor');
     this.context.commit('addNav', menuItem);
   }
 
   public get navMenuItems():NavMenuItem[] {
+    console.log('%c⧭', 'color: #d90000', this.menuItems, "menu");
     return this.menuItems;
   }
+
+
 }
 
 export const NavMenuItemsModule = getModule(NavMenuItemsStore);

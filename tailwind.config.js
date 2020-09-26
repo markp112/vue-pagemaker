@@ -133,10 +133,13 @@ module.exports = {
         siteSurface: '#fffffe',
         siteDark: '#26265c',
         siteLight: '#39407f',
-        siteOnPrimary: '#ffffee',
+        onPrimary: '#fffffe',
         siteBackground: '#ffeeff',
         siteSurface: '#ffffff',
-        onSurface: '#000001',
+        onSurface: '#000000',
+        siteSecondary: '#61527a',
+        'site-secondary-light': '#9f91b6',
+
         primary: {
           100: '#e8eaf2',
           200: '#a0a7c8',
@@ -172,7 +175,10 @@ module.exports = {
         },
         accent1: '#D9C4B8',
         accent2: '#F2E3D5',
-      }
+      },
+      backgroundImage:  theme => ({ 
+        'diskette-save': "url('/assets/icons/diskette-dark-48.png')",
+      }),
     },
     spacing: {
       px: '1px',

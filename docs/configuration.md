@@ -1,23 +1,20 @@
 # User Configuration Settings
 
-### site settings
+### sitedefaults
 
 colour palette
-background colour
-foreground colour
-Light
-Dark
-secondary
-default font
-default font size
+Typography
 
 ### Editor
 
 For the text editor the user should be able to set:
 
-default color
 default font
 default font size
+
+when site loads load the defaults into a singleton
+when settings site defaults loads retrieve from singleton
+call save method on singleton
 
 
 

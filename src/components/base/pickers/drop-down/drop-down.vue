@@ -47,7 +47,7 @@ import { BoxUnits } from '../../../../models/components/box-dimension';
         },
       },
     surface: {
-      default: 'bg-primary-200 text-siteOnPrimary',
+      default: 'bg-primary-200 text-onPrimary',
     },
   },
 })

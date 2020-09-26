@@ -97,17 +97,17 @@ class SitesStore extends VuexModule implements SitesStateInterface{
     return this.sites;
   }
 
-  public get getCollectionId():string {
+  public get getCollectionId(): string {
     if(AuthModule.currentUser.id) {
     return  AuthModule.currentUser.id + '::sites';
     } else {return ''}
   }
 
-  public get getCurrentSiteId():string {
+  public get getCurrentSiteId(): string {
     return this._currentSiteId
   }
 
-  public get getCurrentSite():Site {
+  public get getCurrentSite(): Site {
     return this._currentSiteId !=='' ? this.sites.filter(site => site.siteId === this._currentSiteId)[0] : initSite;
   }
 }
