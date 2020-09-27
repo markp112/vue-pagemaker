@@ -168,7 +168,9 @@ export default class SiteDefaultView extends Vue {
   }
 
   saveSiteDefaults() {
-    this.siteDefaults.saveDefaults()
+    const siteId = this.$store.getters.getCurrentSiteId;
+    const userId = this.$store.getters.currentUser.id;
+    this.siteDefaults.saveDefaults(siteId, userId)
       .then (response => {
         const notification = response as Notification;
         const snackbarMessage: SnackbarMessage = {

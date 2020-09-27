@@ -42,7 +42,6 @@ public loadDefaults(siteId: string, userId: string) {
     const siteDefaults = response as SiteDefaultsInterface;
     this._colours = siteDefaults.colours;
     this._typography = siteDefaults.typography;
-    console.log('%c⧭', 'color: #f200e2', siteDefaults);
     this._isLoaded = true;
   })
   .catch(err => {
@@ -61,13 +60,13 @@ public loadDefaults(siteId: string, userId: string) {
   })
 }
 
-  public saveDefaults() {
+  public saveDefaults(siteId: string, userId: string) {
     const data = {
       siteDefaults: {
         colours: this._colours,
         typography: this._typography,
       },
-      siteId: SitesModule.getCurrentSiteId,
+      siteId: siteId,
       userId: AuthModule.currentUser.id,
     };
     return new Promise((resolve, reject) => {

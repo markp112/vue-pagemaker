@@ -5,7 +5,7 @@ export class SiteSettingsBuilder implements SidebarPanelBuilderInterface {
   private buildSiteSettings(): SidebarToolbar{
     const sideBarToolbar: SidebarToolbar = new SidebarToolbar()
     sideBarToolbar.addIcon('site-settings-32.png', 'site-settings', 'Set site defaults');
-    sideBarToolbar.addIcon('art_palette-32.png', 'colour palette', 'Edit colour palatte');
+    sideBarToolbar.addIcon('art_palette-32.png', 'colour-palette', 'Edit colour palatte');
     return sideBarToolbar;
   }
 

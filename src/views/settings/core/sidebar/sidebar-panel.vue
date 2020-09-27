@@ -47,8 +47,8 @@ export default class SidebarPanelSiteSettings extends Vue {
 
     @Emit('iconClick')
     iconClick(classDef: string) {
-      console.log('%c%s', 'color: #ace2e6', classDef)
-
+      console.log('%c%s', 'color: #ffcc00', classDef)
+      
     }
 
   closeButtonClick(): void {
