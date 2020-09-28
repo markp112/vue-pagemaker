@@ -1,17 +1,17 @@
 <template>
-  <div>
-    <div class="flex flex-row flex-start relative">
-    <div 
-      class="w-8 h-8 border border-gray-200"
-      v-bind:style="{ backgroundColor: colour() }"
-      @click="emitColour()"
-    >
-    </div>
-    <img
-        :src="getPath('down-24.png')" 
-        class="w-4 h-4 cursor-pointer hover:bg-gray-800"
-        @click="show=!show"
-          />
+  <section>
+    <div class="relative">
+      <div 
+        class="w-8 h-8 border border-gray-200"
+        v-bind:style="{ backgroundColor: colour() }"
+        @click="emitColour()"
+      >
+      </div>
+      <img
+          :src="getPath('down-24.png')" 
+          class="w-4 h-4 cursor-pointer hover:bg-gray-800 top-0 right-0 absolute"
+          @click="show=!show"
+      />
     </div>
     <colour-picker 
       v-if="show"
@@ -21,7 +21,7 @@
       class="absolute"
     >
     </colour-picker>
-  </div>
+  </section>
 </template>
 
 <script lang="ts">

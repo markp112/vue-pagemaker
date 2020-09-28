@@ -21,12 +21,21 @@ export interface PalettesInterface {
   accent: string[];
 }
 
+export type ColourSchemes =
+  | 'Analogous'
+  | 'Complementary'
+  | 'Triadic'
+  | 'Compound' 
+
 export class ColourPalettes implements PalettesInterface {
 
   private _colour: string;
   private _primary: string[] = [];
   private _secondary: string[] = [];
   private _accent: string[] = [];
+  private _accentAngle = 30;
+  private _secondaryAngle = 180;
+  private _colourScheme: ColourSchemes = 'Complementary';
 
   private MAX_SHADES = 10;
 
@@ -41,6 +50,14 @@ export class ColourPalettes implements PalettesInterface {
 
   set colour(colour: string) {
     this._colour = colour;
+  }
+
+  set colourScheme(scheme: ColourSchemes) {
+    this._colourScheme = scheme;
+  }
+
+  get colourScheme(): ColourSchemes {
+    return this._colourScheme;
   }
 
   get primary(): string[] {
@@ -75,8 +92,32 @@ export class ColourPalettes implements PalettesInterface {
 
   newPalette(colour: string) {
     this._primary = this.generate(colour);
+    this.setAngles();
     this._secondary = this.generateSecondary(colour);
     this._accent = this.generateAccent(colour);
+  }
+  setAngles() {
+    switch (this._colourScheme) {
+      case 'Complementary':
+        this._secondaryAngle = 180;
+        this._accentAngle = -30;
+        break;
+
+      case 'Analogous':
+        this._secondaryAngle = 30;
+        this._accentAngle = 30;
+        break;
+
+      case 'Compound':
+        this._secondaryAngle = 210;
+        this._accentAngle = 150;
+        break;
+      
+      case 'Triadic':
+        this._secondaryAngle = 120;
+        this._accentAngle = 240;
+        break;
+    }
   }
 
   generate(colour: string):string[] {
@@ -103,13 +144,13 @@ export class ColourPalettes implements PalettesInterface {
 
   generateSecondary(colour: string): string[] {
     const rootColour = new Color(colour);
-    const secondaryColour = rootColour.rotate(180).hex();
+    const secondaryColour = rootColour.rotate(this._secondaryAngle).hex();
     return(this.generate(secondaryColour));
   }
 
   generateAccent(colour: string): string[] {
     const rootColour = new Color(colour);
-    const accentColour = rootColour.saturate(1).rotate(60).hex();
+    const accentColour = rootColour.saturate(10).rotate(this._accentAngle).hex();
     return(this.generate(accentColour));
   }
 }

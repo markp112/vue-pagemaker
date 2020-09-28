@@ -1,13 +1,15 @@
 <template> 
-  <div>
+  <section>
     <div class="text-primary-800 text-3xl mb-8">
       <p class="flex flex-row justify-between">
         Colour Palette
       </p>
-
     </div>
-
-    <div class="flex flex-col justify-start ml-4">
+    <div class="flex flex-row justify-center mb-4 w-full">
+      <span class="px-2">Select base colour</span>
+      <colour-dropdown  @onColourChange="onColourChange($event)"></colour-dropdown>
+    </div>
+    <div class="flex flex-col justify-start ml-8">
       <div class="h-20 w-full flex flex-row justify-start flex-wrap">
         <p class="w-full">
           Primary
@@ -22,7 +24,7 @@
       <div class="h-20 w-full flex flex-row justify-start flex-wrap mt-4">
         <p class="w-full mb-2">
           Secondary
-          </p>
+        </p>
         <span class="h-16 w-16 inline-block"
           v-for="colour in colourPalettes.secondary"
           :key="colour"
@@ -40,16 +42,21 @@
         ></span>
       </div>
     </div>
-  </div>
+  </section>
   
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { ColourPalettes } from '@/classes/settings/colour-palette/colour-palette';
+import { ColourPalettes, ColourSchemes } from '@/classes/settings/colour-palette/colour-palette';
+import ColourDropdown from '@/components/base/pickers/colour-picker/colour-dropdown.vue'; 
 
-@Component({})
+@Component({
+  components: {
+    'colour-dropdown': ColourDropdown,
+  },
+})
 export default class PaletteGenerator extends Vue {
   colourPalettes: ColourPalettes = new ColourPalettes('#ee443e'); 
   
@@ -57,5 +64,9 @@ export default class PaletteGenerator extends Vue {
     this.colourPalettes = new ColourPalettes('#fe4c34');
   }
 
+  onColourChange(colour: string) {
+    this.colourPalettes.colourScheme = 'Analogous';
+    this.colourPalettes.newPalette(colour);
+  }
 }
 </script>
