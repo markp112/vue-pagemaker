@@ -91,11 +91,13 @@ export class ColourPalettes implements PalettesInterface {
   }
 
   newPalette(colour: string) {
+    this._colour = colour;
     this._primary = this.generate(colour);
     this.setAngles();
     this._secondary = this.generateSecondary(colour);
     this._accent = this.generateAccent(colour);
   }
+
   setAngles() {
     switch (this._colourScheme) {
       case 'Complementary':
@@ -105,7 +107,7 @@ export class ColourPalettes implements PalettesInterface {
 
       case 'Analogous':
         this._secondaryAngle = 30;
-        this._accentAngle = 30;
+        this._accentAngle = -30;
         break;
 
       case 'Compound':

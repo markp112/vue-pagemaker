@@ -3,7 +3,6 @@
     <div class="text-primary-800 text-3xl mb-8">
       <p class="flex flex-row justify-between">
         Site Settings
-        <span class="w-10 h-12 bg-diskette-save inline-block"></span>
         <img
           v-show="showDefaultIcon"
           :src="getPath(SAVE_ICON)"
