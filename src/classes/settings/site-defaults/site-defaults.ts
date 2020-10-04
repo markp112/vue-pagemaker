@@ -1,7 +1,6 @@
 import { SiteDefaultsInterface, siteDefaultSettings, MaterialColourInterface, TypographyInterface } from '@/views/settings/pages/site-defaults/models/site-defaults';
 import {  ServicesModule } from '@/store/services/services';
 import { AuthModule } from '@/store/auth/auth';
-import { SitesModule } from '@/store/sites/sites';
 import { Notification } from '@/models/notifications/notifications';
 import { SnackbarModule } from '@/store/snackbar/snackbar';
 import { SnackbarMessage, SnackbarTypes } from '@/models/notifications/snackbar';
@@ -33,6 +32,8 @@ public get isLoaded(): boolean {
 }
 
 public loadDefaults(siteId: string, userId: string) {
+  console.log('%c%s', 'color: #e5de73', userId);
+  console.log('%c%s', 'color: #7f2200', siteId);
   const data = {
     userId: userId,
     siteId: siteId,

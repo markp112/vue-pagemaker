@@ -140,6 +140,7 @@ import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
 import { Notification, notificationDefault } from '@/models/notifications/notifications';
 import { SnackbarModule } from '@/store/snackbar/snackbar';
 import { SnackbarMessage, SnackbarTypes } from '@/models/notifications/snackbar';
+import { SnackbarMixin } from '@/mixins/components/snackbar/snackbar-mixin';
 
 @Component({
   components: {
@@ -149,7 +150,7 @@ import { SnackbarMessage, SnackbarTypes } from '@/models/notifications/snackbar'
     'colour-option': ColourOption,
   },
 })
-export default class SiteDefaultView extends Vue {
+export default class SiteDefaultView extends SnackbarMixin {
   SAVE_ICON = 'diskette-dark-48.png';
   SAVE_ICON_HOVER = 'diskette-light-48.png';
   showDefaultIcon = true;
@@ -172,14 +173,11 @@ export default class SiteDefaultView extends Vue {
     this.siteDefaults.saveDefaults(siteId, userId)
       .then (response => {
         const notification = response as Notification;
-        const snackbarMessage: SnackbarMessage = {
-          message:  notification.message,
-          title: "saved",
-          type: SnackbarTypes.Success,
-          duration: 3000,
-          show: true,
-         }
-        SnackbarModule.showSnackbar(snackbarMessage);
+        this.showSnackbar(notification, "Defaults saved");
+      })
+      .catch (err => {
+        const notification = err as Notification;
+        this.showSnackbar(notification, "Error Saving Defaults");
       })
     
   }

@@ -1,4 +1,7 @@
+import { SiteIdAndUserId } from '@/models/site-and-user/site-and-user';
+import { ServicesModule } from '@/store/services/services';
 import Color from 'color';
+import { Notification } from '@/models/notifications/notifications';
 
 const contrastRatios =  [
   0.15,
@@ -16,6 +19,7 @@ const contrastRatios =  [
 
 export interface PalettesInterface {
   colour: string;
+  colourScheme: ColourSchemes;
   primary: string[];
   secondary: string[];
   accent: string[];
@@ -35,13 +39,14 @@ export class ColourPalettes implements PalettesInterface {
   private _accent: string[] = [];
   private _accentAngle = 30;
   private _secondaryAngle = 180;
-  private _colourScheme: ColourSchemes = 'Complementary';
+  private _colourScheme: ColourSchemes;
 
   private MAX_SHADES = 10;
 
   constructor(colour: string) {
     this._colour = colour;
     this.newPalette(this._colour);
+    this._colourScheme = 'Complementary';
   }
 
   get colour(): string {
@@ -90,7 +95,7 @@ export class ColourPalettes implements PalettesInterface {
     }
   }
 
-  newPalette(colour: string) {
+  public newPalette(colour: string) {
     this._colour = colour;
     this._primary = this.generate(colour);
     this.setAngles();
@@ -98,7 +103,83 @@ export class ColourPalettes implements PalettesInterface {
     this._accent = this.generateAccent(colour);
   }
 
-  setAngles() {
+  public changeSaturation(saturation: number) {
+    const satValue = saturation;
+    this._primary = this.applySaturation(satValue, this._primary);
+    this._secondary = this.applySaturation(satValue, this._secondary);
+    this._accent = this.applySaturation(satValue, this._accent);
+  }
+
+  private applySaturation(multiplier: number, palette: string[]): string[] {
+      const newPalette: string[] = [];
+        palette.forEach(colour => {
+          const newColour = Color(colour);
+          const saturatedColour = multiplier > 0 
+            ? newColour.saturate(multiplier).hex()
+            : newColour.desaturate(multiplier * -1 ).hex();
+          newPalette.push(saturatedColour);
+        });
+        return newPalette;
+    // return new Promise((resolve) => 
+    //   resolve(palette.map(colour => {
+    //     const newColour = Color(colour);
+    //     return  multiplier > 0 
+    //       ? newColour.saturate(multiplier).hex()
+    //       : newColour.desaturate(multiplier * -1 ).hex();  
+    //   })) 
+      
+    // )
+  }
+
+  public savePalette(siteAndUserId: SiteIdAndUserId): Promise<Notification> {
+    const selectedPalette: PalettesInterface = {
+      colour: this.colour,
+      colourScheme: this.colourScheme,
+      primary: this.primary,
+      secondary: this.secondary,
+      accent: this.accent,
+    };
+    const data = {
+      siteAndUserId: siteAndUserId,
+      colourPalette: selectedPalette,
+    }
+    return new Promise((resolve, reject) => {
+      ServicesModule.firestoreSaveColourPalette(data)
+      .then ((response: Notification) => {
+        resolve(response);
+      })
+      .catch((err: Notification) => {
+        reject(err)
+      })
+    })
+  }
+
+  public loadPalette(siteAndUserId: SiteIdAndUserId): Promise<Notification> {
+    return new Promise((resolve, reject) => {
+      ServicesModule.firestoreLoadSitePalette(siteAndUserId)
+      .then (response => {
+        const palettes = response as PalettesInterface;
+        this._colour = palettes.colour;
+        this.colourScheme = palettes.colourScheme;
+        this.primary = palettes.primary;
+        this.secondary = palettes.secondary;
+        this.accent = palettes.accent;
+        const notification: Notification = {
+          message: "loaded palette",
+          status: "ok",
+        };
+        resolve(notification);
+      })
+      .catch((err: Notification) => {
+        this._colour = '#454cF4' // blue
+        this._colourScheme = 'Complementary';
+        this.newPalette(this._colour);
+        reject(err);
+      })
+    })
+  }
+
+  private setAngles() {
     switch (this._colourScheme) {
       case 'Complementary':
         this._secondaryAngle = 180;
@@ -121,8 +202,8 @@ export class ColourPalettes implements PalettesInterface {
         break;
     }
   }
-
-  generate(colour: string):string[] {
+  
+  public generate(colour: string):string[] {
     const palette: string[] = [];
     const rootColour = new Color(colour)
     for (let index = 0; index < this.MAX_SHADES; index++) {
@@ -144,13 +225,13 @@ export class ColourPalettes implements PalettesInterface {
     return palette;
   }
 
-  generateSecondary(colour: string): string[] {
+  private generateSecondary(colour: string): string[] {
     const rootColour = new Color(colour);
     const secondaryColour = rootColour.rotate(this._secondaryAngle).hex();
     return(this.generate(secondaryColour));
   }
 
-  generateAccent(colour: string): string[] {
+  private generateAccent(colour: string): string[] {
     const rootColour = new Color(colour);
     const accentColour = rootColour.saturate(10).rotate(this._accentAngle).hex();
     return(this.generate(accentColour));

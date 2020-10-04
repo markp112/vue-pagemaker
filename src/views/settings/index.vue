@@ -9,7 +9,7 @@ import Vue from 'vue'
 import { Component } from 'vue-property-decorator';
 import { SidebarModule } from '@/store/sidebar/sidebar';
 import SiteDefaults from './pages/site-defaults/site-defaults.vue';
-import ColourPalette from './pages/colour-palette/colour-palette.vue';
+import ColourPalette from './pages/colour-palette/colour-palettes.vue';
 
 @Component({
   components: {
