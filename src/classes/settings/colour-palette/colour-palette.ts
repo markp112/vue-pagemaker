@@ -115,20 +115,11 @@ export class ColourPalettes implements PalettesInterface {
         palette.forEach(colour => {
           const newColour = Color(colour);
           const saturatedColour = multiplier > 0 
-            ? newColour.saturate(multiplier).hex()
-            : newColour.desaturate(multiplier * -1 ).hex();
+          ? newColour.saturate(multiplier).hex()
+          : newColour.desaturate(multiplier * -1 ).hex();
           newPalette.push(saturatedColour);
         });
         return newPalette;
-    // return new Promise((resolve) => 
-    //   resolve(palette.map(colour => {
-    //     const newColour = Color(colour);
-    //     return  multiplier > 0 
-    //       ? newColour.saturate(multiplier).hex()
-    //       : newColour.desaturate(multiplier * -1 ).hex();  
-    //   })) 
-      
-    // )
   }
 
   public savePalette(siteAndUserId: SiteIdAndUserId): Promise<Notification> {

@@ -141,9 +141,11 @@ class ServicesStore extends VuexModule implements ServicesStateInterface {
     if (!siteId) throw new Error(`${ERROR_MESSAGE} siteId missing cannot be blank`);
     const userId = siteDefaultsPlusSiteAnduserId.userId;
     return new Promise((resolve, reject) => {
-      this.collectionId = `${userId}${siteId}${this.SETTINGS}`;
+      const collectionId = `${userId}${siteId}${this.SETTINGS}`;
       const firestore = firebase.firestore();
-      firestore.collection(this.collectionId).doc("siteSettings").set(siteDefaultsPlusSiteAnduserId)
+      firestore.collection(collectionId)
+        .doc(this.SITE_SETTINGS)
+        .set(siteDefaultsPlusSiteAnduserId.siteDefaults)
       .then(() => {
         //update the site defaults
         notification.message = "Defaults saved";
@@ -168,7 +170,9 @@ class ServicesStore extends VuexModule implements ServicesStateInterface {
       firestore.collection(this.collectionId).doc('siteSettings').get()
         .then (response => {
           const docData = response.data();
-          siteDefaults = docData ? docData as SiteDefaults : siteDefaultSettings;
+          console.log('%c⧭', 'color: #00bf00', response.data());
+          siteDefaults = docData !== undefined ? docData as SiteDefaultsInterface : siteDefaultSettings;
+          console.log('%c⧭', 'color: #917399', siteDefaults, "site defaults response");
           resolve(siteDefaults);
         })
         .catch( err => {

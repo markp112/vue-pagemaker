@@ -19,47 +19,47 @@ export class SiteDefaults implements SiteDefaultsInterface {
     return SiteDefaults.instance;
   }
 
-public get colours(): MaterialColourInterface {
-  return this._colours;
-}
-
-public get typography(): TypographyInterface {
-  return this._typography;
-}
-
-public get isLoaded(): boolean {
-  return this._isLoaded;
-}
-
-public loadDefaults(siteId: string, userId: string) {
-  console.log('%c%s', 'color: #e5de73', userId);
-  console.log('%c%s', 'color: #7f2200', siteId);
-  const data = {
-    userId: userId,
-    siteId: siteId,
+  public get colours(): MaterialColourInterface {
+    return this._colours;
   }
-  ServicesModule.firestoreGetSiteDefaultSettings(data)
-  .then (response => {
-    const siteDefaults = response as SiteDefaultsInterface;
-    this._colours = siteDefaults.colours;
-    this._typography = siteDefaults.typography;
-    this._isLoaded = true;
-  })
-  .catch(err => {
-    const notification = err as Notification;
-    const snackbarMessage: SnackbarMessage = {
-      message: notification.message,
-      title: "Could not retrieve site settings",
-      show: true,
-      duration: 3000,
-      type: SnackbarTypes.Error
+
+  public get typography(): TypographyInterface {
+    return this._typography;
+  }
+
+  public get isLoaded(): boolean {
+    return this._isLoaded;
+  }
+
+  public loadDefaults(siteId: string, userId: string) {
+    const data = {
+      userId: userId,
+      siteId: siteId,
     }
-    SnackbarModule.showSnackbar(snackbarMessage);
-    this._colours = siteDefaultSettings.colours;
-    this._typography = siteDefaultSettings.typography;
-    this._isLoaded = false;
-  })
-}
+    ServicesModule.firestoreGetSiteDefaultSettings(data)
+    .then (response => {
+      console.log('%c⧭', 'color: #e97c00', response);
+      const siteDefaults: SiteDefaultsInterface = response as SiteDefaultsInterface;
+      console.log('%c⧭', 'color: #d90000', siteDefaults);
+      this._colours = siteDefaults.colours;
+      this._typography = siteDefaults.typography;
+      this._isLoaded = true;
+    })
+    .catch(err => {
+      const notification = err as Notification;
+      const snackbarMessage: SnackbarMessage = {
+        message: notification.message,
+        title: "Could not retrieve site settings",
+        show: true,
+        duration: 3000,
+        type: SnackbarTypes.Error
+      }
+      SnackbarModule.showSnackbar(snackbarMessage);
+      this._colours = siteDefaultSettings.colours;
+      this._typography = siteDefaultSettings.typography;
+      this._isLoaded = false;
+    })
+  }
 
   public saveDefaults(siteId: string, userId: string) {
     const data = {

@@ -40,13 +40,11 @@ export default class SideBar extends Vue {
   }
 
   get sidebarContent(): SidebarComponents {
-    console.log('%c%s', 'color: #eb0c87',  SidebarModule.sidebarComponentType)
     return SidebarModule.sidebarComponentType;
   }
 
   get sidebarPanel(): SidebarPanel {
     const panelType: SidebarComponents = SidebarModule.sidebarComponentType;
-    console.log('%c%s', 'color: #86bf60', panelType)
     return panelType !== 'site-settings' ? new SidebarPanelBuilder('container-editor').sidebarPanel : new SidebarPanelBuilder('site-settings').sidebarPanel ;
   }
 }

@@ -42,12 +42,12 @@ import SidebarToolbarScreen from '@/components/base/buttons/sidebar-buttons/side
   }
 })
 export default class SidebarPanelSiteSettings extends Vue {
-  name="Site Settings sidebar panel"
+  name='Site Settings sidebar panel';
   data= '';
 
     @Emit('iconClick')
-    iconClick(classDef: string) {
-      console.log('%c%s', 'color: #ffcc00', classDef)
+    iconClick(nameOfComponent: string) {
+      this.$store.dispatch('setSettingsPageActiveComponent', nameOfComponent);
       
     }
 

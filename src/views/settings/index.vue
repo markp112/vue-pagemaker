@@ -13,21 +13,20 @@ import ColourPalette from './pages/colour-palette/colour-palettes.vue';
 
 @Component({
   components: {
-    'site-defaults': SiteDefaults,
+    'site-settings': SiteDefaults,
     'colour-palette': ColourPalette,
   }
 })
 export default class SiteSettings extends Vue{
-  // settingsPage ='site-defaults';
-  settingsPage ='colour-palette';
-
 
   mounted() {
     SidebarModule.setSidebarMenuTo('site-settings');
     SidebarModule.toggleSidebar(true);
-
   }
 
+  get settingsPage(): string {
+    return this.$store.getters.siteSettingsActivePage;
+  }
 
 }
 </script>

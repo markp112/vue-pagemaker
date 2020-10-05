@@ -49,6 +49,5 @@ export const siteDefaultSettings: SiteDefaultsInterface = {
   typography: {
     fontName: 'Roboto',
     fontSizeBody: '16px'
-  }
-
+  },
 }

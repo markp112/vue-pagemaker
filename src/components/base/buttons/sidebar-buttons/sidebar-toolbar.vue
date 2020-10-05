@@ -3,18 +3,20 @@
     <div
       v-for="toolbarItem in $props.toolbarItems.toolbarIcons" 
       :key="toolbarItem.className"
-      class="m-2 relative"
+      class="m-2"
     >
+      <div class="relative">
       <img 
         :src="getPath(toolbarItem.icon)" 
-        class="cursor-pointer  hover:bg-secondary-100" 
+        class="cursor-pointer  hover:bg-secondary-100 w-12" 
         @click="iconClick(toolbarItem.className)"
-        @mouseover="showToolTip=toolbarItem.classNameActive"
+        @mouseover="showToolTip=toolbarItem.className"
         @mouseleave="showToolTip=''" />
         <tooltip
           :tooltip="toolbarItem.toolTip"
-          :showToolTip="getShowToolTip(toolbarItem.classNameActive)" 
+          :showToolTip="getShowToolTip(toolbarItem.className)" 
         ></tooltip>
+      </div>
       </div>
   </section>
 </template>

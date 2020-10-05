@@ -28,6 +28,7 @@ export interface SidebarStateInterface {
   _showSidebar: boolean;
   _sidebarComponent: SidebarComponents;
   _showTextModal: boolean;
+  _settingsActivePage: string; // sets the page shown on the settings page e.g. colours, palette
 }
 
 @Module({ dynamic: true, name: 'sidebar', store })
@@ -36,6 +37,7 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
   _showSidebar = false;
   _sidebarComponent: SidebarComponents = 'sidebar-components';
   _showTextModal = false;
+  _settingsActivePage = '';
 
   @Mutation
   private addComponent(editorComponent: ComponentDefinitionInterface) {
@@ -60,6 +62,11 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
   @Mutation
   private setShowTextModal(show: boolean) {
     this._showTextModal = show;
+  }
+
+  @Mutation 
+  private setSettingsActivePage(activePageName: string) {
+    this._settingsActivePage = activePageName;
   }
 
   @Action({ rawError: true })
@@ -170,6 +177,16 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
     this.context.commit("setShowTextModal", show);
   }
 
+  /**
+   * @description sets the current page when viewing and editing the site settings from the main menu
+   * 
+   * @param activePageName - this should match the name of the component to be displayed
+   */
+  @Action
+  public setSettingsPageActiveComponent(activePageName: string) {
+    this.context.commit("setSettingsActivePage", activePageName);
+  }
+
   get getSidebarElements(): ComponentDefinitionInterface[] {
     return this._sidebarElements.componentDefinitions().filter(elem => elem.isContainer === false);
   }
@@ -199,6 +216,10 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
 
   get showTextModal(): boolean {
     return this._showTextModal;
+  }
+
+  get siteSettingsActivePage(): string {
+    return this._settingsActivePage;
   }
 }
 

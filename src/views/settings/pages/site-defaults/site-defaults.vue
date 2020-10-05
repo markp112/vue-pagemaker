@@ -128,8 +128,9 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import MaterialTemplate from './partials/material-template/material-template.vue';
 import ColourOption from './partials/colour-option/colour-option.vue';
-import FontSelcect from '@/components/base/pickers/font-selector/font-selector.vue';
+import FontSelect from '@/components/base/pickers/font-selector/font-selector.vue';
 import DropDown from '@/components/base/pickers/drop-down/drop-down.vue';
+
 import {
   siteDefaultSettings,
   SiteDefaultsInterface,
@@ -141,11 +142,13 @@ import { Notification, notificationDefault } from '@/models/notifications/notifi
 import { SnackbarModule } from '@/store/snackbar/snackbar';
 import { SnackbarMessage, SnackbarTypes } from '@/models/notifications/snackbar';
 import { SnackbarMixin } from '@/mixins/components/snackbar/snackbar-mixin';
+import { ColourPalettes } from '@/classes/settings/colour-palette/colour-palette';
+import { SiteIdAndUserId } from '@/models/site-and-user/site-and-user';
 
 @Component({
   components: {
     'material-template': MaterialTemplate,
-    'font-picker': FontSelcect,
+    'font-picker': FontSelect,
     'drop-down': DropDown,
     'colour-option': ColourOption,
   },
@@ -156,11 +159,16 @@ export default class SiteDefaultView extends SnackbarMixin {
   showDefaultIcon = true;
   dropDownSurface = "bg-siteSurface text-onSurface";
   siteDefaults: SiteDefaults = SiteDefaults.getInstance();
+  
+  siteId = this.$store.getters.getCurrentSiteId;
+  userId = this.$store.getters.currentUser.id;
 
   fontSizeButton: ButtonIconNumeric = new ButtonFactory().createButton(
     'numeric',
     'fontSize'
   ) as ButtonIconNumeric;
+
+  
 
   getPath(image: string): string {
     const path = require.context('@/assets/icons', false, /\.png$/);
@@ -168,9 +176,7 @@ export default class SiteDefaultView extends SnackbarMixin {
   }
 
   saveSiteDefaults() {
-    const siteId = this.$store.getters.getCurrentSiteId;
-    const userId = this.$store.getters.currentUser.id;
-    this.siteDefaults.saveDefaults(siteId, userId)
+    this.siteDefaults.saveDefaults(this.siteId, this.userId)
       .then (response => {
         const notification = response as Notification;
         this.showSnackbar(notification, "Defaults saved");

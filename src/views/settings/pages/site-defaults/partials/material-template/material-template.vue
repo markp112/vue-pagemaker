@@ -14,6 +14,9 @@
           </span>
         </p>  
     </div>
+      <colour-palette :palette="this.colourPalette.primary" label="Primary"></colour-palette>
+      <colour-palette :palette="this.colourPalette.secondary" label="Secondary"></colour-palette>
+      <colour-palette :palette="this.colourPalette.accent" label="Accent"></colour-palette>
     <div class="flex flex-row justify-start w-full mt-6">
       <div class="flex flex-col justify-start w-6/12">
         <div 
@@ -133,24 +136,41 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
+import Palette from '@/views/settings/pages/colour-palette/partials/colour-palette.vue';
 import { SiteDefaultsInterface } from '../../models/site-defaults';
+import { ColourPalettes } from '@/classes/settings/colour-palette/colour-palette';
+import { SiteIdAndUserId } from '@/models/site-and-user/site-and-user';
 
 @Component({
   props: {
     materialSettings: {
       type: Object as () => SiteDefaultsInterface,
-    }
-  }
+    },
+  },
+  components: {
+    'colour-palette': Palette,
+  },
 })
 export default class MaterialTemplate extends Vue {
-  
+  colourPalette: ColourPalettes = new ColourPalettes("#000000");
+  siteId = this.$store.getters.getCurrentSiteId;
+  userId = this.$store.getters.currentUser.id;
+
+  mounted() {
+    const siteAndUserId: SiteIdAndUserId = {
+      siteId: this.siteId,
+      userId: this.userId,
+    };
+    this.colourPalette.loadPalette(siteAndUserId);
+
+  }
 }
 </script>
 
 <style lang="postcss" scoped>
   .section-wrapper {
     @apply w-full;
-    @apply h-48;
+    @apply h-40;
     @apply overflow-hidden;
     @apply flex;
     @apply flex-col;
@@ -163,6 +183,6 @@ export default class MaterialTemplate extends Vue {
   }
 
   .section-wrapper-long {
-    @apply h-96;
+    @apply h-64;
   }
 </style>
