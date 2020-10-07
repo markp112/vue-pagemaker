@@ -18,107 +18,52 @@
         />
       </p>
     </div>
+    <div class="w-full">
+      <colour-palette
+        class="justify-center"
+        :palette="this.colourPalette.primary" 
+        label="Primary"
+        @colourClicked="applyColour($event)"
+      >
+      </colour-palette>
+      <colour-palette
+        class="justify-center"
+        :palette="this.colourPalette.secondary"
+        label="Secondary"
+      >
+      </colour-palette>
+      <colour-palette
+        class="justify-center"
+        :palette="this.colourPalette.accent"
+        label="Accent"
+      >
+      </colour-palette>
+    </div>
     <div class="flex flex-row justify-start text-siteLight leading-8 ml-4 ">
-      <section class="w-full flex flex-row ">
-        <div class="w-5/12">
-          <h2 class="text-xl text-siteDark ml-2">Font Settings</h2>
-          <div class="flex flex-row justify-between w-6/12 mt-1">
-            <p class="ml-8">Font</p>
-            <font-picker
-              @onChange="siteDefaults.typography.fontName"
-            ></font-picker>
-          </div>
-          <div class="flex flex-row justify-between w-6/12 mt-1">
-            <p class="ml-8">Font Size</p>
-            <drop-down
-              :thisIconButton="fontSizeButton"
-              :surface="dropDownSurface"
-              @onSelectChange="siteDefaults.typography.fontSizeBody"
-            >
-              px
-            </drop-down>
-          </div>
-          <h2 class="text-xl text-siteDark mb-2 ml-2 mt-4">
-            Colours
-          </h2>
+      <div class="w-8/12">
+        <h2 class="text-xl text-siteDark mb-2 ml-2 mt-4">
+          Colours
+        </h2>
+        <div class="flex flex-row justify-evenly">
+          <span class="w-6/12">
           <colour-option
-            heading="Primary"
-            :colour="siteDefaults.colours.primary"
-            @onChange="siteDefaults.colours.primary = $event"
+            heading="Other Colour"
+            :colour="selectedColour"
           >
           </colour-option>
-          <colour-option
-            heading="Primary Light"
-            :colour="siteDefaults.colours.primaryLight"
-            @onChange="siteDefaults.colours.primaryLight = $event"
-          ></colour-option>
-          <colour-option
-            heading="Primary Dark"
-            :colour="siteDefaults.colours.primaryDark"
-            @onChange="siteDefaults.colours.primaryDark = $event"
-          ></colour-option>
-          <colour-option
-            heading="Text on Primary"
-            :colour="siteDefaults.colours.textOnPrimary"
-            @onChange="siteDefaults.colours.textOnPrimary = $event"
-          ></colour-option>
-          <colour-option
-            heading="Secondary"
-            :colour="siteDefaults.colours.secondary"
-            @onChange="siteDefaults.colours.secondary = $event"
-          ></colour-option>
-          <colour-option
-            heading="Secondary Light"
-            :colour="siteDefaults.colours.secondaryLight"
-            @onChange="siteDefaults.colours.secondaryLight = $event"
-          ></colour-option>
-          <colour-option
-            heading="Secondary Dark"
-            :colour="siteDefaults.colours.secondaryDark"
-            @onChange="siteDefaults.colours.secondaryDark = $event"
-          ></colour-option>
-          <colour-option
-            heading="Text on Secondary"
-            :colour="siteDefaults.colours.textOnSecondary"
-            @onChange="siteDefaults.colours.textOnSecondary = $event"
-          ></colour-option>
-          <colour-option
-            heading="Background"
-            :colour="siteDefaults.colours.background"
-            @onChange="siteDefaults.colours.background = $event"
-          ></colour-option>
-          <colour-option
-            heading="Text on background"
-            :colour="siteDefaults.colours.textOnBackground"
-            @onChange="siteDefaults.colours.textOnBackground = $event"
-          ></colour-option>
-          <colour-option
-            heading="Surface"
-            :colour="siteDefaults.colours.surface"
-            @onChange="siteDefaults.colours.surface = $event"
-          ></colour-option>
-          <colour-option
-            heading="Text on surface"
-            :colour="siteDefaults.colours.textOnSurface"
-            @onChange="siteDefaults.colours.textOnSurface = $event"
-          ></colour-option>
-          <colour-option
-            heading="Accent"
-            :colour="siteDefaults.colours.accent"
-            @onChange="siteDefaults.colours.accent = $event"
-          ></colour-option>
-          <colour-option
-            heading="Error"
-            :colour="siteDefaults.colours.error"
-            @onChange="siteDefaults.colours.error = $event"
-          ></colour-option>
+          </span>
+          <span>
+            Apply colour to: {{ selectedItem }}
+          </span>
         </div>
-        <div class="w-7/12">
+      </div>
+    </div>
+<div class="flex flex-row justify-start text-siteLight leading-8 ml-4 ">
+        <div class="w-full">
           <material-template
             :materialSettings="siteDefaults"
           ></material-template>
         </div>
-      </section>
     </div>
   </div>
 </template>
@@ -130,8 +75,9 @@ import MaterialTemplate from './partials/material-template/material-template.vue
 import ColourOption from './partials/colour-option/colour-option.vue';
 import FontSelect from '@/components/base/pickers/font-selector/font-selector.vue';
 import DropDown from '@/components/base/pickers/drop-down/drop-down.vue';
-
+import Palette from '@/views/settings/pages/colour-palette/partials/colour-palette.vue';
 import {
+  ColourProperties,
   siteDefaultSettings,
   SiteDefaultsInterface,
 } from './models/site-defaults';
@@ -151,6 +97,7 @@ import { SiteIdAndUserId } from '@/models/site-and-user/site-and-user';
     'font-picker': FontSelect,
     'drop-down': DropDown,
     'colour-option': ColourOption,
+    'colour-palette': Palette,
   },
 })
 export default class SiteDefaultView extends SnackbarMixin {
@@ -159,20 +106,34 @@ export default class SiteDefaultView extends SnackbarMixin {
   showDefaultIcon = true;
   dropDownSurface = "bg-siteSurface text-onSurface";
   siteDefaults: SiteDefaults = SiteDefaults.getInstance();
-  
+  colourPalette: ColourPalettes = new ColourPalettes("#000000");
   siteId = this.$store.getters.getCurrentSiteId;
   userId = this.$store.getters.currentUser.id;
+  selectedColour = "#3322f4";
+  selectedItem: ColourProperties = 'primary';
 
   fontSizeButton: ButtonIconNumeric = new ButtonFactory().createButton(
     'numeric',
     'fontSize'
   ) as ButtonIconNumeric;
 
-  
+    mounted() {
+    const siteAndUserId: SiteIdAndUserId = {
+      siteId: this.siteId,
+      userId: this.userId,
+    };
+    this.colourPalette.loadPalette(siteAndUserId);
+  }
 
   getPath(image: string): string {
     const path = require.context('@/assets/icons', false, /\.png$/);
     return path(`./${image}`);
+  }
+
+
+  applyColour(colour: string) {
+    
+    this.siteDefaults.colours[this.selectedItem] = colour;
   }
 
   saveSiteDefaults() {

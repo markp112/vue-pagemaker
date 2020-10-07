@@ -1,22 +1,5 @@
 <template>
   <div class="flex flex-col justify-start w-full">
-    <div class="section-wrapper">
-      <p
-        :style="{
-          fontFamily: $props.materialSettings.typography.fontName,
-          fontSize: $props.materialSettings.typography.fontSizeBody, 
-        }"
-      >
-          <span class="block"> Font - {{ $props.materialSettings.typography.fontName }}</span>
-          <span class="block"> Size - {{ $props.materialSettings.typography.fontSizeBody }}</span>
-          <span class="bg-gray-400 border-gray-800 p-2 overflow-hidden block">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-          </span>
-        </p>  
-    </div>
-      <colour-palette :palette="this.colourPalette.primary" label="Primary"></colour-palette>
-      <colour-palette :palette="this.colourPalette.secondary" label="Secondary"></colour-palette>
-      <colour-palette :palette="this.colourPalette.accent" label="Accent"></colour-palette>
     <div class="flex flex-row justify-start w-full mt-6">
       <div class="flex flex-col justify-start w-6/12">
         <div 
@@ -28,7 +11,7 @@
               backgroundColor: $props.materialSettings.colours.primaryDark,
             }"
           >
-            Primary Dark
+            <span @click="itemSelected(ColourProperties.primaryDark)">Primary Dark</span>
           </p>
           <p class="w-full p-1"
             :style="{ color: $props.materialSettings.colours.textOnPrimary }"
@@ -87,8 +70,8 @@
           <div class="h-84"
             :style="{ backgroundColor: $props.materialSettings.colours.background }">
             <p class="p-1" :style="{ color: $props.materialSettings.colours.textOnBackground }">Text on background</p>
-            <div class="p-5">
-              <div class="w-full">
+            <div class="p-5 flex flex-row justify-center">
+              <div class="w-8/12 shadow-lg">
                 <div class="p-1"
                   :style="{ backgroundColor: $props.materialSettings.colours.primary }">
                   <h2 :style="{ color: $props.materialSettings.colours.textOnPrimary }">
@@ -136,10 +119,9 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import Palette from '@/views/settings/pages/colour-palette/partials/colour-palette.vue';
-import { SiteDefaultsInterface } from '../../models/site-defaults';
-import { ColourPalettes } from '@/classes/settings/colour-palette/colour-palette';
-import { SiteIdAndUserId } from '@/models/site-and-user/site-and-user';
+import { Emit } from 'vue-property-decorator';
+import { SiteDefaultsInterface, ColourProperties } from '../../models/site-defaults';
+
 
 @Component({
   props: {
@@ -148,21 +130,13 @@ import { SiteIdAndUserId } from '@/models/site-and-user/site-and-user';
     },
   },
   components: {
-    'colour-palette': Palette,
   },
 })
 export default class MaterialTemplate extends Vue {
-  colourPalette: ColourPalettes = new ColourPalettes("#000000");
-  siteId = this.$store.getters.getCurrentSiteId;
-  userId = this.$store.getters.currentUser.id;
-
-  mounted() {
-    const siteAndUserId: SiteIdAndUserId = {
-      siteId: this.siteId,
-      userId: this.userId,
-    };
-    this.colourPalette.loadPalette(siteAndUserId);
-
+  
+  @Emit('itemSelected')
+  itemSelected(selectedItem: ColourProperties) {
+    return selectedItem;
   }
 }
 </script>
@@ -170,7 +144,7 @@ export default class MaterialTemplate extends Vue {
 <style lang="postcss" scoped>
   .section-wrapper {
     @apply w-full;
-    @apply h-40;
+    @apply h-48;
     @apply overflow-hidden;
     @apply flex;
     @apply flex-col;
@@ -183,6 +157,6 @@ export default class MaterialTemplate extends Vue {
   }
 
   .section-wrapper-long {
-    @apply h-64;
+    @apply h-84;
   }
 </style>

@@ -1,6 +1,9 @@
 <template>
   <div class="flex flex-row justify-between w-9/12 mt-1">
-    <p class="ml-6 w-6/12">{{ $props.heading }}</p>
+    <p
+      class="ml-6 w-6/12 cursor-pointer"
+      @click="selectOption()"  
+    >{{ $props.heading }}</p>
     <colour-dropdown
       :colourProp="$props.colour"
       @onColourChange="onChange($event)"
@@ -32,6 +35,7 @@ import ColourDropdown from '@/components/base/pickers/colour-picker/colour-dropd
   }
 })
 export default class ColourOption extends Vue {
+  selected = false;
  
   @Emit('onChange')
   onChange(colour: string): string {
@@ -42,22 +46,25 @@ export default class ColourOption extends Vue {
  private componentToHex(rgb: number) {
   const hex = rgb.toString(16);
   return hex.length == 1 ? "0" + hex : hex;
-}
+  }
 
-private rgbToHex(r: number, g: number, b: number) {
+  private rgbToHex(r: number, g: number, b: number) {
   return "#" + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
-}
+  }
 
-private convertToHex(rgbColour: string): string {
-  if (rgbColour.substring(0) === '#') return rgbColour;
-  const rgb = rgbColour.split("(")[1].split(")")[0];
-  const rgbArray = rgb.split(",");
-  return this.rgbToHex(
-      parseInt(rgbArray[0]),
-      parseInt(rgbArray[1]),
-      parseInt(rgbArray[2])
-      )
-}
+  private convertToHex(rgbColour: string): string {
+    if (rgbColour.substring(0) === '#') return rgbColour;
+    const rgb = rgbColour.split("(")[1].split(")")[0];
+    const rgbArray = rgb.split(",");
+    return this.rgbToHex(
+        parseInt(rgbArray[0]),
+        parseInt(rgbArray[1]),
+        parseInt(rgbArray[2])
+        )
+  }
 
+  selectOption() {
+    this.selected = true;
+  }
 }
 </script>

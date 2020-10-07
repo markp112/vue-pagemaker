@@ -38,9 +38,7 @@ export class SiteDefaults implements SiteDefaultsInterface {
     }
     ServicesModule.firestoreGetSiteDefaultSettings(data)
     .then (response => {
-      console.log('%c⧭', 'color: #e97c00', response);
       const siteDefaults: SiteDefaultsInterface = response as SiteDefaultsInterface;
-      console.log('%c⧭', 'color: #d90000', siteDefaults);
       this._colours = siteDefaults.colours;
       this._typography = siteDefaults.typography;
       this._isLoaded = true;
