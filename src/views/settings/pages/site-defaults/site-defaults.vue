@@ -49,6 +49,7 @@
           <colour-option
             heading="Other Colour"
             :colour="selectedColour"
+            @onChange="applyColour($event)"
           >
           </colour-option>
           </span>
@@ -62,6 +63,7 @@
         <div class="w-full">
           <material-template
             :materialSettings="siteDefaults"
+            @itemSelected="setItemSelected($event)"
           ></material-template>
         </div>
     </div>
@@ -117,7 +119,7 @@ export default class SiteDefaultView extends SnackbarMixin {
     'fontSize'
   ) as ButtonIconNumeric;
 
-    mounted() {
+  mounted() {
     const siteAndUserId: SiteIdAndUserId = {
       siteId: this.siteId,
       userId: this.userId,
@@ -130,10 +132,13 @@ export default class SiteDefaultView extends SnackbarMixin {
     return path(`./${image}`);
   }
 
-
   applyColour(colour: string) {
-    
     this.siteDefaults.colours[this.selectedItem] = colour;
+  }
+
+  setItemSelected(item: ColourProperties) {
+    console.log('%c%s', 'color: #ffa640', item)
+    this.selectedItem = item;
   }
 
   saveSiteDefaults() {

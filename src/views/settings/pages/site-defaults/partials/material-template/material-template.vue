@@ -11,7 +11,7 @@
               backgroundColor: $props.materialSettings.colours.primaryDark,
             }"
           >
-            <span @click="itemSelected(ColourProperties.primaryDark)">Primary Dark</span>
+            Primary Dark
           </p>
           <p class="w-full p-1"
             :style="{ color: $props.materialSettings.colours.textOnPrimary }"
@@ -134,10 +134,6 @@ import { SiteDefaultsInterface, ColourProperties } from '../../models/site-defau
 })
 export default class MaterialTemplate extends Vue {
   
-  @Emit('itemSelected')
-  itemSelected(selectedItem: ColourProperties) {
-    return selectedItem;
-  }
 }
 </script>
 
