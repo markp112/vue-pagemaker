@@ -37,12 +37,11 @@
           >
             Secondary Dark
           </p>
-          
           <p class="w-full p-1"
             :style="{ color: $props.materialSettings.colours.textOnSecondary }"
           >
-              Secondary
-            </p>
+            Secondary
+          </p>
           <p class="self-end w-full p-1"
             :style="{
               color: $props.materialSettings.colours.textOnSecondary,  
@@ -72,9 +71,16 @@
             <p class="p-1" :style="{ color: $props.materialSettings.colours.textOnBackground }">Text on background</p>
             <div class="p-5 flex flex-row justify-center">
               <div class="w-8/12 shadow-lg">
-                <div class="p-1"
-                  :style="{ backgroundColor: $props.materialSettings.colours.primary }">
-                  <h2 :style="{ color: $props.materialSettings.colours.textOnPrimary }">
+                <div 
+                  class="p-1"
+                  :style="{
+                    backgroundColor: $props.materialSettings.colours.primary,
+                  }"
+                >
+                  <h2
+                    :style="{
+                      color: $props.materialSettings.colours.textOnPrimary,
+                    }">
                     Text on primary
                   </h2>
                 </div> 
@@ -84,15 +90,19 @@
                     backgroundColor: $props.materialSettings.colours.surface,
                     color: $props.materialSettings.colours.textOnSurface,
                   }"
+                >
+                  Text on surface
+                  <div class="absolute bottom-1 left-1/3 h-16 w-16 rounded-full ml-2"
+                    :style="{
+                      backgroundColor: $props.materialSettings.colours.surface,
+                    }"
                   >
-                    Text on surface
-                  <div class="absolute bottom-1 left-1/3 h-16 w-16 rounded-full bg-white ml-2">
                     <p
                       class="absolute bottom-0 ml-2 mb-1 rounded-full h-12 w-12 flex items-center justify-center shadow-lg"
                       :style="{
-                      backgroundColor: $props.materialSettings.colours.accent,
-                      color: $props.materialSettings.colours.textOnSurface,
-                    }"
+                        backgroundColor: $props.materialSettings.colours.accent,
+                        color: $props.materialSettings.colours.textOnSurface,
+                      }"
                     >
                       accent
                     </p>
@@ -100,7 +110,7 @@
                 </div>
                 <div
                   class="p-1"
-                    :style="{
+                  :style="{
                     backgroundColor: $props.materialSettings.colours.secondary,
                     color: $props.materialSettings.colours.textOnSecondary,
                   }"
@@ -112,16 +122,14 @@
           </div>
         </div>
       </div>
-    </div >
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { Emit } from 'vue-property-decorator';
-import { SiteDefaultsInterface, ColourProperties } from '../../models/site-defaults';
-
+import { SiteDefaultsInterface } from '../../models/site-defaults';
 
 @Component({
   props: {
@@ -132,27 +140,25 @@ import { SiteDefaultsInterface, ColourProperties } from '../../models/site-defau
   components: {
   },
 })
-export default class MaterialTemplate extends Vue {
-  
-}
+export default class MaterialTemplate extends Vue {}
 </script>
 
 <style lang="postcss" scoped>
-  .section-wrapper {
-    @apply w-full;
-    @apply h-48;
-    @apply overflow-hidden;
-    @apply flex;
-    @apply flex-col;
-    @apply justify-between;
-    @apply text-sm;
-  }
-  
-  .section-wrapper-short {
-    @apply h-16;
-  }
+.section-wrapper {
+  @apply w-full;
+  @apply h-48;
+  @apply overflow-hidden;
+  @apply flex;
+  @apply flex-col;
+  @apply justify-between;
+  @apply text-sm;
+}
 
-  .section-wrapper-long {
-    @apply h-84;
-  }
+.section-wrapper-short {
+  @apply h-16;
+}
+
+.section-wrapper-long {
+  @apply h-84;
+}
 </style>

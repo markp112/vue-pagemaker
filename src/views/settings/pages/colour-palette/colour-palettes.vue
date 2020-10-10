@@ -39,6 +39,14 @@
           @input="onSaturationChange()"
         >
       </div>
+      <div class="self-end ml-16">
+        <span
+          class="reset-button"
+          @click="onResetClick()"
+        >
+          Reset
+        </span>
+      </div>
     </div>
     <p class="ml-8">scheme</p>
     <div class="flex flex-row justify-start w-full ml-8 mb-6 mt-0">
@@ -161,6 +169,10 @@ export default class PaletteGenerator extends SnackbarMixin {
     this.colourPalettes.newPalette(colour);
   }
 
+  onResetClick() {
+    this.loadPalette();
+  }
+
   onSaturationChange() {
     const value = this.saturationValue > this.saturationPreviousValue ? 0.1 : -0.1;
     this.colourPalettes.changeSaturation(value);
@@ -231,5 +243,24 @@ export default class PaletteGenerator extends SnackbarMixin {
   border-radius: 50%;
   background: #4a3d94;
   cursor: pointer;
+}
+
+.reset-button {
+  @apply rounded-full;
+  @apply w-auto;
+  @apply h-auto;
+  @apply ml-4;
+  @apply text-xs;
+  @apply px-4;
+  @apply py-2;
+  @apply bg-siteLight;
+  @apply text-onPrimary; 
+  @apply border-gray-600;
+  @apply border; 
+  @apply cursor-pointer;
+}
+.reset-button:hover{
+  @apply bg-site-secondary-light;
+  @apply text-onPrimary;
 }
 </style>

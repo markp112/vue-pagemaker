@@ -1,18 +1,18 @@
 <template>
-   <div class="h-20 w-full flex flex-row flex-wrap">
-        <p class="w-full">
-          {{ $props.label }}
-        </p>
-        <span
-          class="h-16 w-16 text-xs text-center flex flex-col justify-end cursor-pointer"
-          v-for="(colour, index) in $props.palette"
-          :key="index + colour"
-          :style="{ backgroundColor: colour, color: getFontColour(index) }"
-          @click="colourClicked(colour)"
-        >
-          {{ colour }}
-        </span>
-      </div>
+  <div class="w-full flex flex-row flex-wrap">
+    <p class="w-1/12">
+      {{ $props.label }}
+    </p>
+    <span
+      class="h-16 w-16 text-xs text-center flex flex-col justify-end cursor-pointer"
+      v-for="(colour, index) in $props.palette"
+      :key="index + colour"
+      :style="{ backgroundColor: colour, color: getFontColour(index) }"
+      @click="colourClicked(colour)"
+    >
+      {{ colour }}
+    </span>
+  </div>
 </template>
 
 <script lang="ts">
@@ -31,6 +31,7 @@ import { Emit } from 'vue-property-decorator';
     },
 })
 export default class PaletteStrip extends Vue {
+  name = "Palette-strip";
 
   getFontColour(index: number): string {
     const BLACK = '#000000';
@@ -42,6 +43,5 @@ export default class PaletteStrip extends Vue {
   colourClicked(colour: string) {
     return colour;
   }
-  
 }
 </script>

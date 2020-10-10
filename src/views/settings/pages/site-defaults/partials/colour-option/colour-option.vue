@@ -1,14 +1,13 @@
 <template>
-  <div class="flex flex-row justify-between w-9/12 mt-1">
+  <div class="flex flex-row justify-start">
     <p
-      class="ml-6 w-6/12 cursor-pointer"
-      @click="selectOption()"  
+      class="cursor-pointer mr-2"
     >{{ $props.heading }}</p>
     <colour-dropdown
       :colourProp="$props.colour"
       @onColourChange="onChange($event)"
     ></colour-dropdown>
-    <span class="border border-gray-500 inline-block ml-1 w-2/12 text-sm h-6">
+    <span class="border border-gray-500 inline-block ml-1 w-auto px-2 text-sm h-6">
       {{ $props.colour }}
     </span>
   </div>
@@ -35,7 +34,6 @@ import ColourDropdown from '@/components/base/pickers/colour-picker/colour-dropd
   }
 })
 export default class ColourOption extends Vue {
-  selected = false;
  
   @Emit('onChange')
   onChange(colour: string): string {
@@ -61,10 +59,6 @@ export default class ColourOption extends Vue {
         parseInt(rgbArray[1]),
         parseInt(rgbArray[2])
         )
-  }
-
-  selectOption() {
-    this.selected = true;
   }
 }
 </script>
