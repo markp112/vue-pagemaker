@@ -1,4 +1,7 @@
-import { PageData, ComponentContainer, PageElement, PageElementBuilder } from '@/models/page/page';
+import { PageData } from '@/models/page/page';
+import { PageElement } from "@/classes/page-element/PageElement";
+import { ComponentContainer } from "@/classes/page-element/ComponentContainer";
+import { PageElementBuilder } from "@/classes/page-element/PageElementBuilder";
 import { ComponentDefinitionInterface, ComponentTypesString } from '@/models/components/base-component'
 export const _componentClasses: ComponentDefinitionInterface[] = []
 

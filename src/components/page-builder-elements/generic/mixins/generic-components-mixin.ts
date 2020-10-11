@@ -5,8 +5,8 @@ import {
   ResizeDimensions,
   BoxDimensionsInterface,
 } from '@/models/components/box-dimension';
-import { ComponentContainer } from '@/models/page/page';
 import { Style } from '@/models/styles/styles';
+import { ComponentContainer } from '@/classes/page-element/ComponentContainer';
 
 @Component
 export class GenericComponentMixins extends Vue {

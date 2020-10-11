@@ -24,18 +24,18 @@ import { Emit } from 'vue-property-decorator';
   props: {
     palette: {
       default: (): string[] => {
-        return []
-      }
+        return [];
       },
-    label: { default: '' },
     },
+    label: { default: '' },
+  },
 })
 export default class PaletteStrip extends Vue {
-  name = "Palette-strip";
+  name = 'Palette-strip';
 
   getFontColour(index: number): string {
     const BLACK = '#000000';
-    const WHITE = '#ffffff'
+    const WHITE = '#ffffff';
     return index < 5 ? BLACK : WHITE;
   }
 

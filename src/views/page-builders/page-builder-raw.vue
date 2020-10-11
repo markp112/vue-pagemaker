@@ -39,11 +39,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import Container from '@/components/page-builder-elements/generic/container.vue';
-import {
-  PageData,
-  ComponentContainer,
-  PageElementBuilder,
-} from '@/models/page/page';
+import { PageData } from '@/models/page/page';
 import { ComponentBuilder } from '@/classes/component-builder/component-builder';
 import EditDeleteOption from '@/components/page-builder-elements/utility/edit-delete-options/edit-delete-options.vue';
 import { PageModule } from '@/store/page/page';
@@ -51,6 +47,10 @@ import { SidebarModule } from '@/store/sidebar/sidebar';
 import { ServicesModule } from '@/store/services/services';
 import { ComponentCounter } from '@/classes/component-counter/singleton-counter';
 import TextEditor from '@/components/base/text/text-editor/text-editor.vue';
+import { ComponentContainer } from '@/classes/page-element/ComponentContainer';
+import { PageElementBuilder } from '@/classes/page-element/PageElementBuilder';
+
+// import { ComponentContainer, PageElementBuilder } from '@/classes/settings/page-element/PageElement';
 
 const PARENT = 'ROOT';
 const PARENTCOMPONENT = new ComponentContainer(new PageElementBuilder());

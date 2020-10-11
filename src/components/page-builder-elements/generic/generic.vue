@@ -38,9 +38,9 @@
   <div 
     v-else
     :style="getStyles()"
-    :id="$props.thisComponent.ref"
-    class="handle items-center flex flex-row justify-center" 
     :class="getClasses()"
+    :id="$props.thisComponent.ref"
+    class="handle  flex flex-row justify-center items-center" 
     @click.prevent="onClick($event)"
   >
     {{ data.content }}
@@ -55,13 +55,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component, { mixins } from 'vue-class-component';
-import 
-  {
-    PageData,
-    ComponentContainer,
-    PageElement,
-    PageElementBuilder,
-  } from '@/models/page/page';
+import { PageData } from '@/models/page/page';
 import { Style } from '@/models//styles/styles';
 import {
   ComponentTypes,
@@ -75,6 +69,10 @@ import Resize from '@/components/base/resizeable/resize.vue';
 import UploadImage from '@/components/base/pickers/upload-image/upload-image.vue';
 import { PageModule } from '@/store/page/page';
 import { GenericComponentMixins } from '@/components/page-builder-elements/generic/mixins/generic-components-mixin';
+import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
+import { ComponentTypesString } from '@/models/components/base-component';
+import { PageElement } from '@/classes/page-element/PageElement';
+import { PageElementBuilder } from '@/classes/page-element/PageElementBuilder';
 
 @Component({
   props: {
@@ -99,6 +97,8 @@ export default class GenericComponent extends mixins(GenericComponentMixins) {
 
   created() {
     this.data = this.$props.thisComponent.data;
+    const pageElement: PageElement = this.$props.thisComponent;
+    pageElement.addStyles(this.getSiteDefaultsStyles(pageElement.type));
     if (this.$props.thisComponent.type === 'image') {
       this.isImage = true;
       this.isText = false;
@@ -111,6 +111,29 @@ export default class GenericComponent extends mixins(GenericComponentMixins) {
 
   get getData(): string | undefined {
     return this.$props.thisComponent.data.content;
+  }
+
+
+  getSiteDefaultsStyles(type: ComponentTypesString): Style[] {
+    // if (type === 'button') return getButtonDefaults();
+    // if (type === 'text') return textDefaults();
+    // if (type === 'image') return imageDefaults();
+    const siteDefaults = SiteDefaults.getInstance();
+    const styles: Style[] = [];
+    styles.push(this.constructStyle('fontFamily', siteDefaults.typography.fontName));
+    styles.push(this.constructStyle('fontSize', siteDefaults.typography.fontSizeBody));
+    const siteColours = siteDefaults.colours;
+    styles.push(this.constructStyle('backgroundColor', siteColours.secondary));
+    styles.push(this.constructStyle('color', siteColours.textOnSecondary));
+    return styles;
+}
+
+  private constructStyle(styleName: string, value: string): Style {
+    const style: Style ={
+      style: styleName,
+      value: value,
+    }
+    return style;
   }
 
   get isActive(): boolean {
@@ -144,10 +167,10 @@ export default class GenericComponent extends mixins(GenericComponentMixins) {
 }
 
 .component {
-  @apply shadow shadow-xl;
+  @apply shadow-xl;
 }
 
 .component:hover {
-  @apply bg-gray-200 bg-gray-600;
+  @apply bg-gray-600;
 }
 </style>

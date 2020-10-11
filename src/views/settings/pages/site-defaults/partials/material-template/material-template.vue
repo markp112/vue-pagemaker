@@ -2,49 +2,58 @@
   <div class="flex flex-col justify-start w-full">
     <div class="flex flex-row justify-start w-full mt-6">
       <div class="flex flex-col justify-start w-6/12">
-        <div 
+        <div
           class="section-wrapper"
-          :style="{ backgroundColor: $props.materialSettings.colours.primary }">
-          <p class="w-full p-1"
+          :style="{ backgroundColor: $props.materialSettings.colours.primary }"
+        >
+          <p
+            class="w-full p-1"
             :style="{
-              color: $props.materialSettings.colours.textOnPrimary,  
+              color: $props.materialSettings.colours.textOnPrimary,
               backgroundColor: $props.materialSettings.colours.primaryDark,
             }"
           >
             Primary Dark
           </p>
-          <p class="w-full p-1"
+          <p
+            class="w-full p-1"
             :style="{ color: $props.materialSettings.colours.textOnPrimary }"
           >
             Primary
           </p>
-          <p class="self-end w-full p-1"
+          <p
+            class="self-end w-full p-1"
             :style="{
-              color: $props.materialSettings.colours.textOnPrimary,  
-              backgroundColor: $props.materialSettings.colours.primaryLight }"
+              color: $props.materialSettings.colours.textOnPrimary,
+              backgroundColor: $props.materialSettings.colours.primaryLight,
+            }"
           >
             Primary Light
           </p>
         </div>
-        <div 
+        <div
           class="section-wrapper"
-          :style="{ backgroundColor: $props.materialSettings.colours.secondary }">
-          <p class="w-full p-1"
+          :style="{ backgroundColor: $props.materialSettings.colours.secondary }"
+        >
+          <p
+            class="w-full p-1"
             :style="{
-              color: $props.materialSettings.colours.textOnSecondary,  
+              color: $props.materialSettings.colours.textOnSecondary,
               backgroundColor: $props.materialSettings.colours.secondaryDark,
             }"
           >
             Secondary Dark
           </p>
-          <p class="w-full p-1"
+          <p
+            class="w-full p-1"
             :style="{ color: $props.materialSettings.colours.textOnSecondary }"
           >
             Secondary
           </p>
-          <p class="self-end w-full p-1"
+          <p
+            class="self-end w-full p-1"
             :style="{
-              color: $props.materialSettings.colours.textOnSecondary,  
+              color: $props.materialSettings.colours.textOnSecondary,
               backgroundColor: $props.materialSettings.colours.secondaryLight,
             }"
           >
@@ -53,12 +62,14 @@
         </div>
       </div>
       <div class="flex flex-col justify-start w-6/12">
-        <div 
+        <div
           class="section-wrapper section-wrapper-short"
-          :style="{ backgroundColor: $props.materialSettings.colours.error }">
-          <p class="w-full p-1"
+          :style="{ backgroundColor: $props.materialSettings.colours.error }"
+        >
+          <p
+            class="w-full p-1"
             :style="{
-              color: $props.materialSettings.colours.textOnError,  
+              color: $props.materialSettings.colours.textOnError,
               backgroundColor: $props.materialSettings.colours.error,
             }"
           >
@@ -66,12 +77,23 @@
           </p>
         </div>
         <div class="section-wrapper section-wrapper-long">
-          <div class="h-84"
-            :style="{ backgroundColor: $props.materialSettings.colours.background }">
-            <p class="p-1" :style="{ color: $props.materialSettings.colours.textOnBackground }">Text on background</p>
+          <div
+            class="h-84"
+            :style="{
+              backgroundColor: $props.materialSettings.colours.background,
+            }"
+          >
+            <p
+              class="p-1"
+              :style="{
+                color: $props.materialSettings.colours.textOnBackground,
+              }"
+            >
+              Text on background
+            </p>
             <div class="p-5 flex flex-row justify-center">
               <div class="w-8/12 shadow-lg">
-                <div 
+                <div
                   class="p-1"
                   :style="{
                     backgroundColor: $props.materialSettings.colours.primary,
@@ -92,9 +114,10 @@
                   }"
                 >
                   Text on surface
-                  <div class="absolute bottom-1 left-1/3 h-16 w-16 rounded-full ml-2"
+                  <div
+                    class="absolute bottom-1 left-1/3 h-16 w-16 rounded-full ml-2"
                     :style="{
-                      backgroundColor: $props.materialSettings.colours.surface,
+                      backgroundColor: $props.materialSettings.colours.surface
                     }"
                   >
                     <p

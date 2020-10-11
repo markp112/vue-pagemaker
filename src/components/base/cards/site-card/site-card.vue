@@ -14,10 +14,12 @@
 
 <script lang="ts">
 import Component from 'vue-class-component';
-import { Vue,  Emit, Prop } from 'vue-property-decorator';
+import { Emit, Prop } from 'vue-property-decorator';
 import { Site, initSite} from '@/models/sites/site';
 import { SitesModule } from '@/store/sites/sites';
 import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
+import { SnackbarMixin } from '@/mixins/components/snackbar/snackbar-mixin';
+import { Notification } from '@/models/notifications/notifications';
 
 @Component({
     props: {
@@ -26,12 +28,12 @@ import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
       }
     }
 })
-export default class SiteCard extends Vue{
-  name = "Site Card";
+export default class SiteCard extends SnackbarMixin{
+  name = 'Site Card';
 
   editSiteClick() {
     SitesModule.updateCurrentSiteId(this.$props.site.siteId);
-    this.$router.push({name:"newSite", params:{title:'Edit Site'}});
+    this.$router.push({name: 'newSite', params:{ title: 'Edit Site' }});
   }
 
   goClick() {
@@ -39,11 +41,12 @@ export default class SiteCard extends Vue{
     SitesModule.updateCurrentSiteId(siteId);
     const siteDefaultSettings = SiteDefaults.getInstance();
     const userId = this.$store.getters.currentUser.id;
-    siteDefaultSettings.loadDefaults(siteId, userId);
-    console.log("SiteDefaults is loaded", siteDefaultSettings.isLoaded)
-    this.$router.push({name:"pageList"});
+    siteDefaultSettings.loadDefaults(siteId, userId)
+    .catch(err => {
+      const notification: Notification = err as Notification;
+      this.showSnackbar(notification, 'Site defaults load failed, defaults applied');
+    })
+    this.$router.push({ name: 'pageList' });
   }
-
 }
-
 </script>

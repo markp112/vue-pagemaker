@@ -7,11 +7,13 @@ import {
   getModule,
 } from 'vuex-module-decorators';
 import {
-  ComponentContainer,
-  PageElement,
   PageData,
   StyleTypes,
 } from '@/models/page/page';
+import {
+  PageElement
+} from "@/classes/page-element/PageElement";
+import { ComponentContainer } from "@/classes/page-element/ComponentContainer";
 import { Style } from '@/models/styles/styles';
 import {
   ComponentTypesString,

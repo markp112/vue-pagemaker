@@ -63,7 +63,6 @@ import { Indents, Paragraph } from '@/classes/dom/range/range-base';
 import { RH } from '@/classes/dom/range/RH';
 import { PageModule } from '../../../../store/page/page';
 import { AlignText } from '@/classes/dom/range/commands/align-text';
-import { PageElement } from '../../../../models/page/page';
 import IconSelect from '@/components/base/pickers/icon-select/icon-select.vue';
 import FontSelect from '@/components/base/pickers/font-selector/font-selector.vue';
 import DropDown from '@/components/base/pickers/drop-down/drop-down.vue';
@@ -78,6 +77,7 @@ import { ButtonFactory } from '@/models/styles/button-factory/button-factory';
 import { ButtonIconNumeric } from '@/models/styles/button-icon/button-numeric-list/button-numeric-list';
 import { StyleElement, TextAttributes } from '@/classes/text-attributes/text-attributes';
 import { TextModule } from '@/store/text-editor/text-editor';
+import { PageElement } from '@/classes/page-element/PageElement';
 @Component({
   components: {
     'close-button': CloseButton,

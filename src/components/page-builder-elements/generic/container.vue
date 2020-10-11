@@ -33,7 +33,7 @@ import Vue from 'vue';
 import Component, { mixins } from 'vue-class-component';
 import { ComponentBuilder } from '@/classes/component-builder/component-builder';
 import { Emit } from 'vue-property-decorator';
-import { PageData, ComponentContainer, PageElementBuilder } from '@/models/page/page';
+import { PageData } from '@/models/page/page';
 import { Style } from '@/models//styles/styles';
 import GenericComponent from '@/components/page-builder-elements/generic/generic.vue';
 import { PageModule } from '@/store/page/page';
@@ -43,6 +43,8 @@ import { ComponentCounter } from '@/classes/component-counter/singleton-counter'
 import Resize from '@/components/base/resizeable/resize.vue';
 import { BoxDimensions, BoxDimensionsInterface, BoxUnits, Dimension } from '../../../models/components/box-dimension';
 import { GenericComponentMixins } from '@/components/page-builder-elements/generic/mixins/generic-components-mixin';
+import { PageElementBuilder } from '@/classes/page-element/PageElementBuilder';
+import { ComponentContainer } from '@/classes/page-element/ComponentContainer';
 
 @Component({
   props: {

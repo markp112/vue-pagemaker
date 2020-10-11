@@ -23,7 +23,7 @@ import { PageModule } from '@/store/page/page';
 import { SidebarModule } from '@/store//sidebar/sidebar';
 import ColourSelect from '@/components/base/pickers/colour-picker/colour-select.vue';
 import { Image } from '@/models/components/components';
-import { PageElement } from '@/models/page/page';
+import { PageElement } from '@/classes/page-element/PageElement';
 
 @Component({
   components: {

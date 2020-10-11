@@ -1,9 +1,12 @@
-import { SiteDefaultsInterface, siteDefaultSettings, MaterialColourInterface, TypographyInterface } from '@/views/settings/pages/site-defaults/models/site-defaults';
-import {  ServicesModule } from '@/store/services/services';
+import {
+  SiteDefaultsInterface,
+  siteDefaultSettings,
+  MaterialColourInterface,
+  TypographyInterface,
+} from '@/views/settings/pages/site-defaults/models/site-defaults';
+import { ServicesModule } from '@/store/services/services';
 import { AuthModule } from '@/store/auth/auth';
 import { Notification } from '@/models/notifications/notifications';
-import { SnackbarModule } from '@/store/snackbar/snackbar';
-import { SnackbarMessage, SnackbarTypes } from '@/models/notifications/snackbar';
 
 export class SiteDefaults implements SiteDefaultsInterface {
   private _colours: MaterialColourInterface = siteDefaultSettings.colours;
@@ -31,31 +34,33 @@ export class SiteDefaults implements SiteDefaultsInterface {
     return this._isLoaded;
   }
 
-  public loadDefaults(siteId: string, userId: string) {
+  public loadDefaults(siteId: string, userId: string):Promise<Notification> {
     const data = {
       userId: userId,
       siteId: siteId,
     }
-    ServicesModule.firestoreGetSiteDefaultSettings(data)
-    .then (response => {
-      const siteDefaults: SiteDefaultsInterface = response as SiteDefaultsInterface;
-      this._colours = siteDefaults.colours;
-      this._typography = siteDefaults.typography;
-      this._isLoaded = true;
-    })
-    .catch(err => {
-      const notification = err as Notification;
-      const snackbarMessage: SnackbarMessage = {
-        message: notification.message,
-        title: "Could not retrieve site settings",
-        show: true,
-        duration: 3000,
-        type: SnackbarTypes.Error
-      }
-      SnackbarModule.showSnackbar(snackbarMessage);
-      this._colours = siteDefaultSettings.colours;
-      this._typography = siteDefaultSettings.typography;
-      this._isLoaded = false;
+    return new Promise((resolve, reject) => {
+      ServicesModule.firestoreGetSiteDefaultSettings(data)
+      .then (response => {
+        const siteDefaults: SiteDefaultsInterface = response as SiteDefaultsInterface;
+        this._colours = siteDefaults.colours;
+        this._typography = siteDefaults.typography;
+        this._isLoaded = true;
+        const notification: Notification = {
+          message: 'Sucess',
+          status: 'ok',
+        }
+        resolve(notification)
+      })
+      .catch(err => {
+        const notification = err as Notification;
+        notification.status = 'Error';
+        // if error load the default settings
+        this._colours = siteDefaultSettings.colours;
+        this._typography = siteDefaultSettings.typography;
+        this._isLoaded = false;
+        reject(notification);
+      })
     })
   }
 
