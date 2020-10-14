@@ -72,7 +72,7 @@ import { GenericComponentMixins } from '@/components/page-builder-elements/gener
 import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
 import { ComponentTypesString } from '@/models/components/base-component';
 import { PageElement } from '@/classes/page-element/PageElement';
-import { PageElementBuilder } from '@/classes/page-element/PageElementBuilder';
+import { PageElementBuilder } from '@/classes/page-element/page-element-builder/PageElementBuilder';
 
 @Component({
   props: {

@@ -31,7 +31,7 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component, { mixins } from 'vue-class-component';
-import { ComponentBuilder } from '@/classes/component-builder/component-builder';
+// import { ComponentBuilder } from '@/classes/component-builder/component-builder';
 import { Emit } from 'vue-property-decorator';
 import { PageData } from '@/models/page/page';
 import { Style } from '@/models//styles/styles';
@@ -43,8 +43,10 @@ import { ComponentCounter } from '@/classes/component-counter/singleton-counter'
 import Resize from '@/components/base/resizeable/resize.vue';
 import { BoxDimensions, BoxDimensionsInterface, BoxUnits, Dimension } from '../../../models/components/box-dimension';
 import { GenericComponentMixins } from '@/components/page-builder-elements/generic/mixins/generic-components-mixin';
-import { PageElementBuilder } from '@/classes/page-element/PageElementBuilder';
+// import { PageElementBuilder } from '@/classes/page-element/PageElementBuilder';
+import { PageElementBuilder } from '@/classes/page-element/page-element-builder/PageElementBuilder'
 import { ComponentContainer } from '@/classes/page-element/ComponentContainer';
+import { PageElementClasses, PageElementFactory } from '@/classes/page-element/factory/page-element-factory';
 
 @Component({
   props: {
@@ -67,8 +69,9 @@ export default class Container extends mixins(GenericComponentMixins) {
     const parentElement: Element = this.$parent.$el;
     // -- convert width and height into pixels as initial dimension may be a percentage and cannot then be used
     // by the child component to get the actual width / height
-    this.$props.thisComponent.boxDimensions.width = { value: this.$el.getBoundingClientRect().width, units: 'px' };
-    this.$props.thisComponent.boxDimensions.height = { value: this.$el.getBoundingClientRect().height, units: 'px' };
+    // this.$props.thisComponent.boxDimensions.width = { value: this.$el.getBoundingClientRect().width, units: 'px' };
+    // this.$props.thisComponent.boxDimensions.height = { value: this.$el.getBoundingClientRect().height, units: 'px' };
+    console.log('%c⧭', 'color: #ffcc00', this.$props.thisComponent)
   }
 
   @Emit('componentClicked')
@@ -85,21 +88,28 @@ export default class Container extends mixins(GenericComponentMixins) {
   }
 
   onDrop(event: DragEvent) {
-    const componentBuilder = new ComponentBuilder();
+    // const componentBuilder = new ComponentBuilder();
+    const componentBuilder = new PageElementFactory();
     if (ServicesModule.dragDropEventHandled) { return }
     if (event) {
-      const componentName = componentBuilder.getComponentName(event);
+      const componentName = this.getComponentName(event);
       const id: number = this.componentCounter.getNextCounter();
       const ref = `${componentName}::${id}`;
       const component = SidebarModule.getComponentDefinition(componentName);
       const parent: ComponentContainer  = this.$props.thisComponent; // when dropping a component this componet will be its parent
       if(component) {
-        const newComponent: PageData = componentBuilder.buildComponent(component, ref, parent );
+        const newComponent: PageElementClasses = componentBuilder.createElement (component.type, component, ref, parent );
         parent.addNewElement(newComponent);
         ServicesModule.toggleDragDropEventHandled(true);
       }
     }
   }
+
+  getComponentName (event: DragEvent): string {
+    const dataTransfer = event.dataTransfer;
+    return dataTransfer ? dataTransfer.getData('text') : '';
+  }
+
   get getStyle(): string {
     return this.componentStyle;
   }

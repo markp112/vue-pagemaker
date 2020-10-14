@@ -21,7 +21,7 @@ export class PageElementBuilder {
   private _data: ComponentTypes = undefined;
   private _boxDimensions: BoxDimensions = new BoxDimensions(width, height, top, left);
   private _actionEvent: ActionEvent = new ActionEvent(null, '');
-  private _content: string ='';
+  private _content ='';
 
   setName(name: string) {
     this._name = name;
@@ -134,10 +134,10 @@ export class PageElementBuilder {
     return this._content;
   }
 
-
-  // public build(): PageElement {
-  //   return new PageElement(this);
-  // }
+// required to create an empty container / element when initialising props.
+  public build(): PageElement {
+    return new PageElement(this);
+  }
 
   public buildAButton(): ButtonElement {
     this._content = 'click me';
@@ -152,5 +152,9 @@ export class PageElementBuilder {
   public buildAnImage(): ImageElement {
     this._content = 'https://firebasestorage.googleapis.com/v0/b/page-maker-69fb1.appspot.com/o/assets%2Fimages%2Fimageplaceholder.png?alt=media&token=149d3e60-0fc4-49de-9e23-5fea91458240';
     return new ImageElement(this);
+  }
+
+  public buildAContainer(): ComponentContainer {
+    return new ComponentContainer(this);
   }
 }

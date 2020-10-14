@@ -5,7 +5,16 @@ import { BoxDimensions, Dimension } from './box-dimension';
 // unique reference for this component when dropped on the page
 export type ComponentRef = string;
 
-export type ComponentTypesString = undefined | 'jumbo' | 'button' | 'navBar' | 'pageTemplate' | 'text' | 'image' | 'groupingContainer';
+export type ComponentTypesString = 
+  | undefined
+  | 'rootContainer'
+  | 'jumbo'
+  | 'button'
+  | 'navBar'
+  | 'pageTemplate'
+  | 'text'
+  | 'image'
+  | 'groupingContainer';
 export const ComponentTypesArray = [ 'jumbo' , 'button' , 'navBar', 'pageTemplate', 'text', 'image', 'groupingContainer' ];
 
 export interface ComponentDefinitionInterface {

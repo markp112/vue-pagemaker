@@ -2,8 +2,8 @@
   <section>
     <p class="page-heading">Editing: {{ title }} Page</p>
     <div
-      :id="id"
-      class="w-full h-full relative p-4 border border-gray-400"
+      :id="id-root"
+      class="w-full h-auto relative p-4 border border-gray-400"
       :class="getClass()"
       ref="mainDiv"
       @dragover.prevent="bgColour = 'bg-gray-600'"
@@ -11,11 +11,11 @@
       @drop.prevent="onDrop"
     >
       <component
-        :is="layout.componentHTMLTag"
-        v-for="(layout, i) in layoutElements"
+        v-for="(component, i) in layoutElements"
+        :is="component.componentHTMLTag"
         :key="i"
         :index="i"
-        :thisComponent="layout"
+        :thisComponent="component"
         z-index="0"
         @dragover.prevent
         @drop.prevent="onDrop"
@@ -40,7 +40,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import Container from '@/components/page-builder-elements/generic/container.vue';
 import { PageData } from '@/models/page/page';
-import { ComponentBuilder } from '@/classes/component-builder/component-builder';
+// import { ComponentBuilder } from '@/classes/component-builder/component-builder';
 import EditDeleteOption from '@/components/page-builder-elements/utility/edit-delete-options/edit-delete-options.vue';
 import { PageModule } from '@/store/page/page';
 import { SidebarModule } from '@/store/sidebar/sidebar';
@@ -48,14 +48,15 @@ import { ServicesModule } from '@/store/services/services';
 import { ComponentCounter } from '@/classes/component-counter/singleton-counter';
 import TextEditor from '@/components/base/text/text-editor/text-editor.vue';
 import { ComponentContainer } from '@/classes/page-element/ComponentContainer';
-import { PageElementBuilder } from '@/classes/page-element/PageElementBuilder';
+// import { PageElementBuilder } from '@/classes/page-element/PageElementBuilder';
+import { PageElementClasses, PageElementFactory } from '@/classes/page-element/factory/page-element-factory';
+import { ComponentDefinitionInterface, initComponentDefinition } from '@/models/components/base-component';
 
 // import { ComponentContainer, PageElementBuilder } from '@/classes/settings/page-element/PageElement';
 
 const PARENT = 'ROOT';
-const PARENTCOMPONENT = new ComponentContainer(new PageElementBuilder());
-
-PARENTCOMPONENT.ref = PARENT;
+// const PARENTCOMPONENT = new ComponentContainer(new PageElementBuilder());
+// PARENTCOMPONENT.ref = PARENT;
 
 @Component({
   props: {
@@ -73,35 +74,59 @@ export default class PageBuilder extends Vue {
   bgColour = 'bg-gray-200';
   showModal = false;
   private componentCounter: ComponentCounter = ComponentCounter.getInstance();
+  private componentFactory: PageElementFactory = new PageElementFactory();
+  private component:ComponentDefinitionInterface = initComponentDefinition;
+  private rootComponent: ComponentContainer = this.componentFactory.createElement(
+    'rootContainer',
+    this.component,
+    PARENT,
+    null
+  ) as ComponentContainer;
+
 
   created() {
     this.title = this.$route.params.title;
     SidebarModule.setSidebarMenuTo('sidebar-components');
   }
 
-  get layoutElements(): PageData[] {
+  get layoutElements(): PageElementClasses[] {
     return PageModule.pageElements;
   }
 
   onDrop(event: DragEvent): void {
-    const componentBuilder = new ComponentBuilder();
+    console.log('%c%s', 'color: #731d6d', 'onDrop')
+    // const componentBuilder = new ComponentBuilder();
     if (ServicesModule.dragDropEventHandled) {
       return;
     }
     if (event) {
-      const componentName = componentBuilder.getComponentName(event);
+      const componentName = this.getComponentName(event);
       const component = SidebarModule.getComponentDefinition(componentName);
+      console.log('%c⧭', 'color: #997326', component)
       const id = this.componentCounter.getNextCounter();
       const ref = `${componentName}::${id}`;
       if (component) {
-        const newComponent: PageData = componentBuilder.buildComponent(
+        // const newComponent: PageData = componentBuilder.buildComponent(
+        //   component,
+        //   ref,
+        //   PARENTCOMPONENT
+        // );
+        const pageElement = this.componentFactory.createElement(
+          component.type,
           component,
           ref,
-          PARENTCOMPONENT
-        );
-        PageModule.addNewPageElement(newComponent);
+          this.rootComponent
+        )
+          console.log('%c⧭', 'color: #bfffc8', pageElement)
+        // PageModule.addNewPageElement(newComponent);
+        PageModule.addNewPageElement(pageElement);
       }
     }
+  }
+  
+  getComponentName (event: DragEvent): string {
+    const dataTransfer = event.dataTransfer;
+    return dataTransfer ? dataTransfer.getData('text') : '';
   }
 
   deleteClicked(): void {

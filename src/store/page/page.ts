@@ -21,9 +21,12 @@ import {
 } from '@/models/components/base-component';
 import { BoxDimensionsInterface } from '@/models/components/box-dimension';
 import { Image } from '@/models/components/components';
+import { PageElementClasses } from '@/classes/page-element/factory/page-element-factory';
 
 export interface PageStateInterface {
-  _pageElements: PageData[];
+  // _pageElements: PageData[];
+  _pageElements: PageElementClasses[];
+
   _editedComponentRef: ComponentContainer | PageElement | undefined;
   _showEditDelete: boolean;
   _selectedComponent: string;
@@ -33,7 +36,8 @@ export interface PageStateInterface {
 class PageStore extends VuexModule implements PageStateInterface {
   ROOT = 'ROOT';
   //stores all the elements that make up a page
-  public _pageElements: PageData[] = [];
+  // public _pageElements: PageData[] = [];
+  public _pageElements: PageElementClasses[] = [];
   // reference to the component currently being edited
   public _editedComponentRef:
     | ComponentContainer
@@ -45,20 +49,22 @@ class PageStore extends VuexModule implements PageStateInterface {
   public _selectedComponent = '';
 
   @Mutation
-  private pushPageElement(element: PageData): void {
+  private pushPageElement(element: PageElementClasses): void {
     if (element) {
+      console.log('%c⧭', 'color: #f863c6', element, "eleemtn");
       if (element.parentRef === this.ROOT) {
         this._pageElements.push(element);
       } else { // component is nested within another
         if (this._pageElements.length > 0) {
           const parentElement = this._pageElements.filter(
               elem => { 
-                return elem.ref === element.parentRef;
+                if (elem) {
+                  return elem.ref === element.parentRef;
+                }
               })[0] as ComponentContainer;
           parentElement.addNewElement(element);
         }
       }
-      // this._componentId++;
     }
   }
 
@@ -68,7 +74,9 @@ class PageStore extends VuexModule implements PageStateInterface {
       if (this._editedComponentRef.parentRef === this.ROOT) {
         this._pageElements = this._pageElements.filter(element => {
           if (this._editedComponentRef) {
-            return element.ref !== this._editedComponentRef.ref;
+            if (element) {
+              return element.ref !== this._editedComponentRef.ref;
+            }
           }
         });
       } else {
@@ -175,9 +183,13 @@ class PageStore extends VuexModule implements PageStateInterface {
   }
 
   @Action
-  public addNewPageElement(element: PageData) {
+  public addNewPageElement(element: PageElementClasses) {
     this.context.commit('pushPageElement', element);
   }
+  // @Action
+  // public addNewPageElement(element: PageData) {
+  //   this.context.commit('pushPageElement', element);
+  // }
 
   @Action
   public deletePageElement() {
@@ -260,7 +272,7 @@ class PageStore extends VuexModule implements PageStateInterface {
     return this._showEditDelete;
   }
 
-  public get pageElements(): PageData[] {
+  public get pageElements(): PageElementClasses[] {
     return this._pageElements.sort(this.compare);
   }
 
@@ -268,9 +280,11 @@ class PageStore extends VuexModule implements PageStateInterface {
     return this._selectedComponent;
   }
 
-  private compare(a: PageData, b: PageData) {
-    if (a.id > b.id) return 1;
-    if (a.id < b.id) return -1;
+  private compare(a: PageElementClasses, b: PageElementClasses) {
+    if (a && b) {
+      if (a.id > b.id) return 1;
+      if (a.id < b.id) return -1;
+    }
     return 0;
   }
 }
