@@ -7,6 +7,7 @@ import {
 } from '@/models/components/box-dimension';
 import { Style } from '@/models/styles/styles';
 import { ComponentContainer } from '@/classes/page-element/ComponentContainer';
+import { PageElementClasses } from '@/classes/page-element/factory/page-element-factory';
 
 @Component
 export class GenericComponentMixins extends Vue {
@@ -32,14 +33,17 @@ export class GenericComponentMixins extends Vue {
   
   getStyles(): string {
     let style = '';
-    const component: ComponentContainer = this.$props.thisComponent;
-    const styles: Style[] = component.styles;
-    if (styles.length > 0) {
-      styles.forEach(element => {
-        style += `${element.style}:${element.value};`;
-      });
+    const component: PageElementClasses = this.$props.thisComponent;
+    if (component) {
+      const styles: Style[] = component.styles;
+      if (styles.length > 0) {
+        styles.forEach(element => {
+          style += `${element.style}:${element.value};`;
+        });
+      }
+      style += `${component.boxDimensions.heightAsStyle};${component.boxDimensions.widthAsStyle}`;
     }
-    style += `${component.boxDimensions.heightAsStyle};${component.boxDimensions.widthAsStyle}`;
+    console.log('%c%s', 'color: #00258c', style);
     return style;
   }
 

@@ -2,7 +2,7 @@
   <section>
     <p class="page-heading">Editing: {{ title }} Page</p>
     <div
-      :id="id-root"
+      :id="id"
       class="w-full h-auto relative p-4 border border-gray-400"
       :class="getClass()"
       ref="mainDiv"

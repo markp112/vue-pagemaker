@@ -174,6 +174,10 @@ export class PageElement implements Partial<PageElementInterface> {
     return style;
   }
 
+  setDefaultStyle(){
+    // to be implemented in inherited classes
+  }
+
   addStyle(newStyle: Style) {
     this._styles = this._styles.filter(el => el.style !== newStyle.style);
     this._styles.push(newStyle);

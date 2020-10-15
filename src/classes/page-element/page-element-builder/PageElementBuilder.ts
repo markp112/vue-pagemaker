@@ -1,5 +1,5 @@
 import { ComponentRef, ComponentTypesString, width, height, left, top, ActionEvent } from '@/models/components/base-component';
-import { BoxDimensions } from '@/models/components/box-dimension';
+import { BoxDimensions, BoxDimensionsInterface } from '@/models/components/box-dimension';
 import { ComponentTypes, LOREMIPSUM } from '@/models/components/components';
 import { Style } from '@/models/styles/styles';
 import { ButtonElement } from '../page-components/button-element/ButtonElement';
@@ -7,6 +7,7 @@ import { ComponentContainer } from '../ComponentContainer';
 import { PageElement } from '../PageElement';
 import { TextElement } from '../page-components/text-element/TextElement';
 import { ImageElement } from '../page-components/image-element/ImageElement';
+import { borderEdgeIconList } from '@/models/components/icon-picker-models';
 
 export class PageElementBuilder {
   private _name = ''; //name of the component
@@ -68,7 +69,13 @@ export class PageElementBuilder {
     return this;
   }
 
-  setBoxDimensions(boxDimensions: BoxDimensions): PageElementBuilder {
+  setBoxDimensions(boxDimensionsData: BoxDimensionsInterface): PageElementBuilder {
+    const boxDimensions = new BoxDimensions(
+      boxDimensionsData.width,
+      boxDimensionsData.height,
+      boxDimensionsData.top,
+      boxDimensionsData.left
+      )
     this._boxDimensions = boxDimensions;
     return this;
   }

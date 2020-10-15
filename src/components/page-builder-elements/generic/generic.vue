@@ -40,10 +40,10 @@
     :style="getStyles()"
     :class="getClasses()"
     :id="$props.thisComponent.ref"
-    class="handle  flex flex-row justify-center items-center" 
+    class="handle flex flex-row justify-center items-center" 
     @click.prevent="onClick($event)"
   >
-    {{ data.content }}
+    {{ getData }}
     <resizeable
       :isActive="isActive"
       :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"
@@ -73,6 +73,8 @@ import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
 import { ComponentTypesString } from '@/models/components/base-component';
 import { PageElement } from '@/classes/page-element/PageElement';
 import { PageElementBuilder } from '@/classes/page-element/page-element-builder/PageElementBuilder';
+import { PageElementClasses } from '@/classes/page-element/factory/page-element-factory';
+import { ButtonElement } from '@/classes/page-element/page-components/button-element/ButtonElement';
 
 @Component({
   props: {
@@ -96,9 +98,13 @@ export default class GenericComponent extends mixins(GenericComponentMixins) {
   style = '';
 
   created() {
-    this.data = this.$props.thisComponent.data;
-    const pageElement: PageElement = this.$props.thisComponent;
-    pageElement.addStyles(this.getSiteDefaultsStyles(pageElement.type));
+    const pageElement: PageElementClasses = this.$props.thisComponent;
+    // pageElement.?addStyles(this.getSiteDefaultsStyles(pageElement.type));
+    if (pageElement) {
+      pageElement.setDefaultStyle();
+    }
+    console.log('%c⧭', 'color: #00ff88', pageElement)
+
     if (this.$props.thisComponent.type === 'image') {
       this.isImage = true;
       this.isText = false;
@@ -110,31 +116,34 @@ export default class GenericComponent extends mixins(GenericComponentMixins) {
   }
 
   get getData(): string | undefined {
-    return this.$props.thisComponent.data.content;
-  }
-
-
-  getSiteDefaultsStyles(type: ComponentTypesString): Style[] {
-    // if (type === 'button') return getButtonDefaults();
-    // if (type === 'text') return textDefaults();
-    // if (type === 'image') return imageDefaults();
-    const siteDefaults = SiteDefaults.getInstance();
-    const styles: Style[] = [];
-    styles.push(this.constructStyle('fontFamily', siteDefaults.typography.fontName));
-    styles.push(this.constructStyle('fontSize', siteDefaults.typography.fontSizeBody));
-    const siteColours = siteDefaults.colours;
-    styles.push(this.constructStyle('backgroundColor', siteColours.secondary));
-    styles.push(this.constructStyle('color', siteColours.textOnSecondary));
-    return styles;
-}
-
-  private constructStyle(styleName: string, value: string): Style {
-    const style: Style ={
-      style: styleName,
-      value: value,
+    const component: PageElementClasses = this.$props.thisComponent;
+    if (component) {
+       
+        return (this.$props.thisComponent as ButtonElement).content;
     }
-    return style;
+    return '';
   }
+
+
+//   getSiteDefaultsStyles(type: ComponentTypesString): Style[] {
+   
+//     const siteDefaults = SiteDefaults.getInstance();
+//     const styles: Style[] = [];
+//     styles.push(this.constructStyle('fontFamily', siteDefaults.typography.fontName));
+//     styles.push(this.constructStyle('fontSize', siteDefaults.typography.fontSizeBody));
+//     const siteColours = siteDefaults.colours;
+//     styles.push(this.constructStyle('backgroundColor', siteColours.secondary));
+//     styles.push(this.constructStyle('color', siteColours.textOnSecondary));
+//     return styles;
+// }
+
+  // private constructStyle(styleName: string, value: string): Style {
+  //   const style: Style ={
+  //     style: styleName,
+  //     value: value,
+  //   }
+  //   return style;
+  // }
 
   get isActive(): boolean {
     return PageModule.selectedComponent === (this.$props.thisComponent as PageElement).ref;

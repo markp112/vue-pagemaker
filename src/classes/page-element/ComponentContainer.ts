@@ -1,6 +1,4 @@
 import { ComponentRef } from '@/models/components/base-component';
-import { PageData } from '../../models/page/page';
-// import { PageElementBuilder } from './PageElementBuilder';
 import { PageElementBuilder } from '@/classes/page-element/page-element-builder/PageElementBuilder';
 import { PageElement } from './PageElement';
 import { PageElementClasses } from './factory/page-element-factory';
@@ -12,6 +10,7 @@ export class ComponentContainer extends PageElement {
   constructor(pageElementBuilder: PageElementBuilder) {
     super(pageElementBuilder);
     this._elements = [];
+    
   }
 
   get elements(): PageElementClasses[] {
