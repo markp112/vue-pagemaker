@@ -6,7 +6,6 @@ import {
   BoxDimensionsInterface,
 } from '@/models/components/box-dimension';
 import { Style } from '@/models/styles/styles';
-import { ComponentContainer } from '@/classes/page-element/ComponentContainer';
 import { PageElementClasses } from '@/classes/page-element/factory/page-element-factory';
 
 @Component
@@ -15,6 +14,7 @@ export class GenericComponentMixins extends Vue {
   showBorder = false;
 
   onResize(newDimensions: ResizeDimensions | undefined) {
+    console.log('%c%s', 'color: #f200e2', 'onResize');
     if (newDimensions) {
       if (PageModule.editedComponentRef) {
         if (newDimensions.height !== undefined) {
@@ -43,7 +43,6 @@ export class GenericComponentMixins extends Vue {
       }
       style += `${component.boxDimensions.heightAsStyle};${component.boxDimensions.widthAsStyle}`;
     }
-    console.log('%c%s', 'color: #00258c', style);
     return style;
   }
 

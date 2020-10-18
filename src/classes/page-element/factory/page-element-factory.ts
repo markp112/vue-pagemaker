@@ -5,6 +5,7 @@ import { PageElementBuilder } from '../page-element-builder/PageElementBuilder';
 import { TextElement } from '../page-components/text-element/TextElement';
 import { ImageElement } from '../page-components/image-element/ImageElement';
 import { ROOT } from '@/utils/constants';
+import { BoxDimensions, BoxDimensionsInterface } from '@/models/components/box-dimension';
 
 
 export type PageElementClasses = 
@@ -85,15 +86,27 @@ export class PageElementFactory {
       }
     }
 
+  private getBoxDimensions(boxDimensionsInteface: BoxDimensionsInterface): BoxDimensions {
+    const boxDimensions: BoxDimensions = new BoxDimensions(
+      boxDimensionsInteface.width,
+      boxDimensionsInteface.height,
+      boxDimensionsInteface.top,
+      boxDimensionsInteface.left
+    );
+    return boxDimensions;
+  } 
+
   private buildAButton(
     component: ComponentDefinitionInterface,
     ref: string,
     parent: ComponentContainer
   ): ButtonElement {
+    
     const buttonElement: ButtonElement = new PageElementBuilder()
     .setName(component.componentName)
     .setParent(parent)
     .setIsContainer(false)
+    .setBoxDimensions(this.getBoxDimensions(component.boxDimensions))
     .setComponentHtmlTag(component.componentRef)
     .setClassDefintion(component.class)
     .setRef(ref)
@@ -108,10 +121,11 @@ export class PageElementFactory {
     ref: string,
     parent: ComponentContainer
   ): TextElement {
-    const textElement: ButtonElement = new PageElementBuilder()
+    const textElement: TextElement = new PageElementBuilder()
     .setName(component.componentName)
     .setParent(parent)
     .setIsContainer(false)
+    .setBoxDimensions(this.getBoxDimensions(component.boxDimensions))
     .setComponentHtmlTag(component.componentRef)
     .setClassDefintion(component.class)
     .setRef(ref)
@@ -129,6 +143,7 @@ export class PageElementFactory {
     .setName(component.componentName)
     .setParent(parent)
     .setIsContainer(false)
+    .setBoxDimensions(this.getBoxDimensions(component.boxDimensions))
     .setComponentHtmlTag(component.componentRef)
     .setClassDefintion(component.class)
     .setRef(ref)

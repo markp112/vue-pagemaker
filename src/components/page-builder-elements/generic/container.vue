@@ -1,7 +1,7 @@
 <template>
   <div  
     :id="$props.thisComponent.ref" 
-    class="handle"
+    class="handle overflow-hidden"
     :class="getClasses()"
     :style="getStyles()"
     :ref="$props.thisComponent.ref"
@@ -31,7 +31,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component, { mixins } from 'vue-class-component';
-// import { ComponentBuilder } from '@/classes/component-builder/component-builder';
 import { Emit } from 'vue-property-decorator';
 import { PageData } from '@/models/page/page';
 import { Style } from '@/models//styles/styles';
@@ -43,7 +42,6 @@ import { ComponentCounter } from '@/classes/component-counter/singleton-counter'
 import Resize from '@/components/base/resizeable/resize.vue';
 import { BoxDimensions, BoxDimensionsInterface, BoxUnits, Dimension } from '../../../models/components/box-dimension';
 import { GenericComponentMixins } from '@/components/page-builder-elements/generic/mixins/generic-components-mixin';
-// import { PageElementBuilder } from '@/classes/page-element/PageElementBuilder';
 import { PageElementBuilder } from '@/classes/page-element/page-element-builder/PageElementBuilder'
 import { ComponentContainer } from '@/classes/page-element/ComponentContainer';
 import { PageElementClasses, PageElementFactory } from '@/classes/page-element/factory/page-element-factory';
@@ -65,13 +63,19 @@ export default class Container extends mixins(GenericComponentMixins) {
   private componentStyle = '';
   private componentCounter: ComponentCounter = ComponentCounter.getInstance();
 
+  created() {
+      const pageElement: PageElementClasses = this.$props.thisComponent;
+    if (pageElement) {
+      pageElement.setDefaultStyle();
+    }
+  }
+
   mounted() {
     const parentElement: Element = this.$parent.$el;
     // -- convert width and height into pixels as initial dimension may be a percentage and cannot then be used
     // by the child component to get the actual width / height
-    // this.$props.thisComponent.boxDimensions.width = { value: this.$el.getBoundingClientRect().width, units: 'px' };
-    // this.$props.thisComponent.boxDimensions.height = { value: this.$el.getBoundingClientRect().height, units: 'px' };
-    console.log('%c⧭', 'color: #ffcc00', this.$props.thisComponent)
+    this.$props.thisComponent.boxDimensions.width = { value: this.$el.getBoundingClientRect().width, units: 'px' };
+    this.$props.thisComponent.boxDimensions.height = { value: this.$el.getBoundingClientRect().height, units: 'px' };
   }
 
   @Emit('componentClicked')
@@ -88,7 +92,6 @@ export default class Container extends mixins(GenericComponentMixins) {
   }
 
   onDrop(event: DragEvent) {
-    // const componentBuilder = new ComponentBuilder();
     const componentBuilder = new PageElementFactory();
     if (ServicesModule.dragDropEventHandled) { return }
     if (event) {

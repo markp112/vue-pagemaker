@@ -74,7 +74,7 @@ export class Image implements ImageInterface {
   }
 
   get ratio(): number {
-    return this.ratio;
+    return this._ratio;
   }
 
   get maintainRatio() {
@@ -93,30 +93,6 @@ export class Image implements ImageInterface {
     this._parentDimensions = dimensions;
   }
 
-  calcScalingRatio(direction: ImageScaleDirection, changedDimension: number ): Dimensions {
-    if (this._maintainRatio) {
-      if (direction === 'width') {
-        this._scaledSize.width = changedDimension;
-        this._scaledSize.height = changedDimension / this._ratio;
-        if (this._scaledSize.height >= this.parentDimensions.height) {
-          this._scaledSize.height = this.parentDimensions.height;
-          if (this._scaledSize.width > this._scaledSize.height * this._ratio) {
-            this._scaledSize.width = this._scaledSize.height * this._ratio;
-          }
-        }
-      } else {
-        this._scaledSize.width = changedDimension * this._ratio;
-        this._scaledSize.height = changedDimension;
-        if (this._scaledSize.width > this._parentDimensions.width) {
-          this._scaledSize.width = this._parentDimensions.width;
-          if (this._scaledSize.height > this._scaledSize.width / this._ratio) {
-            this._scaledSize.height = this._scaledSize.width / this._ratio;
-          }
-        }
-      }
-    }
-    return this._scaledSize;
-  }
 }
 
 export class Text implements Content {

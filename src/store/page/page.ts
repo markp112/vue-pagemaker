@@ -11,17 +11,18 @@ import {
   StyleTypes,
 } from '@/models/page/page';
 import {
-  PageElement
-} from "@/classes/page-element/PageElement";
-import { ComponentContainer } from "@/classes/page-element/ComponentContainer";
+  PageElement,
+} from '@/classes/page-element/PageElement';
+import { ComponentContainer } from '@/classes/page-element/ComponentContainer';
 import { Style } from '@/models/styles/styles';
 import {
   ComponentTypesString,
-  ActionEvent 
+  ActionEvent,
 } from '@/models/components/base-component';
 import { BoxDimensionsInterface } from '@/models/components/box-dimension';
 import { Image } from '@/models/components/components';
 import { PageElementClasses } from '@/classes/page-element/factory/page-element-factory';
+import { ImageElement } from '@/classes/page-element/page-components/image-element/ImageElement';
 
 export interface PageStateInterface {
   // _pageElements: PageData[];
@@ -39,10 +40,8 @@ class PageStore extends VuexModule implements PageStateInterface {
   // public _pageElements: PageData[] = [];
   public _pageElements: PageElementClasses[] = [];
   // reference to the component currently being edited
-  public _editedComponentRef:
-    | ComponentContainer
-    | PageElement
-    | undefined = undefined;
+  public _editedComponentRef: PageElementClasses;
+    
   // show the toolbar for selecting edit // delete
   public _showEditDelete = false;
   // used to ensure only one component can be selected in the UI
@@ -51,17 +50,16 @@ class PageStore extends VuexModule implements PageStateInterface {
   @Mutation
   private pushPageElement(element: PageElementClasses): void {
     if (element) {
-      console.log('%c⧭', 'color: #f863c6', element, "eleemtn");
       if (element.parentRef === this.ROOT) {
         this._pageElements.push(element);
-      } else { // component is nested within another
+      } else 
+      { // component is nested within another
         if (this._pageElements.length > 0) {
-          const parentElement = this._pageElements.filter(
-              elem => { 
-                if (elem) {
-                  return elem.ref === element.parentRef;
-                }
-              })[0] as ComponentContainer;
+          const parentElement = this._pageElements.filter(elem => { 
+              if (elem) {
+                return elem.ref === element.parentRef;
+              }
+            })[0] as ComponentContainer;
           parentElement.addNewElement(element);
         }
       }
@@ -82,7 +80,9 @@ class PageStore extends VuexModule implements PageStateInterface {
       } else {
         const parentComponent = this._editedComponentRef.parent;
         (parentComponent as ComponentContainer)
-          .deleteElement(this._editedComponentRef.ref);
+          .deleteElement(
+            this._editedComponentRef.ref
+          );
       }
     }
   }
@@ -103,7 +103,7 @@ class PageStore extends VuexModule implements PageStateInterface {
 
   /** Add a class to the component currently being edited
    * classDef name of the Tailwind class to be added
-  */
+   */
   @Mutation
   private setEditedComponentClass(classDef: string) {
     if (this._editedComponentRef) {
@@ -134,9 +134,9 @@ class PageStore extends VuexModule implements PageStateInterface {
   }
 
   @Mutation
-  private setEditedComponentRef(ref: PageData): void {
+  private setEditedComponentRef(ref: PageElementClasses): void {
     this._editedComponentRef = ref;
-    this._selectedComponent = ref.ref;
+    this._selectedComponent = ref ? ref.ref : '';
   }
 
   @Mutation
@@ -147,27 +147,28 @@ class PageStore extends VuexModule implements PageStateInterface {
   @Mutation
   private setComponentImage(image: Image): void {
     if (this._editedComponentRef) {
-      if (this._editedComponentRef.data) {
-        const componentType: ComponentTypesString = this._editedComponentRef.type;
-        if (componentType === 'image') {
-          image.parentDimensions.width = this._editedComponentRef.parent.boxDimensions.width.value;
-          image.parentDimensions.height = this._editedComponentRef.parent.boxDimensions.height.value;
-          this._editedComponentRef.data = image;
-        }
+      if (this._editedComponentRef.type === 'image') {
+        // image.parentDimensions.width = this._editedComponentRef.parent.boxDimensions.width.value;
+        // image.parentDimensions.height = this._editedComponentRef.parent.boxDimensions.height.value;
+        (this._editedComponentRef as ImageElement).setImage(image);
       }
     }
   }
 
   @Mutation
-  private setBoxDimensionsHeightandWidth(newDimensions: BoxDimensionsInterface) {
+  private setBoxDimensionsHeightandWidth(
+    newDimensions: BoxDimensionsInterface
+  ) {
     if (this._editedComponentRef) {
-      this._editedComponentRef.updateBoxHeightandWidth(newDimensions);
+      this._editedComponentRef.reSize(newDimensions);
     }
   }
 
   @Mutation
   private setEditedComponentActionEvent(actionEvent: ActionEvent) {
-    if (this.editedComponentRef) this.editedComponentRef.actionEvent = actionEvent;
+    if (this.editedComponentRef) {
+      this.editedComponentRef.actionEvent = actionEvent;
+    }
   }
   //#endregion Mutations
 
@@ -186,10 +187,6 @@ class PageStore extends VuexModule implements PageStateInterface {
   public addNewPageElement(element: PageElementClasses) {
     this.context.commit('pushPageElement', element);
   }
-  // @Action
-  // public addNewPageElement(element: PageData) {
-  //   this.context.commit('pushPageElement', element);
-  // }
 
   @Action
   public deletePageElement() {
@@ -202,7 +199,9 @@ class PageStore extends VuexModule implements PageStateInterface {
   }
 
   @Action
-  public updateBoxDimensionHeightandWidth(newDimensions: BoxDimensionsInterface) {
+  public updateBoxDimensionHeightandWidth(
+    newDimensions: BoxDimensionsInterface
+  ) {
     this.context.commit('setBoxDimensionsHeightandWidth', newDimensions);
   }
 
@@ -261,8 +260,9 @@ class PageStore extends VuexModule implements PageStateInterface {
 
   public get editComponentData(): string {
     if (this._editedComponentRef) {
-      return this._editedComponentRef.data !== undefined
-        ? this._editedComponentRef.data.content
+      if(!(this._editedComponentRef instanceof ComponentContainer))
+      return this._editedComponentRef.content !== undefined
+        ? this._editedComponentRef.content
         : '';
     }
     return '';

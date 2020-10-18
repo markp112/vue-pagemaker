@@ -1,12 +1,11 @@
 <template>
   <div
-    class="absolute triangle1"
+    class="absolute triangleTopRight"
     :class ="{'active': $props.isActive, 'in-active': !$props.isActive}"
     @mousedown.stop.prevent="handleDown($event)"
     @mouseup="handleMouseUp()"
     @mousemove="handleMove($event)">
   </div>    
-
 </template>
 
 <script lang="ts">
@@ -66,17 +65,18 @@ export default class Resize extends Vue {
     else return null;
   }
 
-  handleMouseUp() {
+  handleMouseUp(event: MouseEvent) {
     this.isSizing = false;
     window.removeEventListener('mousemove',() => { this.handleMove(event as MouseEvent) });
-    window.removeEventListener('mouseup',() => { this.handleMouseUp() });
+    window.removeEventListener('mouseup',() => { this.handleMouseUp(event as MouseEvent) });
   }
 
   handleDown(ev: MouseEvent) {
+    console.log('%c%s', 'color: #e50000', 'handleDown')
     if (!this.$props.isActive) return;
     if (!this.isSizing) {
       window.addEventListener('mousemove', () => { this.handleMove(event as MouseEvent) });
-      window.addEventListener('mouseup', () => { this.handleMouseUp() });
+      window.addEventListener('mouseup', () => { this.handleMouseUp(event as MouseEvent) });
       this.isSizing = true
     }
   }
@@ -100,12 +100,12 @@ export default class Resize extends Vue {
     const resizeDimensions: ResizeDimensions = { height: 0, width: 0, }
     resizeDimensions.width = (clientX - boxLeft);
     resizeDimensions.height = (clientY - boxTop);
-    if (resizeDimensions.width >= (parentDimensions.width.value - (this.parentPadding * 2))) {
-      resizeDimensions.width = parentDimensions.width.value - (this.parentPadding * 2);
-    }
-    if (resizeDimensions.height > parentDimensions.top.value + parentDimensions.height.value) {
-      resizeDimensions.height = parentDimensions.top.value + parentDimensions.height.value;
-    }
+    // if (resizeDimensions.width >= (parentDimensions.width.value - (this.parentPadding * 2))) {
+    //   resizeDimensions.width = parentDimensions.width.value - (this.parentPadding * 2);
+    // }
+    // if (resizeDimensions.height > parentDimensions.top.value + parentDimensions.height.value) {
+    //   resizeDimensions.height = parentDimensions.top.value + parentDimensions.height.value;
+    // }
     return resizeDimensions;
   }
 }
@@ -113,10 +113,10 @@ export default class Resize extends Vue {
 
 <style lang="postcss" scoped>
 
-  .triangle1 {
+  .triangleTopRight, .TriangleBottomLeft {
     content: '';
     position: absolute;
-    bottom: -6px;
+    top: -6px;
     right: -1px;
     box-sizing: border-box;
     cursor: nwse-resize;
@@ -126,9 +126,17 @@ export default class Resize extends Vue {
     border-top: 10px solid transparent;
     border-bottom: 10px solid transparent;
     border-left: 10px solid rgb(56, 55, 56);
-    color: rgb(56, 55, 56);
+    color: rgb(228, 210, 228);
+    filter: invert(1);
     mix-blend-mode: difference;
-    transform:rotate(45deg);
+  }
+
+  .triangleTopRight {
+    transform:rotate(315deg); 
+  }
+
+  .TriangleBottomLeft {
+     transform:rotate(45deg);
   }
     
   .active {
