@@ -81,7 +81,7 @@
 }
 
 .dropdown-menu-background {
-  @apply bg-primary-400;
+  @apply bg-siteSecondary;
   @apply cursor-pointer;
 }
 

@@ -262,6 +262,7 @@ module.exports = {
       text: 'text',
       move: 'move',
       'not-allowed': 'not-allowed',
+      pan: 'grab',
     },
     fill: {
       current: 'currentColor',

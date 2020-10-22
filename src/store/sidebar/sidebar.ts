@@ -132,6 +132,7 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
     const componentType: PageData | undefined = PageModule.editedComponentRef;
     if (componentType) {
       const whichComponentType: ComponentTypesString = componentType.type;
+      console.log('%c%s', 'color: #1d3f73', whichComponentType);
       switch (whichComponentType) {
         case 'image':
           this.context.commit('setSidebarEditor', 'image-editor' as SidebarComponents);

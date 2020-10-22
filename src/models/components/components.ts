@@ -14,6 +14,14 @@ export const initDimensions = {
   units: Units.px
 }
 
+/**
+ * @description used for storing the location of an object(images) in their wrapper element
+ */
+export interface Location {
+  top: number;
+  left: number;
+}
+
 export interface Content {
   content: string
 }

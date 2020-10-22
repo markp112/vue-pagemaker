@@ -8,7 +8,7 @@
         @change="onInputChange"
       >
       <img :src="getPath('down-24.png')" 
-        class="w-4 h-4 cursor-pointer hover:bg-gray-800 absolute left-0"
+        class="w-4 h-4 cursor-pointer hover:bg-gray-800 absolute right-0 top-0"
         @click="show()"
         >
     </div>

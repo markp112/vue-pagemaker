@@ -4,33 +4,77 @@ import { PageModule } from '@/store/page/page';
 import {
   ResizeDimensions,
   BoxDimensionsInterface,
+  BoxDimensions,
 } from '@/models/components/box-dimension';
 import { Style } from '@/models/styles/styles';
 import { PageElementClasses } from '@/classes/page-element/factory/page-element-factory';
+
+interface BoxProperties {
+  width: number;
+  height: number;
+  top: number; 
+  left: number;
+};
 
 @Component
 export class GenericComponentMixins extends Vue {
   name = "GenericComponentMixins";
   showBorder = false;
 
-  onResize(newDimensions: ResizeDimensions | undefined) {
-    console.log('%c%s', 'color: #f200e2', 'onResize');
-    if (newDimensions) {
+  calcNewDimensions(element: BoxProperties, clientX: number, clientY: number): ResizeDimensions {
+    const parentDimensions: BoxDimensions = this.$props.parentContainerDimensions;
+    const boxLeft = element.left + pageXOffset;
+    const boxTop = element.top + pageYOffset;
+    const resizeDimensions: ResizeDimensions = { height: 0, width: 0, }
+    resizeDimensions.width = (clientX - boxLeft);
+    resizeDimensions.height = (clientY - boxTop);
+    // if (resizeDimensions.width >= (parentDimensions.width.value - (this.parentPadding * 2))) {
+    //   resizeDimensions.width = parentDimensions.width.value - (this.parentPadding * 2);
+    // }
+    // if (resizeDimensions.height > parentDimensions.top.value + parentDimensions.height.value) {
+    //   resizeDimensions.height = parentDimensions.top.value + parentDimensions.height.value;
+    // }
+    return resizeDimensions;
+  }
+  getElementBoxProperties(): BoxProperties | null {
+    const parent: HTMLDivElement | null = this.$el.parentElement as HTMLDivElement;
+    // const parentContiner: HTMLDivElement = (parent as Node).parentNode as HTMLDivElement;
+    // // padding is in rems 4 = 1rem = 16px
+    // this.parentPadding = this.getPaddingOnParent(parentContiner) * 4;
+    if (parent){
+        const boundingRect: BoxProperties = {
+          width: parent.getBoundingClientRect().width,
+          height: parent.getBoundingClientRect().height,
+          top: parent.getBoundingClientRect().top,
+          left: parent.getBoundingClientRect().left,
+      };
+      return boundingRect;
+    }
+    else return null;
+  }
+
+
+  onResize(boxProperties: BoxProperties| undefined) {
+    if (!boxProperties) return;
+    const boundingRect: BoxProperties | null = this.getElementBoxProperties();
+    if (boundingRect) {
+      // const newDimensions: ResizeDimensions = this.calcNewDimensions(thisElement, ev.clientX, ev.clientY);
+      
+      const boxLeft = boundingRect.left + pageXOffset;
+      const boxTop = boundingRect.top + pageYOffset;
       if (PageModule.editedComponentRef) {
-        if (newDimensions.height !== undefined) {
           const boxDimensions: BoxDimensionsInterface = 
           { 
-            height: { value: newDimensions.height, units: 'px' },
-            width: { value: newDimensions.width, units: 'px' },
+            height: { value: boxProperties.height - boxTop , units: 'px' },
+            width: { value: boxProperties.width - boxLeft, units: 'px' },
             top: { value: 0, units: 'px' },
             left: { value: 0, units: 'px' }
-          }
+          };
           PageModule.updateBoxDimensionHeightandWidth(boxDimensions)
         }
       }
     }
-  }
-  
+
   getStyles(): string {
     let style = '';
     const component: PageElementClasses = this.$props.thisComponent;
@@ -43,6 +87,8 @@ export class GenericComponentMixins extends Vue {
       }
       style += `${component.boxDimensions.heightAsStyle};${component.boxDimensions.widthAsStyle}`;
     }
+    
+    console.log('%c⧭', 'color: #ffa280', style);
     return style;
   }
 

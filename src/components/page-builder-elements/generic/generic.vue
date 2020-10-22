@@ -17,32 +17,8 @@
     </resizeable>
   </div>
   <div 
-    v-else-if="isImage"
-    ref="imageContainer"
-    class="handle relative image box-border" 
-    :class="getClasses()"
-    :style="getStyles()"
-    :id="$props.thisComponent.ref"
-    @click.prevent="onClick($event)"
-  >
-    <img
-      ref="image"
-      :src="getData"
-      :style="getStyles()"
-      class="object-contain w-auto absolute h-auto"
-      :class="{'cursor-move': draggingStarted}"
-      @click.prevent="onClick($event)"
-      @mousemove="moveImage($event)"
-      @mousedown="onDraggingStarted($event)"
-      @mouseup="onDraggingStop($event)"
-
-    />
-    <resizeable
-      :isActive="isActive"
-      :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"
-      @onResize="onResize($event)"
-    >
-    </resizeable>
+    v-else-if="isImage">
+    <image-component :thisComponent="$props.thisComponent"></image-component>
   </div>
   <div 
     v-else
@@ -88,6 +64,7 @@ import { PageElementClasses } from '@/classes/page-element/factory/page-element-
 import { ButtonElement } from '@/classes/page-element/page-components/button-element/ButtonElement';
 import { ImageElement } from '@/classes/page-element/page-components/image-element/ImageElement';
 import { Units } from '@/models/enums/units/units';
+import ImageComponent from './paritals/image-component.vue';
 
 @Component({
   props: {
@@ -99,6 +76,7 @@ import { Units } from '@/models/enums/units/units';
   },
   components: {
     resizeable: Resize,
+    'image-component': ImageComponent,
   },
 })
 export default class GenericComponent extends mixins(GenericComponentMixins) {
@@ -108,14 +86,7 @@ export default class GenericComponent extends mixins(GenericComponentMixins) {
   data: ComponentTypes;
   editorComponent = '';
   style = '';
-  draggingStarted = false;
-  lastMousePosition = {
-    x: 0,
-    y: 0,
-  }
  
-
-
   created() {
     const pageElement: PageElementClasses = this.$props.thisComponent;
     if (pageElement) {
@@ -134,9 +105,7 @@ export default class GenericComponent extends mixins(GenericComponentMixins) {
   get getData(): string | undefined {
     const component: PageElementClasses = this.$props.thisComponent;
     if (component) {
-      console.log('%c', 'color: #00736b', component, "Component")
-
-        return (this.$props.thisComponent as ButtonElement).content;
+        return this.$props.thisComponent.content;
     }
     return '';
   }
@@ -151,45 +120,8 @@ export default class GenericComponent extends mixins(GenericComponentMixins) {
     PageModule.updateShowEditDelete(true);
   }
 
-  onDraggingStarted(event: MouseEvent) {
-    const parentContainer = this.$refs.imageContainer as HTMLDivElement;
-    this.draggingStarted = true;
-    this.lastMousePosition = {
-      x: event.pageX - parentContainer.offsetLeft,
-      y: event.pageY - parentContainer.offsetTop,
-    }
-  }
+ 
 
-  onDraggingStop(event: MouseEvent) {
-    this.draggingStarted = false;
-  }
-
-  moveImage(event: MouseEvent) {
-    if (!this.draggingStarted) {
-      return
-    }
-    const parentContainer = this.$refs.imageContainer as HTMLDivElement;
-    const image = this.$refs.image as HTMLImageElement;
-    const currentMousePosition = {
-      x: event.pageX - parentContainer.offsetLeft,
-      y: event.pageY - parentContainer.offsetTop,
-    }
-    const changeX = currentMousePosition.x - this.lastMousePosition.x;
-    const changeY = currentMousePosition.y - this.lastMousePosition.y;
-    this.lastMousePosition = currentMousePosition;
-    const imageTop = image.style.top === "" ? 0 : parseInt(image.style.top, 10) ;
-    const imageLeft = image.style.left === "" ? 0 : parseInt(image.style.left, 10);
-    let imageTopNew = imageTop + changeY;
-    let imageLeftNew = imageLeft + changeX;
-    if (imageTopNew > 0 ) {
-      imageTopNew = 0;
-    }
-    if (imageLeftNew > 0) {
-      imageLeftNew = 0;
-    }
-    image.style.top = imageTopNew.toString() + "px";
-    image.style.left = imageLeftNew.toString() + "px";
-  }
 }
 </script>
 

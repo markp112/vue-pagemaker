@@ -38,41 +38,33 @@ export default class Resize extends Vue {
   isSizing = false;
   parentPadding = 0;
 
-  getPaddingOnParent(element: HTMLDivElement): number {
-    for (let index = 0; index < element.classList.length; index++) {
-      if (element.classList[index].includes('p-')) {
-        const padding = element.classList[index].substring(2);
-        return Number(padding);
-      }
-    }
-    return 0;
-  }
 
-  getElementBoxProperties(): BoxProperties | null {
-    const parent: HTMLDivElement | null = this.$el.parentElement as HTMLDivElement;
-    const parentContiner: HTMLDivElement = (parent as Node).parentNode as HTMLDivElement;
-    // padding is in rems 4 = 1rem = 16px
-    this.parentPadding = this.getPaddingOnParent(parentContiner) * 4;
-    if (parent){
-        const boundingRect: BoxProperties = {
-        width: parent.getBoundingClientRect().width,
-        height: parent.getBoundingClientRect().height,
-        top: parent.getBoundingClientRect().top,
-        left: parent.getBoundingClientRect().left,
-      };
-      return boundingRect;
-    }
-    else return null;
-  }
+
+  // getElementBoxProperties(): BoxProperties | null {
+  //   const parent: HTMLDivElement | null = this.$el.parentElement as HTMLDivElement;
+  //   // const parentContiner: HTMLDivElement = (parent as Node).parentNode as HTMLDivElement;
+  //   // // padding is in rems 4 = 1rem = 16px
+  //   // this.parentPadding = this.getPaddingOnParent(parentContiner) * 4;
+  //   if (parent){
+  //       const boundingRect: BoxProperties = {
+  //         width: parent.getBoundingClientRect().width,
+  //         height: parent.getBoundingClientRect().height,
+  //         top: parent.getBoundingClientRect().top,
+  //         left: parent.getBoundingClientRect().left,
+  //     };
+  //     return boundingRect;
+  //   }
+  //   else return null;
+  // }
 
   handleMouseUp(event: MouseEvent) {
+    console.log('%c%s', 'color: #994d75', 'handleMouseUp')
     this.isSizing = false;
     window.removeEventListener('mousemove',() => { this.handleMove(event as MouseEvent) });
     window.removeEventListener('mouseup',() => { this.handleMouseUp(event as MouseEvent) });
   }
 
   handleDown(ev: MouseEvent) {
-    console.log('%c%s', 'color: #e50000', 'handleDown')
     if (!this.$props.isActive) return;
     if (!this.isSizing) {
       window.addEventListener('mousemove', () => { this.handleMove(event as MouseEvent) });
@@ -82,13 +74,14 @@ export default class Resize extends Vue {
   }
 
   @Emit('onResize')
-  handleMove(ev: MouseEvent): ResizeDimensions | undefined {
+  handleMove(ev: MouseEvent): BoxProperties | undefined {
     if (this.isSizing) { 
-      const thisElement: BoxProperties | null = this.getElementBoxProperties();
-      if (thisElement) {
-        const newDimensions: ResizeDimensions = this.calcNewDimensions(thisElement, ev.clientX, ev.clientY);
-        return newDimensions;
-      } 
+      return {
+        height: ev.clientY,
+        width: ev.clientX,
+        top: 0,
+        left: 0,
+      }
     } 
     return undefined;
   }

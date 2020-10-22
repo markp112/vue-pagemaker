@@ -1,10 +1,12 @@
 import { PageElementBuilder } from '@/classes/page-element/page-element-builder/PageElementBuilder';
 import { PageElement } from '../../PageElement';
 import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
-import { Dimensions, ImageScaleDirection, initDimensions } from '@/models/components/components';
+import { Dimensions, ImageScaleDirection, initDimensions, Location } from '@/models/components/components';
 import { Image } from '@/models/components/components';
 import { BoxDimensionsInterface } from '@/models/components/box-dimension';
 import { Units } from '@/models/enums/units/units';
+
+
 
 export class ImageElement extends PageElement {
   _content: string;
@@ -13,6 +15,10 @@ export class ImageElement extends PageElement {
   private _ratio: number;
   private _maintainRatio: boolean;
   private _parentDimensions: Dimensions;
+  private _location: Location = {
+    top: 0,
+    left: 0,
+  }
 
   private _widthOnePercent: number;
   private _heightOnePercent: number;
@@ -69,6 +75,14 @@ export class ImageElement extends PageElement {
 
   set parentDimensions(dimensions: Dimensions) {
     this._parentDimensions = dimensions;
+  }
+
+  get location(): Location {
+    return this._location;
+  }
+
+  set location(location: Location) {
+    this._location = location;
   }
 
   private calcScalingRatio(direction: ImageScaleDirection, changedDimension: number ): Dimensions {
