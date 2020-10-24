@@ -42,6 +42,11 @@ export interface ButtonInterface extends Content {
   content: string;
 }
 
+export interface ClientCoordinates {
+  clientX: number;
+  clientY: number;
+}
+
 export class Image implements ImageInterface {
   private _content: string;
   private _naturalSize: Dimensions;

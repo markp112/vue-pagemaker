@@ -139,6 +139,7 @@ export class PageElementFactory {
     ref: string,
     parent: ComponentContainer
   ): ImageElement {
+    console.log('%c⧭', 'color: #ff6600', component);
     const imageElement: ImageElement = new PageElementBuilder()
     .setName(component.componentName)
     .setParent(parent)

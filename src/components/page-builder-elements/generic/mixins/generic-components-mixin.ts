@@ -8,6 +8,7 @@ import {
 } from '@/models/components/box-dimension';
 import { Style } from '@/models/styles/styles';
 import { PageElementClasses } from '@/classes/page-element/factory/page-element-factory';
+import { ClientCoordinates } from '@/models/components/components';
 
 interface BoxProperties {
   width: number;
@@ -53,20 +54,17 @@ export class GenericComponentMixins extends Vue {
     else return null;
   }
 
-
-  onResize(boxProperties: BoxProperties| undefined) {
-    if (!boxProperties) return;
+  onResize(boxProperties: ClientCoordinates) {
+    console.log('%c%s', 'color: #f27999',   'onResize');
     const boundingRect: BoxProperties | null = this.getElementBoxProperties();
     if (boundingRect) {
-      // const newDimensions: ResizeDimensions = this.calcNewDimensions(thisElement, ev.clientX, ev.clientY);
-      
       const boxLeft = boundingRect.left + pageXOffset;
       const boxTop = boundingRect.top + pageYOffset;
       if (PageModule.editedComponentRef) {
           const boxDimensions: BoxDimensionsInterface = 
           { 
-            height: { value: boxProperties.height - boxTop , units: 'px' },
-            width: { value: boxProperties.width - boxLeft, units: 'px' },
+            height: { value: boxProperties.clientY - boxTop , units: 'px' },
+            width: { value: boxProperties.clientX - boxLeft, units: 'px' },
             top: { value: 0, units: 'px' },
             left: { value: 0, units: 'px' }
           };
@@ -86,9 +84,8 @@ export class GenericComponentMixins extends Vue {
         });
       }
       style += `${component.boxDimensions.heightAsStyle};${component.boxDimensions.widthAsStyle}`;
+      console.log('%c⧭', 'color: #9c66cc', style);
     }
-    
-    console.log('%c⧭', 'color: #ffa280', style);
     return style;
   }
 

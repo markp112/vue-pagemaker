@@ -3,7 +3,6 @@ import { PageElement } from '../../PageElement';
 import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
 import { Dimensions, ImageScaleDirection, initDimensions, Location } from '@/models/components/components';
 import { Image } from '@/models/components/components';
-import { BoxDimensionsInterface } from '@/models/components/box-dimension';
 import { Units } from '@/models/enums/units/units';
 
 
@@ -19,7 +18,6 @@ export class ImageElement extends PageElement {
     top: 0,
     left: 0,
   }
-
   private _widthOnePercent: number;
   private _heightOnePercent: number;
 
@@ -85,31 +83,31 @@ export class ImageElement extends PageElement {
     this._location = location;
   }
 
-  private calcScalingRatio(direction: ImageScaleDirection, changedDimension: number ): Dimensions {
-    let dimension: Dimensions;
-    if (this._maintainRatio) {
-      if (direction === 'width') {
-        const imageCurrentPercent = changedDimension / this._widthOnePercent;
-        const newHeight = this._heightOnePercent * imageCurrentPercent;
-         dimension =  {
-          width: changedDimension,
-          height: newHeight,
-          units: Units.px,
-        }
-      } else {
-        const imageCurrentPercent = changedDimension / this._heightOnePercent;
-        const newWidth = this._widthOnePercent * imageCurrentPercent;
-        dimension = {
-          width: newWidth,
-          height: changedDimension,
-          units: Units.px,
-        }
-      }
-    } else {
-      return this.scaledSize;
-    }
-    return dimension;
-  }
+  // private calcScalingRatio(direction: ImageScaleDirection, changedDimension: number ): Dimensions {
+  //   let dimension: Dimensions;
+  //   if (this._maintainRatio) {
+  //     if (direction === 'width') {
+  //       const imageCurrentPercent = changedDimension / this._widthOnePercent;
+  //       const newHeight = this._heightOnePercent * imageCurrentPercent;
+  //        dimension =  {
+  //         width: changedDimension,
+  //         height: newHeight,
+  //         units: Units.px,
+  //       }
+  //     } else {
+  //       const imageCurrentPercent = changedDimension / this._heightOnePercent;
+  //       const newWidth = this._widthOnePercent * imageCurrentPercent;
+  //       dimension = {
+  //         width: newWidth,
+  //         height: changedDimension,
+  //         units: Units.px,
+  //       }
+  //     }
+  //   } else {
+  //     return this.scaledSize;
+  //   }
+  //   return dimension;
+  // }
 
   public setDefaultStyle() {
     const siteDefaults = SiteDefaults.getInstance();
@@ -130,21 +128,21 @@ export class ImageElement extends PageElement {
     this._heightOnePercent = this._naturalSize.height / 100; 
   }
 
-  public reSize(boxDimensions: BoxDimensionsInterface): void {
-    let newDimensions: Dimensions;
-    if (this._maintainRatio) {
-      if (boxDimensions.height.value !== this._scaledSize.height) {
-        newDimensions = this.calcScalingRatio('height', boxDimensions.height.value);
-      } else {
-        newDimensions = this.calcScalingRatio('width', boxDimensions.width.value);
-      }
-      boxDimensions.height.value = newDimensions.height;
-      boxDimensions.width.value = newDimensions.width;
-    }
-    this._scaledSize.height = boxDimensions.height.value;
-    this._scaledSize.width = boxDimensions.width.value;
-    this.boxDimensions.height = boxDimensions.height;
-    this.boxDimensions.width = boxDimensions.width;
-  }
+  // public reSize(boxDimensions: BoxDimensionsInterface): void {
+  //   let newDimensions: Dimensions;
+  //   if (this._maintainRatio) {
+  //     if (boxDimensions.height.value !== this._scaledSize.height) {
+  //       newDimensions = this.calcScalingRatio('height', boxDimensions.height.value);
+  //     } else {
+  //       newDimensions = this.calcScalingRatio('width', boxDimensions.width.value);
+  //     }
+  //     boxDimensions.height.value = newDimensions.height;
+  //     boxDimensions.width.value = newDimensions.width;
+  //   }
+  //   this._scaledSize.height = boxDimensions.height.value;
+  //   this._scaledSize.width = boxDimensions.width.value;
+  //   this.boxDimensions.height = boxDimensions.height;
+  //   this.boxDimensions.width = boxDimensions.width;
+  // }
 
 }

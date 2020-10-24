@@ -3,7 +3,7 @@
     class="absolute triangleTopRight"
     :class ="{'active': $props.isActive, 'in-active': !$props.isActive}"
     @mousedown.stop.prevent="handleDown($event)"
-    @mouseup="handleMouseUp()"
+    @mouseup="handleMouseUp($event)"
     @mousemove="handleMove($event)">
   </div>    
 </template>
@@ -12,13 +12,9 @@
 import Component from 'vue-class-component'
 import { Vue, Emit, Prop } from 'vue-property-decorator';
 import { BoxDimensions, ResizeDimensions } from '@/models/components/box-dimension';
+import { ClientCoordinates } from '@/models/components/components';
 
-interface BoxProperties {
-  width: number;
-  height: number;
-  top: number; 
-  left: number;
-};
+
 
 @Component({
   props: {
@@ -38,69 +34,52 @@ export default class Resize extends Vue {
   isSizing = false;
   parentPadding = 0;
 
-
-
-  // getElementBoxProperties(): BoxProperties | null {
-  //   const parent: HTMLDivElement | null = this.$el.parentElement as HTMLDivElement;
-  //   // const parentContiner: HTMLDivElement = (parent as Node).parentNode as HTMLDivElement;
-  //   // // padding is in rems 4 = 1rem = 16px
-  //   // this.parentPadding = this.getPaddingOnParent(parentContiner) * 4;
-  //   if (parent){
-  //       const boundingRect: BoxProperties = {
-  //         width: parent.getBoundingClientRect().width,
-  //         height: parent.getBoundingClientRect().height,
-  //         top: parent.getBoundingClientRect().top,
-  //         left: parent.getBoundingClientRect().left,
-  //     };
-  //     return boundingRect;
-  //   }
-  //   else return null;
-  // }
-
   handleMouseUp(event: MouseEvent) {
-    console.log('%c%s', 'color: #994d75', 'handleMouseUp')
     this.isSizing = false;
-    window.removeEventListener('mousemove',() => { this.handleMove(event as MouseEvent) });
-    window.removeEventListener('mouseup',() => { this.handleMouseUp(event as MouseEvent) });
+    window.removeEventListener('mousemove', this.handleMove);
+    window.removeEventListener('mouseup', this.handleMouseUp);
   }
 
   handleDown(ev: MouseEvent) {
     if (!this.$props.isActive) return;
-    if (!this.isSizing) {
-      window.addEventListener('mousemove', () => { this.handleMove(event as MouseEvent) });
-      window.addEventListener('mouseup', () => { this.handleMouseUp(event as MouseEvent) });
+   if (!this.isSizing) {
+     this.resizeStarted(ev);
+   }
+  }
+
+  @Emit('resizeStarted')
+  resizeStarted(ev: MouseEvent) {
+
+      window.addEventListener('mousemove', this.handleMove);
+      window.addEventListener('mouseup', this.handleMouseUp);
       this.isSizing = true
-    }
   }
 
   @Emit('onResize')
-  handleMove(ev: MouseEvent): BoxProperties | undefined {
-    if (this.isSizing) { 
-      return {
-        height: ev.clientY,
-        width: ev.clientX,
-        top: 0,
-        left: 0,
-      }
-    } 
-    return undefined;
+  emitResize(clientCoordinates: ClientCoordinates): ClientCoordinates {
+    return clientCoordinates;
   }
 
-  calcNewDimensions(element: BoxProperties, clientX: number, clientY: number): ResizeDimensions {
-    const parentDimensions: BoxDimensions = this.$props.parentContainerDimensions;
-    const boxLeft = element.left + pageXOffset;
-    const boxTop = element.top + pageYOffset;
-    const resizeDimensions: ResizeDimensions = { height: 0, width: 0, }
-    resizeDimensions.width = (clientX - boxLeft);
-    resizeDimensions.height = (clientY - boxTop);
-    // if (resizeDimensions.width >= (parentDimensions.width.value - (this.parentPadding * 2))) {
-    //   resizeDimensions.width = parentDimensions.width.value - (this.parentPadding * 2);
-    // }
-    // if (resizeDimensions.height > parentDimensions.top.value + parentDimensions.height.value) {
-    //   resizeDimensions.height = parentDimensions.top.value + parentDimensions.height.value;
-    // }
-    return resizeDimensions;
+  handleMove(ev: MouseEvent) {
+    ev.stopPropagation;
+    if (this.isSizing) { 
+      const clientCoordinates = {
+        clientY: ev.pageY,
+        clientX: ev.pageX,
+      };
+      this.emitResize(clientCoordinates);
+    } 
   }
+
+  // calcNewDimensions(element: ClientCoordinates, clientX: number, clientY: number): ResizeDimensions {
+  //   const parentDimensions: BoxDimensions = this.$props.parentContainerDimensions;
+  //   const boxLeft = element.clientX + pageXOffset;
+  //   const boxTop = element.clientY + pageYOffset;
+  //   const resizeDimensions: ResizeDimensions = { height: 0, width: 0, }
+  //   resizeDimensions.width = (clientX - boxLeft);
+  //   resizeDimensions.height = (clientY - boxTop);
+  //   return resizeDimensions;
+  // }
 }
 </script>
 

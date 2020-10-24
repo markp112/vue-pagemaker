@@ -1,10 +1,9 @@
 <template>
  
-    <div class="relative w-auto h-auto">
+    <div class="relative w-auto h-full">
       <div 
         ref="imageContainer"
         class="handle relative image box-border" 
-        :class="getClasses()"
         :style="getStyles()"
         :id="$props.thisComponent.ref"
         @click.prevent="onClick($event)"
@@ -13,16 +12,17 @@
           ref="imageElmnt"
           :src="getData"
           :style="getStyles()"
-          class="object-contain absolute top-0 left-0"
+          class="absolute"
           :class="{'cursor-pan': draggingStarted}"
-          @click.prevent="onClick($event)"
-          @mousemove="panImage($event)"
           @mousedown="onDraggingStarted($event)"
           @mouseup="onDraggingStop($event)"
+          @click.prevent="onClick($event)"
+       
         />
       <resizeable
         :isActive="isActive"
         :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"
+        @resizeStarted="resizeStarted($event)"
         @onResize="resizeImage($event)"
       >
       </resizeable>
@@ -42,6 +42,7 @@ import { PageElementBuilder } from '@/classes/page-element/page-element-builder/
 import { PageModule } from '@/store/page/page';
 import { BoxDimensionsInterface, ResizeDimensions } from '@/models/components/box-dimension';
 import { Units } from '@/models/enums/units/units';
+import { ClientCoordinates } from '@/models/components/components';
 
 
 interface BoxProperties {
@@ -50,7 +51,6 @@ interface BoxProperties {
   top: number; 
   left: number;
 };
-
 
 @Component({
  props: {
@@ -71,13 +71,13 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
   lastMousePosition = {
     x: 0,
     y: 0,
-  }  
+  };
+  coordX = 0;
+  coordY = 0;
 
   get getData(): string | undefined {
     const component: PageElementClasses = this.$props.thisComponent;
     if (component) {
-      
-      console.log('%c%s', 'color: #735656', this.$props.thisComponent.content)
       return this.$props.thisComponent.content;
     }
     return '';
@@ -94,7 +94,6 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
   }
 
    onDraggingStarted(event: MouseEvent) {
-    console.log('%c%s', 'color: #ffcc00', 'onDraggingStarted')
     this.onClick(event);
     const parentContainer = this.$refs.imageContainer as HTMLDivElement;
     this.draggingStarted = true;
@@ -102,19 +101,20 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
       x: event.pageX - parentContainer.offsetLeft,
       y: event.pageY - parentContainer.offsetTop,
     }
+     window.addEventListener('mousemove', this.panImage);
+     window.addEventListener('mouseup', this.onDraggingStop);
   }
 
   onDraggingStop(event: MouseEvent) {
     this.draggingStarted = false;
+    window.removeEventListener('mousemove', this.panImage);
+    window.removeEventListener('mouseup', this.onDraggingStop);
   }
 
- 
-  
   panImage(event: MouseEvent) {
     if (!this.draggingStarted) {
-      return
+      return false;
     }
-    console.log('%c%s', 'color: #e5de73', 'moveImage')
     const parentContainer = this.$refs.imageContainer as HTMLDivElement;
     const image = this.$refs.imageElmnt as HTMLImageElement;
     const currentMousePosition = {
@@ -127,9 +127,7 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
     const imageTop = image.style.top === "" ? 0 : parseInt(image.style.top, 10) ;
     const imageLeft = image.style.left === "" ? 0 : parseInt(image.style.left, 10);
     let imageTopNew = imageTop + changeY;
-    console.log('%c%s', 'color: #eeff00', imageTopNew)
     let imageLeftNew = imageLeft + changeX;
-    console.log('%c%s', 'color: #73998c', imageLeftNew)
     if (imageTopNew > 0 ) {
       imageTopNew = 0;
     }
@@ -142,30 +140,65 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
       top: imageTopNew,
       left: imageLeftNew
     };
+    return false;
   }
 
-  resizeImage(boxProperties: BoxProperties | undefined) {
-    if (!boxProperties) return
-    const imageElement = this.$refs.imageElmnt as HTMLElement;
 
-    const boundingRect: BoxProperties = {
-      width: imageElement.getBoundingClientRect().width,
-          height: imageElement.getBoundingClientRect().height,
-          top: imageElement.getBoundingClientRect().top,
-          left: imageElement.getBoundingClientRect().left,
+  resizeStarted(event: MouseEvent) {
+    const parentContainer = this.$refs.imageContainer as HTMLDivElement;
+    this.draggingStarted = true;
+    this.lastMousePosition = {
+      x: event.pageX - parentContainer.offsetLeft,
+      y: event.pageY - parentContainer.offsetTop,
+    }
+  }
+
+  resizeImage(boxProperties: ClientCoordinates) {
+    const imageElement = this.$refs.imageElmnt as HTMLElement;
+    const parentContainer = this.$refs.imageContainer as HTMLDivElement;
+    const currentMousePosition = {
+      x: boxProperties.clientX - parentContainer.offsetLeft,
+      y: boxProperties.clientY - parentContainer.offsetTop,
     };
-       console.log('%c⧭', 'color: #00258c', boundingRect)
-    const boxLeft = boundingRect.left + pageXOffset;
-    const boxTop = boundingRect.top + pageYOffset;
-    
+     const boundingRect: BoxProperties = {
+      width: imageElement.getBoundingClientRect().width,
+      height: imageElement.getBoundingClientRect().height,
+      top: imageElement.getBoundingClientRect().top,
+      left: imageElement.getBoundingClientRect().left,
+    };
+    const changeX = currentMousePosition.x - this.lastMousePosition.x;
+    const changeY = currentMousePosition.y - this.lastMousePosition.y;
+    this.lastMousePosition = currentMousePosition;
     const boxDimensions: BoxDimensionsInterface = {
-      height: { value: boxProperties.height - boxTop, units: 'px' },
-      width: { value: boxProperties.width - boxLeft, units: 'px' },
-      top: { value: 0, units: 'px' },
-      left: { value: 0, units: 'px' },
+      height: { value: boundingRect.height + changeY, units: 'px' },
+      width: { value: boundingRect.width + changeX, units: 'px' },
+      top: { value: boundingRect.top,  units: 'px' },
+      left: { value: boundingRect.left, units: 'px' },
     };
     PageModule.updateBoxDimensionHeightandWidth(boxDimensions);
+
   }
+
+  // xresizeImage(boxProperties: ClientCoordinates) {
+  //   console.log('%c⧭', 'color: #cc7033', boxProperties)
+  //   const imageElement = this.$refs.imageElmnt as HTMLElement;
+  //   const boundingRect: BoxProperties = {
+  //     width: imageElement.getBoundingClientRect().width,
+  //     height: imageElement.getBoundingClientRect().height,
+  //     top: imageElement.getBoundingClientRect().top,
+  //     left: imageElement.getBoundingClientRect().left,
+  //   };
+  //   console.log('%c⧭', 'color: #607339', boundingRect)
+  //   const boxLeft = boundingRect.left + pageXOffset;
+  //   const boxTop = boundingRect.top + pageYOffset;
+  //   const boxDimensions: BoxDimensionsInterface = {
+  //     height: { value: boundingRect.height + (boxProperties.clientY - boxTop), units: 'px' },
+  //     width: { value: boxProperties.clientX - boxLeft, units: 'px' },
+  //     top: { value: boundingRect.top,  units: 'px' },
+  //     left: { value: boundingRect.left, units: 'px' },
+  //   };
+  //   PageModule.updateBoxDimensionHeightandWidth(boxDimensions);
+  // }
 }
 </script>
 
