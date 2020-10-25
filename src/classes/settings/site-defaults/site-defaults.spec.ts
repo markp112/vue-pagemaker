@@ -28,10 +28,7 @@ describe("SiteDefaults", () => {
     AuthModule.login(user)
       .then ( (firebaseUser => {
         const thisUser = firebaseUser as UserInterface;
-        console.log('%c⧭', 'color: #735656', thisUser);
-
         user.id = thisUser.id;
-        console.log('%c%s', 'color: #997326', thisUser.id);
         user.signedIn = true;
       }))
       .catch((err => {

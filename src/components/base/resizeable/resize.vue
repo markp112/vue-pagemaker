@@ -49,7 +49,6 @@ export default class Resize extends Vue {
 
   @Emit('resizeStarted')
   resizeStarted(ev: MouseEvent) {
-
       window.addEventListener('mousemove', this.handleMove);
       window.addEventListener('mouseup', this.handleMouseUp);
       this.isSizing = true

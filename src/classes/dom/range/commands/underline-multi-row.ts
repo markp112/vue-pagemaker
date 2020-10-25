@@ -26,20 +26,15 @@ import { Style } from '@/models/styles/styles';
       if (!this.rangeValues) { throw new Error('RH: range values not set')};
       this.fragment = this.range.extractContents();
       const node: ParentNode = this.fragment as ParentNode;
-      console.log('%c⧭', 'color: #733d00', node);
      
       
       this.isUnderlined = this.checkForUnderline(node);
-      console.log('%c%s', 'color: #00b300', this.isUnderlined);
       if (this.isUnderlined) {
         this.hasTextNode = this.checkForTextNode(node);
       }
       if (!this.hasTextNode) {
         this.hasSpanNodeNoUnderline = this.checkForSpanNodeWithoutUnderline(node);
       }
-      console.log('%c%s', 'color: #00bf00', this.isUnderlined);
-      console.log('%c%s', 'color: #0088cc', this.hasSpanNodeNoUnderline);
-      console.log('%c%s', 'color: #917399', this.hasTextNode);
       (this.isUnderlined && !this.hasSpanNodeNoUnderline && !this.hasTextNode) 
         ? this.removeUnderline(node) :
         this.addUnderline(node, htmlTag);
@@ -61,12 +56,9 @@ import { Style } from '@/models/styles/styles';
     private findUnderlineInChildren(parentNode: Node): boolean {
       for (let index = 0; index < parentNode.childNodes.length; index++) {
         const childNode = parentNode.childNodes[index];
-        console.log('%c⧭', 'color: #e50000', childNode);
         if (childNode.nodeName === 'SPAN') {
           const spanElement = childNode as HTMLSpanElement;
-          console.log('%c⧭', 'color: #ffa640', spanElement);
           if (spanElement.className.includes('underline')) {
-            console.log("true")
             return true;
           }
         }
@@ -116,7 +108,6 @@ import { Style } from '@/models/styles/styles';
     }
 
     private addUnderline(parentNode: ParentNode, htmlTag: HTMLTags) {
-      console.log("Add underline called")
       if (this.isUnderlined) {
         this.addUnderlineToSegment(parentNode, htmlTag);
       } else {
@@ -125,7 +116,6 @@ import { Style } from '@/models/styles/styles';
     }
 
    addUnderlineToSelection(parentNode: ParentNode, htmlTag: HTMLTags) {
-    console.log('%c%s', 'color: #1d5673','addUnderlineToSelection');
     this.applyStyle(htmlTag, this.underline, 'class');
     this.reInsertNodes();
    }

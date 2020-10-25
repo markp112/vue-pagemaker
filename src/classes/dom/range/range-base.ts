@@ -39,10 +39,7 @@ export class RHBase implements RHBaseInterface {
   constructor(range: Range) {
     console.clear();
     this.range = range;
-    console.log('%c⧭', 'color: #eeff00', range);
     this.rangeValues = this.setSelection();
-    console.log('%c⧭', 'color: #cc7033', this.rangeValues);
-
   }
 
   private setSelection(): RangeValuesInterface {
@@ -283,7 +280,6 @@ export class Paragraph extends RHBase {
       const paraNode: Node = this.createWrapperNode('p');
       const element: HTMLElement = paraNode as HTMLElement;
       element.id = this.id;
-      console.log('%c%s', 'color: #994d75', this.id);
       node !== null ? paraNode.appendChild(node) : element.innerText = ' ';
       // element.style.lineHeight = '1em';
       const parentNode: Node | null = this.findNextNodeofType(this.range.commonAncestorContainer, 'DIV');
@@ -374,7 +370,6 @@ export class Paragraph extends RHBase {
   
 
   private setParagrah(node: Node) {
-    console.log('%c⧭', 'color: #1d0957', node);
     const range = document.createRange();
     range.setStart(node, 0);
     const end = node.childNodes.length ? node.childNodes.length : ((node as Text).length ? (node as Text).length : 0);

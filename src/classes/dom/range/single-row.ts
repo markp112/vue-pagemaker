@@ -36,7 +36,6 @@ export class RangeRow extends RHBase {
   }
 
   private createWrapperWithChildren(htmlTag: HTMLTags, style: Style, classOrStyle: ClassOrStyle) {
-    console.log("Here")
     if(!this.range) throw new Error('Range not set');
     if (this.range.commonAncestorContainer === this.range.startContainer) {
       this.createNodeFromFragment(htmlTag, style, classOrStyle)
@@ -47,7 +46,6 @@ export class RangeRow extends RHBase {
       this.createNodeFromFragment(htmlTag, style, classOrStyle)
       return;
     }
-    console.log("passed Ifs")
     this.fragment = this.range.extractContents();
     this.createNewNodeAsWrapper(htmlTag, style, classOrStyle);
   }
@@ -89,7 +87,6 @@ export class RangeRow extends RHBase {
 
   private findNodebyTag(tag: string, startNode: Node): Node | null {
     if (startNode.nodeName === tag) {
-      console.log('%c⧭', 'color: #f200e2', startNode as HTMLElement);
       return startNode;
     }
     if (startNode.parentNode) {
@@ -120,7 +117,6 @@ export class RangeRow extends RHBase {
   private isExistingUnderline(style: Style): boolean {
     if (!this.range) throw new Error('Range not set');
     const parentNode = this.findNodebyTag('P', (this.rangeValues.startContainerParent as Node));
-    console.log('%c⧭', 'color: #d90000', parentNode);
     // if no parent node then can be no node with underline
     if (parentNode) {
       return this.checkForExistingUnderline(parentNode);

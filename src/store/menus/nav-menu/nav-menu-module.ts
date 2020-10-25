@@ -5,7 +5,6 @@ import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
 
 const isSiteLoaded = (): boolean => {
   const sitedefaults = SiteDefaults.getInstance();
-  console.log('%c%s', 'color: #ffa640', sitedefaults.isLoaded);
   return sitedefaults.isLoaded;
   
 } 
@@ -51,7 +50,6 @@ class NavMenuItemsStore extends VuexModule implements NavMenuStateInterface {
   }
 
   public get navMenuItems():NavMenuItem[] {
-    console.log('%c⧭', 'color: #d90000', this.menuItems, "menu");
     return this.menuItems;
   }
 

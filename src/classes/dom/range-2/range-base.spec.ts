@@ -47,18 +47,7 @@ describe('isSelectedRangeASingleParagraph', () => {
   let range: Range;
   beforeEach(() => {
    document.body.appendChild(textEditorSetup);
-  //   range = document.createRange();
-  //   console.log('%c⧭', 'color: #00736b', document);
-  //   const idOfParagraphOne = (textEditorSetup.childNodes[0] as HTMLParagraphElement).id;
-  //   console.log('%c%s', 'color: #99614d', idOfParagraphOne);
-  //   const firstP: Node | null = document.getElementById(idOfParagraphOne);
-  //   if (firstP) {
-  //     console.log("seting start and end")
-  //      range.setStart(firstP, 0);
-  //      range.setEnd(firstP, 1);
-  //   }
-  //   console.debug(range);
-    rangeBase = new RangeBase(range);
+   rangeBase = new RangeBase(range);
   })
   it("should return true when a range selection is within a single paragraph", () => {
      
@@ -96,6 +85,5 @@ describe("isStyleTag", () => {
       const style: ClassOrStyle = 'style';
       const isStyle = rangeBase.isStyleTag(style);
       expect(isStyle).toBeTruthy();
-    
   }) 
 })

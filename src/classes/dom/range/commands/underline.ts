@@ -26,7 +26,6 @@ export class Underline extends RHBase {
     this.isElementUnderlined.startContent 
     && this.isElementUnderlined.selectedContent 
     && this.isElementUnderlined.endContent;
-    console.log('%c%s', 'color: #997326', isUnderline);
     return;
     if (isUnderline) {
       this.removeUnderline(htmlTag);
@@ -51,7 +50,6 @@ export class Underline extends RHBase {
     this.isElementUnderlined.startContent = startParentHasUnderlineClass;
     this.isElementUnderlined.endContent = endParentHasUnderlineClass;
     if (startParentNodeType === 'P' || startParentNodeType === 'SPAN') {
-      console.log('%c%s', 'color: #13f130', startParentNodeType);
       this.isElementUnderlined.selectedContent = 
         this.isSpanTextNodeSandwiched(
           this.range.commonAncestorContainer.parentNode,
@@ -66,10 +64,7 @@ export class Underline extends RHBase {
     if (!ancestorNode) { 
       throw new Error('isSpanTextNodeSandwiched: ancestor node is null');
     }
-    console.log('%c%s', 'color: #807160', endText);
-    console.log('%c%s', 'color: #731d1d', startText);
     const startNodeIndex = this.findChildNodeIndex(ancestorNode, startText);
-    console.log('%c%s', 'color: #007300', startNodeIndex);
     if (startNodeIndex !== -1) {
       // look at the child nodes if there is a span / text node between the start and end containers then the selected content is not underlined
       // if the end node is reached it is underlined
@@ -121,7 +116,6 @@ export class Underline extends RHBase {
 
   // remove the underline if present
   private removeUnderline(htmlTag: HTMLTags) {
-    console.log('%c%s', 'color: #f200e2', 'removeUnderline');
     const underlineNode = this.getNodeWithUnderline(this.range.startContainer);
     if (!underlineNode) throw new Error('removeUnderline no underline class found');
     this.fragment = this.range.extractContents();

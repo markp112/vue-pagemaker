@@ -48,12 +48,12 @@ export class PageElementFactory {
         .setIsContainer(true)
         .setName(component.componentName)
         .setParent(parent)
+        .setType(component.type)
         .setComponentHtmlTag(component.componentRef)
         .setClassDefintion(component.class)
         .setBoxDimensions(component.boxDimensions)
         .buildAContainer();
-        container.parentRef = container.parent.ref;
-        console.log('%c⧭', 'color: #e9a2a2', container);
+      container.parentRef = container.parent.ref;
       return container;
 
   }
@@ -139,7 +139,6 @@ export class PageElementFactory {
     ref: string,
     parent: ComponentContainer
   ): ImageElement {
-    console.log('%c⧭', 'color: #ff6600', component);
     const imageElement: ImageElement = new PageElementBuilder()
     .setName(component.componentName)
     .setParent(parent)

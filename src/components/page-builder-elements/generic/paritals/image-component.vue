@@ -33,7 +33,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { GenericComponentMixins } from '../mixins/generic-components-mixin';
+import { GenericComponentMixins, MousePosition } from '../mixins/generic-components-mixin';
 import Resize from '@/components/base/resizeable/resize.vue';
 import { ImageElement } from '@/classes/page-element/page-components/image-element/ImageElement';
 import Component, { mixins } from 'vue-class-component';
@@ -66,6 +66,8 @@ interface BoxProperties {
 })
 export default class ImageComponent extends mixins(GenericComponentMixins) {
   name = 'ImageComponent';
+  HTML_IMAGE_ELEMENT = 'imageElmnt';
+  HTML_IMAGE_PARENT = 'imageContainer';
   draggingStarted = false;
   isResizing = true;
   lastMousePosition = {
@@ -88,6 +90,7 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
   }
 
   onClick(event: Event) {
+    console.log('%c%s', 'color: #917399', 'onClick')
     event.stopPropagation();
     PageModule.updateEditedComponentRef(this.$props.thisComponent);
     PageModule.updateShowEditDelete(true);
@@ -95,11 +98,11 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
 
    onDraggingStarted(event: MouseEvent) {
     this.onClick(event);
-    const parentContainer = this.$refs.imageContainer as HTMLDivElement;
+    const target = this.$refs[this.HTML_IMAGE_PARENT] as HTMLDivElement;
     this.draggingStarted = true;
     this.lastMousePosition = {
-      x: event.pageX - parentContainer.offsetLeft,
-      y: event.pageY - parentContainer.offsetTop,
+      x: event.pageX - target.offsetLeft,
+      y: event.pageY - target.offsetTop,
     }
      window.addEventListener('mousemove', this.panImage);
      window.addEventListener('mouseup', this.onDraggingStop);
@@ -115,12 +118,8 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
     if (!this.draggingStarted) {
       return false;
     }
-    const parentContainer = this.$refs.imageContainer as HTMLDivElement;
-    const image = this.$refs.imageElmnt as HTMLImageElement;
-    const currentMousePosition = {
-      x: event.pageX - parentContainer.offsetLeft,
-      y: event.pageY - parentContainer.offsetTop,
-    }
+    const image = this.$refs[this.HTML_IMAGE_ELEMENT] as HTMLImageElement;
+    const currentMousePosition: MousePosition = this.getMousePosition(event.pageX, event.pageY, this.HTML_IMAGE_PARENT);
     const changeX = currentMousePosition.x - this.lastMousePosition.x;
     const changeY = currentMousePosition.y - this.lastMousePosition.y;
     this.lastMousePosition = currentMousePosition;
@@ -143,62 +142,31 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
     return false;
   }
 
-
   resizeStarted(event: MouseEvent) {
-    const parentContainer = this.$refs.imageContainer as HTMLDivElement;
-    this.draggingStarted = true;
+    const target = this.$refs[this.HTML_IMAGE_PARENT] as HTMLDivElement;
     this.lastMousePosition = {
-      x: event.pageX - parentContainer.offsetLeft,
-      y: event.pageY - parentContainer.offsetTop,
+      x: event.pageX - target.offsetLeft,
+      y: event.pageY - target.offsetTop,
     }
   }
 
   resizeImage(boxProperties: ClientCoordinates) {
-    const imageElement = this.$refs.imageElmnt as HTMLElement;
-    const parentContainer = this.$refs.imageContainer as HTMLDivElement;
-    const currentMousePosition = {
-      x: boxProperties.clientX - parentContainer.offsetLeft,
-      y: boxProperties.clientY - parentContainer.offsetTop,
-    };
-     const boundingRect: BoxProperties = {
-      width: imageElement.getBoundingClientRect().width,
-      height: imageElement.getBoundingClientRect().height,
-      top: imageElement.getBoundingClientRect().top,
-      left: imageElement.getBoundingClientRect().left,
-    };
+    const currentMousePosition: MousePosition = this.getMousePosition(
+      boxProperties.clientX,
+      boxProperties.clientY,
+      this.HTML_IMAGE_PARENT
+    );
+    const boundingRect: BoxProperties = this.getElementBoxProperties(this.HTML_IMAGE_ELEMENT);
     const changeX = currentMousePosition.x - this.lastMousePosition.x;
     const changeY = currentMousePosition.y - this.lastMousePosition.y;
     this.lastMousePosition = currentMousePosition;
-    const boxDimensions: BoxDimensionsInterface = {
-      height: { value: boundingRect.height + changeY, units: 'px' },
-      width: { value: boundingRect.width + changeX, units: 'px' },
-      top: { value: boundingRect.top,  units: 'px' },
-      left: { value: boundingRect.left, units: 'px' },
-    };
+    const boxDimensions: BoxDimensionsInterface = this.getBoxDimensions(
+      boundingRect,
+      changeY,
+      changeX
+    );
     PageModule.updateBoxDimensionHeightandWidth(boxDimensions);
-
   }
-
-  // xresizeImage(boxProperties: ClientCoordinates) {
-  //   console.log('%c⧭', 'color: #cc7033', boxProperties)
-  //   const imageElement = this.$refs.imageElmnt as HTMLElement;
-  //   const boundingRect: BoxProperties = {
-  //     width: imageElement.getBoundingClientRect().width,
-  //     height: imageElement.getBoundingClientRect().height,
-  //     top: imageElement.getBoundingClientRect().top,
-  //     left: imageElement.getBoundingClientRect().left,
-  //   };
-  //   console.log('%c⧭', 'color: #607339', boundingRect)
-  //   const boxLeft = boundingRect.left + pageXOffset;
-  //   const boxTop = boundingRect.top + pageYOffset;
-  //   const boxDimensions: BoxDimensionsInterface = {
-  //     height: { value: boundingRect.height + (boxProperties.clientY - boxTop), units: 'px' },
-  //     width: { value: boxProperties.clientX - boxLeft, units: 'px' },
-  //     top: { value: boundingRect.top,  units: 'px' },
-  //     left: { value: boundingRect.left, units: 'px' },
-  //   };
-  //   PageModule.updateBoxDimensionHeightandWidth(boxDimensions);
-  // }
 }
 </script>
 

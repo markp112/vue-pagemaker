@@ -13,7 +13,6 @@ export class MultiRow extends MultiRowBase {
   process(htmlTag: HTMLTags, style: Style, classorStyle: ClassOrStyle): void {
     if (!this.range) throw new Error('RH: Range not set');
     if (style.value.includes('underline')) {
-      console.log('%c%s', 'color: #cc7033', style.value);
       const multiRowUnderline = new MultiRowUnderline(this.range);
       // multiRowUnderline.process(htmlTag);
     } else {

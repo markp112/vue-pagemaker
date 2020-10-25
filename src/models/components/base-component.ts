@@ -25,7 +25,7 @@ export interface ComponentDefinitionInterface {
   componentRef: ComponentRef; // the html tag used to put this element on the page
   isContainer: boolean; // is a container or component 
   sidebarIcon: IconInterface; // icon for this component
-  type: ComponentTypesString; // what is this see types
+  type: ComponentTypesString; // what is this component type as in button, jumbo
   boxDimensions: BoxDimensions;
 }
 

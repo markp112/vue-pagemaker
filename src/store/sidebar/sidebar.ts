@@ -20,6 +20,7 @@ import {
 } from '@/models/notifications/notifications';
 import  { PageModule } from '@/store/page/page';
 import firebase from 'firebase';
+import { PageElementClasses } from '@/classes/page-element/factory/page-element-factory';
 
 const SIDEBARCOLLECTION = 'component-definitions';
 
@@ -129,11 +130,9 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
    * requires that the PageModule.editedComponetRef is set
    */
   public updateSidebarEditor() {
-    const componentType: PageData | undefined = PageModule.editedComponentRef;
+    const componentType: ComponentTypesString = PageModule.editedComponentType;
     if (componentType) {
-      const whichComponentType: ComponentTypesString = componentType.type;
-      console.log('%c%s', 'color: #1d3f73', whichComponentType);
-      switch (whichComponentType) {
+      switch (componentType) {
         case 'image':
           this.context.commit('setSidebarEditor', 'image-editor' as SidebarComponents);
           break;

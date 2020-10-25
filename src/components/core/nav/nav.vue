@@ -47,8 +47,6 @@ export default class NavMenuComponent extends Vue {
       siteDefaults = SiteDefaults.getInstance();
 
   menuItemClick(id: number, isVisbile: IsVisible) {
-    console.log('%c%s', 'color: #00b300', isVisbile())
-
     this.$router.push(this.menuItems[id].navLink);
     this.toggleMenu = !this.toggleMenu;
   }
@@ -59,7 +57,6 @@ export default class NavMenuComponent extends Vue {
 
   get getIsVisible(): (isVisible: IsVisible) => boolean {
     return (isVisible) =>{
-      console.log('%c⧭', 'color: #1d5673', isVisible)
        return isVisible();
        }
   }  

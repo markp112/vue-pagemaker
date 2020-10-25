@@ -27,10 +27,10 @@ import { ImageElement } from '@/classes/page-element/page-components/image-eleme
 export interface PageStateInterface {
   // _pageElements: PageData[];
   _pageElements: PageElementClasses[];
-
   _editedComponentRef: ComponentContainer | PageElement | undefined;
   _showEditDelete: boolean;
   _selectedComponent: string;
+  _selectedComponentType: ComponentTypesString;
 }
 
 @Module({ name: 'pagestore', store, dynamic: true })
@@ -41,11 +41,12 @@ class PageStore extends VuexModule implements PageStateInterface {
   public _pageElements: PageElementClasses[] = [];
   // reference to the component currently being edited
   public _editedComponentRef: PageElementClasses;
-    
   // show the toolbar for selecting edit // delete
   public _showEditDelete = false;
   // used to ensure only one component can be selected in the UI
   public _selectedComponent = '';
+  // holds the type of the selected component to be reactive
+  public _selectedComponentType: ComponentTypesString = undefined;
 
   @Mutation
   private pushPageElement(element: PageElementClasses): void {
@@ -137,6 +138,7 @@ class PageStore extends VuexModule implements PageStateInterface {
   private setEditedComponentRef(ref: PageElementClasses): void {
     this._editedComponentRef = ref;
     this._selectedComponent = ref ? ref.ref : '';
+    this._selectedComponentType = this._editedComponentRef ? this._editedComponentRef.type : undefined;
   }
 
   @Mutation
@@ -148,8 +150,6 @@ class PageStore extends VuexModule implements PageStateInterface {
   private setComponentImage(image: Image): void {
     if (this._editedComponentRef) {
       if (this._editedComponentRef.type === 'image') {
-        // image.parentDimensions.width = this._editedComponentRef.parent.boxDimensions.width.value;
-        // image.parentDimensions.height = this._editedComponentRef.parent.boxDimensions.height.value;
         (this._editedComponentRef as ImageElement).setImage(image);
       }
     }
@@ -254,8 +254,12 @@ class PageStore extends VuexModule implements PageStateInterface {
 
   // #region Actions
   // #region getters
-  public get editedComponentRef(): PageData | undefined {
+  public get editedComponentRef(): PageElementClasses | undefined {
     return this._editedComponentRef;
+  }
+
+  public get editedComponentType(): ComponentTypesString {
+    return this._selectedComponentType;
   }
 
   public get editComponentData(): string {

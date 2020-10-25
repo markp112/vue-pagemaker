@@ -170,9 +170,7 @@ class ServicesStore extends VuexModule implements ServicesStateInterface {
       firestore.collection(this.collectionId).doc('siteSettings').get()
         .then (response => {
           const docData = response.data();
-          console.log('%c⧭', 'color: #00bf00', response.data());
           siteDefaults = docData !== undefined ? docData as SiteDefaultsInterface : siteDefaultSettings;
-          console.log('%c⧭', 'color: #917399', siteDefaults, "site defaults response");
           resolve(siteDefaults);
         })
         .catch( err => {

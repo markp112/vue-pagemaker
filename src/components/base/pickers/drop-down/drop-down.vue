@@ -56,13 +56,10 @@ export default class DropDown extends Vue {
   selectedItem = '';
 
   mounted () {
-    console.log('%c%s', 'color: #00a3cc', this.$props.surface)
-
     this.selectedItem = this.$props.thisIconButton.defaultValue;
   }
 
   getSurface(): string {
-    console.log('%c%s', 'color: #00a3cc', this.$props.surface)
     return this.$props.surface; 
   }
 

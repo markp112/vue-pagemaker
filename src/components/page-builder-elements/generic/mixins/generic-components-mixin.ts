@@ -17,61 +17,76 @@ interface BoxProperties {
   left: number;
 };
 
+export interface MousePosition {
+  x: number,
+  y: number,
+}
+
 @Component
 export class GenericComponentMixins extends Vue {
   name = "GenericComponentMixins";
+  HTML_TARGET_ELEMENT = 'wrapperDiv';
   showBorder = false;
-
-  calcNewDimensions(element: BoxProperties, clientX: number, clientY: number): ResizeDimensions {
-    const parentDimensions: BoxDimensions = this.$props.parentContainerDimensions;
-    const boxLeft = element.left + pageXOffset;
-    const boxTop = element.top + pageYOffset;
-    const resizeDimensions: ResizeDimensions = { height: 0, width: 0, }
-    resizeDimensions.width = (clientX - boxLeft);
-    resizeDimensions.height = (clientY - boxTop);
-    // if (resizeDimensions.width >= (parentDimensions.width.value - (this.parentPadding * 2))) {
-    //   resizeDimensions.width = parentDimensions.width.value - (this.parentPadding * 2);
-    // }
-    // if (resizeDimensions.height > parentDimensions.top.value + parentDimensions.height.value) {
-    //   resizeDimensions.height = parentDimensions.top.value + parentDimensions.height.value;
-    // }
-    return resizeDimensions;
-  }
-  getElementBoxProperties(): BoxProperties | null {
-    const parent: HTMLDivElement | null = this.$el.parentElement as HTMLDivElement;
-    // const parentContiner: HTMLDivElement = (parent as Node).parentNode as HTMLDivElement;
-    // // padding is in rems 4 = 1rem = 16px
-    // this.parentPadding = this.getPaddingOnParent(parentContiner) * 4;
-    if (parent){
-        const boundingRect: BoxProperties = {
-          width: parent.getBoundingClientRect().width,
-          height: parent.getBoundingClientRect().height,
-          top: parent.getBoundingClientRect().top,
-          left: parent.getBoundingClientRect().left,
+  lastMousePosition: MousePosition = {
+    x: 0,
+    y: 0,
+  };
+ 
+  getElementBoxProperties(htmlElement: string): BoxProperties {
+    const element: HTMLDivElement | null = this.$refs[htmlElement] as HTMLDivElement;
+    const boundingRect: BoxProperties = {
+      width: element.getBoundingClientRect().width,
+      height: element.getBoundingClientRect().height,
+      top: element.getBoundingClientRect().top,
+      left: element.getBoundingClientRect().left,
       };
-      return boundingRect;
+    return boundingRect;
+  }
+
+  getBoxDimensions(
+    boundingRect: BoxProperties,
+    changeY: number,
+    changeX: number,
+    ): BoxDimensionsInterface {
+    return {
+      height: { value: boundingRect.height + changeY, units: 'px' },
+      width: { value: boundingRect.width + changeX, units: 'px'},
+      top: { value: boundingRect.top, units: 'px' },
+      left: { value: boundingRect.left, units: 'px' },
     }
-    else return null;
+  }
+
+  public getMousePosition(x: number, y: number, targetElement: string): MousePosition {
+    const target = this.$refs[targetElement] as HTMLDivElement;
+    return {
+      x: x - target.offsetLeft,
+      y: y - target.offsetTop,
+    };
+  }
+
+  resizeStarted(event: MouseEvent) {
+    this.lastMousePosition = this.getMousePosition(event.pageX, event.pageY, this.HTML_TARGET_ELEMENT)
   }
 
   onResize(boxProperties: ClientCoordinates) {
-    console.log('%c%s', 'color: #f27999',   'onResize');
-    const boundingRect: BoxProperties | null = this.getElementBoxProperties();
+    const boundingRect: BoxProperties | null = this.getElementBoxProperties(this.HTML_TARGET_ELEMENT);
     if (boundingRect) {
-      const boxLeft = boundingRect.left + pageXOffset;
-      const boxTop = boundingRect.top + pageYOffset;
-      if (PageModule.editedComponentRef) {
-          const boxDimensions: BoxDimensionsInterface = 
-          { 
-            height: { value: boxProperties.clientY - boxTop , units: 'px' },
-            width: { value: boxProperties.clientX - boxLeft, units: 'px' },
-            top: { value: 0, units: 'px' },
-            left: { value: 0, units: 'px' }
-          };
-          PageModule.updateBoxDimensionHeightandWidth(boxDimensions)
-        }
-      }
+      const currentMousePosition = this.getMousePosition(
+        boxProperties.clientX,
+        boxProperties.clientY,
+        this.HTML_TARGET_ELEMENT
+      );
+      const changeX = currentMousePosition.x - this.lastMousePosition.x;
+      const changeY = currentMousePosition.y - this.lastMousePosition.y;
+      this.lastMousePosition = currentMousePosition;
+      const boxDimensions: BoxDimensionsInterface = this.getBoxDimensions(
+        boundingRect,
+         changeY,
+         changeX
+        );
+      PageModule.updateBoxDimensionHeightandWidth(boxDimensions);
     }
+  }
 
   getStyles(): string {
     let style = '';
@@ -84,7 +99,6 @@ export class GenericComponentMixins extends Vue {
         });
       }
       style += `${component.boxDimensions.heightAsStyle};${component.boxDimensions.widthAsStyle}`;
-      console.log('%c⧭', 'color: #9c66cc', style);
     }
     return style;
   }

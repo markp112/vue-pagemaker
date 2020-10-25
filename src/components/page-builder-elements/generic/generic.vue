@@ -7,11 +7,12 @@
     class="handle" 
     :class="getClasses()"
     @click.prevent="onClick($event)"
+    v-html="getData"
   >
-    <div v-html="getData"></div>
     <resizeable
       :isActive="isActive"
       :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"
+      @resizeStarted="resizeStarted($event)"
       @onResize="onResize($event)"
     >
     </resizeable>
@@ -21,6 +22,7 @@
     <image-component :thisComponent="$props.thisComponent"></image-component>
   </div>
   <div 
+    ref="wrapperDiv"
     v-else
     :style="getStyles()"
     :class="getClasses()"
@@ -32,7 +34,8 @@
     <resizeable
       :isActive="isActive"
       :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"
-      @onResize="onResize"
+      @resizeStarted="resizeStarted($event)"
+      @onResize="onResize($event)"
     ></resizeable>
   </div>
 </template>

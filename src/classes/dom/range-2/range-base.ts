@@ -76,7 +76,6 @@ export class RangeBase {
 
   public isNodeOfType(node: Node | ChildNode | null, type: HTMLTags): boolean {
     if (!node) throw new Error('isNodeOfType: Ancestor Node is null')
-    console.log("called", node.nodeName)
     return node.nodeName === type.toUpperCase();
   }
 

@@ -80,11 +80,10 @@ export default class Container extends mixins(GenericComponentMixins) {
 
   @Emit('componentClicked')
   onClick(ev: Event) {
+    ev.stopPropagation();
     PageModule.updateEditedComponentRef(this.$props.thisComponent);
     PageModule.updateShowEditDelete(true);
     this.showBorder = !this.showBorder;
-    ev.stopPropagation();
-    return
   }
 
   componentClick(event: Event) {
@@ -92,7 +91,7 @@ export default class Container extends mixins(GenericComponentMixins) {
   }
 
   onDrop(event: DragEvent) {
-    const componentBuilder = new PageElementFactory();
+    const componentFactory = new PageElementFactory();
     if (ServicesModule.dragDropEventHandled) { return }
     if (event) {
       const componentName = this.getComponentName(event);
@@ -101,7 +100,7 @@ export default class Container extends mixins(GenericComponentMixins) {
       const component = SidebarModule.getComponentDefinition(componentName);
       const parent: ComponentContainer  = this.$props.thisComponent; // when dropping a component this componet will be its parent
       if(component) {
-        const newComponent: PageElementClasses = componentBuilder.createElement (component.type, component, ref, parent );
+        const newComponent: PageElementClasses = componentFactory.createElement (component.type, component, ref, parent );
         parent.addNewElement(newComponent);
         ServicesModule.toggleDragDropEventHandled(true);
       }
