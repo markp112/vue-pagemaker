@@ -8,7 +8,7 @@
       <border-buttons class="mt-2"></border-buttons>
       <sidebar-text-editor
         class="mt-2"
-          :textValue="data"
+        :textValue="data"
         @onTextChange="onTextChange"
       >
       </sidebar-text-editor>
@@ -36,7 +36,7 @@ import { ActionEvent } from '../../../../models/components/base-component';
 @Component({
   components: {
     'close-button': CloseButton,
-    'colour-select': ColourSelect,
+    
     'border-buttons': BorderButtons,
     'sidebar-text-editor': SideBarTextEditor,
     'actions-select': ActionsSelect,

@@ -44,6 +44,8 @@ export interface TypographyInterface {
 export interface SiteDefaultsInterface {
   colours: MaterialColourInterface;
   typography: TypographyInterface;
+  userId: string;
+  siteId: string;
 }
 
 export const siteDefaultSettings: SiteDefaultsInterface = {
@@ -69,4 +71,6 @@ export const siteDefaultSettings: SiteDefaultsInterface = {
     fontName: 'Roboto',
     fontSizeBody: '16px'
   },
+  userId: '',
+  siteId: '',
 }

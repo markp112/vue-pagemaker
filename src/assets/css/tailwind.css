@@ -81,28 +81,28 @@
 }
 
 .dropdown-menu-background {
-  @apply bg-siteSecondary;
-  @apply cursor-pointer;
+  
+  @apply bg-siteSurface;
 }
 
 .dropdown-menu-item {
-  @apply text-onPrimary;
+  @apply text-onSurface;
 }
 
 .dropdown-menu-selected {
-  @apply  bg-primary-200;
   @apply text-onPrimary;
+  @apply bg-siteLight;
 }
 
 .dropdown-menu-item:hover {
   @apply  bg-secondary-200;
   @apply  text-onPrimary;
-
 }
 
 .app-input-field {
   @apply border-transparent;
-  @apply text-onPrimary;
+  @apply text-onSurface;
+  @apply bg-siteSurface;
 }
 
 @tailwind base;

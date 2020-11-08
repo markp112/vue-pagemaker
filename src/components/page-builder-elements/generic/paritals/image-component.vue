@@ -43,6 +43,8 @@ import { PageModule } from '@/store/page/page';
 import { BoxDimensionsInterface, ResizeDimensions } from '@/models/components/box-dimension';
 import { Units } from '@/models/enums/units/units';
 import { ClientCoordinates } from '@/models/components/components';
+import { Style } from '@/models/styles/styles';
+import { Location } from '@/models/components/components'
 
 
 interface BoxProperties {
@@ -79,6 +81,7 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
 
   get getData(): string | undefined {
     const component: PageElementClasses = this.$props.thisComponent;
+    console.log('%c⧭', 'color: #607339', component)
     if (component) {
       return this.$props.thisComponent.content;
     }
@@ -90,7 +93,6 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
   }
 
   onClick(event: Event) {
-    console.log('%c%s', 'color: #917399', 'onClick')
     event.stopPropagation();
     PageModule.updateEditedComponentRef(this.$props.thisComponent);
     PageModule.updateShowEditDelete(true);
@@ -112,6 +114,12 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
     this.draggingStarted = false;
     window.removeEventListener('mousemove', this.panImage);
     window.removeEventListener('mouseup', this.onDraggingStop);
+    const image = this.$refs[this.HTML_IMAGE_ELEMENT] as HTMLImageElement;
+    const top: Style = { style:'top', value: image.style.top.toString() };
+    const left: Style = { style:'left', value: image.style.left.toString() };
+    PageModule.updateEditedComponentStyles(top);
+    PageModule.updateEditedComponentStyles(left);
+    
   }
 
   panImage(event: MouseEvent) {
@@ -135,7 +143,7 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
     }
     image.style.top = imageTopNew.toString() + "px";
     image.style.left = imageLeftNew.toString() + "px";
-    (this.$props.thisComponent as ImageElement).location = {
+   (this.$props.thisComponent as ImageElement).location = {
       top: imageTopNew,
       left: imageLeftNew
     };

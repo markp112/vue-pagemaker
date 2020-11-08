@@ -1,14 +1,11 @@
 import { PageElementBuilder } from '@/classes/page-element/page-element-builder/PageElementBuilder';
 import { PageElement } from '../../PageElement';
 import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
-import { Dimensions, ImageScaleDirection, initDimensions, Location } from '@/models/components/components';
+import { Dimensions, initDimensions, Location } from '@/models/components/components';
 import { Image } from '@/models/components/components';
-import { Units } from '@/models/enums/units/units';
+import { ImageElementFirebaseData, ImageElementInterface } from '../../models/pageElements/imageElement';
 
-
-
-export class ImageElement extends PageElement {
-  _content: string;
+export class ImageElement extends PageElement implements ImageElementInterface {
   private _naturalSize: Dimensions;
   private _scaledSize: Dimensions;
   private _ratio: number;
@@ -18,27 +15,14 @@ export class ImageElement extends PageElement {
     top: 0,
     left: 0,
   }
-  private _widthOnePercent: number;
-  private _heightOnePercent: number;
 
   constructor(builder: PageElementBuilder) {
     super(builder);
-    this._content = builder.content;
     this._maintainRatio = true;
     this._naturalSize = initDimensions;
     this._parentDimensions = initDimensions;
     this._ratio = this._naturalSize.width / this._naturalSize.height;
     this._scaledSize = initDimensions;
-    this._widthOnePercent = this._naturalSize.width / 100;
-    this._heightOnePercent = this._naturalSize.height / 100; 
-  }
-
-  get content(): string {
-    return this._content;
-  }
-
-  set content(content: string) {
-    this._content = content;
   }
 
   get naturalSize(): Dimensions {
@@ -83,31 +67,16 @@ export class ImageElement extends PageElement {
     this._location = location;
   }
 
-  // private calcScalingRatio(direction: ImageScaleDirection, changedDimension: number ): Dimensions {
-  //   let dimension: Dimensions;
-  //   if (this._maintainRatio) {
-  //     if (direction === 'width') {
-  //       const imageCurrentPercent = changedDimension / this._widthOnePercent;
-  //       const newHeight = this._heightOnePercent * imageCurrentPercent;
-  //        dimension =  {
-  //         width: changedDimension,
-  //         height: newHeight,
-  //         units: Units.px,
-  //       }
-  //     } else {
-  //       const imageCurrentPercent = changedDimension / this._heightOnePercent;
-  //       const newWidth = this._widthOnePercent * imageCurrentPercent;
-  //       dimension = {
-  //         width: newWidth,
-  //         height: changedDimension,
-  //         units: Units.px,
-  //       }
-  //     }
-  //   } else {
-  //     return this.scaledSize;
-  //   }
-  //   return dimension;
-  // }
+  public getElementContent(): ImageElementFirebaseData {
+    return Object.assign( this.getBaseElementContent(), {
+      naturalSize: this._naturalSize,
+      scaledSize: this._scaledSize,
+      ratio: this._ratio,
+      maintainRatio: this._maintainRatio,
+      parentDimensions: this._parentDimensions,
+      location: this._location,
+    });
+  }
 
   public setDefaultStyle() {
     const siteDefaults = SiteDefaults.getInstance();
@@ -119,30 +88,10 @@ export class ImageElement extends PageElement {
   }
 
   public setImage(image: Image) {
-    this._content = image.content;
+    this.content = image.content;
     this._naturalSize = image.naturalSize;
     this._ratio = image.ratio;
     this._scaledSize = image.scaledSize;
     this._maintainRatio = image.maintainRatio;
-    this._widthOnePercent = this._naturalSize.width / 100;
-    this._heightOnePercent = this._naturalSize.height / 100; 
   }
-
-  // public reSize(boxDimensions: BoxDimensionsInterface): void {
-  //   let newDimensions: Dimensions;
-  //   if (this._maintainRatio) {
-  //     if (boxDimensions.height.value !== this._scaledSize.height) {
-  //       newDimensions = this.calcScalingRatio('height', boxDimensions.height.value);
-  //     } else {
-  //       newDimensions = this.calcScalingRatio('width', boxDimensions.width.value);
-  //     }
-  //     boxDimensions.height.value = newDimensions.height;
-  //     boxDimensions.width.value = newDimensions.width;
-  //   }
-  //   this._scaledSize.height = boxDimensions.height.value;
-  //   this._scaledSize.width = boxDimensions.width.value;
-  //   this.boxDimensions.height = boxDimensions.height;
-  //   this.boxDimensions.width = boxDimensions.width;
-  // }
-
 }

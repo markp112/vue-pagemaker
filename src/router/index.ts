@@ -24,7 +24,6 @@ const routes = [
       ]
     },
   },
- 
   {
     path: "/register",
     name: "register",
@@ -82,18 +81,6 @@ const routes = [
       ]
     },
   },
-  {
-    path: "/pages",
-    name: "pageList",
-    component: PageList,
-    meta: {
-      breadcrumb: [
-        { name: 'home', link: 'home' },
-        { name: 'sites', link: 'sites' },
-        { name: 'page list' }
-      ]
-    },
-  }, 
   {
     path: "/settings",
     name: "siteSettings",

@@ -14,6 +14,7 @@
         >
         </sidebar-toolbar>
       </div>
+      <colour-select></colour-select>
     </div>
   </div>
 </template>
@@ -27,6 +28,7 @@
   import { PageModule } from '@/store/page/page';
   import  SidebarToolbarScreen from './sidebar-toolbar.vue';
   import CloseButton from '@/components/base/buttons/close-button/close-button.vue';
+  import ColourSelect from '@/components/base/pickers/colour-picker/colour-select.vue';
 
   @Component({
     props: {
@@ -39,6 +41,7 @@
     components: {
       'close-button': CloseButton,
       'sidebar-toolbar': SidebarToolbarScreen,
+      'colour-select': ColourSelect,
     },
   })
   export default class SidebarPanelScreen extends Vue {

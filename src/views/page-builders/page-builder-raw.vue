@@ -44,7 +44,7 @@ import { SidebarModule } from '@/store/sidebar/sidebar';
 import { ServicesModule } from '@/store/services/services';
 import { ComponentCounter } from '@/classes/component-counter/singleton-counter';
 import TextEditor from '@/components/base/text/text-editor/text-editor.vue';
-import { ComponentContainer } from '@/classes/page-element/ComponentContainer';
+import { PageContainer } from '@/classes/page-element/PageContainer/PageContainer';
 import {
   PageElementClasses,
   PageElementFactory,
@@ -53,6 +53,7 @@ import {
   ComponentDefinitionInterface,
   initComponentDefinition,
 } from '@/models/components/base-component';
+import { FirebaseDataBuilder } from '@/classes/page-element/firebase-data/FirebaseDataBuilder';
 
 const PARENT = 'ROOT';
 
@@ -73,17 +74,18 @@ export default class PageBuilder extends Vue {
   showModal = false;
   private componentCounter: ComponentCounter = ComponentCounter.getInstance();
   private componentFactory: PageElementFactory = new PageElementFactory();
-  private component: ComponentDefinitionInterface = initComponentDefinition;
-  private rootComponent: ComponentContainer = this.componentFactory.createElement(
+  private component: PageElementClasses = undefined;
+  private rootComponent: PageContainer = this.componentFactory.createElement(
     'rootContainer',
-    this.component,
-    PARENT,
-    null
-  ) as ComponentContainer;
+    PARENT
+  ) as PageContainer;
 
   created() {
     this.title = this.$route.params.title;
+    PageModule.updatePageId(this.title);
     SidebarModule.setSidebarMenuTo('sidebar-components');
+    const firebase = new FirebaseDataBuilder();
+    firebase.retrievePageDataFromFirestore(this.title);
   }
 
   get layoutElements(): PageElementClasses[] {
@@ -102,8 +104,8 @@ export default class PageBuilder extends Vue {
       if (component) {
         const pageElement = this.componentFactory.createElement(
           component.type,
-          component,
           ref,
+          component,
           this.rootComponent
         );
         PageModule.addNewPageElement(pageElement);

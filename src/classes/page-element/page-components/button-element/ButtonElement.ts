@@ -1,20 +1,11 @@
 import { PageElementBuilder } from '@/classes/page-element/page-element-builder/PageElementBuilder';
 import { PageElement } from '../../PageElement';
 import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
+import { PageElementFirebaseData, PageElementInterface } from '../../models/pageElements/pageElement';
 
 export class ButtonElement extends PageElement {
-  _content: string;
   constructor(builder: PageElementBuilder) {
     super(builder);
-    this._content = builder.content;
-  }
-
-  get content(): string {
-    return this._content;
-  }
-
-  set content(content: string) {
-    this._content = content;
   }
 
   setDefaultStyle() {
@@ -24,5 +15,9 @@ export class ButtonElement extends PageElement {
     const siteColours = siteDefaults.colours;
     this.addStyle(this.constructStyle('backgroundColor', siteColours.secondary));
     this.addStyle(this.constructStyle('color', siteColours.textOnSecondary));
+  }
+
+  getElementContent(): PageElementFirebaseData {
+    return this.getBaseElementContent();
   }
 }

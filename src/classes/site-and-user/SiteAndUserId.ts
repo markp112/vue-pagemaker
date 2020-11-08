@@ -16,7 +16,6 @@ export class SiteAndUserId implements SiteIdAndUserId {
   get userId(): string {
     return this._userId;
   }
-  
 
   validate(): boolean {
     if (!this.siteId) {

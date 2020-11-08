@@ -2,12 +2,10 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { PageModule } from '@/store/page/page';
 import {
-  ResizeDimensions,
   BoxDimensionsInterface,
-  BoxDimensions,
 } from '@/models/components/box-dimension';
 import { Style } from '@/models/styles/styles';
-import { PageElementClasses } from '@/classes/page-element/factory/page-element-factory';
+import { PageElementClasses, PageElementFactory } from '@/classes/page-element/factory/page-element-factory';
 import { ClientCoordinates } from '@/models/components/components';
 
 interface BoxProperties {
@@ -22,16 +20,35 @@ export interface MousePosition {
   y: number,
 }
 
-@Component
+
+const componentProps = Vue.extend({
+  props: {
+    thisComponent: {
+      default: (): PageElementClasses=> {
+        return new PageElementFactory().createElement();
+      },
+    },
+  }
+})
+
+@Component ({
+  props: {
+    thisComponent: {
+      default: (): PageElementClasses=> {
+        return new PageElementFactory().createElement();
+      },
+    },
+  },
+})
 export class GenericComponentMixins extends Vue {
   name = "GenericComponentMixins";
-  HTML_TARGET_ELEMENT = 'wrapperDiv';
+  // HTML_TARGET_ELEMENT = '';
   showBorder = false;
   lastMousePosition: MousePosition = {
     x: 0,
     y: 0,
   };
- 
+
   getElementBoxProperties(htmlElement: string): BoxProperties {
     const element: HTMLDivElement | null = this.$refs[htmlElement] as HTMLDivElement;
     const boundingRect: BoxProperties = {
@@ -65,16 +82,16 @@ export class GenericComponentMixins extends Vue {
   }
 
   resizeStarted(event: MouseEvent) {
-    this.lastMousePosition = this.getMousePosition(event.pageX, event.pageY, this.HTML_TARGET_ELEMENT)
+    this.lastMousePosition = this.getMousePosition(event.pageX, event.pageY, this.$props.thisComponent.ref)
   }
 
   onResize(boxProperties: ClientCoordinates) {
-    const boundingRect: BoxProperties | null = this.getElementBoxProperties(this.HTML_TARGET_ELEMENT);
+    const boundingRect: BoxProperties | null = this.getElementBoxProperties(this.$props.thisComponent.ref);
     if (boundingRect) {
       const currentMousePosition = this.getMousePosition(
         boxProperties.clientX,
         boxProperties.clientY,
-        this.HTML_TARGET_ELEMENT
+        this.$props.thisComponent.ref
       );
       const changeX = currentMousePosition.x - this.lastMousePosition.x;
       const changeY = currentMousePosition.y - this.lastMousePosition.y;

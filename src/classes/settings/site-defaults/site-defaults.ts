@@ -7,10 +7,13 @@ import {
 import { ServicesModule } from '@/store/services/services';
 import { AuthModule } from '@/store/auth/auth';
 import { Notification } from '@/models/notifications/notifications';
+import { SitesModule } from '@/store/sites/sites';
 
 export class SiteDefaults implements SiteDefaultsInterface {
   private _colours: MaterialColourInterface = siteDefaultSettings.colours;
   private _typography: TypographyInterface = siteDefaultSettings.typography;
+  private _siteId = SitesModule.getCurrentSiteId;
+  private _userId = AuthModule.currentUser.id;
   private _isLoaded = false;
   
   private static instance: SiteDefaults;
@@ -34,10 +37,19 @@ export class SiteDefaults implements SiteDefaultsInterface {
     return this._isLoaded;
   }
 
-  public loadDefaults(siteId: string, userId: string):Promise<Notification> {
+  public get siteId(): string {
+    return SitesModule.getCurrentSiteId;
+  }
+
+  public get userId(): string {
+    return this._userId;
+  }
+
+
+  public loadDefaults():Promise<Notification> {
     const data = {
-      userId: userId,
-      siteId: siteId,
+      userId: this.userId,
+      siteId: this.siteId,
     }
     return new Promise((resolve, reject) => {
       ServicesModule.firestoreGetSiteDefaultSettings(data)
@@ -64,14 +76,14 @@ export class SiteDefaults implements SiteDefaultsInterface {
     })
   }
 
-  public saveDefaults(siteId: string, userId: string) {
+  public saveDefaults(siteId: string, userId: string): Promise<Notification> {
     const data = {
       siteDefaults: {
         colours: this._colours,
         typography: this._typography,
+        siteId: siteId,
+        userId: AuthModule.currentUser.id,
       },
-      siteId: siteId,
-      userId: AuthModule.currentUser.id,
     };
     return new Promise((resolve, reject) => {
       ServicesModule.firestoreSaveSiteDefaults(data)

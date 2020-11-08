@@ -1,11 +1,12 @@
 import { ComponentRef } from '@/models/components/base-component';
 import { PageElementBuilder } from '@/classes/page-element/page-element-builder/PageElementBuilder';
-import { PageElement } from './PageElement';
-import { PageElementClasses } from './factory/page-element-factory';
-import { SiteDefaults } from '../settings/site-defaults/site-defaults';
+import { PageElement } from '../PageElement';
+import { PageElementClasses } from '../factory/page-element-factory';
+import { SiteDefaults } from '../../settings/site-defaults/site-defaults';
+import { PageContainerInterface } from '../models/page-container/PageContainer';
+import { FirebasePageDataTypes } from '../firebase-data/FirebaseDataBuilder';
 
-
-export class ComponentContainer extends PageElement {
+export class PageContainer extends PageElement implements PageContainerInterface{
   private _elements: PageElementClasses[];
 
   constructor(pageElementBuilder: PageElementBuilder) {
@@ -24,7 +25,6 @@ export class ComponentContainer extends PageElement {
     const siteColours = siteDefaults.colours;
     this.addStyle(this.constructStyle('backgroundColor', siteColours.surface));
     this.addStyle(this.constructStyle('color', siteColours.textOnSurface))
-
   }
 
   addNewElement(newElement: PageElementClasses) {
@@ -65,5 +65,11 @@ export class ComponentContainer extends PageElement {
         return element.ref !== ref
       }
     });
+  }
+
+  getElementContent(): FirebasePageDataTypes {
+    return Object.assign(this.getBaseElementContent(), {
+      elements: this._elements,
+     })
   }
 }

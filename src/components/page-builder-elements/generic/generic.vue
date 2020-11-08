@@ -1,6 +1,6 @@
 <template>
   <div 
-    ref="wrapperDiv"
+    :ref="$props.thisComponent.ref"
     v-if="isText"
     :style="getStyles()"
     :id="$props.thisComponent.ref"
@@ -22,7 +22,7 @@
     <image-component :thisComponent="$props.thisComponent"></image-component>
   </div>
   <div 
-    ref="wrapperDiv"
+    :ref="$props.thisComponent.ref"
     v-else
     :style="getStyles()"
     :class="getClasses()"
@@ -43,7 +43,6 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component, { mixins } from 'vue-class-component';
-import { PageData } from '@/models/page/page';
 import { Style } from '@/models//styles/styles';
 import {
   ComponentTypes,
@@ -62,21 +61,11 @@ import { GenericComponentMixins } from '@/components/page-builder-elements/gener
 import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
 import { ComponentTypesString } from '@/models/components/base-component';
 import { PageElement } from '@/classes/page-element/PageElement';
-import { PageElementBuilder } from '@/classes/page-element/page-element-builder/PageElementBuilder';
 import { PageElementClasses } from '@/classes/page-element/factory/page-element-factory';
-import { ButtonElement } from '@/classes/page-element/page-components/button-element/ButtonElement';
-import { ImageElement } from '@/classes/page-element/page-components/image-element/ImageElement';
-import { Units } from '@/models/enums/units/units';
 import ImageComponent from './paritals/image-component.vue';
 
 @Component({
-  props: {
-    thisComponent: {
-      default: (): PageData => {
-        return new PageElementBuilder().build();
-      },
-    },
-  },
+  
   components: {
     resizeable: Resize,
     'image-component': ImageComponent,
@@ -89,6 +78,7 @@ export default class GenericComponent extends mixins(GenericComponentMixins) {
   data: ComponentTypes;
   editorComponent = '';
   style = '';
+  HTML_TARGET_ELEMENT = '';
  
   created() {
     const pageElement: PageElementClasses = this.$props.thisComponent;
@@ -103,6 +93,8 @@ export default class GenericComponent extends mixins(GenericComponentMixins) {
       this.isImage = false;
       this.isText = true;
     }
+    this.HTML_TARGET_ELEMENT = this.$props.thisComponent.ref;
+
   }
 
   get getData(): string | undefined {
@@ -122,9 +114,6 @@ export default class GenericComponent extends mixins(GenericComponentMixins) {
     PageModule.updateEditedComponentRef(this.$props.thisComponent);
     PageModule.updateShowEditDelete(true);
   }
-
- 
-
 }
 </script>
 

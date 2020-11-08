@@ -6,13 +6,12 @@ import  'firebase/firestore';
 import { secrets } from '@/firebase/secrets';
 import { AuthModule } from '@/store/auth/auth';
 import { initUser, UserInterface } from '@/models/user/user';
-
+import { SitesModule } from '@/store/sites/sites';
 
 describe("SiteDefaults", () => {
   
   let siteDefaults: SiteDefaults;
   let user: UserInterface = initUser;
-  const siteId = '1';
 
   const firebaseApp = Firebase.initializeApp(secrets.google);
   firebaseApp.firestore().settings({
@@ -34,19 +33,22 @@ describe("SiteDefaults", () => {
       .catch((err => {
         console.debug("Error login in", err);
       }));
+     SitesModule.updateCurrentSiteId('1');
   })
     
   beforeEach(() => {
-  siteDefaults = SiteDefaults.getInstance();
+    SitesModule.updateCurrentSiteId('1');
+    siteDefaults = SiteDefaults.getInstance();
   })
   
   it("should when getInstance is called return an instance of SiteDefaults with default values", () => {
     
-  expect(siteDefaults).not.toBe(null);
+    expect(siteDefaults).not.toBe(null);
     expect(siteDefaults.colours).not.toBe(null);
     expect(siteDefaults.typography).not.toBe(null);
     expect(siteDefaults.colours.primary).toEqual('#323673');
     expect(siteDefaults.typography.fontName).toEqual('Roboto');
+
   })
   
   // it("Should when SaveDefaults is called create / update a record in Firebase",() => {

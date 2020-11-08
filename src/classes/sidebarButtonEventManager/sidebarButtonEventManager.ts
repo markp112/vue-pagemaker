@@ -49,7 +49,6 @@ export class SidebarButtonEventManager {
  updateEditedComponent() {
     switch (this.impactedAtrribute) {
       case 'text':
-
         this.applyTextStyle();
         break;
       case 'border':

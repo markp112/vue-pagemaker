@@ -3,11 +3,10 @@ import { BoxDimensions, BoxDimensionsInterface } from '@/models/components/box-d
 import { ComponentTypes, LOREMIPSUM } from '@/models/components/components';
 import { Style } from '@/models/styles/styles';
 import { ButtonElement } from '../page-components/button-element/ButtonElement';
-import { ComponentContainer } from '../ComponentContainer';
+import { PageContainer } from '../PageContainer/PageContainer';
 import { PageElement } from '../PageElement';
 import { TextElement } from '../page-components/text-element/TextElement';
 import { ImageElement } from '../page-components/image-element/ImageElement';
-import { borderEdgeIconList } from '@/models/components/icon-picker-models';
 
 export class PageElementBuilder {
   private _name = ''; //name of the component
@@ -15,13 +14,13 @@ export class PageElementBuilder {
   private _componentHTMLTag = ''; // component tag
   private _isContainer = false; // can contain  other elements
   private _styles: Style[] = []; // css styles
-  private _parent!: ComponentContainer; // parent Object
+  private _parent!: PageContainer; // parent Object
   private _parentRef: ComponentRef = ''; // string ref to the parent
   private _classDefinition = 'bg-gray-200';
   private _type: ComponentTypesString = undefined; // what is this component as in image text etc
   private _data: ComponentTypes = undefined;
   private _boxDimensions: BoxDimensions = new BoxDimensions(width, height, top, left);
-  private _actionEvent: ActionEvent = new ActionEvent(null, '');
+  private _actionEvent: ActionEvent = new ActionEvent('Navigation', '');
   private _content ='';
 
   setName(name: string) {
@@ -49,7 +48,7 @@ export class PageElementBuilder {
     return this;
   }
 
-  setParent(parent: ComponentContainer): PageElementBuilder {
+  setParent(parent: PageContainer): PageElementBuilder {
     this._parent = parent;
     return this;
   }
@@ -87,6 +86,7 @@ export class PageElementBuilder {
 
   setContent(content: string) {
     this._content = content;
+    return this;
   }
   
   public get name(): string {
@@ -109,7 +109,7 @@ export class PageElementBuilder {
     return this._styles;
   }
 
-  public get parent(): ComponentContainer {
+  public get parent(): PageContainer {
     return this._parent;
   }
 
@@ -157,11 +157,13 @@ export class PageElementBuilder {
   }
 
   public buildAnImage(): ImageElement {
-    this._content = 'https://firebasestorage.googleapis.com/v0/b/page-maker-69fb1.appspot.com/o/assets%2Fimages%2Fimageplaceholder.png?alt=media&token=149d3e60-0fc4-49de-9e23-5fea91458240';
+    if (this._content === '') {
+      this._content = 'https://firebasestorage.googleapis.com/v0/b/page-maker-69fb1.appspot.com/o/assets%2Fimages%2Fimageplaceholder.png?alt=media&token=149d3e60-0fc4-49de-9e23-5fea91458240';
+    }
     return new ImageElement(this);
   }
 
-  public buildAContainer(): ComponentContainer {
-    return new ComponentContainer(this);
+  public buildAContainer(): PageContainer {
+    return new PageContainer(this);
   }
 }

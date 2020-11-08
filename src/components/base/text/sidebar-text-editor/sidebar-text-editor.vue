@@ -11,13 +11,13 @@
       <icon-toggle-button :thisIconButton="italicButton" @onChange="onItemChange" ></icon-toggle-button>
       <icon-toggle-button :thisIconButton="underLineButton" @onChange="onItemChange" ></icon-toggle-button>
     <div class="sidebar-button-container text-input">
-      <span class="font-bold">Text</span>
+      <span class="font-bold inline-block mr-2">Text</span>
       <input
         type="text"
         name="text"
         v-model="textContent"
         @change="textChange"
-        class="app-input-field w-6/12 text-accent-100"
+        class="app-input-field w-6/12 bg-siteSurface text-onSurface"
         placeholder="Enter content"
       />
       <drop-down 

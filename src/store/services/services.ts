@@ -1,17 +1,19 @@
 import store from '@/store';
 import { Module, Mutation, Action, VuexModule, getModule } from 'vuex-module-decorators';
 import { Notification, notificationDefault } from '@/models/notifications/notifications';
-import firebase, { auth, firestore } from 'firebase';
+import firebase from 'firebase';
 import { AuthModule } from '../auth/auth';
 import { siteDefaultSettings, SiteDefaultsInterface } from '@/views/settings/pages/site-defaults/models/site-defaults';
 import { PalettesInterface } from '@/classes/settings/colour-palette/colour-palette';
 import { SiteIdAndUserId } from '@/models/site-and-user/site-and-user';
 import { SiteAndUserId } from '@/classes/site-and-user/SiteAndUserId';
-import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
+import { PageContainerFirebaseDataInterface, PageIdentity } from './models/page-data';
+import { PageElementFirebaseData } from '@/classes/page-element/models/pageElements/pageElement';
+
 
 export interface ServicesStateInterface {
-  _percentComplete?: number,
-  _dragDropEventHandled: boolean,
+_percentComplete?: number,
+_dragDropEventHandled: boolean,
 }
 const notification: Notification = notificationDefault;
 
@@ -20,6 +22,7 @@ class ServicesStore extends VuexModule implements ServicesStateInterface {
   SETTINGS = '::settings';
   PALETTE = 'siteColourPalette';
   SITE_SETTINGS = 'siteSettings';
+  PAGES = 'pagecontent';
   collectionId = '';
   _percentComplete!: number;
   _dragDropEventHandled = false;
@@ -64,7 +67,7 @@ class ServicesStore extends VuexModule implements ServicesStateInterface {
     })
   }
   //#region Palettes
-  
+
   @Action 
   public firestoreSaveColourPalette(data: {
     siteAndUserId: SiteIdAndUserId,
@@ -124,6 +127,55 @@ class ServicesStore extends VuexModule implements ServicesStateInterface {
   }
 
 //#endregion
+
+//#region Save and Get a Page
+
+@Action({ rawError: true })
+firestoreSavePage(data: PageContainerFirebaseDataInterface): Promise<Notification> {
+  const siteId = data.pageIdentity.siteId;
+  const userId = data.pageIdentity.userId;
+  const pageId = data.pageIdentity.pageId;
+  const pageData ={ data: data.containerData };
+  return new Promise((resolve, reject) => {
+    const collectionId = `${userId}${siteId}::${this.PAGES}`;
+    const firestore = firebase.firestore();
+    firestore.collection(collectionId)
+      .doc(pageId)
+      .set(pageData)
+    .then(() => {
+      notification.message = "Page content saved";
+      notification.status = "ok";
+      resolve(notification);
+    })
+    .catch(err => {
+      notification.status = "Error";
+      notification.message = err;
+      reject(notification);
+    })
+  })
+}
+
+@Action({ rawError: true })
+firestoreLoadPageData(data: PageIdentity): Promise<PageElementFirebaseData[] | Notification> {
+  const pageId = data.pageId;
+  const siteId = data.siteId;
+  const userId = data.userId;
+  return new Promise((resolve, reject) => {
+    const collectionId = `${userId}${siteId}::${this.PAGES}`;
+    const firestore = firebase.firestore();
+    firestore.collection(collectionId).doc(pageId).get()
+    .then (response => {
+      const docData = response.data();
+      resolve(docData ? docData.data : []);
+    })
+    .catch( err => {
+      notification.status = "Error";
+      notification.message = err;
+      reject(notification)
+    });
+  })
+} 
+////#endregion
   @Action({ rawError: true }) 
   public toggleDragDropEventHandled(toggle: boolean) {
     this.context.commit('setDragDropEventHandled', toggle)
@@ -132,14 +184,12 @@ class ServicesStore extends VuexModule implements ServicesStateInterface {
   @Action({ rawError: true })
   public firestoreSaveSiteDefaults(siteDefaultsPlusSiteAnduserId: {
     siteDefaults: SiteDefaultsInterface,
-    siteId: string,
-    userId: string,
   }): Promise<Notification> {
     const ERROR_MESSAGE = "FirestoreSaveSiteDefaults:";
     if (!siteDefaultsPlusSiteAnduserId) throw new Error(`${ERROR_MESSAGE} missing data`);
-    const siteId = siteDefaultsPlusSiteAnduserId.siteId;
+    const siteId = siteDefaultsPlusSiteAnduserId.siteDefaults.siteId;
     if (!siteId) throw new Error(`${ERROR_MESSAGE} siteId missing cannot be blank`);
-    const userId = siteDefaultsPlusSiteAnduserId.userId;
+    const userId = siteDefaultsPlusSiteAnduserId.siteDefaults.userId;
     return new Promise((resolve, reject) => {
       const collectionId = `${userId}${siteId}${this.SETTINGS}`;
       const firestore = firebase.firestore();
@@ -156,7 +206,6 @@ class ServicesStore extends VuexModule implements ServicesStateInterface {
         notification.status = "Error";
         notification.message = err;
         reject(notification);
-     
       });
     }
   )}
@@ -169,6 +218,7 @@ class ServicesStore extends VuexModule implements ServicesStateInterface {
       const firestore = firebase.firestore();
       firestore.collection(this.collectionId).doc('siteSettings').get()
         .then (response => {
+          console.log('%c⧭', 'color: #73998c', response);
           const docData = response.data();
           siteDefaults = docData !== undefined ? docData as SiteDefaultsInterface : siteDefaultSettings;
           resolve(siteDefaults);
@@ -177,7 +227,7 @@ class ServicesStore extends VuexModule implements ServicesStateInterface {
           notification.status = "Error";
           notification.message = err;
           reject(notification)
-        })
+        });
     })
   }
 

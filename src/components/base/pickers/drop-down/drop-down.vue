@@ -4,7 +4,7 @@
       <input
         v-model="selectedItem"
         class="min-w-6 text-center relative app-input-field"
-        :class="$props.surface"
+        
         @change="onInputChange"
       >
       <img :src="getPath('down-24.png')" 
@@ -13,7 +13,7 @@
         >
     </div>
     <ul
-      class="dropdown-menu-background flex flex-col items-center absolute z-10 w-16 shadow-lg h-auto overflow-auto"
+      class="dropdown-menu-background flex flex-col items-center absolute z-10 w-16 shadow-lg h-auto overflow-auto text-sm"
       v-if="toggleSelectOptions"
       @mouseleave="show"
       @blur="show"

@@ -20,7 +20,7 @@
           :class="{'bg-secondary-100': iconElement.className === selectedItem}">
           <img :src="getPath(iconElement.iconImage)"
               class="w-8 h-8"
-              :class="getClass(iconElement.className)"
+              :class="getClass(iconElement.classNameActive)"
               @mouseover="showToolTip=iconElement.classNameActive"
               @mouseleave="showToolTip=''"
               >
@@ -47,7 +47,7 @@ import { StyleElement } from '@/classes/text-attributes/text-attributes';
   props: {
     buttonIconClassList: {
       default: () => {
-        return  new ButtonFactory().createButton('class-list','border-styles');
+        return  new ButtonFactory().createButton('class-list', 'border-styles');
       }},
     iconSelect: { default: '' },
     iconList: { default: () => {
@@ -87,7 +87,7 @@ export default class IconSelect extends Vue {
   }
   
   getClass(classDef: string ) {
-    return classDef === 'hidden' ? '' : classDef 
+    return classDef === 'hidden' ? '' : classDef;
   }
 
   get getShowToolTip(): (classDef: string) => boolean {

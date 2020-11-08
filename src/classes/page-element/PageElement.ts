@@ -1,19 +1,20 @@
-import { ComponentTypes, Image, Dimensions } from '../../models/components/components';
+import { ComponentTypes } from '../../models/components/components';
 import {
   ComponentRef,
   ComponentTypesString,
-  ActionEvent
+  ActionEvent,
+  ActionEventInterface
 } from '@/models/components/base-component';
 import {
   BoxDimensions,
   BoxDimensionsInterface
 } from '../../models/components/box-dimension';
 import { Style } from '@/models/styles/styles';
-import { PageElementInterface, StyleTypes } from '../../models/page/page';
-// import { PageElementBuilder } from './PageElementBuilder';
+import { PageElementFirebaseData, PageElementInterface, } from '@/classes/page-element/models/pageElements/pageElement';
 import { PageElementBuilder } from '@/classes/page-element/page-element-builder/PageElementBuilder';
-import { ComponentContainer } from './ComponentContainer';
+import { PageContainer } from './PageContainer/PageContainer';
 
+export type StyleTypes = 'border';
 
 export class PageElement implements Partial<PageElementInterface> {
   private _name: string; //** name of the component  */
@@ -21,14 +22,16 @@ export class PageElement implements Partial<PageElementInterface> {
   private _componentHTMLTag: string; //** component tag */
   private _isContainer: boolean; //** can contain  other elements */
   private _styles: Style[]; //** css styles */
-  private _parent!: ComponentContainer; //** parent Object */
+  private _parent!: PageContainer; //** parent Object */
   private _parentRef: ComponentRef; //** string ref to the parent */
   private _classDefinition: string; //** String of tailwind classes to be applied to an element */
   private _type: ComponentTypesString; //** what is this component as in image text etc */
   private _data: ComponentTypes; //** holds associated user data i.e. the data the user inputs */
   private _boxDimensions: BoxDimensions;
   private _actionEvent: ActionEvent; //** if this component support events ActionEvent defines the event type and action */
+  private _content: string;
   private classList: string[] = [];
+  
 
   constructor(pageElementBuilder: PageElementBuilder) {
     this._name = pageElementBuilder.name;
@@ -44,6 +47,7 @@ export class PageElement implements Partial<PageElementInterface> {
     this._boxDimensions = pageElementBuilder.boxDimensions;
     this._actionEvent = pageElementBuilder.actionEvent;
     this.classList = pageElementBuilder.classDefinition.split(' ');
+    this._content = pageElementBuilder.content;
   }
 
   get name(): string {
@@ -98,11 +102,11 @@ export class PageElement implements Partial<PageElementInterface> {
     this._classDefinition = definition;
   }
 
-  get parent(): ComponentContainer {
+  get parent(): PageContainer {
     return this._parent;
   }
 
-  set parent(newParent: ComponentContainer) {
+  set parent(newParent: PageContainer) {
     this._parent = newParent;
   }
 
@@ -139,6 +143,14 @@ export class PageElement implements Partial<PageElementInterface> {
     return parseInt(this._ref.substring(index + 1));
   }
 
+  get content(): string {
+    return this._content;
+  }
+
+  set content(content: string) {
+    this._content = content;
+  }
+
   buildBoxDimensions(boxDimensions: BoxDimensionsInterface): void {
     this._boxDimensions = new BoxDimensions(
       boxDimensions.width,
@@ -148,6 +160,27 @@ export class PageElement implements Partial<PageElementInterface> {
     );
   }
   
+  getAction(): ActionEventInterface {
+    return this._actionEvent.toObject;
+  }
+
+
+public getBaseElementContent(): PageElementFirebaseData {
+  return {
+    name: this._name,
+    ref: this._ref,
+    componentHTMLTag: this._componentHTMLTag,
+    isContainer: this._isContainer,
+    styles: this._styles,
+    parentRef: this._parentRef,
+    classDefinition: this.classDefinition,
+    type: this._type,
+    actionEvent: this._actionEvent.toObject,
+    boxDimensions: this._boxDimensions.toObject,
+    content: this._content,
+  }
+}
+
   public reSize(boxDimensions: BoxDimensionsInterface): void {
     this._boxDimensions.height = boxDimensions.height;
     this._boxDimensions.width = boxDimensions.width;

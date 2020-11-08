@@ -22,7 +22,6 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Emit } from 'vue-property-decorator';
 import { PageModule } from '@/store/page/page';
-import { PageData } from '@/models/page/page';
 import { SidebarModule } from '@/store/sidebar/sidebar';
 
 @Component({

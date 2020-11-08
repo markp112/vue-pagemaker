@@ -32,7 +32,7 @@ export class ButtonIconBuilder {
           'borderEdge',
           borderEdgeIconList,
           'border edge',
-          'project_stage_planning-32.png'
+          'border_all-32.png'
         );
       case 'border-styles':
         return this.buildIconList(

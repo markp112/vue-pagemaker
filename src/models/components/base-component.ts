@@ -18,6 +18,7 @@ export type ComponentTypesString =
 export const ComponentTypesArray = [ 'jumbo' , 'button' , 'navBar', 'pageTemplate', 'text', 'image', 'groupingContainer' ];
 
 export interface ComponentDefinitionInterface {
+  boxDimensions: BoxDimensions;
   //  unique name for this component
   componentName: string;
   // class defintion which controls the layout of this element
@@ -26,7 +27,6 @@ export interface ComponentDefinitionInterface {
   isContainer: boolean; // is a container or component 
   sidebarIcon: IconInterface; // icon for this component
   type: ComponentTypesString; // what is this component type as in button, jumbo
-  boxDimensions: BoxDimensions;
 }
 
 export const top: Dimension = new Dimension(0, 'px');
@@ -67,7 +67,7 @@ export class ComponentDefinition implements ComponentDefinitionInterface {
   }
 }
 
-export type ActionEventTypes = 'Navigation' | null;
+export type ActionEventTypes = 'Navigation';
 
 export interface ActionEventInterface {
   actionType: ActionEventTypes;
@@ -75,7 +75,7 @@ export interface ActionEventInterface {
 }
 
 export class ActionEvent implements ActionEventInterface {
-  private _actionType: ActionEventTypes;
+  private _actionType: ActionEventTypes = 'Navigation';
   private _eventAction: string;
 
   constructor(actionType: ActionEventTypes, eventAction: string) {
@@ -89,6 +89,13 @@ export class ActionEvent implements ActionEventInterface {
 
   get eventAction(): string {
     return this._eventAction;
+  }
+
+  public get toObject(): ActionEventInterface {
+    return {
+      actionType: this._actionType,
+      eventAction: this._eventAction,
+    }
   }
 }
 

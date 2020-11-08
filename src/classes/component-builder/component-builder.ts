@@ -1,6 +1,6 @@
 // import { PageData } from '@/models/page/page';
 // import { PageElement } from "@/classes/page-element/PageElement";
-// import { ComponentContainer } from "@/classes/page-element/ComponentContainer";
+// import { PageContainer } from "@/classes/page-element/PageContainer";
 // import { PageElementBuilder } from "@/classes/page-element/PageElementBuilder";
 // import { ComponentDefinitionInterface, ComponentTypesString } from '@/models/components/base-component'
 // export const _componentClasses: ComponentDefinitionInterface[] = []
@@ -14,13 +14,13 @@
 //     return dataTransfer ? dataTransfer.getData('text') : '';
 //   }
 
-//   buildComponent(component: ComponentDefinitionInterface, ref: string, parent: ComponentContainer): PageData {
+//   buildComponent(component: ComponentDefinitionInterface, ref: string, parent: PageContainer): PageData {
 //     if(component.isContainer) return this.buildContainer(component, ref, parent)
 //     else return this.buildTheComponent(component, ref, parent);
 //   }
   
-//   private buildContainer(component: ComponentDefinitionInterface, ref: string, parent:  ComponentContainer) {
-//     const container: ComponentContainer = new ComponentContainer(
+//   private buildContainer(component: ComponentDefinitionInterface, ref: string, parent:  PageContainer) {
+//     const container: PageContainer = new PageContainer(
 //         new PageElementBuilder()
 //           .setName(component.componentName)
 //           .setRef(ref)
@@ -35,7 +35,7 @@
 //     return container
 //   }
 
-//   private buildBaseComponent(component: ComponentDefinitionInterface, ref: string, parent: ComponentContainer): PageElementBuilder {
+//   private buildBaseComponent(component: ComponentDefinitionInterface, ref: string, parent: PageContainer): PageElementBuilder {
 //     return new PageElementBuilder()
 //       .setName(component.componentName)
 //       .setParent(parent)
@@ -46,7 +46,7 @@
 //       .setType(component.type);
 //   }
 
-//   private buildTheComponent(component: ComponentDefinitionInterface, ref: string, parent: ComponentContainer): PageElement {
+//   private buildTheComponent(component: ComponentDefinitionInterface, ref: string, parent: PageContainer): PageElement {
 //     let theComponent: PageElement | null = null;
 //     const componentType: ComponentTypesString = component.type;
 //     switch (componentType) {

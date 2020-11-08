@@ -7,7 +7,6 @@ import {
   VuexModule,
   getModule
 } from 'vuex-module-decorators';
-import { PageData } from '@/models/page/page';
 import { SidebarComponents } from '@/classes/sidebar-toolbar/sidebar-toolbar-buidler';
 import {  
   ComponentDefinitions,
@@ -20,7 +19,6 @@ import {
 } from '@/models/notifications/notifications';
 import  { PageModule } from '@/store/page/page';
 import firebase from 'firebase';
-import { PageElementClasses } from '@/classes/page-element/factory/page-element-factory';
 
 const SIDEBARCOLLECTION = 'component-definitions';
 
@@ -199,8 +197,7 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
     return this._sidebarElements.componentDefinitions();
   }
 
-  get getComponentDefinition():
-    (componentName: string)
+  get getComponentDefinition(): (componentName: string)
     => ComponentDefinitionInterface | undefined {
     return (componentName: string) =>
       this._sidebarElements.getComponent(componentName);

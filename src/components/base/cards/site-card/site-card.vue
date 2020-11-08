@@ -40,8 +40,7 @@ export default class SiteCard extends SnackbarMixin{
     const siteId = this.$props.site.siteId;
     SitesModule.updateCurrentSiteId(siteId);
     const siteDefaultSettings = SiteDefaults.getInstance();
-    const userId = this.$store.getters.currentUser.id;
-    siteDefaultSettings.loadDefaults(siteId, userId)
+    siteDefaultSettings.loadDefaults()
     .catch(err => {
       const notification: Notification = err as Notification;
       this.showSnackbar(notification, 'Site defaults load failed, defaults applied');

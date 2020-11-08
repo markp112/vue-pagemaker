@@ -10,7 +10,7 @@
     @click.prevent="onClick"
     
     >
-    <component :is="layout.componentHTMLTag" v-for="(layout,i) in $props.thisComponent.elements"
+    <component :is="layout.componentHTMLTag" v-for="(layout, i) in $props.thisComponent.elements"
         :key="i"
         :index="i" 
         :thisComponent="layout"
@@ -23,7 +23,8 @@
     <resizeable
       :isActive="isActive"
       :parentContainerDimensions="getBoundingRect()"
-      @onResize="onResize"
+      @resizeStarted="resizeStarted($event)"
+      @onResize="onResize($event)"
     ></resizeable>
   </div>
 </template>
@@ -32,7 +33,6 @@
 import Vue from 'vue';
 import Component, { mixins } from 'vue-class-component';
 import { Emit } from 'vue-property-decorator';
-import { PageData } from '@/models/page/page';
 import { Style } from '@/models//styles/styles';
 import GenericComponent from '@/components/page-builder-elements/generic/generic.vue';
 import { PageModule } from '@/store/page/page';
@@ -43,15 +43,11 @@ import Resize from '@/components/base/resizeable/resize.vue';
 import { BoxDimensions, BoxDimensionsInterface, BoxUnits, Dimension } from '../../../models/components/box-dimension';
 import { GenericComponentMixins } from '@/components/page-builder-elements/generic/mixins/generic-components-mixin';
 import { PageElementBuilder } from '@/classes/page-element/page-element-builder/PageElementBuilder'
-import { ComponentContainer } from '@/classes/page-element/ComponentContainer';
+import { PageContainer } from '@/classes/page-element/PageContainer/PageContainer';
 import { PageElementClasses, PageElementFactory } from '@/classes/page-element/factory/page-element-factory';
 
 @Component({
-  props: {
-    thisComponent: {
-      default: (): ComponentContainer => { return new ComponentContainer(new PageElementBuilder()) }
-    },
-  },
+
   components: {
     'generic-component': GenericComponent,
     resizeable: Resize,
@@ -59,12 +55,13 @@ import { PageElementClasses, PageElementFactory } from '@/classes/page-element/f
 })
 
 export default class Container extends mixins(GenericComponentMixins) {
+  name="container";
   private isSizing = false;
   private componentStyle = '';
   private componentCounter: ComponentCounter = ComponentCounter.getInstance();
 
   created() {
-      const pageElement: PageElementClasses = this.$props.thisComponent;
+    const pageElement: PageElementClasses = this.$props.thisComponent;
     if (pageElement) {
       pageElement.setDefaultStyle();
     }
@@ -98,9 +95,10 @@ export default class Container extends mixins(GenericComponentMixins) {
       const id: number = this.componentCounter.getNextCounter();
       const ref = `${componentName}::${id}`;
       const component = SidebarModule.getComponentDefinition(componentName);
-      const parent: ComponentContainer  = this.$props.thisComponent; // when dropping a component this componet will be its parent
+      const parent: PageContainer  = this.$props.thisComponent; // when dropping a component this componet will be its parent
       if(component) {
-        const newComponent: PageElementClasses = componentFactory.createElement (component.type, component, ref, parent );
+        const newComponent: PageElementClasses =
+          componentFactory.createElement(component.type, ref, component, parent );
         parent.addNewElement(newComponent);
         ServicesModule.toggleDragDropEventHandled(true);
       }
@@ -117,7 +115,7 @@ export default class Container extends mixins(GenericComponentMixins) {
   }
 
   get isActive(): boolean {
-    return PageModule.selectedComponent === (this.$props.thisComponent as ComponentContainer).ref;
+    return PageModule.selectedComponent === (this.$props.thisComponent as PageContainer).ref;
   }
 
   getBoundingRect(): BoxDimensions | null {

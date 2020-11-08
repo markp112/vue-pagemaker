@@ -19,14 +19,7 @@ import { ClientCoordinates } from '@/models/components/components';
 @Component({
   props: {
     isActive: { default: false },
-    parentContainerDimensions: { 
-      default: (): BoxDimensions => { return new BoxDimensions(
-          { value: 0, units: 'px' },
-          { value: 0, units: 'px' },
-          { value: 0, units: 'px' },
-          { value: 0, units: 'px' }
-        )},
-    },
+    location: { }
   }
 })
 export default class Resize extends Vue {
@@ -70,15 +63,6 @@ export default class Resize extends Vue {
     } 
   }
 
-  // calcNewDimensions(element: ClientCoordinates, clientX: number, clientY: number): ResizeDimensions {
-  //   const parentDimensions: BoxDimensions = this.$props.parentContainerDimensions;
-  //   const boxLeft = element.clientX + pageXOffset;
-  //   const boxTop = element.clientY + pageYOffset;
-  //   const resizeDimensions: ResizeDimensions = { height: 0, width: 0, }
-  //   resizeDimensions.width = (clientX - boxLeft);
-  //   resizeDimensions.height = (clientY - boxTop);
-  //   return resizeDimensions;
-  // }
 }
 </script>
 

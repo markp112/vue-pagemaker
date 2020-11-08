@@ -1,6 +1,6 @@
 import { ComponentDefinitionInterface, ComponentTypesString } from '@/models/components/base-component';
 import { ButtonElement } from '../page-components/button-element/ButtonElement';
-import { ComponentContainer } from '../ComponentContainer';
+import { PageContainer } from '../PageContainer/PageContainer';
 import { PageElementBuilder } from '../page-element-builder/PageElementBuilder';
 import { TextElement } from '../page-components/text-element/TextElement';
 import { ImageElement } from '../page-components/image-element/ImageElement';
@@ -12,7 +12,7 @@ export type PageElementClasses =
 | ButtonElement
 | TextElement
 | ImageElement
-| ComponentContainer
+| PageContainer
 | undefined
 
 
@@ -22,28 +22,47 @@ export type PageElementClasses =
  */
 export class PageElementFactory {
 
+  public createElement(): PageElementClasses;
+
+  public createElement(type: ComponentTypesString, ref: string): PageElementClasses;
+
   public createElement(
     type: ComponentTypesString,
-    component: ComponentDefinitionInterface,
     ref: string,
-    parent: ComponentContainer | null
+    component: ComponentDefinitionInterface,
+    parent: PageContainer | null
+  ): PageElementClasses;
+
+  public createElement(
+    type?: ComponentTypesString,
+    ref?: string,
+    component?: ComponentDefinitionInterface,
+    parent?: PageContainer | null
   ): PageElementClasses {
-    if (parent === null) {
+    if (type === undefined) {
+      return undefined;
+    }
+    if (type === 'rootContainer' && ref) {
       return this.buildRootContainer(ref);
     }
-    if (component.isContainer) {
-      return this.createContainer(component, ref, parent);
-    } else {
-      return this.createComponent(component, ref, parent);
+    if (type && component && ref ) {
+      if (!parent) {
+        return this.buildRootContainer(ref);
+      } else {
+        if (component.isContainer) {
+          return this.createContainer(component, ref, parent);
+        } else {
+          return this.createComponent(component, ref, parent);
+        }
+      }
     }
   }
 
   private createContainer (
     component: ComponentDefinitionInterface,
     ref: string,
-    parent: ComponentContainer): ComponentContainer {
-
-      const container : ComponentContainer = new PageElementBuilder()
+    parent: PageContainer): PageContainer {
+      const container : PageContainer = new PageElementBuilder()
         .setRef(ref)
         .setIsContainer(true)
         .setName(component.componentName)
@@ -55,13 +74,12 @@ export class PageElementFactory {
         .buildAContainer();
       container.parentRef = container.parent.ref;
       return container;
-
   }
 
   private createComponent (
     component: ComponentDefinitionInterface,
     ref: string,
-    parent: ComponentContainer): PageElementClasses {
+    parent: PageContainer): PageElementClasses {
       const type = component.type;
       if (type === 'button') {
         return this.buildAButton(
@@ -99,7 +117,7 @@ export class PageElementFactory {
   private buildAButton(
     component: ComponentDefinitionInterface,
     ref: string,
-    parent: ComponentContainer
+    parent: PageContainer
   ): ButtonElement {
     
     const buttonElement: ButtonElement = new PageElementBuilder()
@@ -119,7 +137,7 @@ export class PageElementFactory {
   private buildATextElement(
     component: ComponentDefinitionInterface,
     ref: string,
-    parent: ComponentContainer
+    parent: PageContainer
   ): TextElement {
     const textElement: TextElement = new PageElementBuilder()
     .setName(component.componentName)
@@ -137,7 +155,7 @@ export class PageElementFactory {
 
   private buildAnImageElement(component: ComponentDefinitionInterface,
     ref: string,
-    parent: ComponentContainer
+    parent: PageContainer
   ): ImageElement {
     const imageElement: ImageElement = new PageElementBuilder()
     .setName(component.componentName)
@@ -153,8 +171,8 @@ export class PageElementFactory {
     return imageElement;
   }
 
-  private buildRootContainer(ref: string): ComponentContainer {
-    const container : ComponentContainer = new PageElementBuilder()
+  private buildRootContainer(ref: string): PageContainer {
+    const container : PageContainer = new PageElementBuilder()
       .setRef(ref)
       .setIsContainer(true)
       .setName(ROOT)
