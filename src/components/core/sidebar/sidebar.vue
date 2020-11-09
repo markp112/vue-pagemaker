@@ -19,7 +19,6 @@ import { SidebarPanelBuilder, SidebarComponents } from '@/classes/sidebar-toolba
 import { SidebarModule } from '@/store/sidebar/sidebar';
 import { SidebarPanel } from '../../../models/sidebar/button-definition/sidebar-buttons';
 
-
 @Component({
   components: {
     'sidebar-components': sidebarComponentIcons,

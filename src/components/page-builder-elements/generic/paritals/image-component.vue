@@ -81,7 +81,6 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
 
   get getData(): string | undefined {
     const component: PageElementClasses = this.$props.thisComponent;
-    console.log('%c⧭', 'color: #607339', component)
     if (component) {
       return this.$props.thisComponent.content;
     }

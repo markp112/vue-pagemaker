@@ -17,7 +17,7 @@
             name="bg-check"
             id="background"
             value="background"
-            @click="onRadioChange('background')"
+            @click="onRadioChange('backgroundColor')"
           />
         </div>
         <div class="sidebar-radio-container">

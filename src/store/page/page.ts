@@ -184,8 +184,8 @@ class PageStore extends VuexModule implements PageStateInterface {
   }
 
   @Mutation
-  private setPageElements(elements: PageContainer) {
-    this._pageElements.push(elements);
+  private setPageElements(elements: PageElementClasses[]) {
+    this._pageElements = elements;
   }
   //#endregion Mutations
 
@@ -292,7 +292,7 @@ class PageStore extends VuexModule implements PageStateInterface {
   }
 
   @Action
-  public updatePageElements(elements: PageElementClasses) {
+  public updatePageElements(elements: PageElementClasses[]) {
     this.context.commit('setPageElements', elements);
   }
   // #region Actions

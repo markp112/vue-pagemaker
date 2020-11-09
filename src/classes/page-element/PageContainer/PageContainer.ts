@@ -19,12 +19,14 @@ export class PageContainer extends PageElement implements PageContainerInterface
   }
 
   setDefaultStyle() {
-    const siteDefaults = SiteDefaults.getInstance();
-    this.addStyle(this.constructStyle('fontFamily', siteDefaults.typography.fontName));
-    this.addStyle(this.constructStyle('fontSize', siteDefaults.typography.fontSizeBody));
-    const siteColours = siteDefaults.colours;
-    this.addStyle(this.constructStyle('backgroundColor', siteColours.surface));
-    this.addStyle(this.constructStyle('color', siteColours.textOnSurface))
+    if (this.styles.length === 0) {
+      const siteDefaults = SiteDefaults.getInstance();
+      this.addStyle(this.constructStyle('fontFamily', siteDefaults.typography.fontName));
+      this.addStyle(this.constructStyle('fontSize', siteDefaults.typography.fontSizeBody));
+      const siteColours = siteDefaults.colours;
+      this.addStyle(this.constructStyle('backgroundColor', siteColours.surface));
+      this.addStyle(this.constructStyle('color', siteColours.textOnSurface))
+    }
   }
 
   addNewElement(newElement: PageElementClasses) {

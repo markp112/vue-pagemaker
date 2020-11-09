@@ -100,13 +100,13 @@ export class FirebaseDataBuilder {
       console.log('%c⧭', 'color: #e5de73', response);
       pageData = response as FirebasePageDataTypes[];
       const rootComponent = this.componentFactory.createElement('rootContainer','ROOT') as PageContainer;
-      const component = pageData[0] as PageContainerFirebaseData;
-      const container = this.createComponent(rootComponent, component) as PageContainer;
-      console.log('%c⧭', 'color: #cc0036', container);
+       const component = pageData as PageContainerFirebaseData[];
+      // const container = this.createComponent(rootComponent, component) as PageContainer;
+      console.log('%c⧭', 'color: #cc0036', component);
       // const rootContainer: PageContainer = this.componentFactory.createElement(container.type, container.componentRef, container, null) as PageContainer;
-      this.buildPageElements(pageData, container);
-      console.log('%c⧭', 'color: #ff6600', container);
-      PageModule.updatePageElements(container)
+      this.buildPageElements(pageData, rootComponent);
+      console.log('%c⧭', 'color: #ff6600', rootComponent);
+      PageModule.updatePageElements(rootComponent.elements)
     })
     .catch(err => {
       console.log(err)
@@ -115,7 +115,7 @@ export class FirebaseDataBuilder {
   }
 
   buildPageElements(pageData: FirebasePageDataTypes[], parentContainer: PageContainer) {
-    (pageData[0] as PageContainerFirebaseData).elements.forEach(item => {
+    pageData.forEach(item => {
       if (item.isContainer) {
         const container = this.createComponent(parentContainer, item) as PageContainer;
         parentContainer.elements.push(container);
@@ -166,6 +166,7 @@ export class FirebaseDataBuilder {
   }
   
   private buildAButton(parentComponent: PageContainer, item: FirebasePageDataTypes): ButtonElement {
+    console.log('%c⧭', 'color: #86bf60', item);
     const pageElement: ButtonElement = new PageElementBuilder() .setActionEvent(new ActionEvent(item.actionEvent.actionType, item.actionEvent.eventAction))
     .setBoxDimensions(new BoxDimensions(
       item.boxDimensions.width,
@@ -183,6 +184,7 @@ export class FirebaseDataBuilder {
     .setComponentHtmlTag(item.componentHTMLTag)
     .setContent(item.content)
     .buildAButton();
+    console.log('%c⧭', 'color: #ace2e6', pageElement);
     return pageElement;
   }
 

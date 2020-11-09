@@ -147,12 +147,16 @@ export class PageElementBuilder {
   }
 
   public buildAButton(): ButtonElement {
-    this._content = 'click me';
+    if (this._content === '') {
+      this._content = 'click me';
+    }
     return new ButtonElement(this);
   }
 
   public buildATextElement(): TextElement {
-    this._content = LOREMIPSUM;
+    if (this._content === '') {
+      this._content = LOREMIPSUM;
+    }
     return new TextElement(this);
   }
 

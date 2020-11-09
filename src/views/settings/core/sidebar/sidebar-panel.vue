@@ -45,11 +45,10 @@ export default class SidebarPanelSiteSettings extends Vue {
   name='Site Settings sidebar panel';
   data= '';
 
-    @Emit('iconClick')
-    iconClick(nameOfComponent: string) {
-      this.$store.dispatch('setSettingsPageActiveComponent', nameOfComponent);
-      
-    }
+  @Emit('iconClick')
+  iconClick(nameOfComponent: string) {
+    this.$store.dispatch('setSettingsPageActiveComponent', nameOfComponent);
+  }
 
   closeButtonClick(): void {
     SidebarModule.closeEditor();
