@@ -52,6 +52,11 @@ export class PageElementBuilder {
     this._parent = parent;
     return this;
   }
+ 
+  setParentRef(parentRef: string): PageElementBuilder {
+    this._parentRef = parentRef;
+    return this;
+  }
 
   setClassDefintion(classDefintion: string): PageElementBuilder {
     this._classDefinition = classDefintion;

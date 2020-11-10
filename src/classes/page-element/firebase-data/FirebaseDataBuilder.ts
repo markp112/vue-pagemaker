@@ -10,7 +10,6 @@ import { PageContainerFirebaseData } from '../models/page-container/PageContaine
 import { PageElementFirebaseData } from '../models/pageElements/pageElement';
 import { PageElementBuilder } from '@/classes/page-element/page-element-builder/PageElementBuilder';
 import { PageContainer } from '../PageContainer/PageContainer';
-import { PageElement } from '../PageElement';
 import { ButtonElement } from '../page-components/button-element/ButtonElement';
 import { ImageElement } from '../page-components/image-element/ImageElement';
 import { TextElement } from '../page-components/text-element/TextElement';
@@ -49,9 +48,10 @@ export class FirebaseDataBuilder {
           const containerElement = (this.getContainerProperties((element as PageContainer))) as PageContainerFirebaseData;
           containerElement.elements = this.getElements(container);
           data.push(containerElement);
+        } else {
+          const elem = element.getElementContent();
+          data.push(elem);
         }
-        const elem = element.getElementContent();
-        data.push(elem);
       }
     })
     return data;
@@ -65,17 +65,17 @@ export class FirebaseDataBuilder {
       if (container) { 
         const pageContainer = container as PageContainer;
         const containerData = (this.getContainerProperties(pageContainer)) as PageContainerFirebaseData;
-        containerData.elements = (this.getElements(pageContainer.elements));
+        containerData.elements = this.getElements(pageContainer.elements);
         pageData.push(containerData);
         }
-    });
-    const firebaseData: PageContainerFirebaseDataInterface = {
-      pageIdentity: {
-        siteId: siteId,
-        userId: userId,
-        pageId: pageName,
-      },
-      containerData: pageData
+      });
+      const firebaseData: PageContainerFirebaseDataInterface = {
+        pageIdentity: {
+          siteId: siteId,
+          userId: userId,
+          pageId: pageName,
+        },
+        containerData: pageData,
     };
     return new Promise((resolve, reject) => {
       ServicesModule.firestoreSavePage(firebaseData)
@@ -97,15 +97,10 @@ export class FirebaseDataBuilder {
     }
     ServicesModule.firestoreLoadPageData(data)
     .then(response => {
-      console.log('%c⧭', 'color: #e5de73', response);
       pageData = response as FirebasePageDataTypes[];
       const rootComponent = this.componentFactory.createElement('rootContainer','ROOT') as PageContainer;
        const component = pageData as PageContainerFirebaseData[];
-      // const container = this.createComponent(rootComponent, component) as PageContainer;
-      console.log('%c⧭', 'color: #cc0036', component);
-      // const rootContainer: PageContainer = this.componentFactory.createElement(container.type, container.componentRef, container, null) as PageContainer;
       this.buildPageElements(pageData, rootComponent);
-      console.log('%c⧭', 'color: #ff6600', rootComponent);
       PageModule.updatePageElements(rootComponent.elements)
     })
     .catch(err => {
@@ -156,6 +151,7 @@ export class FirebaseDataBuilder {
         .setIsContainer(item.isContainer)
         .setName(item.name)
         .setParent(parentComponent)
+        .setParentRef(item.parentRef)
         .setStyles(item.styles)
         .setType(item.type)
         .setClassDefintion(item.classDefinition)
@@ -178,6 +174,7 @@ export class FirebaseDataBuilder {
     .setIsContainer(item.isContainer)
     .setName(item.name)
     .setParent(parentComponent)
+    .setParentRef(item.parentRef)
     .setStyles(item.styles)
     .setType(item.type)
     .setClassDefintion(item.classDefinition)
@@ -200,6 +197,7 @@ export class FirebaseDataBuilder {
     .setIsContainer(item.isContainer)
     .setName(item.name)
     .setParent(parentComponent)
+    .setParentRef(item.parentRef)
     .setStyles(item.styles)
     .setType(item.type)
     .setClassDefintion(item.classDefinition)

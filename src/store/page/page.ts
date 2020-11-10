@@ -244,7 +244,6 @@ class PageStore extends VuexModule implements PageStateInterface {
 
   @Action
   public updateEditedComponentStyles(newStyle: Style): void {
-    console.log('%c⧭', 'color: #f27999', newStyle);
     this.context.commit('setEditedComponentStyles', newStyle);
   }
 
