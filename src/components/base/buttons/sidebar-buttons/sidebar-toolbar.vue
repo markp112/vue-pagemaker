@@ -1,5 +1,6 @@
 <template>
   <section class="sidebar-button-panel mt-2">
+    <h4 class="text-siteSurface">{{ $props.toolbarTitle }}</h4>
     <div
       v-for="toolbarItem in $props.toolbarItems.toolbarIcons" 
       :key="toolbarItem.className"
@@ -35,6 +36,7 @@
           return new SidebarToolbar();
         },
       },
+      toolbarTitle: { default: '' },
     },
     components: {
       tooltip: ToolTip,
@@ -44,6 +46,11 @@
     name = 'SidebarToolbarScreen';
     showToolTip = '';
     
+    mounted() {
+      console.log('%c%s', 'color: #00bf00', this.$props.toolbarTitle)
+      
+    }
+
     @Emit('iconClick')
     iconClick($event: string) {
       return $event;

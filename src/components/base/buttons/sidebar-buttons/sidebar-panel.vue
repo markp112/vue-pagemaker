@@ -1,18 +1,20 @@
 <template>
   <div class="sidebar-panel">
-    <span class="inline-block flex-row justify-end mr-2 mb-4">
+    <span class="flex flex-row justify-end mr-2 mb-4 w-full">
       <close-button @onClick="closeButtonClick"></close-button>
     </span>
-    <div class="mr-2 mt-4">
-      <div
+    <div class="mt-4">
+      <div class="w-full"
         v-for="(toolbar, index) in $props.toolbarPanel.sidebarPanels"
         :key="index"
       >
+      <sidebar-accordian :accordianTitle="toolbar.toolbarTitle" class="mb-4">
         <sidebar-toolbar
           :toolbarItems="toolbar"
           @iconClick="iconClick($event)"
         >
         </sidebar-toolbar>
+        </sidebar-accordian>
       </div>
       <colour-select></colour-select>
     </div>
@@ -29,6 +31,7 @@
   import  SidebarToolbarScreen from './sidebar-toolbar.vue';
   import CloseButton from '@/components/base/buttons/close-button/close-button.vue';
   import ColourSelect from '@/components/base/pickers/colour-picker/colour-select.vue';
+  import Accordian from '@/components/base/accordian/sidebar-accordian/sidebar-accordian.vue';
 
   @Component({
     props: {
@@ -42,6 +45,7 @@
       'close-button': CloseButton,
       'sidebar-toolbar': SidebarToolbarScreen,
       'colour-select': ColourSelect,
+      'sidebar-accordian': Accordian,
     },
   })
   export default class SidebarPanelScreen extends Vue {

@@ -4,11 +4,12 @@
       <close-button @onClick="closeButtonClick"></close-button>
     </span>
     <upload-image :urlEdited="currentImageUrl" @image-url="urlChanged" ></upload-image>
-    <div class="mt-8 bg-secondary-800 h-full p-1">
+    <div class="mt-8 h-full p-1">
       <colour-select></colour-select>
       <border-buttons
         class="mt-2"
-      ></border-buttons>
+      >
+      </border-buttons>
     </div>
   </div>
 </template>
