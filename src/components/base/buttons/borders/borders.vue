@@ -1,25 +1,24 @@
 <template>
   <section>
-    <p class="mt-8">Border Styles</p>
     <div class="sidebar-button-panel text-accent-600">
-        <icon-select 
-          :buttonIconClassList="borderDirectionButton" 
-          @selectChange="onItemChange($event, 'border')"
-        >
-        </icon-select>
-        <icon-select
-          :buttonIconClassList="borderStyleButton"
-          @selectChange="onItemChange($event, 'border')"
-        ></icon-select>
-        <icon-select
-          :buttonIconClassList="shadowButton"
-          @selectChange="onItemChange($event, 'shadow')"
-        ></icon-select>
-        <plus-minus-icon
-          :thisIconButton="buttonIconDimension"
-          @onChange="onItemChange($event, 'border')"
-        >
-        </plus-minus-icon>
+      <icon-select 
+        :buttonIconClassList="borderDirectionButton" 
+        @selectChange="onItemChange($event, 'border')"
+      >
+      </icon-select>
+      <icon-select
+        :buttonIconClassList="borderStyleButton"
+        @selectChange="onItemChange($event, 'border')"
+      ></icon-select>
+      <icon-select
+        :buttonIconClassList="shadowButton"
+        @selectChange="onItemChange($event, 'shadow')"
+      ></icon-select>
+      <plus-minus-icon
+        :thisIconButton="buttonIconDimension"
+        @onChange="onItemChange($event, 'border')"
+      >
+      </plus-minus-icon>
       <numeric-input-dropdown 
         :thisIconButton="borderRadiusButton"
         @onChange="onItemChange($event, 'border') "

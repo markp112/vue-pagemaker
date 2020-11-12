@@ -162,7 +162,6 @@ export class FirebaseDataBuilder {
   }
   
   private buildAButton(parentComponent: PageContainer, item: FirebasePageDataTypes): ButtonElement {
-    console.log('%c⧭', 'color: #86bf60', item);
     const pageElement: ButtonElement = new PageElementBuilder() .setActionEvent(new ActionEvent(item.actionEvent.actionType, item.actionEvent.eventAction))
     .setBoxDimensions(new BoxDimensions(
       item.boxDimensions.width,
@@ -181,7 +180,6 @@ export class FirebaseDataBuilder {
     .setComponentHtmlTag(item.componentHTMLTag)
     .setContent(item.content)
     .buildAButton();
-    console.log('%c⧭', 'color: #ace2e6', pageElement);
     return pageElement;
   }
 
@@ -204,7 +202,6 @@ export class FirebaseDataBuilder {
     .setComponentHtmlTag(item.componentHTMLTag)
     .setContent(item.content)
     .buildAnImage();
-    console.log('%c⧭', 'color: #40fff2', pageElement);
     return pageElement;
   }
 

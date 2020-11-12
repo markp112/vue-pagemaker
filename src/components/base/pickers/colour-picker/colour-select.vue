@@ -1,6 +1,5 @@
 <template>  
   <section>
-    <p class="mb-3">Colours</p>
     <div class="sidebar-button-panel colour-select"> 
       <div class="colour-select-radios">
         <div class="sidebar-radio-container">

@@ -25,6 +25,7 @@ import { SidebarModule } from '@/store//sidebar/sidebar';
 import ColourSelect from '@/components/base/pickers/colour-picker/colour-select.vue';
 import { Image } from '@/models/components/components';
 import { PageElement } from '@/classes/page-element/PageElement';
+import { ImageElement } from '@/classes/page-element/page-components/image-element/ImageElement';
 
 @Component({
   components: {
@@ -39,11 +40,10 @@ export default class ImageEditorSidebar extends Vue {
   currentImageUrl = '';
 
   mounted() {
-    if ((PageModule.editedComponentRef as PageElement).data !== undefined) {
-      const editedComponentData: Image = (PageModule.editedComponentRef as PageElement)
-        .data as Image;
-      this.currentImageUrl = editedComponentData.content;
-    }
+      const editedComponentData: ImageElement = (PageModule.editedComponentRef as ImageElement)
+      if (editedComponentData) {
+        this.currentImageUrl = editedComponentData.content;
+      }
   }
 
   urlChanged(image: Image) {

@@ -4,19 +4,27 @@
       <close-button @onClick="closeButtonClick"></close-button>
     </span>
     <div class="mr-2 mt-1 text-onPrimary">
-      <colour-select></colour-select>
-      <border-buttons class="mt-2"></border-buttons>
-      <sidebar-text-editor
-        class="mt-2"
-        :textValue="data"
-        @onTextChange="onTextChange"
-      >
-      </sidebar-text-editor>
-      <actions-select 
-        onActionSelect="onActionSelect" 
-        class="mt-2"
-      >
-      </actions-select>
+      <sidebar-accordian accordianTitle="Colours" class="mb-4">
+        <colour-select></colour-select>
+      </sidebar-accordian>
+      <sidebar-accordian accordianTitle="Borders" class="mb-4">
+        <border-buttons class="mt-2"></border-buttons>
+      </sidebar-accordian>
+      <sidebar-accordian accordianTitle="Button text" class="mb-4">
+        <sidebar-text-editor
+          class="mt-2"
+          :textValue="data"
+          @onTextChange="onTextChange"
+        >
+        </sidebar-text-editor>
+      </sidebar-accordian>
+      <sidebar-accordian accordianTitle="Actions" class="mb-4">
+        <actions-select 
+          onActionSelect="onActionSelect" 
+          class="mt-2"
+        >
+        </actions-select>
+      </sidebar-accordian>
     </div>
   </div>
 </template>
@@ -32,6 +40,7 @@ import ActionsSelect from '@/components/base/pickers/actions-select/actions-sele
 import { PageModule } from '@/store/page/page';
 import { SidebarModule } from '@/store//sidebar/sidebar';
 import { ActionEvent } from '../../../../models/components/base-component';
+import Accordian from '@/components/base/accordian/sidebar-accordian/sidebar-accordian.vue';
 
 @Component({
   components: {
@@ -40,11 +49,20 @@ import { ActionEvent } from '../../../../models/components/base-component';
     'border-buttons': BorderButtons,
     'sidebar-text-editor': SideBarTextEditor,
     'actions-select': ActionsSelect,
+    'sidebar-accordian': Accordian,
   },
 })
 export default class ButtonEditor extends Vue {
   name = 'button-editor'
-  data = PageModule.editComponentData;
+  data = '';
+
+  mounted() {
+    console.log('%c⧭', 'color: #917399', 'mounted')
+    const content = PageModule.editedComponentData;
+    console.log('%c⧭', 'color: #731d1d', PageModule.editedComponentData)
+    console.log('%c%s', 'color: #ffa640', content)
+    this.data = content;
+  }
 
   closeButtonClick(): void {
     SidebarModule.closeEditor();

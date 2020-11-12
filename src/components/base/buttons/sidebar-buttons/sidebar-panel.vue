@@ -14,9 +14,11 @@
           @iconClick="iconClick($event)"
         >
         </sidebar-toolbar>
-        </sidebar-accordian>
+      </sidebar-accordian>
       </div>
-      <colour-select></colour-select>
+      <sidebar-accordian accordianTitle="Colours" class="mb-4">
+        <colour-select></colour-select>
+      </sidebar-accordian>
     </div>
   </div>
 </template>

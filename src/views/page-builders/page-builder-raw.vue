@@ -131,7 +131,7 @@ export default class PageBuilder extends Vue {
   }
 
   get editedComponentText(): string {
-    return PageModule.editComponentData;
+    return PageModule.editedComponentData;
   }
 }
 </script>

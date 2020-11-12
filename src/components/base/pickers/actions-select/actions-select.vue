@@ -1,8 +1,7 @@
 <template>
   <div>
-    <P>Actions</P>
     <div class="sidebar-button-panel ">
-      <div class="sidebar-button-container w-full actions-layout">
+     
         <span class="mb-2 p-1 font-semibold "> Navigate To</span>
         <div class="relative flex-row flex justify-start  ">
           <input
@@ -32,7 +31,6 @@
           </ul>
           </div>
         </div>
-      </div> 
   </div>
 </template>
 

@@ -23,11 +23,7 @@ import { BoxDimensionsInterface } from '@/models/components/box-dimension';
 import { Image } from '@/models/components/components';
 import { PageElementClasses } from '@/classes/page-element/factory/page-element-factory';
 import { ImageElement } from '@/classes/page-element/page-components/image-element/ImageElement';
-import { ButtonElement } from '@/classes/page-element/page-components/button-element/ButtonElement';
-import { PageDataInterface } from '../services/models/page-data';
-import { ServicesModule } from '../services/services';
 import { Notification } from '@/models/notifications/notifications';
-import { SiteIdAndUserId } from '@/models/site-and-user/site-and-user';
 import { FirebaseDataBuilder } from '@/classes/page-element/firebase-data/FirebaseDataBuilder';
 
 export interface PageStateInterface {
@@ -54,6 +50,8 @@ class PageStore extends VuexModule implements PageStateInterface {
   public _selectedComponent = '';
   // holds the type of the selected component to be reactive
   public _selectedComponentType: ComponentTypesString = undefined;
+  // create reactive content
+  public _editComponentContent = '';
 
   @Mutation
   private setPageId(pageId: string) {
@@ -148,9 +146,19 @@ class PageStore extends VuexModule implements PageStateInterface {
 
   @Mutation
   private setEditedComponentRef(ref: PageElementClasses): void {
+    this._editedComponentRef = undefined;
     this._editedComponentRef = ref;
     this._selectedComponent = ref ? ref.ref : '';
     this._selectedComponentType = this._editedComponentRef ? this._editedComponentRef.type : undefined;
+    this._editComponentContent = this._editedComponentRef ? this._editedComponentRef.content : '';
+  }
+  
+  @Mutation 
+  private setEditedComponentContent(content: string): void {
+    if (this._editedComponentRef) {
+      this._editedComponentRef.content = content;
+      this._editComponentContent = content;
+    }
   }
 
   @Mutation
@@ -259,13 +267,7 @@ class PageStore extends VuexModule implements PageStateInterface {
 
   @Action
   public updateEditedComponentData(newContent: string): void {
-    if (this.editedComponentRef) {
-      const component: PageElementClasses = this.editedComponentRef as PageElementClasses;
-      if (component) {
-        if (component.type === 'button')
-          (component as ButtonElement).content = newContent;
-      }
-    }
+    this.context.commit("setEditedComponentContent", newContent);
   }
 
   @Action
@@ -302,6 +304,7 @@ class PageStore extends VuexModule implements PageStateInterface {
   }
 
   public get editedComponentRef(): PageElementClasses | undefined {
+    console.log('%c%s', 'color: #1d5673', 'editedComponentRef');
     return this._editedComponentRef;
   }
 
@@ -309,14 +312,10 @@ class PageStore extends VuexModule implements PageStateInterface {
     return this._selectedComponentType;
   }
 
-  public get editComponentData(): string {
-    if (this._editedComponentRef) {
-      if(!(this._editedComponentRef instanceof PageContainer))
-      return this._editedComponentRef.content !== undefined
-        ? this._editedComponentRef.content
-        : '';
-    }
-    return '';
+  public get editedComponentData(): string {
+    console.log('%c%s', 'color: #d90000', 'editedComponentData');
+    return this._editComponentContent;
+
   }
 
   public get showEditDelete(): boolean {

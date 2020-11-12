@@ -1,6 +1,5 @@
 <template>
   <section class="mt-2">
-    <p>Text Styles</p>
     <div class="sidebar-button-panel">
       <font-select @onChange="onItemChange"></font-select>
       <icon-select
@@ -10,24 +9,24 @@
       </icon-select>
       <icon-toggle-button :thisIconButton="italicButton" @onChange="onItemChange" ></icon-toggle-button>
       <icon-toggle-button :thisIconButton="underLineButton" @onChange="onItemChange" ></icon-toggle-button>
-    <div class="sidebar-button-container text-input">
-      <span class="font-bold inline-block mr-2">Text</span>
-      <input
-        type="text"
-        name="text"
-        v-model="textContent"
-        @change="textChange"
-        class="app-input-field w-6/12 bg-siteSurface text-onSurface"
-        placeholder="Enter content"
-      />
-      <drop-down 
-        class="ml-1"
-        :thisIconButton="fontSizeButton"
-        @onSelectChange="onItemChange"
-      >
-      px
-      </drop-down>
-    </div>
+      <div class="sidebar-button-container text-input">
+        <span class="font-bold inline-block mr-2">Text</span>
+        <input
+          type="text"
+          name="text"
+          v-model="$props.textValue"
+          @change="textChange()"
+          class="app-input-field w-6/12 bg-siteSurface text-onSurface"
+          placeholder="Enter content"
+        />
+        <drop-down 
+          class="ml-1"
+          :thisIconButton="fontSizeButton"
+          @onSelectChange="onItemChange"
+        >
+        px
+        </drop-down>
+      </div>
     </div>
   </section>
 </template>
@@ -75,10 +74,6 @@ export default class SideBarTextEditor extends Vue {
   underLineButton: ButtonIconClassInterface = new ButtonFactory().createButton('class','underline-button') as ButtonIconClassInterface;
   fontSizeButton: ButtonIconNumeric = new ButtonFactory().createButton('numeric','fontSize') as ButtonIconNumeric;
 
-  mounted() {
-    this.textContent = this.$props.textValue;
-  }
-
   onItemChange(style: StyleElement) {
     const eventManager = SidebarButtonEventManager.getInstance();
     eventManager.applyValue('text', style);
@@ -87,7 +82,7 @@ export default class SideBarTextEditor extends Vue {
 
   @Emit('onTextChange')
   textChange(): string {
-    return this.textContent;
+    return this.$props.textValue;
   }
 }
 </script>
