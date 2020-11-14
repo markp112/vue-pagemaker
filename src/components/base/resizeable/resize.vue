@@ -4,7 +4,7 @@
     :class ="{'active': $props.isActive, 'in-active': !$props.isActive}"
     @mousedown.stop.prevent="handleDown($event)"
     @mouseup="handleMouseUp($event)"
-    @mousemove="handleMove($event)">
+    @mousemove="handleMouseMove($event)">
   </div>    
 </template>
 
@@ -29,7 +29,7 @@ export default class Resize extends Vue {
 
   handleMouseUp(event: MouseEvent) {
     this.isSizing = false;
-    window.removeEventListener('mousemove', this.handleMove);
+    window.removeEventListener('mousemove', this.handleMouseMove);
     window.removeEventListener('mouseup', this.handleMouseUp);
   }
 
@@ -42,7 +42,7 @@ export default class Resize extends Vue {
 
   @Emit('resizeStarted')
   resizeStarted(ev: MouseEvent) {
-      window.addEventListener('mousemove', this.handleMove);
+      window.addEventListener('mousemove', this.handleMouseMove);
       window.addEventListener('mouseup', this.handleMouseUp);
       this.isSizing = true
   }
@@ -52,12 +52,15 @@ export default class Resize extends Vue {
     return clientCoordinates;
   }
 
-  handleMove(ev: MouseEvent) {
+  handleMouseMove(ev: MouseEvent) {
     ev.stopPropagation;
     if (this.isSizing) { 
-      const clientCoordinates = {
+      console.log('%c%s', 'color: #ffcc00', )
+      const clientCoordinates: ClientCoordinates = {
         clientY: ev.pageY,
         clientX: ev.pageX,
+        offsetWidth: (this.$el as HTMLDivElement).offsetWidth,
+        offsetHeight: (this.$el as HTMLDivElement).offsetHeight,
       };
       this.emitResize(clientCoordinates);
     } 

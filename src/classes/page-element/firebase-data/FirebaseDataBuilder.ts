@@ -146,6 +146,9 @@ export class FirebaseDataBuilder {
           item.boxDimensions.height,
           item.boxDimensions.top,
           item.boxDimensions.left,
+          item.boxDimensions.borderWidthLeft,
+          item.boxDimensions.borderWidthRight,
+          item.boxDimensions.padding,
         ))
         .setRef(item.ref)
         .setIsContainer(item.isContainer)
@@ -168,6 +171,9 @@ export class FirebaseDataBuilder {
       item.boxDimensions.height,
       item.boxDimensions.top,
       item.boxDimensions.left,
+      item.boxDimensions.borderWidthLeft,
+      item.boxDimensions.borderWidthRight,
+      item.boxDimensions.padding,
     ))
     .setRef(item.ref)
     .setIsContainer(item.isContainer)
@@ -190,6 +196,9 @@ export class FirebaseDataBuilder {
       item.boxDimensions.height,
       item.boxDimensions.top,
       item.boxDimensions.left,
+      item.boxDimensions.borderWidthLeft,
+      item.boxDimensions.borderWidthRight,
+      item.boxDimensions.padding,
     ))
     .setRef(item.ref)
     .setIsContainer(item.isContainer)
@@ -212,6 +221,9 @@ export class FirebaseDataBuilder {
       item.boxDimensions.height,
       item.boxDimensions.top,
       item.boxDimensions.left,
+      item.boxDimensions.borderWidthLeft,
+      item.boxDimensions.borderWidthRight,
+      item.boxDimensions.padding,
     ))
     .setRef(item.ref)
     .setIsContainer(item.isContainer)

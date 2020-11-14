@@ -45,6 +45,8 @@ export interface ButtonInterface extends Content {
 export interface ClientCoordinates {
   clientX: number;
   clientY: number;
+  offsetWidth: number;
+  offsetHeight: number;
 }
 
 export class Image implements ImageInterface {

@@ -33,6 +33,9 @@ export const top: Dimension = new Dimension(0, 'px');
 export const left: Dimension = new Dimension(0, 'px');
 export const width: Dimension = new Dimension(0, 'px');
 export const height: Dimension = new Dimension(0, 'px');
+export const borderWidthLeft: Dimension = new Dimension(0, 'px');
+export const borderWidthRight: Dimension = new Dimension(0, 'px');
+export const padding: Dimension = new Dimension(0, 'px');
 
 export const initComponentDefinition = {
   componentName: '',
@@ -41,7 +44,7 @@ export const initComponentDefinition = {
   isContainer: false,
   sidebarIcon: initIcon,
   type: undefined,
-  boxDimensions: new BoxDimensions(width, height, top, left),
+  boxDimensions: new BoxDimensions(width, height, top, left, borderWidthLeft, borderWidthRight, padding),
   
 }
 
@@ -52,7 +55,7 @@ export class ComponentDefinition implements ComponentDefinitionInterface {
   isContainer = false;
   sidebarIcon: IconInterface = initIcon;
   type: ComponentTypesString = undefined;
-  boxDimensions: BoxDimensions = new BoxDimensions(width, height, top, left);
+  boxDimensions: BoxDimensions = new BoxDimensions(width, height, top, left, borderWidthLeft, borderWidthRight, padding);
 
   get toObject(): Record<string, any> {
     return {

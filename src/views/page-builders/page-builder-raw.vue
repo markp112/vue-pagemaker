@@ -1,11 +1,11 @@
 <template>
   <section>
-    <p class="page-heading">Editing: {{ title }} Page</p>
+    <h2 class="page-heading">Editing: {{ title }} Page</h2>
     <div
       :id="id"
       class="w-full h-auto relative p-4 border border-gray-400"
       :class="getClass()"
-      ref="mainDiv"
+      ref="ROOT"
       @dragover.prevent="bgColour = 'bg-gray-600'"
       @dragleave.prevent="bgColour = 'bg-gray-200'"
       @drop.prevent="onDrop"
@@ -87,6 +87,22 @@ export default class PageBuilder extends Vue {
     const firebase = new FirebaseDataBuilder();
     firebase.retrievePageDataFromFirestore(this.title);
   }
+
+  mounted() {
+    const mainPageDiv = this.$refs.ROOT as HTMLDivElement;
+    this.rootComponent.boxDimensions.width.value = mainPageDiv.clientWidth;
+    this.rootComponent.boxDimensions.height.value = mainPageDiv.clientHeight;
+    this.rootComponent.boxDimensions.top.value = mainPageDiv.clientTop;
+    this.rootComponent.boxDimensions.left.value = mainPageDiv.clientLeft;
+  }
+
+
+  getStyleDimension(style: string): number {
+      if (style === '') {
+        return 0;
+      }
+      return parseInt(style.substring(0, style.length - 2));
+    }
 
   get layoutElements(): PageElementClasses[] {
     return PageModule.pageElements;

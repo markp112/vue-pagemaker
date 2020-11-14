@@ -1,4 +1,4 @@
-import { ComponentRef, ComponentTypesString, width, height, left, top, ActionEvent } from '@/models/components/base-component';
+import { ComponentRef, ComponentTypesString, width, height, left, top, ActionEvent, borderWidthLeft, borderWidthRight, padding } from '@/models/components/base-component';
 import { BoxDimensions, BoxDimensionsInterface } from '@/models/components/box-dimension';
 import { ComponentTypes, LOREMIPSUM } from '@/models/components/components';
 import { Style } from '@/models/styles/styles';
@@ -19,7 +19,15 @@ export class PageElementBuilder {
   private _classDefinition = 'bg-gray-200';
   private _type: ComponentTypesString = undefined; // what is this component as in image text etc
   private _data: ComponentTypes = undefined;
-  private _boxDimensions: BoxDimensions = new BoxDimensions(width, height, top, left);
+  private _boxDimensions: BoxDimensions = new BoxDimensions(
+    width,
+    height,
+    top,
+    left,
+    borderWidthLeft,
+    borderWidthRight,
+    padding,
+  );
   private _actionEvent: ActionEvent = new ActionEvent('Navigation', '');
   private _content ='';
 
@@ -78,7 +86,10 @@ export class PageElementBuilder {
       boxDimensionsData.width,
       boxDimensionsData.height,
       boxDimensionsData.top,
-      boxDimensionsData.left
+      boxDimensionsData.left,
+      boxDimensionsData.borderWidthLeft,
+      boxDimensionsData.borderWidthRight,
+      boxDimensionsData.padding,
       )
     this._boxDimensions = boxDimensions;
     return this;

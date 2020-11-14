@@ -121,7 +121,7 @@ export default class Container extends mixins(GenericComponentMixins) {
   getBoundingRect(): BoxDimensions | null {
     if (!this.$el) return null;
     if (!this.$el.parentElement) return null;
-    const parentElement = this.$el.parentElement;
+    const parentElement = this.$el.parentElement as HTMLDivElement;
     const boxLeft: Dimension = {
       value: parentElement.getBoundingClientRect().left + pageXOffset,
       units: 'px',
@@ -138,7 +138,26 @@ export default class Container extends mixins(GenericComponentMixins) {
       value: this.$el.getBoundingClientRect().height,
       units: 'px',
     };
-    return new BoxDimensions(boxWidth, boxHeight, boxTop, boxLeft)
+    const borderWidthLeft: Dimension = {
+      value: this.getStyleDimension((this.$el as HTMLDivElement).style.borderLeftWidth),
+      units: 'px'
+    }
+    const borderRightLeft: Dimension = {
+      value: this.getStyleDimension((this.$el as HTMLDivElement).style.borderRightWidth),
+      units: 'px'
+    }
+    const padding: Dimension = {
+      value: this.getStyleDimension((this.$el as HTMLDivElement).style.padding),
+      units: 'px'
+    }
+    return new BoxDimensions(
+      boxWidth,
+      boxHeight,
+      boxTop,
+      boxLeft,
+      borderWidthLeft,
+      borderRightLeft,
+      padding)
   }
 }
 </script>

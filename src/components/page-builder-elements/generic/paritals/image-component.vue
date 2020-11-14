@@ -40,19 +40,11 @@ import Component, { mixins } from 'vue-class-component';
 import { PageElementClasses } from '@/classes/page-element/factory/page-element-factory';
 import { PageElementBuilder } from '@/classes/page-element/page-element-builder/PageElementBuilder';
 import { PageModule } from '@/store/page/page';
-import { BoxDimensionsInterface, ResizeDimensions } from '@/models/components/box-dimension';
+import { BoxDimensionsInterface, BoxProperties, ResizeDimensions } from '@/models/components/box-dimension';
 import { Units } from '@/models/enums/units/units';
 import { ClientCoordinates } from '@/models/components/components';
 import { Style } from '@/models/styles/styles';
 import { Location } from '@/models/components/components'
-
-
-interface BoxProperties {
-  width: number;
-  height: number;
-  top: number; 
-  left: number;
-};
 
 @Component({
  props: {

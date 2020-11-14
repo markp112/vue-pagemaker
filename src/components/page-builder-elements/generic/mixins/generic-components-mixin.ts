@@ -2,34 +2,18 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { PageModule } from '@/store/page/page';
 import {
-  BoxDimensionsInterface,
+  BoxDimensions,
+  BoxDimensionsInterface, BoxProperties,
 } from '@/models/components/box-dimension';
 import { Style } from '@/models/styles/styles';
 import { PageElementClasses, PageElementFactory } from '@/classes/page-element/factory/page-element-factory';
 import { ClientCoordinates } from '@/models/components/components';
 
-interface BoxProperties {
-  width: number;
-  height: number;
-  top: number; 
-  left: number;
-};
 
 export interface MousePosition {
   x: number,
   y: number,
 }
-
-
-const componentProps = Vue.extend({
-  props: {
-    thisComponent: {
-      default: (): PageElementClasses=> {
-        return new PageElementFactory().createElement();
-      },
-    },
-  }
-})
 
 @Component ({
   props: {
@@ -56,8 +40,18 @@ export class GenericComponentMixins extends Vue {
       height: element.getBoundingClientRect().height,
       top: element.getBoundingClientRect().top,
       left: element.getBoundingClientRect().left,
+      borderWidthLeft: this.getStyleDimension(element.style.borderLeftWidth), 
+      borderWidthRight: this.getStyleDimension(element.style.borderRightWidth), 
+      padding: this.getStyleDimension(element.style.padding), 
       };
     return boundingRect;
+  }
+
+  getStyleDimension(style: string): number {
+    if (style === '') {
+      return 0;
+    }
+    return parseInt(style.substring(0, style.length - 2));
   }
 
   getBoxDimensions(
@@ -67,9 +61,12 @@ export class GenericComponentMixins extends Vue {
     ): BoxDimensionsInterface {
     return {
       height: { value: boundingRect.height + changeY, units: 'px' },
-      width: { value: boundingRect.width + changeX, units: 'px'},
+      width: { value: boundingRect.width + changeX, units: 'px' },
       top: { value: boundingRect.top, units: 'px' },
       left: { value: boundingRect.left, units: 'px' },
+      borderWidthLeft: { value: boundingRect.borderWidthLeft, units: 'px' },
+      borderWidthRight: { value: boundingRect.borderWidthRight, units: 'px' },
+      padding: { value: boundingRect.padding, units: 'px' },
     }
   }
 
@@ -86,21 +83,30 @@ export class GenericComponentMixins extends Vue {
   }
 
   onResize(boxProperties: ClientCoordinates) {
-    const boundingRect: BoxProperties | null = this.getElementBoxProperties(this.$props.thisComponent.ref);
+    const thisComponent = this.$props.thisComponent;
+    const boundingRect: BoxProperties | null = this.getElementBoxProperties(thisComponent.ref);
     if (boundingRect) {
       const currentMousePosition = this.getMousePosition(
         boxProperties.clientX,
         boxProperties.clientY,
-        this.$props.thisComponent.ref
+        thisComponent.ref
       );
       const changeX = currentMousePosition.x - this.lastMousePosition.x;
       const changeY = currentMousePosition.y - this.lastMousePosition.y;
       this.lastMousePosition = currentMousePosition;
       const boxDimensions: BoxDimensionsInterface = this.getBoxDimensions(
         boundingRect,
-         changeY,
-         changeX
+        changeY,
+        changeX
         );
+      if (thisComponent.isContainer) {
+        const parentContainer = thisComponent.parent;
+        const parentDimensions = parentContainer.boxDimensions;
+        const offSetWidth = boxProperties.offsetWidth;
+        if (boxDimensions.width.value + offSetWidth > parentDimensions.width.value) {
+          boxDimensions.width.value = parentDimensions.width.value - offSetWidth;
+        }
+      }
       PageModule.updateBoxDimensionHeightandWidth(boxDimensions);
     }
   }
