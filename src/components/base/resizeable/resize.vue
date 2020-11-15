@@ -1,6 +1,6 @@
 <template>
   <div
-    class="absolute triangleTopRight"
+    class="absolute triangleTopRight z-30"
     :class ="{'active': $props.isActive, 'in-active': !$props.isActive}"
     @mousedown.stop.prevent="handleDown($event)"
     @mouseup="handleMouseUp($event)"
@@ -13,8 +13,6 @@ import Component from 'vue-class-component'
 import { Vue, Emit, Prop } from 'vue-property-decorator';
 import { BoxDimensions, ResizeDimensions } from '@/models/components/box-dimension';
 import { ClientCoordinates } from '@/models/components/components';
-
-
 
 @Component({
   props: {

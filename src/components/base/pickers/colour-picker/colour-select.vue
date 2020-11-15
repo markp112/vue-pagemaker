@@ -56,7 +56,37 @@
         </div>
       </div>
       <div class="w-3/12">
-       <colour-picker @onColourChange="onColourChange"></colour-picker>
+        <colour-dropdown
+          tooltip="From Palette"
+          @onColourChange="onColourChange"
+        >
+          <template
+            v-if="show"
+            slot-scope="{ show }"
+          >
+            <colour-palette 
+              class="absolute"
+              @colour="onColourPickerChange($event)"
+            >
+            </colour-palette>
+          </template>
+        </colour-dropdown>
+        <colour-dropdown 
+          @onColourChange="onColourChange"
+          class="mt-2"
+          tooltip="Colour picker"
+        >
+          <template
+            v-if="show"
+            slot-scope="{ show }"
+          >
+            <colour-picker
+              class="absolute"
+              @colour="onColourPickerChange($event)"
+            >
+            </colour-picker>
+          </template>
+        </colour-dropdown>
       </div>
     </div>
   </section>        
@@ -70,10 +100,14 @@ import { BackgroundBorderForeground, Colour } from '@/classes/colour/singleton-c
 import { Emit } from 'vue-property-decorator';
 import { StyleElement } from '../../../../classes/text-attributes/text-attributes';
 import { SidebarButtonEventManager } from '@/classes/sidebarButtonEventManager/sidebarButtonEventManager';
+import ColourPicker from './colour-picker.vue';
+import ColourPaletteSidebar from '@/components/base/pickers/colour-picker/colour-palette-sidebar/colour-palette-sidebar.vue';
 
 @Component({
   components: {
-    'colour-picker': ColourDropdown,
+    'colour-dropdown': ColourDropdown,
+    'colour-palette': ColourPaletteSidebar,
+    'colour-picker': ColourPicker,
   },
 })
 export default  class ColourSelect extends Vue {
@@ -96,6 +130,11 @@ export default  class ColourSelect extends Vue {
     eventManager.applyValue('colour', style);
     eventManager.updateEditedComponent();
     return;
+  }
+
+  onColourPickerChange(colour: string) {
+    this.colour.rgbColour = colour;
+    this.onColourChange();
   }
 }
 </script>

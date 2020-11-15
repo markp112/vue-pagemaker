@@ -1,11 +1,18 @@
 <template>
   <div>
     <div class="sidebar-button-container relative">
-      <img :src="getPath($props.buttonIconClassList.iconImage)" alt="">
-      <img :src="getPath('down-24.png')" 
-        class="w-4 h-4 cursor-pointer hover:bg-gray-800"
-        @click="show()"
+      <div class="flex flex-row justify-start ">
+        <img
+          :src="getPath($props.buttonIconClassList.iconImage)"
+          alt=""
+          class="cursor-pointer hover:bg-gray-600"
+          @click="show()"
         >
+        <img :src="getPath('down-24.png')" 
+          class="w-4 h-4 cursor-pointer hover:bg-gray-800"
+          @click="show()"
+        >
+      </div>
     </div>
     <div>
       <ul class="dropdown-menu-background flex flex-col items-center absolute w-12 shadow-lg z-20"

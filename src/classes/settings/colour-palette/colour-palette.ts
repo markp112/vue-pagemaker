@@ -33,20 +33,22 @@ export type ColourSchemes =
 
 export class ColourPalettes implements PalettesInterface {
 
-  private _colour: string;
+  private _colour = '#0';
   private _primary: string[] = [];
   private _secondary: string[] = [];
   private _accent: string[] = [];
   private _accentAngle = 30;
   private _secondaryAngle = 180;
-  private _colourScheme: ColourSchemes;
+  private _colourScheme: ColourSchemes = 'Complementary';
 
   private MAX_SHADES = 10;
 
-  constructor(colour: string) {
-    this._colour = colour;
-    this.newPalette(this._colour);
-    this._colourScheme = 'Complementary';
+  constructor(colour = '') {
+    if(colour !== '') {
+      this._colour = colour;
+      this.newPalette(this._colour);
+      this._colourScheme = 'Complementary';
+    }
   }
 
   get colour(): string {

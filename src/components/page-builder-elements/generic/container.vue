@@ -138,26 +138,13 @@ export default class Container extends mixins(GenericComponentMixins) {
       value: this.$el.getBoundingClientRect().height,
       units: 'px',
     };
-    const borderWidthLeft: Dimension = {
-      value: this.getStyleDimension((this.$el as HTMLDivElement).style.borderLeftWidth),
-      units: 'px'
-    }
-    const borderRightLeft: Dimension = {
-      value: this.getStyleDimension((this.$el as HTMLDivElement).style.borderRightWidth),
-      units: 'px'
-    }
-    const padding: Dimension = {
-      value: this.getStyleDimension((this.$el as HTMLDivElement).style.padding),
-      units: 'px'
-    }
+  
     return new BoxDimensions(
       boxWidth,
       boxHeight,
       boxTop,
       boxLeft,
-      borderWidthLeft,
-      borderRightLeft,
-      padding)
+   )
   }
 }
 </script>

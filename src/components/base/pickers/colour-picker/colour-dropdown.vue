@@ -2,10 +2,18 @@
   <section>
     <div class="relative">
       <div 
-        class="w-8 h-8 border border-gray-200"
+        class="w-8 h-8 border border-gray-200 cursor-pointer relative"
         v-bind:style="{ backgroundColor: colour() }"
         @click="emitColour()"
+        @mouseover="showTooltip=true"
+        @mouseleave="showTooltip=false"
       >
+        <tooltip
+          style="top:20px"
+          :tooltip="tooltip"
+          :showToolTip="showTooltip" 
+        >
+        </tooltip>
       </div>
       <img
           :src="getPath('down-24.png')" 
@@ -13,14 +21,11 @@
           @click="show=!show"
       />
     </div>
-    <colour-picker 
-      v-if="show"
-      @colour="emitColour()"
-      @mouseLeave="show=!show"
-      @mouseout="show=!show"
+    <slot
+      :show="show"
       class="absolute"
-    >
-    </colour-picker>
+    ></slot>
+   
   </section>
 </template>
 
@@ -29,23 +34,31 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Emit } from 'vue-property-decorator';
 import ColourPicker from './colour-picker.vue';
+import ColourPaletteSidebar from './colour-palette-sidebar/colour-palette-sidebar.vue';
 import { Colour } from '@/classes/colour/singleton-colour';
+import ToolTip from '../../notifications/tooltip/tooltip.vue';
+
 
 @Component({
   components: {
     'colour-picker': ColourPicker,
+    'colour-palette': ColourPaletteSidebar,
+    'tooltip': ToolTip,
   },
   props: {
     colourProp: {
       default: '',
-    }
+    },
+    tooltip: { default: '' }
   }
 })
 export default class ColourDropdown extends Vue {
   name='colour-dropdown';
   colourStore: Colour =  Colour.getInstance();
   private show = false;
+  private showTooltip = false;
   
+
   @Emit('onColourChange') 
   emitColour(): string {
     return this.colourStore.rgbColour;

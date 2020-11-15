@@ -110,9 +110,6 @@ export class PageElementFactory {
       boxDimensionsInteface.height,
       boxDimensionsInteface.top,
       boxDimensionsInteface.left,
-      boxDimensionsInteface.borderWidthLeft,
-      boxDimensionsInteface.borderWidthRight,
-      boxDimensionsInteface.padding,
     );
     return boxDimensions;
   } 

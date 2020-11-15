@@ -1,0 +1,58 @@
+<template>
+  <section>
+     <numeric-input-dropdown 
+        :thisIconButton="marginLeftButton"
+        @onChange="onItemChange($event, 'margin') "
+        >
+      </numeric-input-dropdown>
+     <numeric-input-dropdown 
+        :thisIconButton="marginRightButton"
+        @onChange="onItemChange($event, 'margin') "
+        >
+      </numeric-input-dropdown>
+     <numeric-input-dropdown 
+        :thisIconButton="marginTopButton"
+        @onChange="onItemChange($event, 'margin') "
+        >
+      </numeric-input-dropdown>
+     <numeric-input-dropdown 
+        :thisIconButton="marginBottomButton"
+        @onChange="onItemChange($event, 'margin') "
+        >
+      </numeric-input-dropdown>
+  </section>
+</template>
+
+<script lang="ts">
+import { ImpactedAttributeTypes, SidebarButtonEventManager } from '@/classes/sidebarButtonEventManager/sidebarButtonEventManager';
+import { StyleElement } from '@/classes/text-attributes/text-attributes';
+import { ButtonFactory } from '@/models/styles/button-factory/button-factory';
+import { ButtonIconNumeric } from '@/models/styles/button-icon/button-numeric-list/button-numeric-list';
+import Vue from 'vue'
+import Component from 'vue-class-component';
+import NumericInputDropdown from '@/components/base/buttons/numeric-input-drop-down/numeric-input-dropdown.vue'
+import { PageModule } from '@/store/page/page';
+import { Style } from '@/models/styles/styles';
+
+@Component({
+  components: {
+    'numeric-input-dropdown': NumericInputDropdown,
+  }
+})
+export default class Margins extends Vue {
+ name = 'margins';
+ marginLeftButton: ButtonIconNumeric = new ButtonFactory().createButton('numeric', 'marginLeft') as ButtonIconNumeric; 
+ marginRightButton: ButtonIconNumeric = new ButtonFactory().createButton('numeric', 'marginRight') as ButtonIconNumeric; 
+ marginTopButton: ButtonIconNumeric = new ButtonFactory().createButton('numeric', 'marginTop') as ButtonIconNumeric; 
+ marginBottomButton: ButtonIconNumeric = new ButtonFactory().createButton('numeric', 'marginBottom') as ButtonIconNumeric; 
+ 
+  onItemChange(style: StyleElement, itemType: ImpactedAttributeTypes) {
+    const margin: Style = {
+      style: style.styleName,
+      value: style.value + style.units,
+    }
+    PageModule.updateEditedComponentStyles(margin)
+    
+  }
+}
+</script>

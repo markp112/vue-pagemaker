@@ -1,6 +1,20 @@
-import { ComponentRef, ComponentTypesString, width, height, left, top, ActionEvent, borderWidthLeft, borderWidthRight, padding } from '@/models/components/base-component';
-import { BoxDimensions, BoxDimensionsInterface } from '@/models/components/box-dimension';
-import { ComponentTypes, LOREMIPSUM } from '@/models/components/components';
+import {
+  ComponentRef,
+  ComponentTypesString,
+  width,
+  height,
+  left,
+  top,
+  ActionEvent,
+} from '@/models/components/base-component';
+import {
+  BoxDimensions,
+  BoxDimensionsInterface
+} from '@/models/components/box-dimension';
+import {
+  ComponentTypes,
+  LOREMIPSUM
+} from '@/models/components/components';
 import { Style } from '@/models/styles/styles';
 import { ButtonElement } from '../page-components/button-element/ButtonElement';
 import { PageContainer } from '../PageContainer/PageContainer';
@@ -24,9 +38,6 @@ export class PageElementBuilder {
     height,
     top,
     left,
-    borderWidthLeft,
-    borderWidthRight,
-    padding,
   );
   private _actionEvent: ActionEvent = new ActionEvent('Navigation', '');
   private _content ='';
@@ -87,10 +98,7 @@ export class PageElementBuilder {
       boxDimensionsData.height,
       boxDimensionsData.top,
       boxDimensionsData.left,
-      boxDimensionsData.borderWidthLeft,
-      boxDimensionsData.borderWidthRight,
-      boxDimensionsData.padding,
-      )
+    )
     this._boxDimensions = boxDimensions;
     return this;
   }

@@ -40,9 +40,6 @@ export class GenericComponentMixins extends Vue {
       height: element.getBoundingClientRect().height,
       top: element.getBoundingClientRect().top,
       left: element.getBoundingClientRect().left,
-      borderWidthLeft: this.getStyleDimension(element.style.borderLeftWidth), 
-      borderWidthRight: this.getStyleDimension(element.style.borderRightWidth), 
-      padding: this.getStyleDimension(element.style.padding), 
       };
     return boundingRect;
   }
@@ -64,9 +61,6 @@ export class GenericComponentMixins extends Vue {
       width: { value: boundingRect.width + changeX, units: 'px' },
       top: { value: boundingRect.top, units: 'px' },
       left: { value: boundingRect.left, units: 'px' },
-      borderWidthLeft: { value: boundingRect.borderWidthLeft, units: 'px' },
-      borderWidthRight: { value: boundingRect.borderWidthRight, units: 'px' },
-      padding: { value: boundingRect.padding, units: 'px' },
     }
   }
 

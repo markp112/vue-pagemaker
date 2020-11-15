@@ -1,5 +1,4 @@
 import {
-  SidebarToolbar,
   SidebarPanel,
 } from '@/models/sidebar/button-definition/sidebar-buttons';
 import { ContainerEditorBuilder } from './builders/container-editor';
@@ -26,7 +25,6 @@ export class SidebarPanelBuilder {
       case ('site-settings'):
         this.sidebarPanel = this.buildSiteSettings();
         break;
-
     }
   }
 

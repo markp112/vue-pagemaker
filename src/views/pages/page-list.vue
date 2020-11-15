@@ -77,8 +77,16 @@ export default class PageList extends Vue {
 
   created() {
     this.siteId = SitesModule.getCurrentSiteId;
-    PagesModule.loadPages();
+    console.log('%c%s', 'color: #f279ca', SitesModule.getCurrentSiteId)
+    // PagesModule.loadPages();
   }
+
+  mounted() {
+     console.log('%c%s', 'color: #00ff88', 'mounted')
+     PagesModule.loadPages();
+  }
+
+
 
   createNewPage() {
     this.$router.push({
@@ -99,6 +107,8 @@ export default class PageList extends Vue {
   }
 
   get pageList(): Page[] {
+    console.log('%c%s', 'color: #00258c', 'pageList')
+    
     return PagesModule.pageList;
   }
 }

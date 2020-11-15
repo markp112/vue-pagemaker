@@ -82,6 +82,14 @@ export class ButtonIconNumericBuilderWrapper {
         return this.buildButton('bezier-32.png', this.units, 'px', whichButton, '0px','px');
       case 'fontSize' :
         return this.buildButton('', this.fontSizes, '16', whichButton, '16','px');
+      case 'marginLeft':
+        return this.buildButton('margin-left-32.png', this.units, 'px', whichButton, '0', 'px');
+      case 'marginRight':
+        return this.buildButton('margin-right-32.png', this.units, 'px', whichButton, '0', 'px');
+      case 'marginTop':
+        return this.buildButton('margin-top-32.png', this.units, 'px', whichButton, '0', 'px');
+      case 'marginBottom':
+        return this.buildButton('margin-bottom-32.png', this.units, 'px', whichButton, '0', 'px');
       default:
         throw new Error('Unrecognised Numeric Button Type')
     }
@@ -89,12 +97,12 @@ export class ButtonIconNumericBuilderWrapper {
 
   private buildButton(iconImage: string, valuesList: string[], defaultvalue: string, styleName: string, styleValue: string, units: BoxUnits) {
     return new ButtonIconNumericBuilder()
-    .withIconImage(iconImage)
-    .withValuesList(valuesList)
-    .withDefaultValue(defaultvalue)
-    .withStyle(styleName, styleValue)
-    .withUnits(units)
-    .build();
+      .withIconImage(iconImage)
+      .withValuesList(valuesList)
+      .withDefaultValue(defaultvalue)
+      .withStyle(styleName, styleValue)
+      .withUnits(units)
+      .build();
   }
 
 }

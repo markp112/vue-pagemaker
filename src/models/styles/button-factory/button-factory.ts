@@ -24,7 +24,11 @@ export type ButtonRequestTypes =
   | 'italic-button'
   | 'underline-button'
   | 'border-radius'
-  | 'border-thickness';
+  | 'border-thickness'
+  | 'marginLeft'
+  | 'marginRight'
+  | 'marginTop'
+  | 'marginBottom';
 
 export type ClassOfButton =
   | 'class-list'

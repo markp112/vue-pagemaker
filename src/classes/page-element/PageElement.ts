@@ -157,9 +157,6 @@ export class PageElement implements Partial<PageElementInterface> {
       boxDimensions.height,
       boxDimensions.top,
       boxDimensions.left,
-      boxDimensions.borderWidthLeft,
-      boxDimensions.borderWidthRight,
-      boxDimensions.padding
     );
   }
   

@@ -46,11 +46,6 @@
     name = 'SidebarToolbarScreen';
     showToolTip = '';
     
-    mounted() {
-      console.log('%c%s', 'color: #00bf00', this.$props.toolbarTitle)
-      
-    }
-
     @Emit('iconClick')
     iconClick($event: string) {
       return $event;

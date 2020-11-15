@@ -2,7 +2,7 @@
   <div class="sidebar-button-container relative" >
     <div class="flex flex-row justify-start ">
       <img src="@/assets/icons/alphabet_latin-32.png"
-            class="text-accent-600 cursor-pointer hover:bg-gray-600"
+            class="cursor-pointer hover:bg-gray-600"
       />
       <img src="@/assets/icons/down-24.png" 
         class="w-4 h-4 cursor-pointer hover:bg-gray-800"

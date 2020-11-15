@@ -28,7 +28,6 @@
     }
 
     routeTo(index: number) {
-
       const link = this.breadcrumbList[index].link === undefined ? '' : `/${this.breadcrumbList[index].link}`;
       if (link != undefined) {
         this.$router.push(link);

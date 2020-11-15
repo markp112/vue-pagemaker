@@ -23,9 +23,6 @@ export interface BoxProperties {
   height: number;
   top: number; 
   left: number;
-  borderWidthLeft: number,
-  borderWidthRight: number,
-  padding: number,
 };
 
 export interface BoxDimensionsInterface {
@@ -33,9 +30,6 @@ export interface BoxDimensionsInterface {
   height: Dimension;
   top: Dimension; 
   left: Dimension;
-  borderWidthLeft: Dimension;
-  borderWidthRight: Dimension;
-  padding: Dimension;
 };
 
 export class BoxDimensions implements BoxDimensionsInterface {
@@ -43,26 +37,17 @@ export class BoxDimensions implements BoxDimensionsInterface {
   height: Dimension;
   top: Dimension;
   left: Dimension;
-  borderWidthLeft: Dimension;
-  borderWidthRight: Dimension;
-  padding: Dimension;
-  
 
   constructor(
       width: Dimension,
       height: Dimension,
       top: Dimension,
       left: Dimension,
-      borderWidthLeft: Dimension,
-      borderWidthRight: Dimension,
-      padding: Dimension){
+   ){
     this.height = height;
     this.width = width;
     this.left = left;
     this.top = top;
-    this.borderWidthLeft = borderWidthLeft;
-    this.borderWidthRight = borderWidthRight;
-    this.padding = padding;
   }
 
   get heightAsStyle(): string {
@@ -91,9 +76,6 @@ export class BoxDimensions implements BoxDimensionsInterface {
       width: { value: this.width.value, units: this.width.units },
       left: { value: this.left.value, units: this.left.units },
       top: { value: this.top.value, units: this.top.units },
-      borderWidthLeft: { value: this.borderWidthLeft.value, units: this.borderWidthLeft.units },
-      borderWidthRight: { value: this.borderWidthRight.value, units: this.borderWidthRight.units },
-      padding: { value: this.padding.value, units: this.padding.units },
     }
   }
 }

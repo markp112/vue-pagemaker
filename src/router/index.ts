@@ -70,14 +70,14 @@ const routes = [
     },
   },
   {
-    path: "/pages",
+    path: "/pageList",
     name: "pageList",
-    component: PageList,
+    component: () => import('@/views/pages/page-list.vue'),
     meta: {
       breadcrumb: [
         { name: 'home', link: 'home' },
         { name: 'sites', link: 'sites' },
-        { name: 'page list' }
+        { name: 'pages' }
       ]
     },
   },
@@ -88,6 +88,7 @@ const routes = [
     meta: {
       breadcrumb: [
         { name: 'home', link: 'home' },
+        { name: 'sites', link: 'sites' },
         { name: 'settings', link: 'settings' },
       ]
     },
