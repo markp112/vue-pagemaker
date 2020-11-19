@@ -3,7 +3,7 @@ import { PageElementBuilder } from '@/classes/page-element/page-element-builder/
 import { PageElement } from '../PageElement';
 import { PageElementClasses } from '../factory/page-element-factory';
 import { SiteDefaults } from '../../settings/site-defaults/site-defaults';
-import { PageContainerInterface } from '../models/page-container/PageContainer';
+import { ContainerOrientation, PageContainerInterface } from '../models/page-container/PageContainer';
 import { FirebasePageDataTypes } from '../firebase-data/FirebaseDataBuilder';
 
 export class PageContainer extends PageElement implements PageContainerInterface{
@@ -14,8 +14,72 @@ export class PageContainer extends PageElement implements PageContainerInterface
     this._elements = [];
   }
 
+  checkDimensions(componentRef: string, dimensionToCheck: number) {
+    let totalDimensionOfOtherComponent = 0;
+    let totalHeightOrWidth = 0;
+    if (this.containerOrientation === 'row') {
+      totalHeightOrWidth = this.boxDimensions.width.value;
+      this.elements.filter(element => {
+        return element ? element.ref !== componentRef : undefined;
+      }).forEach(element => {
+        if (element) {
+          const boxDimensions = element.boxDimensions;
+          const units = boxDimensions.width.units;
+          if (units === '%') {
+            const divisor: number = boxDimensions.width.value / 100;
+            totalDimensionOfOtherComponent += this.boxDimensions.width.value * divisor;
+          } else {
+            totalDimensionOfOtherComponent += element.boxDimensions.width.value;
+          }
+        }
+      })
+    } else {
+        totalHeightOrWidth = this.boxDimensions.height.value;
+        this.elements.filter(element => {
+        return element ? element.ref !== componentRef : undefined;
+      }).forEach(element => {
+        if (element) {
+          totalDimensionOfOtherComponent += element.boxDimensions.height.value;
+        }
+      })
+    }
+    console.log('%c%s', 'color: #00736b', dimensionToCheck);
+    console.log('%c%s', 'color: #d0bfff', totalDimensionOfOtherComponent);
+    console.log('%c%s', 'color: #cc0036', totalHeightOrWidth);
+    console.log('%c%s', 'color: #ff6600', dimensionToCheck + totalDimensionOfOtherComponent);
+
+    return dimensionToCheck + totalDimensionOfOtherComponent >= totalHeightOrWidth 
+      ? totalHeightOrWidth - totalDimensionOfOtherComponent - 4
+      : dimensionToCheck;
+  }
+
+
+  getWidthOfAllComponents(): number {
+    let width = 0;
+    this._elements.forEach(element => {
+      if (element) {
+        width += element.boxDimensions.width.value;
+      }
+    });
+    return width;
+  }
+
+  getHeightOfAllComponents(): number {
+    let height = 0;
+    this._elements.forEach(element => {
+      if (element) {
+        height += element.boxDimensions.width.value;
+      }
+    });
+    return height;
+  }
+
   get elements(): PageElementClasses[] {
     return this._elements;
+  }
+
+  get containerOrientation(): ContainerOrientation {
+    return this.classDefinition.includes('flex-row') ? 'row' : 'column';
   }
 
   setDefaultStyle() {

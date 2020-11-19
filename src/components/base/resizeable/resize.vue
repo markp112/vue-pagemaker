@@ -53,7 +53,6 @@ export default class Resize extends Vue {
   handleMouseMove(ev: MouseEvent) {
     ev.stopPropagation;
     if (this.isSizing) { 
-      console.log('%c%s', 'color: #ffcc00', )
       const clientCoordinates: ClientCoordinates = {
         clientY: ev.pageY,
         clientX: ev.pageX,

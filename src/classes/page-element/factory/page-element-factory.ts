@@ -104,12 +104,13 @@ export class PageElementFactory {
       }
     }
 
-  private getBoxDimensions(boxDimensionsInteface: BoxDimensionsInterface): BoxDimensions {
+  private getBoxDimensions(boxDimensionsInterface: BoxDimensionsInterface): BoxDimensions {
+    console.log('%c⧭', 'color: #607339', boxDimensionsInterface);
     const boxDimensions: BoxDimensions = new BoxDimensions(
-      boxDimensionsInteface.width,
-      boxDimensionsInteface.height,
-      boxDimensionsInteface.top,
-      boxDimensionsInteface.left,
+      boxDimensionsInterface.width,
+      boxDimensionsInterface.height,
+      boxDimensionsInterface.top,
+      boxDimensionsInterface.left,
     );
     return boxDimensions;
   } 

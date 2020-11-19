@@ -1,7 +1,7 @@
 <template>
   <div  
     :id="$props.thisComponent.ref" 
-    class="handle overflow-hidden"
+    class="handle overflow-hidden flex-no-wrap"
     :class="getClasses()"
     :style="getStyles()"
     :ref="$props.thisComponent.ref"

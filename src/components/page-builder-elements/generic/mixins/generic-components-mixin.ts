@@ -34,7 +34,10 @@ export class GenericComponentMixins extends Vue {
   };
 
   getElementBoxProperties(htmlElement: string): BoxProperties {
-    const element: HTMLDivElement | null = this.$refs[htmlElement] as HTMLDivElement;
+    let element: HTMLDivElement | null = this.$refs[htmlElement] as HTMLDivElement;
+    if (!element) {
+      element = document.getElementById(htmlElement) as HTMLDivElement;
+    }
     const boundingRect: BoxProperties = {
       width: element.getBoundingClientRect().width,
       height: element.getBoundingClientRect().height,

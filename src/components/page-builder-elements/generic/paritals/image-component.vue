@@ -1,19 +1,17 @@
 <template>
  
-    <div class="relative w-auto h-full">
-      <div 
+    <div 
         ref="imageContainer"
-        class="handle relative image box-border" 
+        class="handle relative image box-border w-auto h-full object-contain" 
         :style="getStyles()"
         :id="$props.thisComponent.ref"
-        @click.prevent="onClick($event)"
-      >
+        @click.prevent="onClick($event)">
+    
         <img
           ref="imageElmnt"
           :src="getData"
           :style="getStyles()"
-          class="absolute"
-          :class="{'cursor-pan': draggingStarted}"
+          :class="{ 'cursor-pan': draggingStarted }"
           @mousedown="onDraggingStarted($event)"
           @mouseup="onDraggingStop($event)"
           @click.prevent="onClick($event)"
@@ -26,7 +24,6 @@
         @onResize="resizeImage($event)"
       >
       </resizeable>
-    </div>
     </div>
   
 </template>
@@ -45,6 +42,7 @@ import { Units } from '@/models/enums/units/units';
 import { ClientCoordinates } from '@/models/components/components';
 import { Style } from '@/models/styles/styles';
 import { Location } from '@/models/components/components'
+import { PageContainer } from '@/classes/page-element/PageContainer/PageContainer';
 
 @Component({
  props: {
@@ -156,6 +154,8 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
       this.HTML_IMAGE_PARENT
     );
     const boundingRect: BoxProperties = this.getElementBoxProperties(this.HTML_IMAGE_ELEMENT);
+    const parent: PageContainer = this.$props.thisComponent.parent;
+    const parentBoundingRect: BoxProperties = this.getElementBoxProperties(parent.ref);
     const changeX = currentMousePosition.x - this.lastMousePosition.x;
     const changeY = currentMousePosition.y - this.lastMousePosition.y;
     this.lastMousePosition = currentMousePosition;
@@ -164,6 +164,15 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
       changeY,
       changeX
     );
+    const value  = parent.checkDimensions(this.$props.thisComponent.ref, boxDimensions.width.value);
+    boxDimensions.width.value = value;
+    if (boundingRect.top < parentBoundingRect.top) {
+      boxDimensions.top.value = parentBoundingRect.top;
+    }
+    if (boxDimensions.height.value > parent.boxDimensions.height.value) {
+      boxDimensions.height.value = parent.boxDimensions.height.value;
+
+    }
     PageModule.updateBoxDimensionHeightandWidth(boxDimensions);
   }
 }
