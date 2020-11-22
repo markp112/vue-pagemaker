@@ -33,6 +33,11 @@ export class GenericComponentMixins extends Vue {
     y: 0,
   };
 
+  getPath(image: string): string {
+    const path = require.context('@/assets/icons',false,/\.png$/);
+    return path(`./${image}`);
+  }
+
   getElementBoxProperties(htmlElement: string): BoxProperties {
     let element: HTMLDivElement | null = this.$refs[htmlElement] as HTMLDivElement;
     if (!element) {

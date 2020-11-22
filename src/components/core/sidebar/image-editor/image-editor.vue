@@ -52,13 +52,14 @@ export default class ImageEditorSidebar extends Vue {
   currentImageUrl = '';
 
   mounted() {
-      const editedComponentData: ImageElement = (PageModule.editedComponentRef as ImageElement)
-      if (editedComponentData) {
-        this.currentImageUrl = editedComponentData.content;
-      }
+    const editedComponentData: ImageElement = (PageModule.editedComponentRef as ImageElement)
+    if (editedComponentData) {
+      this.currentImageUrl = editedComponentData.content;
+    }
   }
 
   urlChanged(image: Image) {
+    console.log('%c%s', 'color: #7f7700', image)
     PageModule.updateComponentImage(image);
   }
 

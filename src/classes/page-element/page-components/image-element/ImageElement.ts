@@ -21,18 +21,18 @@ export class ImageElement extends PageElement implements ImageElementInterface {
     this._maintainRatio = true;
     this._naturalSize = initDimensions;
     this._parentDimensions = initDimensions;
-    this._ratio = this._naturalSize.width / this._naturalSize.height;
+    this._ratio = this.calcRatio( this._naturalSize.width, this._naturalSize.height);
     this._scaledSize = initDimensions;
   }
 
   get naturalSize(): Dimensions {
     return this._naturalSize;
   }
-  
+
   set naturalSize(size: Dimensions){
     this._naturalSize = size;
     this._scaledSize = size; /** @description when image size changes the scaled size should be reset */
-    this._ratio = this._naturalSize.width / this._naturalSize.height;
+    this._ratio = this.calcRatio( this._naturalSize.width, this._naturalSize.height);
   }
 
   get scaledSize() {
@@ -46,11 +46,11 @@ export class ImageElement extends PageElement implements ImageElementInterface {
   get maintainRatio() {
     return this._maintainRatio;
   }
-  
+
   set maintainRatio(maintainRatio: boolean) {
     this._maintainRatio = maintainRatio;
   }
-  
+
   get parentDimensions(): Dimensions {
     return this._parentDimensions;
   }
@@ -81,11 +81,13 @@ export class ImageElement extends PageElement implements ImageElementInterface {
   public setDefaultStyle() {
     if (this.styles.length === 0) {
       const siteDefaults = SiteDefaults.getInstance();
-      this.addStyle(this.constructStyle('fontFamily', siteDefaults.typography.fontName));
-      this.addStyle(this.constructStyle('fontSize', siteDefaults.typography.fontSizeBody));
       const siteColours = siteDefaults.colours;
       this.addStyle(this.constructStyle('backgroundColor', siteColours.surface));
       this.addStyle(this.constructStyle('color', siteColours.textOnSurface));
+      this.addStyle(this.constructStyle('backgroundSize', '500px'));
+      this.addStyle(this.constructStyle('backgroundRepeat', 'no-repeat'));
+
+
     }
   }
 
@@ -95,5 +97,9 @@ export class ImageElement extends PageElement implements ImageElementInterface {
     this._ratio = image.ratio;
     this._scaledSize = image.scaledSize;
     this._maintainRatio = image.maintainRatio;
+  }
+
+  private calcRatio(width: number, height: number): number {
+    return Math.min(width / height, height / width);
   }
 }

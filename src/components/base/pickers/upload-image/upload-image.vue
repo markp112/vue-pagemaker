@@ -1,13 +1,13 @@
 <template>
   <div class="flex flex-col justify-center align-middle w-full text-sm">
     <input
-      class="w-full app-input-field text-accent-600 mb-1"
+      class="w-full app-input-field text-siteDark mb-1"
       type="file"
       @change="setImage( $event.target.name, $event.target.files)"
       accept="image/png, image/jpeg"
       />
     <input
-        class="w-full app-input-field text-sm text-accent-600 mb-1"
+        class="w-full app-input-field text-sm text-siteDark  mb-1"
         type="text"
         @input="getImageFromUrl"
         placeholder="or paste URL"
@@ -23,7 +23,7 @@
       @drop.prevent="drop($event)">
       <h3 
         v-if="!hasFile" 
-        class="z-10 fixed font-bold text-accent-600 flex-row flex-wrap justify-start p-1 mb-1 block"
+        class="z-10 fixed font-bold text-siteDark flex-row flex-wrap justify-start p-1 mb-1 block"
       >
         Upload a file by dropping it here
       </h3>

@@ -5,11 +5,16 @@
     class="handle overflow-hidden object-contain " 
     :id="$props.thisComponent.ref"
     @click.prevent="onClick($event)"
+    
   >
     <img
       ref="imageElmnt"
-      class="absolute"
-      :src="getData"
+      class="absolute w-auto h-full"
+      style="background-size:500px;background-repeat:no-repeat;"
+      :style="urlImage"
+      width="300px"
+      height="400px"
+      
       :class="{ 'cursor-pan': draggingStarted }"
       @mousedown="onDraggingStarted($event)"
       @mouseup="onDraggingStop($event)"
@@ -46,6 +51,7 @@ import { Style } from '@/models/styles/styles';
 import { Location } from '@/models/components/components'
 import { PageContainer } from '@/classes/page-element/PageContainer/PageContainer';
 import { faChalkboard } from '@fortawesome/free-solid-svg-icons';
+import { Watch } from 'vue-property-decorator';
 
 @Component({
  props: {
@@ -80,18 +86,34 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
 
   parentContainer: HTMLDivElement = this.$refs[this.HTML_IMAGE_PARENT] as HTMLDivElement;
   image: HTMLImageElement = new Image();
+  component: ImageElement | null = null;
+  urlImage = 'url(https://www.nudespuri.com/gals/mpl_studios/2012/11/alba_sunlight_in_the_forest/alba_sunlight_in_the_forest-7.jpg)'
+  
 
   mounted() {
     this.parentContainer = this.$refs[this.HTML_IMAGE_PARENT] as HTMLDivElement;
     this.image = this.$refs[this.HTML_IMAGE_ELEMENT] as HTMLImageElement;
-    const styles: string = this.getStyles();
+    let styles: string = this.getStyles();
+    console.log('%c%s', 'color: #00ff88', styles)
     this.parentContainer.setAttribute('style', styles)
+    styles += ';background-image:url(' + this.getData + ');'
+    console.log('%c%s', 'color: #00258c', styles)
     this.image.setAttribute('style', styles)
   }
 
+  @Watch('component',{immediate: true, deep: true})
+  imageContentChanged() {
+    console.log('%c%s', 'color: #7f2200', 'imageContentChanged')
+    if (this.component) {
+   this.image.style.backgroundImage = this.component.content;
+    }
+  }
+
   get getData(): string {
-    const component: PageElementClasses = this.$props.thisComponent;
+    const component: ImageElement = this.$props.thisComponent;
     if (component) {
+      console.log('%c⧭', 'color: #994d75', component)
+      this.image.style.backgroundImage = component.content;
       return component.content;
     }
     return '';
@@ -195,7 +217,7 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
     img.src = this.image.src;
     img.height = boxDimensions.height.value;
     img.width = boxDimensions.width.value;
-    this.image.src = img.src;
+    this.image.style.backgroundImage = img.src;
   }
 
   zoom(event: MouseEvent, direction: string) {
@@ -232,7 +254,7 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
     const mouseY = event.y;
     const width = parseInt(parent.style.width);
     const height = parseInt(parent.style.height);
-
+    this.image.style.backgroundSize =  boxDimensions.width.value + "px " + boxDimensions.height.value + "px";
     parent.scrollLeft = width / -2 + (mouseX + theImage.offsetLeft) * scale;
     parent.scrollTop  = height / -2 + (mouseY + theImage.offsetTop) * scale;
 
