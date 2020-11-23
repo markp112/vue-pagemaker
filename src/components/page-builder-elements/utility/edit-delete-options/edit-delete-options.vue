@@ -44,6 +44,7 @@ export default class EditDeleteOption extends Vue {
   trashClick(): void {
     PageModule.updateShowEditDelete(false);
     PageModule.deletePageElement();
+    SidebarModule.setSidebarMenuTo('sidebar-components');
   }
 
   get isVisible(): boolean {

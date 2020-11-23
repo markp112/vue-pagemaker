@@ -9,12 +9,8 @@
   >
     <img
       ref="imageElmnt"
-      class="absolute w-auto h-full"
-      style="background-size:500px;background-repeat:no-repeat;"
-      :style="urlImage"
-      width="300px"
-      height="400px"
-      
+      class="absolute w-auto h-full bg-no-repeat"
+      :style="{backgroundImage: 'url(' + getData + ')'}"
       :class="{ 'cursor-pan': draggingStarted }"
       @mousedown="onDraggingStarted($event)"
       @mouseup="onDraggingStop($event)"
@@ -87,33 +83,20 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
   parentContainer: HTMLDivElement = this.$refs[this.HTML_IMAGE_PARENT] as HTMLDivElement;
   image: HTMLImageElement = new Image();
   component: ImageElement | null = null;
-  urlImage = 'url(https://www.nudespuri.com/gals/mpl_studios/2012/11/alba_sunlight_in_the_forest/alba_sunlight_in_the_forest-7.jpg)'
   
 
   mounted() {
     this.parentContainer = this.$refs[this.HTML_IMAGE_PARENT] as HTMLDivElement;
     this.image = this.$refs[this.HTML_IMAGE_ELEMENT] as HTMLImageElement;
-    let styles: string = this.getStyles();
-    console.log('%c%s', 'color: #00ff88', styles)
+    const styles: string = this.getStyles();
     this.parentContainer.setAttribute('style', styles)
-    styles += ';background-image:url(' + this.getData + ');'
-    console.log('%c%s', 'color: #00258c', styles)
     this.image.setAttribute('style', styles)
-  }
-
-  @Watch('component',{immediate: true, deep: true})
-  imageContentChanged() {
-    console.log('%c%s', 'color: #7f2200', 'imageContentChanged')
-    if (this.component) {
-   this.image.style.backgroundImage = this.component.content;
-    }
   }
 
   get getData(): string {
     const component: ImageElement = this.$props.thisComponent;
     if (component) {
-      console.log('%c⧭', 'color: #994d75', component)
-      this.image.style.backgroundImage = component.content;
+      // this.image.style.backgroundImage = component.content;
       return component.content;
     }
     return '';
@@ -162,10 +145,18 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
     const changeX = currentMousePosition.x - this.lastMousePosition.x;
     const changeY = currentMousePosition.y - this.lastMousePosition.y;
     this.lastMousePosition = currentMousePosition;
-    this.imagePosition.top += changeY;
-    this.imagePosition.left += changeX;
-    image.style.top = this.imagePosition.top + "px";
-    image.style.left = this.imagePosition.left + "px";
+    
+    const backgroundX = isNaN(parseInt(this.image.style.backgroundPositionX))  ? 0 : parseInt(this.image.style.backgroundPositionX)  + changeX;
+    console.log('%c%s', 'color: #364cd9', this.image.style.backgroundPositionX)
+    console.log('%c%s', 'color: #33cc99', backgroundX)
+    const backgroundY = isNaN(parseInt(this.image.style.backgroundPositionY)) ? 0 : parseInt(this.image.style.backgroundPositionY) + changeY;
+    console.log('%c%s', 'color: #e5de73', backgroundY)
+
+    // this.imagePosition.top += changeY;
+    // this.imagePosition.left += changeX;
+    // image.style.top = this.imagePosition.top + "px";
+    // image.style.left = this.imagePosition.left + "px";
+    image.style.backgroundPosition = `${backgroundX}px ${backgroundY}px`
   }
 
   resizeStarted(event: MouseEvent) {
@@ -204,6 +195,9 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
     PageModule.updateBoxDimensionHeightandWidth(boxDimensions);
     this.setElementHeightAndWidth(this.parentContainer, boxDimensions);
     this.setElementHeightAndWidth(this.image, boxDimensions);
+    // if ( this.image) {
+    //   this.image.style.backgroundSize = `${boxDimensions.width.value}px  ${boxDimensions.height.value}px`;
+    // }
   }
 
   private setElementHeightAndWidth(target: HTMLElement, boxDimensions: BoxDimensionsInterface) {
@@ -213,7 +207,7 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
   }
 
   private imageResize( boxDimensions: BoxDimensionsInterface) {
-       const img = new Image();
+    const img = new Image();
     img.src = this.image.src;
     img.height = boxDimensions.height.value;
     img.width = boxDimensions.width.value;
@@ -241,23 +235,14 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
         break;
     }
 
-    console.log('%c%s', 'color: #f200e2', newWidth)
     boxDimensions.height.value = newHeight;
     boxDimensions.width.value = newWidth;
     console.log('%c%s', 'color: #807160', boxDimensions.width.value)
     const theImage = this.$refs[this.HTML_IMAGE_ELEMENT] as HTMLImageElement;
     console.log('%c⧭', 'color: #006dcc', theImage)
     this.setElementHeightAndWidth(theImage, boxDimensions);
-    this.imageResize(boxDimensions);
-    const parent = this.$refs[this.HTML_IMAGE_PARENT] as HTMLDivElement;
-    const mouseX = event.x;
-    const mouseY = event.y;
-    const width = parseInt(parent.style.width);
-    const height = parseInt(parent.style.height);
-    this.image.style.backgroundSize =  boxDimensions.width.value + "px " + boxDimensions.height.value + "px";
-    parent.scrollLeft = width / -2 + (mouseX + theImage.offsetLeft) * scale;
-    parent.scrollTop  = height / -2 + (mouseY + theImage.offsetTop) * scale;
-
+    // this.imageResize(boxDimensions);
+    this.image.style.backgroundSize = `${boxDimensions.width.value}px  ${boxDimensions.height.value}px`;
   }
 
 }
