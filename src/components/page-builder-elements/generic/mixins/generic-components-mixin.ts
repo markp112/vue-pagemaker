@@ -59,7 +59,7 @@ export class GenericComponentMixins extends Vue {
     return parseInt(style.substring(0, style.length - 2));
   }
 
-  getBoxDimensions(
+  calculateNewDimensions(
     boundingRect: BoxProperties,
     changeY: number,
     changeX: number,
@@ -96,7 +96,7 @@ export class GenericComponentMixins extends Vue {
       const changeX = currentMousePosition.x - this.lastMousePosition.x;
       const changeY = currentMousePosition.y - this.lastMousePosition.y;
       this.lastMousePosition = currentMousePosition;
-      const boxDimensions: BoxDimensionsInterface = this.getBoxDimensions(
+      const boxDimensions: BoxDimensionsInterface = this.calculateNewDimensions(
         boundingRect,
         changeY,
         changeX
@@ -123,7 +123,7 @@ export class GenericComponentMixins extends Vue {
           style += `${element.style}:${element.value};`;
         });
       }
-      style += `${component.boxDimensions.heightAsStyle};${component.boxDimensions.widthAsStyle}`;
+      style += `${component.boxDimensions.heightAsStyle};${component.boxDimensions.widthAsStyle};`;
     }
     return style;
   }

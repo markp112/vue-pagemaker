@@ -166,12 +166,12 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
     const changeX = currentMousePosition.x - this.lastMousePosition.x;
     const changeY = currentMousePosition.y - this.lastMousePosition.y;
     this.lastMousePosition = currentMousePosition;
-    const boxDimensions: BoxDimensionsInterface = this.getBoxDimensions(
+    const boxDimensions: BoxDimensionsInterface = this.calculateNewDimensions(
       boundingRect,
       changeY,
       changeX
     );
-    const value = parent.checkDimensions(this.$props.thisComponent.ref, boxDimensions.width.value);
+    const value = parent.checkDimensionRelativeToContainerElements(this.$props.thisComponent.ref, boxDimensions.width.value);
     boxDimensions.width.value = value;
     if (boundingRect.top < parentBoundingRect.top) {
       boxDimensions.top.value = parentBoundingRect.top;
@@ -185,13 +185,12 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
   }
 
   private setElementHeightAndWidth(target: HTMLElement, boxDimensions: BoxDimensionsInterface) {
-    console.log('%c⧭', 'color: #731d1d', boxDimensions)
     target.style.height = boxDimensions.height.value + "px";
     target.style.width = boxDimensions.width.value + "px";
   }
 
   private imageResize( boxDimensions: BoxDimensionsInterface) {
-       const img = new Image();
+    const img = new Image();
     img.src = this.image.src;
     img.height = boxDimensions.height.value;
     img.width = boxDimensions.width.value;

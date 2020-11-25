@@ -14,7 +14,7 @@ export class PageContainer extends PageElement implements PageContainerInterface
     this._elements = [];
   }
 
-  checkDimensions(componentRef: string, dimensionToCheck: number) {
+  checkDimensionRelativeToContainerElements(componentRef: string, dimensionToCheck: number) {
     let totalDimensionOfOtherComponent = 0;
     let totalHeightOrWidth = 0;
     if (this.containerOrientation === 'row') {
@@ -43,10 +43,6 @@ export class PageContainer extends PageElement implements PageContainerInterface
         }
       })
     }
-    console.log('%c%s', 'color: #00736b', dimensionToCheck);
-    console.log('%c%s', 'color: #d0bfff', totalDimensionOfOtherComponent);
-    console.log('%c%s', 'color: #cc0036', totalHeightOrWidth);
-    console.log('%c%s', 'color: #ff6600', dimensionToCheck + totalDimensionOfOtherComponent);
 
     return dimensionToCheck + totalDimensionOfOtherComponent >= totalHeightOrWidth 
       ? totalHeightOrWidth - totalDimensionOfOtherComponent - 4

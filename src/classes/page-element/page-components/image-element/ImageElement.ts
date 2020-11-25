@@ -84,10 +84,8 @@ export class ImageElement extends PageElement implements ImageElementInterface {
       const siteColours = siteDefaults.colours;
       this.addStyle(this.constructStyle('backgroundColor', siteColours.surface));
       this.addStyle(this.constructStyle('color', siteColours.textOnSurface));
-      this.addStyle(this.constructStyle('backgroundSize', '500px'));
+      this.addStyle(this.constructStyle('backgroundSize', '100px 200px'));
       this.addStyle(this.constructStyle('backgroundRepeat', 'no-repeat'));
-
-
     }
   }
 

@@ -59,7 +59,6 @@ export default class ImageEditorSidebar extends Vue {
   }
 
   urlChanged(image: Image) {
-    console.log('%c%s', 'color: #7f7700', image)
     PageModule.updateComponentImage(image);
   }
 
