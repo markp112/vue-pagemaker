@@ -46,8 +46,7 @@ import { ClientCoordinates, Dimensions } from '@/models/components/components';
 import { Style } from '@/models/styles/styles';
 import { Location } from '@/models/components/components'
 import { PageContainer } from '@/classes/page-element/PageContainer/PageContainer';
-import { faChalkboard } from '@fortawesome/free-solid-svg-icons';
-import { Watch } from 'vue-property-decorator';
+import { ImageManipulator } from '@/classes/images/image-manipulation/imageManipulation';
 
 @Component({
  props: {
@@ -83,22 +82,23 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
 
   parentContainer: HTMLDivElement = this.$refs[this.HTML_IMAGE_PARENT] as HTMLDivElement;
   image: HTMLImageElement = new Image();
-  component: ImageElement | null = null;
+  component!: ImageElement;
+  imageManipulator!: ImageManipulator;
   
-
   mounted() {
     this.parentContainer = this.$refs[this.HTML_IMAGE_PARENT] as HTMLDivElement;
     this.image = this.$refs[this.HTML_IMAGE_ELEMENT] as HTMLImageElement;
     const styles: string = this.getStyles();
     this.parentContainer.setAttribute('style', styles)
     this.component = this.$props.thisComponent;
+    this.imageManipulator = new ImageManipulator(this.$props.thisComponent.ref);
+    this.imageManipulator.parentContainer = this.$props.thisComponent.parent;
+
     // this.image.setAttribute('style', styles)
   }
 
   get getData(): string {
     const component: ImageElement = this.$props.thisComponent;
-    console.log('%c⧭', 'color: #73998c', component)
-    // this.imageResize();
     if (component) {
       return component.content;
     }
@@ -110,17 +110,17 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
   }
 
   getImageStyles(): string {
-    const component: PageElementClasses = this.$props.thisComponent;
+    console.log('%c%s', 'color: #f27999', 'getImageStyles')
     let style = '';
-    if (component) {
-      const styles: Style[] = component.styles;
+    if (this.component) {
+      const styles: Style[] = this.component.styles;
       if (styles.length > 0) {
         styles.forEach(element => {
           style += `${element.style}:${element.value};`;
         });
       }
-      style += `${component.boxDimensions.heightAsStyle};${component.boxDimensions.widthAsStyle};`;
-      style += `background-image:url('${component.content}');`;
+      style += `${this.component.boxDimensions.heightAsStyle};${this.component.boxDimensions.widthAsStyle};`;
+      style += `background-image:url('${this.component.content}');`;
     }
     return style;
   }
@@ -173,10 +173,12 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
 
   resizeStarted(event: MouseEvent) {
     const target = this.$refs[this.HTML_IMAGE_PARENT] as HTMLDivElement;
-    this.lastMousePosition = {
+    const lastMousePosition = {
       x: event.pageX - target.offsetLeft,
       y: event.pageY - target.offsetTop,
     }
+    this.imageManipulator.lastMousePosition = lastMousePosition;
+    this.imageManipulator.naturalSize = this.component.naturalSize;
   }
 
   resizeImage(boxProperties: ClientCoordinates) {
@@ -185,37 +187,41 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
       boxProperties.clientY,
       this.HTML_IMAGE_PARENT
     );
-    this.lastMousePosition = currentMousePosition;
-    const changeX = currentMousePosition.x - this.lastMousePosition.x;
-    const changeY = currentMousePosition.y - this.lastMousePosition.y;
-    const boundingRect: BoxProperties = this.getElementBoxProperties(this.HTML_IMAGE_ELEMENT);
+    const imageBoundingRectangle: BoxProperties = this.getElementBoxProperties(this.HTML_IMAGE_ELEMENT);
+    const parentRef = this.$props.thisComponent.parentRef;
+    const containerBoundingRectangle: BoxProperties = this.getElementBoxProperties(parentRef);
+    this.imageManipulator.imageBoundingRect = imageBoundingRectangle;
+    this.imageManipulator.containerBoundingRect = containerBoundingRectangle;
+    const resizedDimensions = this.imageManipulator.reSizeContainers(currentMousePosition);
+    // const changeX = currentMousePosition.x - this.lastMousePosition.x;
+    // const changeY = currentMousePosition.y - this.lastMousePosition.y;
      
-    const resizedDimensions: BoxDimensionsInterface = this.calculateNewDimensions(
-      boundingRect,
-      changeY,
-      changeX
-    );
-    const parent: PageContainer = this.$props.thisComponent.parent;
-    const parentBoundingRect: BoxProperties = this.getElementBoxProperties(parent.ref);
+    // const resizedDimensions: BoxDimensionsInterface = this.calculateNewDimensions(
+    //   boundingRect,
+    //   changeY,
+    //   changeX
+    // );
+    // const parent: PageContainer = this.$props.thisComponent.parent;
+    // const parentBoundingRect: BoxProperties = this.getElementBoxProperties(parent.ref);
 
-    resizedDimensions.width.value = parent.checkDimensionRelativeToContainerElements(this.$props.thisComponent.ref, resizedDimensions.width.value);
+    // resizedDimensions.width.value = parent.checkDimensionRelativeToContainerElements(this.$props.thisComponent.ref, resizedDimensions.width.value);
 
-    if (boundingRect.top < parentBoundingRect.top) {
-      resizedDimensions.top.value = parentBoundingRect.top;
-    }
-    if (resizedDimensions.height.value > parent.boxDimensions.height.value) {
-      resizedDimensions.height.value = parent.boxDimensions.height.value;
-    }
+    // if (boundingRect.top < parentBoundingRect.top) {
+    //   resizedDimensions.top.value = parentBoundingRect.top;
+    // }
+    // if (resizedDimensions.height.value > parent.boxDimensions.height.value) {
+    //   resizedDimensions.height.value = parent.boxDimensions.height.value;
+    // }
     PageModule.updateBoxDimensionHeightandWidth(resizedDimensions);
-    this.setElementHeightAndWidth(this.parentContainer, resizedDimensions);
-    this.setElementHeightAndWidth(this.image, resizedDimensions);
+    this.setElementHeightAndWidth(this.parentContainer);
+    this.setElementHeightAndWidth(this.image);
     this.imageResize(resizedDimensions);
   
   }
 
-  private setElementHeightAndWidth(target: HTMLElement, boxDimensions: BoxDimensionsInterface) {
-    target.style.height = boxDimensions.height.value + "px";
-    target.style.width = boxDimensions.width.value + "px";
+  private setElementHeightAndWidth(target: HTMLElement) {
+    target.style.height = this.imageManipulator.imageHeight + "px"; //boxDimensions.height.value + "px";
+    target.style.width =  this.imageManipulator. imageWidth + "px"; //boxDimensions.width.value + "px";
   }
 
   private imageResize(resizedDimensions: BoxDimensionsInterface) {

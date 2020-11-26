@@ -1,5 +1,6 @@
 import { PageContainer } from '@/classes/page-element/PageContainer/PageContainer';
 import { BoxProperties, BoxDimensionsInterface } from '@/models/components/box-dimension';
+import { Dimensions } from '@/models/components/components';
 
 export interface MousePostion {
   x: number,
@@ -11,42 +12,81 @@ export class ImageManipulator {
     x: 0,
     y: 0
   };
-
-  private _imageBoundRect: BoxProperties;
-  private _containerBoundingRect: BoxProperties;
+  
+  private _imageBoundRect!: BoxProperties;
+  private _containerBoundingRect!: BoxProperties;
   private _imageRef: string;
-  private _parent: PageContainer;
+  private _parent: PageContainer | null = null;
+  private _imageWidth = 0;
+  private _imageHeight = 0;
+  private _naturalSize!: Dimensions;
 
-  constructor(
-    lastMousePosition: MousePostion,
-    imageBoundingRectangle: BoxProperties,
-    containerBoundingRectangle: BoxProperties,
-    imageRef: string,
-    parent: PageContainer) {
-      this._lastMousePosition = lastMousePosition;
-      this._imageBoundRect = imageBoundingRectangle;
-      this._containerBoundingRect = containerBoundingRectangle;
-      this._imageRef = imageRef;
-      this._parent = parent;
-    }
+  constructor(imageRef: string) {
+    this._imageRef = imageRef;
+  }
 
+  get imageHeight(): number {
+    return this._imageHeight;
+  }
+
+  get imageWidth(): number {
+    return this._imageWidth;
+  }
+
+  set imageBoundingRect(boundingRectangle: BoxProperties) {
+    this._imageBoundRect = boundingRectangle;
+  }
+
+  set containerBoundingRect(boundingRectangle: BoxProperties) {
+    this._containerBoundingRect = boundingRectangle;
+  }
+
+  set lastMousePosition(mousePosition: MousePostion) {
+    this._lastMousePosition = mousePosition; 
+  }
+
+  set parentContainer(container: PageContainer) {
+    this._parent = container;
+  }
+
+  set naturalSize(naturalSize: Dimensions) {
+    this._naturalSize = naturalSize;
+  }
 
   public reSizeContainers(currentMousePosition: MousePostion): BoxDimensionsInterface {
     const resizedDimensions = this.calculateNewDimensions(currentMousePosition);
+    this._lastMousePosition = currentMousePosition;
     resizedDimensions.width.value = 
       this.checkWidthFitsWithinContainer(
         resizedDimensions.width.value
       );
     const constrainedDimensions = this.checkDimensionsRelativeToContainer(resizedDimensions);
+    this._imageWidth = constrainedDimensions.width.value;
+    this._imageHeight = constrainedDimensions.height.value;
     return constrainedDimensions;
   }
 
+  public resizeImage(): string {
+    let style =`background-size:${this._imageWidth}px ${this._imageHeight}px`;
+
+    if (this._naturalSize) {
+      if (this._imageWidth > this._naturalSize.width) {
+        style =`background-size:${this._imageWidth}px ${this._naturalSize.height}px`;
+      } else if (this._imageWidth < this._naturalSize.width) {
+        style = `background-size:${this._naturalSize.width}px ${this._naturalSize.height}px`;
+      }
+    }
+    return style;
+  }
 
   private checkWidthFitsWithinContainer(width: number) {
-    return this._parent.checkDimensionRelativeToContainerElements(
-      this._imageRef, 
-      width
-    );
+    if (this._parent) {
+      return this._parent.checkDimensionRelativeToContainerElements(
+        this._imageRef, 
+        width
+      );
+    }
+    return width;
   }
 
   private checkDimensionsRelativeToContainer(dimensions: BoxDimensionsInterface): BoxDimensionsInterface {
@@ -54,8 +94,10 @@ export class ImageManipulator {
     if (this._imageBoundRect.top < this._containerBoundingRect.top) {
         checkedDimensions.top.value = this._containerBoundingRect.top;
     }
-    if (dimensions.height.value > this._parent.boxDimensions.height.value) {
-      checkedDimensions.height.value = this._parent.boxDimensions.height.value;
+    if (this._parent) {
+      if (dimensions.height.value > this._parent.boxDimensions.height.value) {
+        checkedDimensions.height.value = this._parent.boxDimensions.height.value;
+      }
     }
     return checkedDimensions;
   }

@@ -39,6 +39,7 @@ export class PageElementFactory {
     component?: ComponentDefinitionInterface,
     parent?: PageContainer | null
   ): PageElementClasses {
+   
     if (type === undefined) {
       return undefined;
     }
