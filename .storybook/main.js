@@ -1,5 +1,5 @@
 module.exports = {
-  stories: ['../stories/**/*.stories.js'],
+  stories: ['../stories/**/*.stories.@(js|ts|tsx)'],
   typescript: {
     check: false,
     checkOptions: {},

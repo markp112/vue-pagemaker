@@ -32,7 +32,8 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts",
-    "tests/**/*.tsx", "src/store/menus", "src/components/base/notifications/snackbar/snackbar.stories.js", "src/setupTests.js"
+    "tests/**/*.tsx", 
+    "tests/**/*.js", 
   ],
   "exclude": [
     "node_modules"

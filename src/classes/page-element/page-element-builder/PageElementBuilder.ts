@@ -13,6 +13,7 @@ import {
 } from '@/models/components/box-dimension';
 import {
   ComponentTypes,
+  Dimensions,
   LOREMIPSUM
 } from '@/models/components/components';
 import { Style } from '@/models/styles/styles';
@@ -21,6 +22,7 @@ import { PageContainer } from '../PageContainer/PageContainer';
 import { PageElement } from '../PageElement';
 import { TextElement } from '../page-components/text-element/TextElement';
 import { ImageElement } from '../page-components/image-element/ImageElement';
+import { Units } from '@/models/enums/units/units';
 
 export class PageElementBuilder {
   private _name = ''; //name of the component
@@ -30,7 +32,7 @@ export class PageElementBuilder {
   private _styles: Style[] = []; // css styles
   private _parent!: PageContainer; // parent Object
   private _parentRef: ComponentRef = ''; // string ref to the parent
-  private _classDefinition = 'bg-gray-200';
+  private _classDefinition = '';
   private _type: ComponentTypesString = undefined; // what is this component as in image text etc
   private _data: ComponentTypes = undefined;
   private _boxDimensions: BoxDimensions = new BoxDimensions(
@@ -41,6 +43,7 @@ export class PageElementBuilder {
   );
   private _actionEvent: ActionEvent = new ActionEvent('Navigation', '');
   private _content ='';
+  private _naturalSize!: Dimensions;
 
   setName(name: string) {
     this._name = name;
@@ -112,6 +115,11 @@ export class PageElementBuilder {
     this._content = content;
     return this;
   }
+
+  setNaturalSize(naturalSize: Dimensions) {
+    this._naturalSize = naturalSize;
+    return this;
+  }
   
   public get name(): string {
     return this._name;
@@ -165,6 +173,9 @@ export class PageElementBuilder {
     return this._content;
   }
 
+  public get naturalSize(): Dimensions {
+    return this._naturalSize;
+  }
 // required to create an empty container / element when initialising props.
   public build(): PageElement {
     return new PageElement(this);
@@ -187,6 +198,10 @@ export class PageElementBuilder {
   public buildAnImage(): ImageElement {
     if (this._content === '') {
       this._content = 'https://firebasestorage.googleapis.com/v0/b/page-maker-69fb1.appspot.com/o/assets%2Fimages%2Fimageplaceholder.png?alt=media&token=149d3e60-0fc4-49de-9e23-5fea91458240';
+      this._naturalSize = {
+        width: 300,
+        height: 200,
+        units: Units.px }
     }
     return new ImageElement(this);
   }

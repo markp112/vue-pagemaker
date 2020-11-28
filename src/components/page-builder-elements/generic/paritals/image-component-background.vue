@@ -2,18 +2,20 @@
 <section>
   <div 
     ref="imageContainer"
-    class="handle overflow-hidden object-contain " 
+    class="handle object-contain " 
     :id="$props.thisComponent.ref"
     @click.prevent="onClick($event)"
+    :styles="getStyles()"
     
   >
     <img
       ref="imageElmnt"
-      class="absolute w-auto h-full bg-no-repeat"
+      class="absolute bg-no-repeat w-full h-full"
       :style="getImageStyles()"
       :class="{ 'cursor-pan': draggingStarted }"
       @mousedown="onDraggingStarted($event)"
       @mouseup="onDraggingStop($event)"
+     
     />
     <resizeable
       :isActive="isActive"
@@ -22,11 +24,14 @@
       @onResize="resizeImage($event)"
     >
     </resizeable>
-  </div>
-    <div class="w-full bg-site-secondary-light bg-opacity-50 h-10 absolute bottom-0 flex flex-row justify-center p-1 ">
-      <img :src="getPath('zoom_out-32.png')" class=" z-30 h-8 w-8 ml-2" @click="zoom($event, 'out')">
-      <img :src="getPath('zoom_in-32.png')" class=" z-30 h-8 w-8 ml-4" @click="zoom($event, 'in')">
-      <img :src="getPath('100-32.png')" class=" z-30 h-8 w-8 ml-4" @click="zoom($event, '100')">
+ 
+      <div 
+        v-if="isActive"
+        class=" bg-site-secondary-light bg-opacity-50 h-10 w-40 absolute bottom-0 left-1/2 flex flex-row justify-center p-1 z-50 ">
+        <img :src="getPath('zoom_out-32.png')" class=" z-30 h-8 w-8 ml-2" @click="zoom($event, 'out')">
+        <img :src="getPath('zoom_in-32.png')" class=" z-30 h-8 w-8 ml-4" @click="zoom($event, 'in')">
+        <img :src="getPath('100-32.png')" class=" z-30 h-8 w-8 ml-4" @click="zoom($event, '100')">
+      </div>
     </div>
 </section>
 </template>
@@ -66,17 +71,13 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
   HTML_IMAGE_PARENT = 'imageContainer';
   draggingStarted = false;
   isResizing = true;
-  lastMousePosition = {
-    x: 0,
-    y: 0,
-  };
   imagePosition = {
     top: 0,
     left: 0,
   };
   parentDimension = {
-    height: 0,
-    width: 0,
+    height: 200,
+    width: 100,
   };
   isZoomed = false;
 
@@ -88,13 +89,13 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
   mounted() {
     this.parentContainer = this.$refs[this.HTML_IMAGE_PARENT] as HTMLDivElement;
     this.image = this.$refs[this.HTML_IMAGE_ELEMENT] as HTMLImageElement;
-    const styles: string = this.getStyles();
+    let styles: string = this.getStyles();
     this.parentContainer.setAttribute('style', styles)
     this.component = this.$props.thisComponent;
     this.imageManipulator = new ImageManipulator(this.$props.thisComponent.ref);
     this.imageManipulator.parentContainer = this.$props.thisComponent.parent;
-
-    // this.image.setAttribute('style', styles)
+    styles = this.getImageStyles();
+    this.image.setAttribute('style', styles)
   }
 
   get getData(): string {
@@ -110,17 +111,12 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
   }
 
   getImageStyles(): string {
-    console.log('%c%s', 'color: #f27999', 'getImageStyles')
     let style = '';
-    if (this.component) {
-      const styles: Style[] = this.component.styles;
-      if (styles.length > 0) {
-        styles.forEach(element => {
-          style += `${element.style}:${element.value};`;
-        });
-      }
-      style += `${this.component.boxDimensions.heightAsStyle};${this.component.boxDimensions.widthAsStyle};`;
-      style += `background-image:url('${this.component.content}');`;
+    const styles: Style[] = this.$props.thisComponent.styles;
+    if (styles.length > 0) {
+      styles.forEach(element => {
+        style += `${element.style}:${element.value};`;
+      });
     }
     return style;
   }
@@ -149,8 +145,8 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
     this.draggingStarted = false;
     window.removeEventListener('mousemove', this.panImage);
     window.removeEventListener('mouseup', this.onDraggingStop);
-    const top: Style = { style: 'backgroundPositionX', value: this.image.style.backgroundPositionX};
-    const left: Style = { style: 'backgroundPositionY', value: this.image.style.backgroundPositionY};
+    const top: Style = { style: 'background-position-x', value: this.image.style.backgroundPositionX};
+    const left: Style = { style: 'background-position-y', value: this.image.style.backgroundPositionY};
     PageModule.updateEditedComponentStyles(top);
     PageModule.updateEditedComponentStyles(left);
   }
@@ -168,7 +164,9 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
     const backgroundX = isNaN(parseInt(this.image.style.backgroundPositionX))  ? 0 : parseInt(this.image.style.backgroundPositionX)  + changeX;
     const backgroundY = isNaN(parseInt(this.image.style.backgroundPositionY)) ? 0 : parseInt(this.image.style.backgroundPositionY) + changeY;
 
-    this.image.style.backgroundPosition = `${backgroundX}px ${backgroundY}px`
+    const style: Style = {style: 'background-position', value: `${backgroundX}px ${backgroundY}px`};
+    PageModule.updateEditedComponentStyles(style);
+    // this.image.style.backgroundPosition = `${backgroundX}px ${backgroundY}px`
   }
 
   resizeStarted(event: MouseEvent) {
@@ -188,35 +186,17 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
       this.HTML_IMAGE_PARENT
     );
     const imageBoundingRectangle: BoxProperties = this.getElementBoxProperties(this.HTML_IMAGE_ELEMENT);
+    this.imageManipulator.imageBoundingRect = imageBoundingRectangle;
     const parentRef = this.$props.thisComponent.parentRef;
     const containerBoundingRectangle: BoxProperties = this.getElementBoxProperties(parentRef);
-    this.imageManipulator.imageBoundingRect = imageBoundingRectangle;
     this.imageManipulator.containerBoundingRect = containerBoundingRectangle;
     const resizedDimensions = this.imageManipulator.reSizeContainers(currentMousePosition);
-    // const changeX = currentMousePosition.x - this.lastMousePosition.x;
-    // const changeY = currentMousePosition.y - this.lastMousePosition.y;
-     
-    // const resizedDimensions: BoxDimensionsInterface = this.calculateNewDimensions(
-    //   boundingRect,
-    //   changeY,
-    //   changeX
-    // );
-    // const parent: PageContainer = this.$props.thisComponent.parent;
-    // const parentBoundingRect: BoxProperties = this.getElementBoxProperties(parent.ref);
-
-    // resizedDimensions.width.value = parent.checkDimensionRelativeToContainerElements(this.$props.thisComponent.ref, resizedDimensions.width.value);
-
-    // if (boundingRect.top < parentBoundingRect.top) {
-    //   resizedDimensions.top.value = parentBoundingRect.top;
-    // }
-    // if (resizedDimensions.height.value > parent.boxDimensions.height.value) {
-    //   resizedDimensions.height.value = parent.boxDimensions.height.value;
-    // }
+    
     PageModule.updateBoxDimensionHeightandWidth(resizedDimensions);
     this.setElementHeightAndWidth(this.parentContainer);
     this.setElementHeightAndWidth(this.image);
-    this.imageResize(resizedDimensions);
-  
+    PageModule.updateEditedComponentStyles(this.imageManipulator.resizeImage());
+    
   }
 
   private setElementHeightAndWidth(target: HTMLElement) {
@@ -230,7 +210,6 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
     const height = this.image.height;
     if (this.component) {
       naturalSize = this.component.naturalSize;
-      console.log('%c⧭', 'color: #5200cc', naturalSize)
     }
     if (!this.isZoomed) {
       this.image.style.backgroundPosition = `${0}px ${0}px`;

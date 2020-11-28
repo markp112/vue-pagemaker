@@ -218,12 +218,9 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
         break;
     }
 
-    console.log('%c%s', 'color: #f200e2', newWidth)
     boxDimensions.height.value = newHeight;
     boxDimensions.width.value = newWidth;
-    console.log('%c%s', 'color: #807160', boxDimensions.width.value)
     const theImage = this.$refs[this.HTML_IMAGE_ELEMENT] as HTMLImageElement;
-    console.log('%c⧭', 'color: #006dcc', theImage)
     this.setElementHeightAndWidth(theImage, boxDimensions);
     this.imageResize(boxDimensions);
     const parent = this.$refs[this.HTML_IMAGE_PARENT] as HTMLDivElement;

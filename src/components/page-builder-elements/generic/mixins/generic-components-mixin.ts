@@ -48,7 +48,7 @@ export class GenericComponentMixins extends Vue {
       height: element.getBoundingClientRect().height,
       top: element.getBoundingClientRect().top,
       left: element.getBoundingClientRect().left,
-      };
+    };
     return boundingRect;
   }
 

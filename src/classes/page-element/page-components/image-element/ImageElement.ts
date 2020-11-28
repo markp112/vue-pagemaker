@@ -19,7 +19,7 @@ export class ImageElement extends PageElement implements ImageElementInterface {
   constructor(builder: PageElementBuilder) {
     super(builder);
     this._maintainRatio = true;
-    this._naturalSize = initDimensions;
+    this._naturalSize = builder.naturalSize;
     this._parentDimensions = initDimensions;
     this._ratio = this.calcRatio( this._naturalSize.width, this._naturalSize.height);
     this._scaledSize = initDimensions;
@@ -82,19 +82,30 @@ export class ImageElement extends PageElement implements ImageElementInterface {
     if (this.styles.length === 0) {
       const siteDefaults = SiteDefaults.getInstance();
       const siteColours = siteDefaults.colours;
-      this.addStyle(this.constructStyle('backgroundColor', siteColours.surface));
+      this.addStyle(this.constructStyle('background-color', siteColours.surface));
       this.addStyle(this.constructStyle('color', siteColours.textOnSurface));
-      this.addStyle(this.constructStyle('backgroundSize', '100px 200px'));
-      this.addStyle(this.constructStyle('backgroundRepeat', 'no-repeat'));
+      this.addStyle(this.constructStyle('background-size', '100px 200px'));
+      this.addStyle(this.constructStyle('background-repeat', 'no-repeat'));
+      this.addStyle(this.constructStyle('background-image', `url(${this.content})`));
+      this.addStyle(this.constructStyle('background-position-x', '0px'));
+      this.addStyle(this.constructStyle('background-position-y', '0px'));
+
     }
   }
 
   public setImage(image: Image) {
     this.content = image.content;
+    if (image.naturalSize.width === 0) {
+      image.naturalSize.width = 300;
+    }
+    if (image.naturalSize.height === 0) {
+      image.naturalSize.height = 250;
+    }
     this._naturalSize = image.naturalSize;
     this._ratio = image.ratio;
     this._scaledSize = image.scaledSize;
     this._maintainRatio = image.maintainRatio;
+    this.addStyle(this.constructStyle('background-image', `url(${this.content})`));
   }
 
   private calcRatio(width: number, height: number): number {

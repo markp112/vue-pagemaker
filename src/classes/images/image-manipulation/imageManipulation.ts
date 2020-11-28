@@ -1,6 +1,7 @@
 import { PageContainer } from '@/classes/page-element/PageContainer/PageContainer';
 import { BoxProperties, BoxDimensionsInterface } from '@/models/components/box-dimension';
 import { Dimensions } from '@/models/components/components';
+import { Style } from '@/models/styles/styles';
 
 export interface MousePostion {
   x: number,
@@ -17,8 +18,8 @@ export class ImageManipulator {
   private _containerBoundingRect!: BoxProperties;
   private _imageRef: string;
   private _parent: PageContainer | null = null;
-  private _imageWidth = 0;
-  private _imageHeight = 0;
+  private _imageWidth = 100;
+  private _imageHeight = 200;
   private _naturalSize!: Dimensions;
 
   constructor(imageRef: string) {
@@ -66,15 +67,25 @@ export class ImageManipulator {
     return constrainedDimensions;
   }
 
-  public resizeImage(): string {
-    let style =`background-size:${this._imageWidth}px ${this._imageHeight}px`;
-
+  public resizeImage(): Style {
+    const backgroundSize = 'background-size'
+    let style = {
+      style: backgroundSize,
+      value: `${this._imageWidth}px ${this._imageHeight}px`
+    };
     if (this._naturalSize) {
       if (this._imageWidth > this._naturalSize.width) {
-        style =`background-size:${this._imageWidth}px ${this._naturalSize.height}px`;
+        style = {
+          style: backgroundSize,
+          value: `${this._imageWidth}px ${this._naturalSize.height}px`
+        };
       } else if (this._imageWidth < this._naturalSize.width) {
-        style = `background-size:${this._naturalSize.width}px ${this._naturalSize.height}px`;
+        style = {
+          style:backgroundSize,
+          value: `${this._naturalSize.width}px ${this._naturalSize.height}px`
+        };
       }
+      
     }
     return style;
   }

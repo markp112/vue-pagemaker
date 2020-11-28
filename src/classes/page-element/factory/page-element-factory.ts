@@ -6,6 +6,7 @@ import { TextElement } from '../page-components/text-element/TextElement';
 import { ImageElement } from '../page-components/image-element/ImageElement';
 import { ROOT } from '@/utils/constants';
 import { BoxDimensions, BoxDimensionsInterface } from '@/models/components/box-dimension';
+import { Units } from '@/models/enums/units/units';
 
 
 export type PageElementClasses = 
@@ -97,6 +98,7 @@ export class PageElementFactory {
         )
       }
       if (type === 'image') {
+
         return this.buildAnImageElement(
           component,
           ref,
@@ -106,7 +108,6 @@ export class PageElementFactory {
     }
 
   private getBoxDimensions(boxDimensionsInterface: BoxDimensionsInterface): BoxDimensions {
-    console.log('%c⧭', 'color: #607339', boxDimensionsInterface);
     const boxDimensions: BoxDimensions = new BoxDimensions(
       boxDimensionsInterface.width,
       boxDimensionsInterface.height,
@@ -160,15 +161,16 @@ export class PageElementFactory {
     parent: PageContainer
   ): ImageElement {
     const imageElement: ImageElement = new PageElementBuilder()
-    .setName(component.componentName)
-    .setParent(parent)
-    .setIsContainer(false)
-    .setBoxDimensions(this.getBoxDimensions(component.boxDimensions))
-    .setComponentHtmlTag(component.componentRef)
-    .setClassDefintion(component.class)
-    .setRef(ref)
-    .setType(component.type)
-    .buildAnImage();
+      .setName(component.componentName)
+      .setParent(parent)
+      .setIsContainer(false)
+      .setBoxDimensions(this.getBoxDimensions(component.boxDimensions))
+      .setComponentHtmlTag(component.componentRef)
+      .setClassDefintion(component.class)
+      .setRef(ref)
+      .setType(component.type)
+      .setNaturalSize({ width:300, height:200, units: Units.px })
+      .buildAnImage();
     imageElement.parentRef = imageElement.parent.ref;
     return imageElement;
   }

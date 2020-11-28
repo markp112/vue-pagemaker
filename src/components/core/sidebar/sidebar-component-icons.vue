@@ -3,27 +3,28 @@
     <p class="flex flex-row justify-between text-siteSurface mb-2">
       Save Page
       <img
-      :src="getPath('floppy_disk-32.png')"
-      class="text-accent-600 cursor-pointer hover:bg-gray-600"
-      @click="onSaveClick()"
-    /></p>
+        :src="getPath('floppy_disk-32.png')"
+        class="text-accent-600 cursor-pointer hover:bg-gray-600"
+        @click="onSaveClick()"
+      />
+    </p>
     <p class=" mt-3 text-lg">Containers</p>
-      <ul class='flex flex-row flex-wrap text-4xl justify-evenly w-full mt-4 ml-2 mr-2'>
-        <li v-for="element in sidebarContainers" :key="element.componentName" >
-          <draggable-icon draggable="true" :id="element.componentName">
-            <icon-image :icon = "element.sidebarIcon" classDef="icon" :id="element.componentName"></icon-image>
-          </draggable-icon>
-        </li>
-      </ul>
-      <p class="mt-3 text-lg">Elements</p>
-      <ul class='flex flex-row flex-wrap text-4xl justify-evenly w-full mt-4 ml-2 mr-2'>
-        <li v-for="element in sidebarElements" :key="element.componentName" >
-          <draggable-icon draggable="true" :id="element.componentName">
-            <icon-image :icon = "element.sidebarIcon" classDef="icon" :id="element.componentName"></icon-image>
-          </draggable-icon>
-        </li>
-      </ul>
-    </div>
+    <ul class='flex flex-row flex-wrap text-4xl justify-evenly w-full mt-4 ml-2 mr-2'>
+      <li v-for="element in sidebarContainers" :key="element.componentName" >
+        <draggable-icon draggable="true" :id="element.componentName">
+          <icon-image :icon = "element.sidebarIcon" classDef="icon" :id="element.componentName"></icon-image>
+        </draggable-icon>
+      </li>
+    </ul>
+    <p class="mt-3 text-lg">Elements</p>
+    <ul class='flex flex-row flex-wrap text-4xl justify-evenly w-full mt-4 ml-2 mr-2'>
+      <li v-for="element in sidebarElements" :key="element.componentName" >
+        <draggable-icon draggable="true" :id="element.componentName">
+          <icon-image :icon = "element.sidebarIcon" classDef="icon" :id="element.componentName"></icon-image>
+        </draggable-icon>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script lang="ts">

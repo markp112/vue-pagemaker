@@ -96,9 +96,9 @@ export default class Container extends mixins(GenericComponentMixins) {
       const ref = `${componentName}::${id}`;
       const component = SidebarModule.getComponentDefinition(componentName);
       const parent: PageContainer  = this.$props.thisComponent; // when dropping a component this componet will be its parent
-      if(component) {
+      if (component) {
         const newComponent: PageElementClasses =
-          componentFactory.createElement(component.type, ref, component, parent );
+        componentFactory.createElement(component.type, ref, component, parent );
         parent.addNewElement(newComponent);
         ServicesModule.toggleDragDropEventHandled(true);
       }

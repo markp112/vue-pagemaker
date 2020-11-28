@@ -218,7 +218,6 @@ firestoreLoadPageData(data: PageIdentity): Promise<PageElementFirebaseData[] | N
       const firestore = firebase.firestore();
       firestore.collection(this.collectionId).doc('siteSettings').get()
         .then (response => {
-          console.log('%c⧭', 'color: #73998c', response);
           const docData = response.data();
           siteDefaults = docData !== undefined ? docData as SiteDefaultsInterface : siteDefaultSettings;
           resolve(siteDefaults);

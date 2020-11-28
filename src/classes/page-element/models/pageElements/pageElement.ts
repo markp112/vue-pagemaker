@@ -4,10 +4,11 @@ import {
   ActionEventInterface,
 } from '@/models/components/base-component';
 import {
-  BoxDimensions, BoxDimensionsInterface,
+  BoxDimensions,
+ BoxDimensionsInterface,
 } from '@/models/components/box-dimension';
+import { Dimensions } from '@/models/components/components';
 import { Style } from '@/models/styles/styles';
-import { FirebasePageDataTypes } from '../../firebase-data/FirebaseDataBuilder';
 //interface for an html Style
 
 // represents the definition of the object the user has dropped on the page
@@ -23,6 +24,7 @@ export interface PageElementInterface {
   boxDimensions: BoxDimensions;
   actionEvent: ActionEventInterface;
   content: string;
+ 
 }
 
 export interface PageElementFirebaseData {
@@ -37,4 +39,5 @@ export interface PageElementFirebaseData {
   boxDimensions: BoxDimensionsInterface;
   actionEvent: ActionEventInterface;
   content: string;
+  naturalSize: Dimensions;
 }

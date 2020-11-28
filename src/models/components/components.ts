@@ -58,7 +58,10 @@ export class Image implements ImageInterface {
   private _parentDimensions: Dimensions;
 
   constructor() {
-    this._naturalSize = initDimensions;
+    this._naturalSize = this._naturalSize = {
+      width: 300,
+      height: 200,
+      units: Units.px };
     this._scaledSize = initDimensions;
     this._content = 'https://firebasestorage.googleapis.com/v0/b/page-maker-69fb1.appspot.com/o/assets%2Fimages%2Fimageplaceholder.png?alt=media&token=149d3e60-0fc4-49de-9e23-5fea91458240';
     this._ratio = this.naturalSize.width / this.naturalSize.height;
