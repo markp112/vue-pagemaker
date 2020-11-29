@@ -7,14 +7,14 @@ import { PageContainerFirebaseDataInterface, PageIdentity } from '@/store/servic
 import { ServicesModule } from '@/store/services/services';
 import { PageElementClasses, PageElementFactory } from '../factory/page-element-factory';
 import { PageContainerFirebaseData } from '../models/page-container/PageContainer';
-import { PageElementFirebaseData } from '../models/pageElements/pageElement';
+import { PageElementFirebaseData, PageElementImage, PageElementInterface } from '../models/pageElements/pageElement';
 import { PageElementBuilder } from '@/classes/page-element/page-element-builder/PageElementBuilder';
 import { PageContainer } from '../PageContainer/PageContainer';
 import { ButtonElement } from '../page-components/button-element/ButtonElement';
 import { ImageElement } from '../page-components/image-element/ImageElement';
 import { TextElement } from '../page-components/text-element/TextElement';
 
-export type FirebasePageDataTypes = PageContainerFirebaseData | PageElementFirebaseData;
+export type FirebasePageDataTypes = PageContainerFirebaseData | PageElementFirebaseData | PageElementImage;
 
 export class FirebaseDataBuilder {
   
@@ -131,7 +131,7 @@ export class FirebaseDataBuilder {
         case 'button':
           return this.buildAButton(parentComponent, item);
         case 'image':
-          return this.buildAnImage(parentComponent, item);
+          return this.buildAnImage(parentComponent, item as PageElementImage);
         case 'text':
           return this.buildText(parentComponent, item);
       }
@@ -183,7 +183,7 @@ export class FirebaseDataBuilder {
     return pageElement;
   }
 
-  private buildAnImage(parentComponent: PageContainer, item: FirebasePageDataTypes): ImageElement {
+  private buildAnImage(parentComponent: PageContainer, item: PageElementImage): ImageElement {
     const pageElement: ImageElement = new PageElementBuilder() .setActionEvent(new ActionEvent(item.actionEvent.actionType, item.actionEvent.eventAction))
     .setBoxDimensions(new BoxDimensions(
       item.boxDimensions.width,
@@ -194,6 +194,8 @@ export class FirebaseDataBuilder {
     .setRef(item.ref)
     .setIsContainer(item.isContainer)
     .setName(item.name)
+    .setNaturalSize(item.naturalSize)
+    
     .setParent(parentComponent)
     .setParentRef(item.parentRef)
     .setStyles(item.styles)

@@ -4,10 +4,9 @@ import {
   ActionEventInterface,
 } from '@/models/components/base-component';
 import {
-  BoxDimensions,
- BoxDimensionsInterface,
+  BoxDimensions, BoxDimensionsInterface,
 } from '@/models/components/box-dimension';
-import { Dimensions } from '@/models/components/components';
+import { Dimensions, Location } from '@/models/components/components';
 import { Style } from '@/models/styles/styles';
 //interface for an html Style
 
@@ -24,7 +23,6 @@ export interface PageElementInterface {
   boxDimensions: BoxDimensions;
   actionEvent: ActionEventInterface;
   content: string;
- 
 }
 
 export interface PageElementFirebaseData {
@@ -39,5 +37,11 @@ export interface PageElementFirebaseData {
   boxDimensions: BoxDimensionsInterface;
   actionEvent: ActionEventInterface;
   content: string;
+}
+
+export interface PageElementImage extends PageElementFirebaseData {
   naturalSize: Dimensions;
+  location: Location;
+  maintainRatio: boolean;
+  scaledSize: Dimensions;
 }

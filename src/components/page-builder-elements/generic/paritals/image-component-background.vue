@@ -51,7 +51,9 @@ import { ClientCoordinates, Dimensions } from '@/models/components/components';
 import { Style } from '@/models/styles/styles';
 import { Location } from '@/models/components/components'
 import { PageContainer } from '@/classes/page-element/PageContainer/PageContainer';
-import { ImageManipulator } from '@/classes/images/image-manipulation/imageManipulation';
+import { ImageManipulator, ZoomDirection } from '@/classes/images/image-manipulation/imageManipulation';
+import { Zoom } from '@/classes/images/image-manipulation/zoom';
+import { Pan } from '@/classes/images/image-manipulation/pan';
 
 @Component({
  props: {
@@ -92,8 +94,19 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
     let styles: string = this.getStyles();
     this.parentContainer.setAttribute('style', styles)
     this.component = this.$props.thisComponent;
-    this.imageManipulator = new ImageManipulator(this.$props.thisComponent.ref);
-    this.imageManipulator.parentContainer = this.$props.thisComponent.parent;
+    const imageElement = this.$props.thisComponent as ImageElement;
+    this.imageManipulator = new ImageManipulator();
+    this.imageManipulator.imageRef = imageElement.ref;
+    this.imageManipulator.parentContainer = imageElement.parent;
+
+    this.imageManipulator.naturalSize = imageElement.naturalSize;
+    this.imageManipulator.currentSize = 
+      {
+        width: imageElement.boxDimensions.width.value,
+        height: imageElement.boxDimensions.height.value,
+        units: Units.px,
+      };
+    this.imageManipulator.location = imageElement.location;
     styles = this.getImageStyles();
     this.image.setAttribute('style', styles)
   }
@@ -131,10 +144,11 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
     this.onClick(event);
     const parent = this.$refs[this.HTML_IMAGE_PARENT] as HTMLDivElement;
     this.draggingStarted = true;
-    this.lastMousePosition = {
+    const lastMousePosition = {
       x: event.pageX - parent.offsetLeft,
       y: event.pageY - parent.offsetTop,
     };
+    this.imageManipulator.lastMousePosition = lastMousePosition;
     this.parentDimension.width = parseInt(parent.style.width);
     this.parentDimension.height = parseInt(parent.style.height);
     window.addEventListener('mousemove', this.panImage);
@@ -145,28 +159,16 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
     this.draggingStarted = false;
     window.removeEventListener('mousemove', this.panImage);
     window.removeEventListener('mouseup', this.onDraggingStop);
-    const top: Style = { style: 'background-position-x', value: this.image.style.backgroundPositionX};
-    const left: Style = { style: 'background-position-y', value: this.image.style.backgroundPositionY};
-    PageModule.updateEditedComponentStyles(top);
-    PageModule.updateEditedComponentStyles(left);
   }
 
   panImage(event: MouseEvent) {
     if (!this.draggingStarted) {
       return false;
     }
-    // const image = this.$refs[this.HTML_IMAGE_ELEMENT] as HTMLImageElement;
     const currentMousePosition: MousePosition = this.getMousePosition(event.pageX, event.pageY, this.HTML_IMAGE_PARENT);
-    const changeX = currentMousePosition.x - this.lastMousePosition.x;
-    const changeY = currentMousePosition.y - this.lastMousePosition.y;
-    this.lastMousePosition = currentMousePosition;
-    
-    const backgroundX = isNaN(parseInt(this.image.style.backgroundPositionX))  ? 0 : parseInt(this.image.style.backgroundPositionX)  + changeX;
-    const backgroundY = isNaN(parseInt(this.image.style.backgroundPositionY)) ? 0 : parseInt(this.image.style.backgroundPositionY) + changeY;
-
-    const style: Style = {style: 'background-position', value: `${backgroundX}px ${backgroundY}px`};
+    const style = this.imageManipulator.pan(currentMousePosition);
     PageModule.updateEditedComponentStyles(style);
-    // this.image.style.backgroundPosition = `${backgroundX}px ${backgroundY}px`
+
   }
 
   resizeStarted(event: MouseEvent) {
@@ -190,68 +192,25 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
     const parentRef = this.$props.thisComponent.parentRef;
     const containerBoundingRectangle: BoxProperties = this.getElementBoxProperties(parentRef);
     this.imageManipulator.containerBoundingRect = containerBoundingRectangle;
-    const resizedDimensions = this.imageManipulator.reSizeContainers(currentMousePosition);
+    const resizedDimensions = this.imageManipulator.resize(currentMousePosition);
     
-    PageModule.updateBoxDimensionHeightandWidth(resizedDimensions);
+    PageModule.updateBoxDimensionHeightandWidth(resizedDimensions.boxDimensions);
     this.setElementHeightAndWidth(this.parentContainer);
     this.setElementHeightAndWidth(this.image);
-    PageModule.updateEditedComponentStyles(this.imageManipulator.resizeImage());
+    PageModule.updateEditedComponentStyles(resizedDimensions.style);
     
   }
 
   private setElementHeightAndWidth(target: HTMLElement) {
-    target.style.height = this.imageManipulator.imageHeight + "px"; //boxDimensions.height.value + "px";
-    target.style.width =  this.imageManipulator. imageWidth + "px"; //boxDimensions.width.value + "px";
+    target.style.height = this.imageManipulator.imageHeight + "px"; 
+    target.style.width =  this.imageManipulator. imageWidth + "px"; 
   }
 
-  private imageResize(resizedDimensions: BoxDimensionsInterface) {
-    let naturalSize: Dimensions = {width: 10000, height: 1000, units: Units.px }
-    const width = this.image.width;
-    const height = this.image.height;
-    if (this.component) {
-      naturalSize = this.component.naturalSize;
-    }
-    if (!this.isZoomed) {
-      this.image.style.backgroundPosition = `${0}px ${0}px`;
-      if (resizedDimensions.width.value > naturalSize.width) {
-        this.image.style.backgroundSize = `${width}px  ${naturalSize.height}px`
-      } else if (resizedDimensions.width.value < naturalSize.width) {
-        this.image.style.backgroundSize = `${naturalSize.width}px  ${naturalSize.height}px`
-      }
-    } else {
-      this.image.style.backgroundSize = `${width}px  ${height}px`
-    }
-  }
-
-  zoom(event: MouseEvent, direction: string) {
-    const scale = 1.1; 
-    const component = this.$props.thisComponent;
-    const boxDimensions = component.boxDimensions;
-    let newHeight = boxDimensions.height.value;
-    let newWidth = boxDimensions.width.value;
-    this.isZoomed = true;
-    switch (direction) {
-      case 'out':
-        newHeight = boxDimensions.height.value / scale;
-        newWidth = boxDimensions.width.value / scale;
-        break;
-      case 'in':
-        newHeight = boxDimensions.height.value * scale;
-        newWidth = boxDimensions.width.value * scale;
-        break;
-      case '100':
-        newHeight = (component as ImageElement).naturalSize.height;
-        newWidth = (component as ImageElement).naturalSize.width;
-        break;
-    }
-
-    // boxDimensions.height.value = newHeight;
-    // boxDimensions.width.value = newWidth;
-    const theImage = this.$refs[this.HTML_IMAGE_ELEMENT] as HTMLImageElement;
-    // this.setElementHeightAndWidth(theImage, boxDimensions);
-    // this.imageResize(boxDimensions);
-    
-    this.image.style.backgroundSize = `${boxDimensions.width.value}px  ${boxDimensions.height.value}px`;
+  zoom(event: MouseEvent, direction: ZoomDirection) {
+    const styles = this.imageManipulator.zoom(direction);
+    styles.forEach(style => {
+      PageModule.updateEditedComponentStyles(style);
+    });
   }
 
 }

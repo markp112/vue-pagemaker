@@ -57,10 +57,7 @@ export default class ButtonEditor extends Vue {
   data = '';
 
   mounted() {
-    console.log('%c⧭', 'color: #917399', 'mounted')
     const content = PageModule.editedComponentData;
-    console.log('%c⧭', 'color: #731d1d', PageModule.editedComponentData)
-    console.log('%c%s', 'color: #ffa640', content)
     this.data = content;
   }
 
