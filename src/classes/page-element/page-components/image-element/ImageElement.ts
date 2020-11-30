@@ -4,6 +4,7 @@ import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
 import { Dimensions, initDimensions, Location } from '@/models/components/components';
 import { Image } from '@/models/components/components';
 import { ImageElementFirebaseData, ImageElementInterface } from '../../models/pageElements/imageElement';
+import { Units } from '@/models/enums/units/units';
 
 export class ImageElement extends PageElement implements ImageElementInterface {
   private _naturalSize: Dimensions;
@@ -22,7 +23,7 @@ export class ImageElement extends PageElement implements ImageElementInterface {
     this._naturalSize = builder.naturalSize;
     this._parentDimensions = initDimensions;
     this._ratio = this.calcRatio( this._naturalSize.width, this._naturalSize.height);
-    this._scaledSize = initDimensions;
+    this._scaledSize = {width: 100, height: 200, units: Units.px};
   }
 
   get naturalSize(): Dimensions {

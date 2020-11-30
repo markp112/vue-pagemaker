@@ -1,3 +1,4 @@
+import { ImageElement } from '@/classes/page-element/page-components/image-element/ImageElement';
 import { PageContainer } from '@/classes/page-element/PageContainer/PageContainer';
 import { MousePosition } from '@/components/page-builder-elements/generic/mixins/generic-components-mixin';
 import { BoxProperties, BoxDimensionsInterface } from '@/models/components/box-dimension';
@@ -19,13 +20,16 @@ export class ImageManipulator {
     y: 0
   };
 
+  private _imageElement: ImageElement;
+
+  constructor(imageElement: ImageElement) {
+    this._imageElement = imageElement;
+  }
+
   private _imageBoundRect!: BoxProperties;
   private _containerBoundingRect!: BoxProperties;
   private _imageRef = '';
   private _parent!: PageContainer;
-  private _currentDimensions!: Dimensions;
-  private _naturalSize!: Dimensions;
-  private _location!: Location;
 
   get imageRef(): string {
     return this._imageRef;
@@ -36,23 +40,11 @@ export class ImageManipulator {
   }
 
   get imageHeight(): number {
-    return this._currentDimensions.height;
-  }
-
-  set imageHeight(height: number) {
-    this._currentDimensions.height = height;
+    return this._imageElement.scaledSize.height;
   }
 
   get imageWidth(): number {
-    return this._currentDimensions.width;
-  }
-
-  set imageWidth(width: number) {
-    this._currentDimensions.width = width;
-  }
-
-  set currentSize(currentSize: Dimensions) {
-    this._currentDimensions = currentSize;
+    return this._imageElement.scaledSize.width;
   }
 
   get imageBoundRect(): BoxProperties {
@@ -66,6 +58,7 @@ export class ImageManipulator {
   get containerBoundingRect(): BoxProperties {
     return this._containerBoundingRect;
   }
+
   set containerBoundingRect(boundingRectangle: BoxProperties) {
     this._containerBoundingRect = boundingRectangle;
   }
@@ -82,17 +75,6 @@ export class ImageManipulator {
     this._parent = container;
   }
 
-  get naturalSize(): Dimensions {
-    return this._naturalSize;
-  }
-
-  set naturalSize(naturalSize: Dimensions) {
-    this._naturalSize = naturalSize;
-  }
-
-  set location(location: Location) {
-    this._location = location;
-  }
 
   public resize(currentMousePosition: MousePostion): { boxDimensions: BoxDimensionsInterface, style: Style} {
     return {
@@ -102,10 +84,15 @@ export class ImageManipulator {
   }
 
   public zoom(direction: ZoomDirection): Style[] {
-    const zoom: Zoom = new Zoom(this._currentDimensions, this._naturalSize, this._location);
+    const zoom: Zoom = new Zoom(
+      this._imageElement.scaledSize,
+      this._imageElement.naturalSize,
+      this._imageElement.location
+    );
     const dimensionLocation = zoom.zoom(direction);
-    this._currentDimensions = dimensionLocation.dimensions;
-    this._location = dimensionLocation.location;
+    this._imageElement.scaledSize.height = dimensionLocation.dimensions.height;
+    this._imageElement.scaledSize.width = dimensionLocation.dimensions.width;
+    this._imageElement.location = dimensionLocation.location;
     return this.getStyles();
   }
 
@@ -113,15 +100,23 @@ export class ImageManipulator {
     const deltaMouse: MousePosition = this.calculateDeltaChange(currentMousePosition);
     this._lastMousePosition = currentMousePosition;
     const pan = new Pan();
-    const newLocation = pan.pan(deltaMouse, this._location);
-    this._location = newLocation;
-    return this.construsctStyle('background-position', `${this._location.left}px ${this._location.top}px`);
+    this._imageElement.location = pan.pan(deltaMouse, this._imageElement.location);
+    return this.construsctStyle(
+      'background-position',
+      `${this._imageElement.location.left}px ${this._imageElement.location.top}px`
+    );
   }
 
   public getStyles(): Style[] {
     const styles: Style[] = [];
-    styles.push(this.construsctStyle('background-size',`${this._currentDimensions.width}px ${this._currentDimensions.height}px`));
-    styles.push(this.construsctStyle('background-position',`${this._location.left}px ${this._location.top}px`));
+    styles.push(this.construsctStyle(
+      'background-size', 
+      `${this._imageElement.scaledSize.width}px ${this._imageElement.scaledSize.height}px`
+    ));
+    styles.push(this.construsctStyle(
+      'background-position',
+      `${this._imageElement.location.left}px ${this._imageElement.location.top}px`
+    ));
     return styles;
   }
 
@@ -141,31 +136,19 @@ export class ImageManipulator {
         resizedDimensions.width.value
       );
     const constrainedDimensions = this.checkDimensionsRelativeToContainer(resizedDimensions);
-    this._currentDimensions.width = constrainedDimensions.width.value;
-    this._currentDimensions.height = constrainedDimensions.height.value;
+    this._imageElement.scaledSize.width = constrainedDimensions.width.value;
+    this._imageElement.scaledSize.height = constrainedDimensions.height.value;
     return constrainedDimensions;
   }
 
   private resizeImage(): Style {
     const backgroundSize = 'background-size' as const;
-    let style = {
+    const height = this._imageElement.scaledSize.height;
+    const width = this._imageElement.scaledSize.width;
+    const style = {
       style: backgroundSize,
-      value: `${this._currentDimensions.width}px ${this._currentDimensions.height}px`
+      value: `${width}px ${height}px`
     };
-    if (this._naturalSize) {
-      if (this._currentDimensions.width > this._naturalSize.width) {
-        style = {
-          style: backgroundSize,
-          value: `${this._currentDimensions.width}px ${this._naturalSize.height}px`
-        };
-      } else if (this._currentDimensions.width < this._naturalSize.width) {
-        style = {
-          style:backgroundSize,
-          value: `${this._naturalSize.width}px ${this._naturalSize.height}px`
-        };
-      }
-      
-    }
     return style;
   }
 
@@ -202,11 +185,13 @@ export class ImageManipulator {
 
   private calculateNewDimensions(currentMousePosition: MousePostion): BoxDimensionsInterface {
     const newPosition = this.calculateDeltaChange(currentMousePosition);
+    this._imageElement.scaledSize.width += newPosition.x;
+    this._imageElement.scaledSize.height += newPosition.y;
     return {
-      height: { value: this._imageBoundRect.height + newPosition.y, units: 'px' },
-      width: { value: this._imageBoundRect.width + newPosition.x, units: 'px' },
-      top: { value: this._imageBoundRect.top, units: 'px' },
-      left: { value: this._imageBoundRect.left, units: 'px' },
+      height: { value: this._imageElement.scaledSize.height + newPosition.y, units: 'px' },
+      width: {  value: this._imageElement.scaledSize.width + newPosition.x, units: 'px' },
+      top: { value: this._imageElement.location.top, units: 'px' },
+      left: { value: this._imageElement.location.left, units: 'px' },
     };
   }
 }

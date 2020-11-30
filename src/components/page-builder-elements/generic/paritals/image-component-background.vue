@@ -95,18 +95,11 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
     this.parentContainer.setAttribute('style', styles)
     this.component = this.$props.thisComponent;
     const imageElement = this.$props.thisComponent as ImageElement;
-    this.imageManipulator = new ImageManipulator();
+    this.imageManipulator = new ImageManipulator(imageElement);
     this.imageManipulator.imageRef = imageElement.ref;
     this.imageManipulator.parentContainer = imageElement.parent;
 
-    this.imageManipulator.naturalSize = imageElement.naturalSize;
-    this.imageManipulator.currentSize = 
-      {
-        width: imageElement.boxDimensions.width.value,
-        height: imageElement.boxDimensions.height.value,
-        units: Units.px,
-      };
-    this.imageManipulator.location = imageElement.location;
+    // this.imageManipulator.location = imageElement.location;
     styles = this.getImageStyles();
     this.image.setAttribute('style', styles)
   }
@@ -178,7 +171,6 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
       y: event.pageY - target.offsetTop,
     }
     this.imageManipulator.lastMousePosition = lastMousePosition;
-    this.imageManipulator.naturalSize = this.component.naturalSize;
   }
 
   resizeImage(boxProperties: ClientCoordinates) {
@@ -203,7 +195,7 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
 
   private setElementHeightAndWidth(target: HTMLElement) {
     target.style.height = this.imageManipulator.imageHeight + "px"; 
-    target.style.width =  this.imageManipulator. imageWidth + "px"; 
+    target.style.width =  this.imageManipulator.imageWidth + "px"; 
   }
 
   zoom(event: MouseEvent, direction: ZoomDirection) {
