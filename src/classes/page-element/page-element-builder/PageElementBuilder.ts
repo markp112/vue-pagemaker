@@ -44,6 +44,7 @@ export class PageElementBuilder {
   private _actionEvent: ActionEvent = new ActionEvent('Navigation', '');
   private _content ='';
   private _naturalSize!: Dimensions;
+  private _scaledSize!: Dimensions;
 
   setName(name: string) {
     this._name = name;
@@ -120,6 +121,11 @@ export class PageElementBuilder {
     this._naturalSize = naturalSize;
     return this;
   }
+
+  setScaledSize(scaledSize: Dimensions) {
+    this._scaledSize = scaledSize;
+    return this;
+  }
   
   public get name(): string {
     return this._name;
@@ -176,6 +182,11 @@ export class PageElementBuilder {
   public get naturalSize(): Dimensions {
     return this._naturalSize;
   }
+
+  public get scaledSize(): Dimensions {
+    return this._scaledSize;
+  }
+
 // required to create an empty container / element when initialising props.
   public build(): PageElement {
     return new PageElement(this);

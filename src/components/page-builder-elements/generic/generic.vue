@@ -62,13 +62,13 @@ import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
 import { ComponentTypesString } from '@/models/components/base-component';
 import { PageElement } from '@/classes/page-element/PageElement';
 import { PageElementClasses } from '@/classes/page-element/factory/page-element-factory';
-import ImageComponent from './paritals/image-component-background.vue';
+import ImageComponentBackground from './paritals/image-component-background.vue';
 
 @Component({
   
   components: {
     resizeable: Resize,
-    'image-component': ImageComponent,
+    'image-component': ImageComponentBackground,
   },
 })
 export default class GenericComponent extends mixins(GenericComponentMixins) {

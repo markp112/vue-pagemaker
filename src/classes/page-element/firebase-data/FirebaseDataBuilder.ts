@@ -184,27 +184,28 @@ export class FirebaseDataBuilder {
   }
 
   private buildAnImage(parentComponent: PageContainer, item: PageElementImage): ImageElement {
-    const pageElement: ImageElement = new PageElementBuilder() .setActionEvent(new ActionEvent(item.actionEvent.actionType, item.actionEvent.eventAction))
-    .setBoxDimensions(new BoxDimensions(
-      item.boxDimensions.width,
-      item.boxDimensions.height,
-      item.boxDimensions.top,
-      item.boxDimensions.left,
-    ))
-    .setRef(item.ref)
-    .setIsContainer(item.isContainer)
-    .setName(item.name)
-    .setNaturalSize(item.naturalSize)
-    
-    .setParent(parentComponent)
-    .setParentRef(item.parentRef)
-    .setStyles(item.styles)
-    .setType(item.type)
-    .setClassDefintion(item.classDefinition)
-    .setComponentHtmlTag(item.componentHTMLTag)
-    .setContent(item.content)
-    .buildAnImage();
-    return pageElement;
+    const pageElement: ImageElement = new PageElementBuilder()
+      .setActionEvent(new ActionEvent(item.actionEvent.actionType, item.actionEvent.eventAction))
+      .setBoxDimensions(new BoxDimensions(
+        item.boxDimensions.width,
+        item.boxDimensions.height,
+        item.boxDimensions.top,
+        item.boxDimensions.left,
+      ))
+      .setRef(item.ref)
+      .setIsContainer(item.isContainer)
+      .setName(item.name)
+      .setNaturalSize(item.naturalSize)
+      .setScaledSize(item.scaledSize)
+      .setParent(parentComponent)
+      .setParentRef(item.parentRef)
+      .setStyles(item.styles)
+      .setType(item.type)
+      .setClassDefintion(item.classDefinition)
+      .setComponentHtmlTag(item.componentHTMLTag)
+      .setContent(item.content)
+      .buildAnImage();
+      return pageElement;
   }
 
   private buildText(parentComponent: PageContainer, item: FirebasePageDataTypes): TextElement {

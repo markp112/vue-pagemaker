@@ -23,7 +23,11 @@ export class ImageElement extends PageElement implements ImageElementInterface {
     this._naturalSize = builder.naturalSize;
     this._parentDimensions = initDimensions;
     this._ratio = this.calcRatio( this._naturalSize.width, this._naturalSize.height);
-    this._scaledSize = {width: 100, height: 200, units: Units.px};
+    this._scaledSize = {
+      width: 100,
+      height: 200,
+      units: Units.px
+    };
   }
 
   get naturalSize(): Dimensions {
@@ -32,8 +36,9 @@ export class ImageElement extends PageElement implements ImageElementInterface {
 
   set naturalSize(size: Dimensions){
     this._naturalSize = size;
-    this._scaledSize = size; /** @description when image size changes the scaled size should be reset */
-    this._ratio = this.calcRatio( this._naturalSize.width, this._naturalSize.height);
+    console.log('%c⧭', 'color: #00ff88', this._naturalSize);
+    // this._scaledSize = size; /** @description when image size changes the scaled size should be reset */
+    this._ratio = this.calcRatio(this._naturalSize.width, this._naturalSize.height);
   }
 
   get scaledSize() {
@@ -96,6 +101,8 @@ export class ImageElement extends PageElement implements ImageElementInterface {
 
   public setImage(image: Image) {
     this.content = image.content;
+    
+    console.log('%c⧭', 'color: #7f7700', image.naturalSize);
     if (image.naturalSize.width === 0) {
       image.naturalSize.width = 300;
     }

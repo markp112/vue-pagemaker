@@ -139,12 +139,8 @@ export default class UploadImage extends Vue {
     const image = new Image();
     image.maintainRatio = this.maintainRatio;
     image.content = this.url;
-     const dimensions: Dimensions = {
-      width: img.naturalWidth,
-      height: img.naturalHeight,
-      units: Units.px,
-    };
-    image.naturalSize = dimensions;
+    image.naturalSize.width = img.naturalWidth;
+    image.naturalSize.height = img.naturalHeight;
     return image;
   }
 

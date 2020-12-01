@@ -64,7 +64,8 @@ export class ImageManipulator {
   }
 
   set lastMousePosition(mousePosition: MousePostion) {
-    this._lastMousePosition = mousePosition; 
+    this._lastMousePosition.x = mousePosition.x;
+    this._lastMousePosition.y = mousePosition.y; 
   }
   
   get parent(): PageContainer {
@@ -92,7 +93,7 @@ export class ImageManipulator {
     const dimensionLocation = zoom.zoom(direction);
     this._imageElement.scaledSize.height = dimensionLocation.dimensions.height;
     this._imageElement.scaledSize.width = dimensionLocation.dimensions.width;
-    this._imageElement.location = dimensionLocation.location;
+    this._imageElement.location = zoom.location;
     return this.getStyles();
   }
 
@@ -130,7 +131,8 @@ export class ImageManipulator {
 
   private reSizeContainers(currentMousePosition: MousePostion): BoxDimensionsInterface {
     const resizedDimensions = this.calculateNewDimensions(currentMousePosition);
-    this._lastMousePosition = currentMousePosition;
+    this._lastMousePosition.x = currentMousePosition.x;
+    this._lastMousePosition.y = currentMousePosition.y;
     resizedDimensions.width.value = 
       this.checkWidthFitsWithinContainer(
         resizedDimensions.width.value
@@ -153,11 +155,14 @@ export class ImageManipulator {
   }
 
   private checkWidthFitsWithinContainer(width: number) {
+    console.log('%c⧭', 'color: #e5de73', width);
     if (this._parent) {
-      return this._parent.checkDimensionRelativeToContainerElements(
+      const newWidth = this._parent.checkDimensionRelativeToContainerElements(
         this._imageRef, 
         width
-      );
+        );
+        console.log('%c⧭', 'color: #7f2200', newWidth)
+        return newWidth;
     }
     return width;
   }
@@ -176,6 +181,8 @@ export class ImageManipulator {
   }
 
   private calculateDeltaChange(currentMousePosition: MousePostion): MousePosition {
+    console.log('%c⧭', 'color: #33cc99', currentMousePosition);
+    console.log('%c⧭', 'color: #364cd9', this._lastMousePosition);
     const newPosition: MousePosition = {
       x: currentMousePosition.x - this._lastMousePosition.x,
       y: currentMousePosition.y - this._lastMousePosition.y,
@@ -184,12 +191,15 @@ export class ImageManipulator {
   }
 
   private calculateNewDimensions(currentMousePosition: MousePostion): BoxDimensionsInterface {
+    console.log('%c⧭', 'color: #2ceeaa', this._imageElement.scaledSize);
     const newPosition = this.calculateDeltaChange(currentMousePosition);
+    console.log('%c⧭', 'color: #eeff00', newPosition);
+    console.log('%c⧭', 'color: #73998c', this._imageElement.scaledSize);
     this._imageElement.scaledSize.width += newPosition.x;
     this._imageElement.scaledSize.height += newPosition.y;
     return {
-      height: { value: this._imageElement.scaledSize.height + newPosition.y, units: 'px' },
-      width: {  value: this._imageElement.scaledSize.width + newPosition.x, units: 'px' },
+      height: { value: this._imageElement.scaledSize.height, units: 'px' },
+      width: {  value: this._imageElement.scaledSize.width, units: 'px' },
       top: { value: this._imageElement.location.top, units: 'px' },
       left: { value: this._imageElement.location.left, units: 'px' },
     };

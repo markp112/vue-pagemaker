@@ -5,12 +5,11 @@
     class="handle object-contain " 
     :id="$props.thisComponent.ref"
     @click.prevent="onClick($event)"
-    :styles="getStyles()"
     
   >
     <img
       ref="imageElmnt"
-      class="absolute bg-no-repeat w-full h-full"
+      class="absolute bg-no-repeat "
       :style="getImageStyles()"
       :class="{ 'cursor-pan': draggingStarted }"
       @mousedown="onDraggingStarted($event)"
@@ -27,10 +26,14 @@
  
       <div 
         v-if="isActive"
-        class=" bg-site-secondary-light bg-opacity-50 h-10 w-40 absolute bottom-0 left-1/2 flex flex-row justify-center p-1 z-50 ">
-        <img :src="getPath('zoom_out-32.png')" class=" z-30 h-8 w-8 ml-2" @click="zoom($event, 'out')">
-        <img :src="getPath('zoom_in-32.png')" class=" z-30 h-8 w-8 ml-4" @click="zoom($event, 'in')">
-        <img :src="getPath('100-32.png')" class=" z-30 h-8 w-8 ml-4" @click="zoom($event, '100')">
+        class=" bg-site-secondary-light bg-opacity-50 h-10 w-84 absolute bottom-0 left-1/2 flex flex-row justify-center p-1 z-50 ">
+        <img :src="getPath('arrow_bidirectional-32.png')" class="cursor-pointer z-30 h-8 w-8 ml-2" @click="zoom('out')">
+        <img :src="getPath('arrow_vertical-32.png')" class=" z-30 h-8 w-8 ml-2" @click="zoom($event, 'out')">
+        <img :src="getPath('resize2-32.png')" class=" z-30 h-8 w-8 ml-2" @click="zoom('out')">
+        <img :src="getPath('zoom_out-32.png')" class=" z-30 h-8 w-8 ml-2" @click="zoom('out')">
+        <img :src="getPath('zoom_in-32.png')" class=" z-30 h-8 w-8 ml-4" @click="zoom('in')">
+        <img :src="getPath('50-32.png')" class=" z-30 h-8 w-8 ml-4" @click="zoom('50')">
+        <img :src="getPath('100-32.png')" class="cursor-pointer z-30 h-8 w-8 ml-4" @click="zoom('100')">
       </div>
     </div>
 </section>
@@ -67,16 +70,13 @@ import { Pan } from '@/classes/images/image-manipulation/pan';
     resizeable: Resize,
   },
 })
-export default class ImageComponent extends mixins(GenericComponentMixins) {
-  name = 'ImageComponent';
+export default class ImageComponentBackground extends mixins(GenericComponentMixins) {
+  name = 'ImageComponentBackground';
   HTML_IMAGE_ELEMENT = 'imageElmnt';
   HTML_IMAGE_PARENT = 'imageContainer';
   draggingStarted = false;
   isResizing = true;
-  imagePosition = {
-    top: 0,
-    left: 0,
-  };
+
   parentDimension = {
     height: 200,
     width: 100,
@@ -170,6 +170,7 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
       x: event.pageX - target.offsetLeft,
       y: event.pageY - target.offsetTop,
     }
+    console.log('%c⧭', 'color: #ffa280', this.imageManipulator)
     this.imageManipulator.lastMousePosition = lastMousePosition;
   }
 
@@ -186,7 +187,7 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
     this.imageManipulator.containerBoundingRect = containerBoundingRectangle;
     const resizedDimensions = this.imageManipulator.resize(currentMousePosition);
     
-    PageModule.updateBoxDimensionHeightandWidth(resizedDimensions.boxDimensions);
+    // PageModule.updateBoxDimensionHeightandWidth(resizedDimensions.boxDimensions);
     this.setElementHeightAndWidth(this.parentContainer);
     this.setElementHeightAndWidth(this.image);
     PageModule.updateEditedComponentStyles(resizedDimensions.style);
@@ -198,7 +199,7 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
     target.style.width =  this.imageManipulator.imageWidth + "px"; 
   }
 
-  zoom(event: MouseEvent, direction: ZoomDirection) {
+  zoom(direction: ZoomDirection) {
     const styles = this.imageManipulator.zoom(direction);
     styles.forEach(style => {
       PageModule.updateEditedComponentStyles(style);
