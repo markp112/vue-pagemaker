@@ -5,7 +5,6 @@
     class="handle object-contain " 
     :id="$props.thisComponent.ref"
     @click.prevent="onClick($event)"
-    
   >
     <img
       ref="imageElmnt"
@@ -76,11 +75,6 @@ export default class ImageComponentBackground extends mixins(GenericComponentMix
   HTML_IMAGE_PARENT = 'imageContainer';
   draggingStarted = false;
   isResizing = true;
-
-  parentDimension = {
-    height: 200,
-    width: 100,
-  };
   isZoomed = false;
 
   parentContainer: HTMLDivElement = this.$refs[this.HTML_IMAGE_PARENT] as HTMLDivElement;
@@ -91,10 +85,12 @@ export default class ImageComponentBackground extends mixins(GenericComponentMix
   mounted() {
     this.parentContainer = this.$refs[this.HTML_IMAGE_PARENT] as HTMLDivElement;
     this.image = this.$refs[this.HTML_IMAGE_ELEMENT] as HTMLImageElement;
-    let styles: string = this.getStyles();
-    this.parentContainer.setAttribute('style', styles)
     this.component = this.$props.thisComponent;
     const imageElement = this.$props.thisComponent as ImageElement;
+    
+    let styles: string = imageElement.getContainerStyles();
+    console.log('%c⧭', 'color: #cc0036', styles)
+    this.parentContainer.setAttribute('style', styles)
     this.imageManipulator = new ImageManipulator(imageElement);
     this.imageManipulator.imageRef = imageElement.ref;
     this.imageManipulator.parentContainer = imageElement.parent;
@@ -117,14 +113,7 @@ export default class ImageComponentBackground extends mixins(GenericComponentMix
   }
 
   getImageStyles(): string {
-    let style = '';
-    const styles: Style[] = this.$props.thisComponent.styles;
-    if (styles.length > 0) {
-      styles.forEach(element => {
-        style += `${element.style}:${element.value};`;
-      });
-    }
-    return style;
+    return (this.$props.thisComponent as ImageElement).getStyles();
   }
 
   onClick(event: Event) {
@@ -142,8 +131,8 @@ export default class ImageComponentBackground extends mixins(GenericComponentMix
       y: event.pageY - parent.offsetTop,
     };
     this.imageManipulator.lastMousePosition = lastMousePosition;
-    this.parentDimension.width = parseInt(parent.style.width);
-    this.parentDimension.height = parseInt(parent.style.height);
+    // this.parentDimension.width = parseInt(parent.style.width);
+    // this.parentDimension.height = parseInt(parent.style.height);
     window.addEventListener('mousemove', this.panImage);
     window.addEventListener('mouseup', this.onDraggingStop);
   }
@@ -170,7 +159,6 @@ export default class ImageComponentBackground extends mixins(GenericComponentMix
       x: event.pageX - target.offsetLeft,
       y: event.pageY - target.offsetTop,
     }
-    console.log('%c⧭', 'color: #ffa280', this.imageManipulator)
     this.imageManipulator.lastMousePosition = lastMousePosition;
   }
 
@@ -181,9 +169,10 @@ export default class ImageComponentBackground extends mixins(GenericComponentMix
       this.HTML_IMAGE_PARENT
     );
     const imageBoundingRectangle: BoxProperties = this.getElementBoxProperties(this.HTML_IMAGE_ELEMENT);
+    console.log('%c⧭', 'color: #ff6600', imageBoundingRectangle)
     this.imageManipulator.imageBoundingRect = imageBoundingRectangle;
     const parentRef = this.$props.thisComponent.parentRef;
-    const containerBoundingRectangle: BoxProperties = this.getElementBoxProperties(parentRef);
+    const containerBoundingRectangle: BoxProperties = this.getElementBoxProperties('imageContainer');
     this.imageManipulator.containerBoundingRect = containerBoundingRectangle;
     const resizedDimensions = this.imageManipulator.resize(currentMousePosition);
     

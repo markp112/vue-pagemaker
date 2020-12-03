@@ -106,7 +106,6 @@ export class FirebaseDataBuilder {
     .catch(err => {
       console.log(err)
     })
-
   }
 
   buildPageElements(pageData: FirebasePageDataTypes[], parentContainer: PageContainer) {
@@ -198,6 +197,7 @@ export class FirebaseDataBuilder {
       .setNaturalSize(item.naturalSize)
       .setScaledSize(item.scaledSize)
       .setParent(parentComponent)
+      .setContainerDimensions(item.containerDimensions)
       .setParentRef(item.parentRef)
       .setStyles(item.styles)
       .setType(item.type)

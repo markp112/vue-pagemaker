@@ -15,7 +15,7 @@ export interface ImageElementFirebaseData extends PageElementFirebaseData {
   scaledSize: Dimensions;
   ratio: number;
   maintainRatio: boolean;
-  parentDimensions: Dimensions;
+  containerDimensions: Dimensions;
   location: Location;
 }
 

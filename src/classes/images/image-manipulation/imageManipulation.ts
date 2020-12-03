@@ -140,6 +140,8 @@ export class ImageManipulator {
     const constrainedDimensions = this.checkDimensionsRelativeToContainer(resizedDimensions);
     this._imageElement.scaledSize.width = constrainedDimensions.width.value;
     this._imageElement.scaledSize.height = constrainedDimensions.height.value;
+    this._imageElement.containerDimensions.height = constrainedDimensions.height.value;
+    this._imageElement.containerDimensions.width = constrainedDimensions.width.value;
     return constrainedDimensions;
   }
 

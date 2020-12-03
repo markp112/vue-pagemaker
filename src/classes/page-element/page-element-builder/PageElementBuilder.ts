@@ -45,6 +45,7 @@ export class PageElementBuilder {
   private _content ='';
   private _naturalSize!: Dimensions;
   private _scaledSize!: Dimensions;
+  private _containerDimensions!: Dimensions;
 
   setName(name: string) {
     this._name = name;
@@ -123,7 +124,16 @@ export class PageElementBuilder {
   }
 
   setScaledSize(scaledSize: Dimensions) {
-    this._scaledSize = scaledSize;
+    this._scaledSize = {
+      height: scaledSize.height,
+      width: scaledSize.width,
+      units: scaledSize.units
+    }
+    return this;
+  }
+
+  setContainerDimensions(dimensions: Dimensions) {
+    this._containerDimensions = dimensions;
     return this;
   }
   
@@ -187,6 +197,10 @@ export class PageElementBuilder {
     return this._scaledSize;
   }
 
+  public get containerDimensions(): Dimensions {
+    return this._containerDimensions;
+  }
+
 // required to create an empty container / element when initialising props.
   public build(): PageElement {
     return new PageElement(this);
@@ -212,7 +226,18 @@ export class PageElementBuilder {
       this._naturalSize = {
         width: 300,
         height: 200,
-        units: Units.px }
+        units: Units.px,
+      };
+      this._containerDimensions = {
+        width: 100,
+        height: 200,
+        units: Units.px,
+      };
+      this._scaledSize = {
+        width: 100,
+        height: 200,
+        units: Units.px,
+      };
     }
     return new ImageElement(this);
   }

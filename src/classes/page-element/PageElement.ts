@@ -226,6 +226,18 @@ public getBaseElementContent(): PageElementFirebaseData {
     this.classDefinition = this.classList.join(' ');
   }
 
+  getStyles(): string {
+    let style = '';
+    const styles: Style[] = this.styles;
+    if (styles.length > 0) {
+      styles.forEach(element => {
+        style += `${element.style}:${element.value};`;
+      });
+    }
+    style += `${this.boxDimensions.heightAsStyle};${this.boxDimensions.widthAsStyle};`;
+    return style;
+  }
+
   /** removeClass removes a class from the component, but it must be the full class name */
   removeClass(classDef: string): void {
     const tempClassList = this.classList.filter(

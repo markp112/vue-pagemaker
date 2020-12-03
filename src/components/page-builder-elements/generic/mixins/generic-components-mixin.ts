@@ -43,6 +43,7 @@ export class GenericComponentMixins extends Vue {
     if (!element) {
       element = document.getElementById(htmlElement) as HTMLDivElement;
     }
+    console.log('%c⧭', 'color: #607339', element);
     const boundingRect: BoxProperties = {
       width: element.getBoundingClientRect().width,
       height: element.getBoundingClientRect().height,
@@ -117,13 +118,14 @@ export class GenericComponentMixins extends Vue {
     let style = '';
     const component: PageElementClasses = this.$props.thisComponent;
     if (component) {
-      const styles: Style[] = component.styles;
-      if (styles.length > 0) {
-        styles.forEach(element => {
-          style += `${element.style}:${element.value};`;
-        });
-      }
-      style += `${component.boxDimensions.heightAsStyle};${component.boxDimensions.widthAsStyle};`;
+        style = component.getStyles();
+    //   const styles: Style[] = component.styles;
+    //   if (styles.length > 0) {
+    //     styles.forEach(element => {
+    //       style += `${element.style}:${element.value};`;
+    //     });
+    //   }
+        style += `${component.boxDimensions.heightAsStyle};${component.boxDimensions.widthAsStyle};`;
     }
     return style;
   }

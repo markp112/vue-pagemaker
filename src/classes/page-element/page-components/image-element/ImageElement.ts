@@ -1,10 +1,10 @@
 import { PageElementBuilder } from '@/classes/page-element/page-element-builder/PageElementBuilder';
 import { PageElement } from '../../PageElement';
-import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
 import { Dimensions, initDimensions, Location } from '@/models/components/components';
 import { Image } from '@/models/components/components';
 import { ImageElementFirebaseData, ImageElementInterface } from '../../models/pageElements/imageElement';
-import { Units } from '@/models/enums/units/units';
+import { Style } from '@/models/styles/styles';
+import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
 
 export class ImageElement extends PageElement implements ImageElementInterface {
   private _naturalSize: Dimensions;
@@ -12,6 +12,7 @@ export class ImageElement extends PageElement implements ImageElementInterface {
   private _ratio: number;
   private _maintainRatio: boolean;
   private _parentDimensions: Dimensions;
+  private _containerDimensions: Dimensions;
   private _location: Location = {
     top: 0,
     left: 0,
@@ -22,12 +23,9 @@ export class ImageElement extends PageElement implements ImageElementInterface {
     this._maintainRatio = true;
     this._naturalSize = builder.naturalSize;
     this._parentDimensions = initDimensions;
+    this._containerDimensions = builder.containerDimensions;
     this._ratio = this.calcRatio( this._naturalSize.width, this._naturalSize.height);
-    this._scaledSize = {
-      width: 100,
-      height: 200,
-      units: Units.px
-    };
+    this._scaledSize = builder.scaledSize;
   }
 
   get naturalSize(): Dimensions {
@@ -36,7 +34,6 @@ export class ImageElement extends PageElement implements ImageElementInterface {
 
   set naturalSize(size: Dimensions){
     this._naturalSize = size;
-    console.log('%c⧭', 'color: #00ff88', this._naturalSize);
     // this._scaledSize = size; /** @description when image size changes the scaled size should be reset */
     this._ratio = this.calcRatio(this._naturalSize.width, this._naturalSize.height);
   }
@@ -55,6 +52,7 @@ export class ImageElement extends PageElement implements ImageElementInterface {
 
   set maintainRatio(maintainRatio: boolean) {
     this._maintainRatio = maintainRatio;
+    
   }
 
   get parentDimensions(): Dimensions {
@@ -65,6 +63,10 @@ export class ImageElement extends PageElement implements ImageElementInterface {
     this._parentDimensions = dimensions;
   }
 
+  get containerDimensions(): Dimensions {
+    return this._containerDimensions
+  }
+
   get location(): Location {
     return this._location;
   }
@@ -73,14 +75,42 @@ export class ImageElement extends PageElement implements ImageElementInterface {
     this._location = location;
   }
 
+  public getStyles(): string {
+    let style = '';
+    const styles: Style[] = this.styles;
+    if (styles.length > 0) {
+      styles.forEach(element => {
+        style += `${element.style}:${element.value};`;
+      });
+    }
+    return style;
+  }
+
+  public getContainerStyles(): string {
+    let style = '';
+    const styles: Style[] = this.styles;
+    if (styles.length > 0) {
+      styles.forEach(element => {
+        if (element.style === 'background-size') {
+          style += `${element.style}:${this.containerDimensions.width}px ${this.containerDimensions.height}px;`;
+          style += `width:${this.containerDimensions.width}px;height:${this.containerDimensions.height}px;`
+        } else {
+          style += `${element.style}:${element.value};`;
+        }
+      });
+    }
+    return style;
+  }
+
   public getElementContent(): ImageElementFirebaseData {
     return Object.assign( this.getBaseElementContent(), {
       naturalSize: this._naturalSize,
       scaledSize: this._scaledSize,
       ratio: this._ratio,
       maintainRatio: this._maintainRatio,
-      parentDimensions: this._parentDimensions,
+      containerDimensions: this._parentDimensions,
       location: this._location,
+
     });
   }
 
@@ -101,8 +131,6 @@ export class ImageElement extends PageElement implements ImageElementInterface {
 
   public setImage(image: Image) {
     this.content = image.content;
-    
-    console.log('%c⧭', 'color: #7f7700', image.naturalSize);
     if (image.naturalSize.width === 0) {
       image.naturalSize.width = 300;
     }
