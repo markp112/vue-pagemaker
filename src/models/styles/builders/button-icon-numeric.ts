@@ -1,4 +1,4 @@
-import { Style } from '../styles';
+import { Style, StyleTags } from '../styles';
 import { IconType, ComponentNames } from '../button-icon/button-icon';
 import { ButtonIconNumeric } from '../button-icon/button-numeric-list/button-numeric-list';
 import { ButtonRequestTypes } from '../button-factory/button-factory';
@@ -10,7 +10,7 @@ export class ButtonIconNumericBuilder {
   _valuesList: string[] = [];
   _defaultValue = '0';
   _style: Style = {
-      style: 'fontSize',
+      style: 'font-size',
       value: '0'
   };
   _iconImage = '';
@@ -34,7 +34,7 @@ export class ButtonIconNumericBuilder {
     return this;
   }
 
-  withStyle(styleName: string, value: string) {
+  withStyle(styleName: StyleTags, value: string) {
     this._style = {
       style: styleName,
       value: value
@@ -80,22 +80,22 @@ export class ButtonIconNumericBuilderWrapper {
     switch (whichButton) {
       case 'border-radius':
         return this.buildButton('bezier-32.png', this.units, 'px', whichButton, '0px','px');
-      case 'fontSize' :
+      case 'font-size' :
         return this.buildButton('', this.fontSizes, '16', whichButton, '16','px');
-      case 'marginLeft':
+      case 'margin-left':
         return this.buildButton('margin-left-32.png', this.units, 'px', whichButton, '0', 'px');
-      case 'marginRight':
+      case 'margin-right':
         return this.buildButton('margin-right-32.png', this.units, 'px', whichButton, '0', 'px');
-      case 'marginTop':
+      case 'margin-top':
         return this.buildButton('margin-top-32.png', this.units, 'px', whichButton, '0', 'px');
-      case 'marginBottom':
+      case 'margin-bottom':
         return this.buildButton('margin-bottom-32.png', this.units, 'px', whichButton, '0', 'px');
       default:
         throw new Error('Unrecognised Numeric Button Type')
     }
   }
 
-  private buildButton(iconImage: string, valuesList: string[], defaultvalue: string, styleName: string, styleValue: string, units: BoxUnits) {
+  private buildButton(iconImage: string, valuesList: string[], defaultvalue: string, styleName: StyleTags, styleValue: string, units: BoxUnits) {
     return new ButtonIconNumericBuilder()
       .withIconImage(iconImage)
       .withValuesList(valuesList)

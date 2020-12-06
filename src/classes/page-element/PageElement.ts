@@ -9,7 +9,7 @@ import {
   BoxDimensions,
   BoxDimensionsInterface
 } from '../../models/components/box-dimension';
-import { Style } from '@/models/styles/styles';
+import { Style, StyleTags } from '@/models/styles/styles';
 import { PageElementFirebaseData, PageElementInterface, } from '@/classes/page-element/models/pageElements/pageElement';
 import { PageElementBuilder } from '@/classes/page-element/page-element-builder/PageElementBuilder';
 import { PageContainer } from './PageContainer/PageContainer';
@@ -186,7 +186,7 @@ public getBaseElementContent(): PageElementFirebaseData {
     this._boxDimensions.width = boxDimensions.width;
   }
 
-  constructStyle(styleName: string, value: string): Style {
+  constructStyle(styleName: StyleTags, value: string): Style {
     const style: Style ={
       style: styleName,
       value: value,

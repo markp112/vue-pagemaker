@@ -1,4 +1,4 @@
-import { Style } from '@/models/styles/styles';
+import { Style, StyleTags } from '@/models/styles/styles';
 
 
 interface RangeValuesInterface {
@@ -338,8 +338,9 @@ export class Paragraph extends RHBase {
     if (styles) {
       for (let index = 0; index < styles.length; index++) {
         if(styles[index]) {
+          const styleName = (styles[index] as unknown) as StyleTags;
           const style: Style = {
-            style: styles[index],
+            style: styleName,
             value: styles.getPropertyValue(styles[index]),
           };
           if (style.style !=='') spanStyles.push(style);
@@ -364,7 +365,7 @@ export class Paragraph extends RHBase {
     const  styleName = style.style.substring(0, index)
       + style.style.replace('-','').charAt(index).toUpperCase()
       + style.style.substring(index + 2);;
-    style.style = styleName;
+    style.style = styleName as StyleTags;
   }
 
   

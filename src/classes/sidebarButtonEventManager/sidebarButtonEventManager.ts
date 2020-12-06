@@ -1,7 +1,7 @@
 import {  TextAttributes, StyleElement } from '../text-attributes/text-attributes';
 
 import { PageModule } from '@/store/page/page';
-import { Style } from '@/models/styles/styles';
+import { Style, StyleTags } from '@/models/styles/styles';
 import { Border } from '../borders/borders';
 import { Colour } from '../colour/singleton-colour';
 
@@ -70,8 +70,9 @@ export class SidebarButtonEventManager {
    */
   private applyTextStyle() {
     const textAttribute: TextAttributes = TextAttributes.getInstance();
+    const styleName = textAttribute.styleName as StyleTags;
     const style: Style = {
-      style: textAttribute.styleName,
+      style: styleName,
       value: `${textAttribute.value}${textAttribute.units}`,
     }
     switch (textAttribute.classOrStyle) {

@@ -6,7 +6,7 @@ type StringOrNull = string | null;
 export class Underline extends RHBase {
 
   private underline: Style = {
-    style: 'textDecoration',
+    style: 'text-decoration',
     value: 'underline',
   };
 

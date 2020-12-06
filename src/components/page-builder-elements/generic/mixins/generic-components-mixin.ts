@@ -2,11 +2,13 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { PageModule } from '@/store/page/page';
 import {
-  BoxDimensions,
-  BoxDimensionsInterface, BoxProperties,
+  BoxDimensionsInterface,
+  BoxProperties,
 } from '@/models/components/box-dimension';
-import { Style } from '@/models/styles/styles';
-import { PageElementClasses, PageElementFactory } from '@/classes/page-element/factory/page-element-factory';
+import { 
+  PageElementClasses,
+  PageElementFactory 
+} from '@/classes/page-element/factory/page-element-factory';
 import { ClientCoordinates } from '@/models/components/components';
 
 
@@ -43,7 +45,7 @@ export class GenericComponentMixins extends Vue {
     if (!element) {
       element = document.getElementById(htmlElement) as HTMLDivElement;
     }
-    console.log('%c⧭', 'color: #607339', element);
+    // console.log('%c⧭', 'color: #607339', element);
     const boundingRect: BoxProperties = {
       width: element.getBoundingClientRect().width,
       height: element.getBoundingClientRect().height,

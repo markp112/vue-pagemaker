@@ -69,10 +69,10 @@ export default class SideBarTextEditor extends Vue {
   isFontUnderlined = false;
   fontWeightIconList = fontWeightIconList;
   textContent = '';
-  fontWeightButton: ButtonIconClassList = new ButtonFactory().createButton('class-list', 'fontWeight') as ButtonIconClassList;
+  fontWeightButton: ButtonIconClassList = new ButtonFactory().createButton('class-list', 'font-weight') as ButtonIconClassList;
   italicButton: ButtonIconClassInterface = new ButtonFactory().createButton('class','italic-button') as ButtonIconClassInterface;
   underLineButton: ButtonIconClassInterface = new ButtonFactory().createButton('class','underline-button') as ButtonIconClassInterface;
-  fontSizeButton: ButtonIconNumeric = new ButtonFactory().createButton('numeric','fontSize') as ButtonIconNumeric;
+  fontSizeButton: ButtonIconNumeric = new ButtonFactory().createButton('numeric','font-size') as ButtonIconNumeric;
 
   onItemChange(style: StyleElement) {
     const eventManager = SidebarButtonEventManager.getInstance();

@@ -57,7 +57,7 @@ import CloseButton from '@/components/base/buttons/close-button/close-button.vue
 import SideBarTextEditor from '../sidebar-text-editor/sidebar-text-editor.vue';
 import IndentOutdent from '@/components/base/text/text-editor/indent/indent-outdent.vue';
 import TextAlignment from '@/components/base/text/text-editor/justify/justify.vue';
-import { Style } from '../../../../models/styles/styles';
+import { Style, StyleTags } from '../../../../models/styles/styles';
 import { SidebarModule } from '@/store/sidebar/sidebar';
 import { Indents, Paragraph } from '@/classes/dom/range/range-base';
 import { RH } from '@/classes/dom/range/RH';
@@ -101,10 +101,10 @@ export default class TextEditor extends Vue {
   isFontItalic = false;
   isFontUnderlined = false;
   fontWeightIconList = fontWeightIconList;
-  fontWeightButton: ButtonIconClassList = new ButtonFactory().createButton('class-list', 'fontWeight') as ButtonIconClassList;
+  fontWeightButton: ButtonIconClassList = new ButtonFactory().createButton('class-list', 'font-weight') as ButtonIconClassList;
   italicButton: ButtonIconClassInterface = new ButtonFactory().createButton('class', 'italic-button') as ButtonIconClassInterface;
   underLineButton: ButtonIconClassInterface = new ButtonFactory().createButton('class', 'underline-button') as ButtonIconClassInterface;
-  fontSizeButton: ButtonIconNumeric = new ButtonFactory().createButton('numeric', 'fontSize') as ButtonIconNumeric;
+  fontSizeButton: ButtonIconNumeric = new ButtonFactory().createButton('numeric', 'font-size') as ButtonIconNumeric;
 
   mounted() {
     this.localContent = this.$props.content;
@@ -190,32 +190,36 @@ export default class TextEditor extends Vue {
     return this.$refs.texteditorcontent as HTMLParagraphElement;
   }
 
-  setStyle(styleName: string, value: string, classOrStyle: 'class' | 'style'): void {
-    const style: Style = { style: styleName, value: value };
-    this.rangeClone = this.range.cloneRange();
-    const rh = new RH(this.range);
-    rh.applyStyle('span', style, classOrStyle);
-    this.restoreSelection(this.rangeClone);
+  setStyle(styleName: StyleTags, value: string, classOrStyle: 'class' | 'style'): void {
+    if (classOrStyle === 'style') {
+      const style: Style = { style: styleName, value: value };
+      this.rangeClone = this.range.cloneRange();
+      const rh = new RH(this.range);
+      rh.applyStyle('span', style, classOrStyle);
+      this.restoreSelection(this.rangeClone);
+    }
   }
 
   onChange(fontFamilyStyle: StyleElement): void {
-    this.setStyle(fontFamilyStyle.styleName, fontFamilyStyle.value, 'style');
+    const styleName = fontFamilyStyle.styleName as StyleTags;
+    this.setStyle(styleName, fontFamilyStyle.value, 'style');
   }
 
   onFontWeightChange(iconElement:  StyleElement): void {
     const textAttributes: TextAttributes = TextAttributes.getInstance();
-    this.setStyle('fontWeight', iconElement.value, 'class');
+    this.setStyle('font-weight', iconElement.value, 'class');
   }
 
   onItalicClick(style: StyleElement): void {
-    this.setStyle('fontStyle', style.value, 'class');
+    this.setStyle('font-style', style.value, 'class');
   }
   onUnderlineClick(style: StyleElement): void {
-    this.setStyle('textDecoration', style.value, 'class');
+    this.setStyle('text-decoration', style.value, 'class');
   }
 
   onFontSizeChange(style: StyleElement): void {
-    this.setStyle(style.styleName, `${style.value}px`, 'style');
+    const styleName = style.styleName as StyleTags;
+    this.setStyle(styleName, `${style.value}px`, 'style');
   }
 
   onColourChange(rgbColour: string) {

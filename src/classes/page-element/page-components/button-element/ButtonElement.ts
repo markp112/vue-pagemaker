@@ -11,10 +11,10 @@ export class ButtonElement extends PageElement {
   setDefaultStyle() {
     if (this.styles.length === 0) {
       const siteDefaults = SiteDefaults.getInstance();
-      this.addStyle(this.constructStyle('fontFamily', siteDefaults.typography.fontName));
-      this.addStyle(this.constructStyle('fontSize', siteDefaults.typography.fontSizeBody));
+      this.addStyle(this.constructStyle('font-family', siteDefaults.typography.fontName));
+      this.addStyle(this.constructStyle('font-size', siteDefaults.typography.fontSizeBody));
       const siteColours = siteDefaults.colours;
-      this.addStyle(this.constructStyle('backgroundColor', siteColours.secondary));
+      this.addStyle(this.constructStyle('background-color', siteColours.secondary));
       this.addStyle(this.constructStyle('color', siteColours.textOnSecondary));
     }
   }

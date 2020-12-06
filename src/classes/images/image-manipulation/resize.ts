@@ -1,85 +1,60 @@
-// import { BoxDimensionsInterface } from '@/models/components/box-dimension';
-// import { Style } from '@/models/styles/styles';
-// import { ImageManipulator, MousePostion } from './imageManipulation';
+import { ImageElement } from '@/classes/page-element/page-components/image-element/ImageElement';
+import { PageContainer } from '@/classes/page-element/PageContainer/PageContainer';
+import { Dimension } from '@/models/components/box-dimension';
+import { Dimensions } from '@/models/components/components';
+import { Units } from '@/models/enums/units/units';
+import { MousePostion } from './imageManipulation';
 
-// export class Resize extends ImageManipulator {
+export class ResizeImage {
+  private _imageElement: ImageElement;
+  private _imageContainer: Dimensions;
 
-//   public resize(currentMousePosition: MousePostion): { boxDimensions: BoxDimensionsInterface, style: Style} {
-//     const resize: Resize = new Resize();
-//     return {
-//       boxDimensions: resize.reSizeContainers(currentMousePosition),
-//       style: resize.resizeImage(),
-//     };
-//   }
+constructor (imageElement: ImageElement) {
+  this._imageElement = imageElement;
+  this._imageContainer = this._imageElement.containerDimensions;
+}
 
-//   private reSizeContainers(currentMousePosition: MousePostion): BoxDimensionsInterface {
-//     const resizedDimensions = this.calculateNewDimensions(currentMousePosition);
-//     this.lastMousePosition = currentMousePosition;
-//     resizedDimensions.width.value = 
-//       this.checkWidthFitsWithinContainer(
-//         resizedDimensions.width.value
-//       );
-//     const constrainedDimensions = this.checkDimensionsRelativeToContainer(resizedDimensions);
-//     this.imageWidth = constrainedDimensions.width.value;
-//     this.imageHeight = constrainedDimensions.height.value;
-//     return constrainedDimensions;
-//   }
+public resize(deltaChange: MousePostion) {
+  this._imageContainer.width += deltaChange.x;
+  this._imageContainer.height += deltaChange.y;
+  this._imageContainer.width = this.checkElementFitsWithOtherContainerElements(this._imageContainer.width);
+  this._imageContainer = this.containWithinParentElement();
+  this._setNewSizes(deltaChange);
+}
 
-//   private resizeImage(): Style {
-//     const backgroundSize = 'background-size' as const;
-//     let style = {
-//       style: backgroundSize,
-//       value: `${this.imageWidth}px ${this.imageHeight}px`
-//     };
-//     if (this.naturalSize) {
-//       if (this.imageWidth > this.naturalSize.width) {
-//         style = {
-//           style: backgroundSize,
-//           value: `${this.imageWidth}px ${this.naturalSize.height}px`
-//         };
-//       } else if (this.imageWidth < this.naturalSize.width) {
-//         style = {
-//           style:backgroundSize,
-//           value: `${this.naturalSize.width}px ${this.naturalSize.height}px`
-//         };
-//       }
-      
-//     }
-//     return style;
-//   }
+private _setNewSizes(deltaChange: MousePostion) {
+  this._imageElement.scaledSize.width += deltaChange.x;
+  this._imageElement.scaledSize.height += deltaChange.y;
+  this._imageElement.containerDimensions = this._imageContainer;
+}
 
-//   private checkWidthFitsWithinContainer(width: number) {
-//     if (this.parent) {
-//       return this.parent.checkDimensionRelativeToContainerElements(
-//         this.imageRef, 
-//         width
-//       );
-//     }
-//     return width;
-//   }
+private checkElementFitsWithOtherContainerElements(width: number): number {
+  const newWidth = this._imageElement.parent.checkDimensionRelativeToContainerElements(
+    this._imageElement.ref, 
+    width
+    );
+  return newWidth;
+}
 
-//   private checkDimensionsRelativeToContainer(dimensions: BoxDimensionsInterface): BoxDimensionsInterface {
-//     const checkedDimensions = dimensions;   
-//     if (this.imageBoundRect.top < this.containerBoundingRect.top) {
-//         checkedDimensions.top.value = this.containerBoundingRect.top;
-//     }
-//     if (this.parent) {
-//       if (dimensions.height.value > this.parent.boxDimensions.height.value) {
-//         checkedDimensions.height.value = this.parent.boxDimensions.height.value;
-//       }
-//     }
-//     return checkedDimensions;
-//   }
+private containWithinParentElement(): Dimensions {
+  const checkedDimensions: Dimensions = {
+    height: this._imageContainer.height,
+    width: this._imageContainer.width,
+    units: Units.px,
+  }
+  if (checkedDimensions.height < 0) {
+    checkedDimensions.height = 0;
+  }
+  if (checkedDimensions.height > this._imageElement.parent.boxDimensions.height.value) {
+    checkedDimensions.height = this._imageElement.parent.boxDimensions.height.value;
+  }
+  if (checkedDimensions.width < 0) {
+    checkedDimensions.width = 0;
+  }
+  if (checkedDimensions.width > this._imageElement.parent.boxDimensions.width.value) {
+    checkedDimensions.width = this._imageElement.parent.boxDimensions.width.value;
+  }
+  return checkedDimensions;
+}
 
-//   private calculateNewDimensions(currentMousePosition: MousePostion): BoxDimensionsInterface {
-//     const changeX = currentMousePosition.x - this.lastMousePosition.x;
-//     const changeY = currentMousePosition.y - this.lastMousePosition.y;
-//     return {
-//       height: { value: this.imageBoundRect.height + changeY, units: 'px' },
-//       width: { value: this.imageBoundRect.width + changeX, units: 'px' },
-//       top: { value: this.imageBoundRect.top, units: 'px' },
-//       left: { value: this.imageBoundRect.left, units: 'px' },
-//     };
-//   }
-
-// }
+}

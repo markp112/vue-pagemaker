@@ -108,7 +108,7 @@ export default class UploadImage extends Vue {
               this.hasFile = true;
               this.url = result.message;
               this.updateImage();
-              resolve();
+              resolve("");
               })
             })
         }
@@ -122,7 +122,7 @@ export default class UploadImage extends Vue {
         .then(result => {
           this.url = result.message;
           this.updateImage();
-          resolve();
+          resolve("");
         })
         .catch(err => reject(err))
     })

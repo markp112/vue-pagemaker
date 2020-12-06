@@ -42,7 +42,7 @@ export class ButtonIconBuilder {
           'border style',
           'sketch-32.png'
         );
-      case 'fontWeight':
+      case 'font-weight':
         return this.buildIconList(
           'text',
           'fontWeight',

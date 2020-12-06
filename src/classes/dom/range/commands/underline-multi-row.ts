@@ -13,7 +13,7 @@ import { Style } from '@/models/styles/styles';
     private hasTextNode = false;
     private hasSpanNodeNoUnderline = false;
     private underline: Style = {
-      style: 'textDecoration',
+      style: 'text-decoration',
       value: 'underline',
     };
 

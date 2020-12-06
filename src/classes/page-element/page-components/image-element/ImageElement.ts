@@ -9,6 +9,7 @@ import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
 export class ImageElement extends PageElement implements ImageElementInterface {
   private _naturalSize: Dimensions;
   private _scaledSize: Dimensions;
+  private _imageTagDimensions: Dimensions;
   private _ratio: number;
   private _maintainRatio: boolean;
   private _parentDimensions: Dimensions;
@@ -26,20 +27,33 @@ export class ImageElement extends PageElement implements ImageElementInterface {
     this._containerDimensions = builder.containerDimensions;
     this._ratio = this.calcRatio( this._naturalSize.width, this._naturalSize.height);
     this._scaledSize = builder.scaledSize;
+    this._imageTagDimensions = builder.imageTagDimensions;
   }
 
   get naturalSize(): Dimensions {
     return this._naturalSize;
   }
 
-  set naturalSize(size: Dimensions){
+  set naturalSize(size: Dimensions) {
     this._naturalSize = size;
     // this._scaledSize = size; /** @description when image size changes the scaled size should be reset */
     this._ratio = this.calcRatio(this._naturalSize.width, this._naturalSize.height);
   }
 
-  get scaledSize() {
+  get scaledSize(): Dimensions {
     return this._scaledSize;
+  }
+
+  set scaledSize(dimensions: Dimensions) {
+    this._scaledSize = dimensions;
+  }
+
+  get imageTagDimensions(): Dimensions {
+    return this._imageTagDimensions;
+  }
+
+  set imageTagDimensions(dimension: Dimensions) {
+    this._imageTagDimensions = dimension;
   }
 
   get ratio(): number {
@@ -52,7 +66,6 @@ export class ImageElement extends PageElement implements ImageElementInterface {
 
   set maintainRatio(maintainRatio: boolean) {
     this._maintainRatio = maintainRatio;
-    
   }
 
   get parentDimensions(): Dimensions {
@@ -65,6 +78,10 @@ export class ImageElement extends PageElement implements ImageElementInterface {
 
   get containerDimensions(): Dimensions {
     return this._containerDimensions
+  }
+
+  set containerDimensions(dimensions: Dimensions) {
+    this._containerDimensions = dimensions;
   }
 
   get location(): Location {
@@ -82,6 +99,7 @@ export class ImageElement extends PageElement implements ImageElementInterface {
       styles.forEach(element => {
         style += `${element.style}:${element.value};`;
       });
+      style += `width:${this.containerDimensions.width}px;height:${this.containerDimensions.height}px;`;
     }
     return style;
   }
@@ -110,7 +128,7 @@ export class ImageElement extends PageElement implements ImageElementInterface {
       maintainRatio: this._maintainRatio,
       containerDimensions: this._parentDimensions,
       location: this._location,
-
+      imageTagDimensions: this._imageTagDimensions,
     });
   }
 
@@ -125,7 +143,8 @@ export class ImageElement extends PageElement implements ImageElementInterface {
       this.addStyle(this.constructStyle('background-image', `url(${this.content})`));
       this.addStyle(this.constructStyle('background-position-x', '0px'));
       this.addStyle(this.constructStyle('background-position-y', '0px'));
-
+      this.addStyle(this.constructStyle('width', '100px'));
+      this.addStyle(this.constructStyle('height', '200px'));
     }
   }
 

@@ -10,10 +10,10 @@ export class TextElement extends PageElement {
 
   setDefaultStyle() {
     const siteDefaults = SiteDefaults.getInstance();
-    this.addStyle(this.constructStyle('fontFamily', siteDefaults.typography.fontName));
-    this.addStyle(this.constructStyle('fontSize', siteDefaults.typography.fontSizeBody));
+    this.addStyle(this.constructStyle('font-family', siteDefaults.typography.fontName));
+    this.addStyle(this.constructStyle('font-size', siteDefaults.typography.fontSizeBody));
     const siteColours = siteDefaults.colours;
-    this.addStyle(this.constructStyle('backgroundColor', siteColours.surface));
+    this.addStyle(this.constructStyle('background-color', siteColours.surface));
     this.addStyle(this.constructStyle('color', siteColours.textOnSurface));
   }
 

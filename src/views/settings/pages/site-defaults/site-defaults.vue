@@ -91,7 +91,9 @@ import FontSelect from '@/components/base/pickers/font-selector/font-selector.vu
 import Palette from '@/views/settings/pages/colour-palette/partials/colour-palette.vue';
 import
   ColourPills,
-  { Tuple } from '@/views/settings/pages/site-defaults/partials/colour-pills/colour-pills.vue';
+  {
+    Tuple,
+  } from '@/views/settings/pages/site-defaults/partials/colour-pills/colour-pills.vue';
 import { ColourProperties } from './models/site-defaults';
 import { ButtonIconNumeric } from '@/models/styles/button-icon/button-numeric-list/button-numeric-list';
 import { ButtonFactory } from '@/models/styles/button-factory/button-factory';
@@ -144,7 +146,7 @@ export default class SiteDefaultView extends SnackbarMixin {
 
   fontSizeButton: ButtonIconNumeric = new ButtonFactory().createButton(
     'numeric',
-    'fontSize'
+    'font-size'
   ) as ButtonIconNumeric;
 
   mounted() {
@@ -173,10 +175,7 @@ export default class SiteDefaultView extends SnackbarMixin {
   }
 
   saveSiteDefaults() {
-    this.siteDefaults.saveDefaults(
-        this.siteId,
-        this.userId
-    )
+    this.siteDefaults.saveDefaults(this.siteId, this.userId)
       .then(response => {
         const notification = response as Notification;
         this.showSnackbar(notification, 'Defaults saved');

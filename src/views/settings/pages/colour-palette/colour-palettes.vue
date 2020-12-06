@@ -147,7 +147,7 @@ export default class PaletteGenerator extends SnackbarMixin {
   colourPalettes: ColourPalettes = new ColourPalettes('#ee443e'); 
     fontSizeButton: ButtonIconNumeric = new ButtonFactory().createButton(
     'numeric',
-    'fontSize'
+    'font-size'
   ) as ButtonIconNumeric;
 
   getPath(image: string): string {
@@ -189,12 +189,12 @@ export default class PaletteGenerator extends SnackbarMixin {
     this.colourPalettes.savePalette(siteAndUserId)
     .then (response => {
       const notification = response as Notification;
-      this.showSnackbar(notification, "Palettes Saved");
+      this.showSnackbar(notification, 'Palettes Saved');
     })
-    .catch( err => {
+    .catch(err => {
       const notification = err as Notification;
-      this.showSnackbar(notification, "Error saving Palettes");
-    })
+      this.showSnackbar(notification, 'Error saving Palettes');
+    });
   }
 
   loadPalette() {
@@ -216,26 +216,27 @@ export default class PaletteGenerator extends SnackbarMixin {
 </script>
 
 <style scoped>
-  .slider {
-    -webkit-appearance: none;
-    width: 100%;
-    height: 12px;
-    border-radius: 5px;  
-    background: #d3d3d3;
-    outline: none;
-    opacity: 0.7;
-    -webkit-transition: .2s;
-    transition: opacity .2s;
-  }
-  .slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%; 
-    background: #4a3d94;
-    cursor: pointer;
-  }
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 12px;
+  border-radius: 5px;  
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%; 
+  background: #4a3d94;
+  cursor: pointer;
+}
 
 .slider::-moz-range-thumb {
   width: 20px;
@@ -254,12 +255,12 @@ export default class PaletteGenerator extends SnackbarMixin {
   @apply px-4;
   @apply py-2;
   @apply bg-siteLight;
-  @apply text-onPrimary; 
+  @apply text-onPrimary;
   @apply border-gray-600;
-  @apply border; 
+  @apply border;
   @apply cursor-pointer;
 }
-.reset-button:hover{
+.reset-button:hover {
   @apply bg-site-secondary-light;
   @apply text-onPrimary;
 }

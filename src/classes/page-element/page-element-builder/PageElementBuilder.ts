@@ -46,6 +46,7 @@ export class PageElementBuilder {
   private _naturalSize!: Dimensions;
   private _scaledSize!: Dimensions;
   private _containerDimensions!: Dimensions;
+  private _imageTagDimensions!: Dimensions;
 
   setName(name: string) {
     this._name = name;
@@ -132,6 +133,11 @@ export class PageElementBuilder {
     return this;
   }
 
+  setimageTagDimensions(dimensions: Dimensions) {
+    this._imageTagDimensions = dimensions;
+    return this;
+  }
+
   setContainerDimensions(dimensions: Dimensions) {
     this._containerDimensions = dimensions;
     return this;
@@ -201,6 +207,10 @@ export class PageElementBuilder {
     return this._containerDimensions;
   }
 
+  public get imageTagDimensions(): Dimensions {
+    return this._imageTagDimensions;
+  }
+
 // required to create an empty container / element when initialising props.
   public build(): PageElement {
     return new PageElement(this);
@@ -221,23 +231,32 @@ export class PageElementBuilder {
   }
 
   public buildAnImage(): ImageElement {
+    const DEFAULT_HEIGHT = 200;
+    const DEFAULT_WIDTH = 100;
+    const NATURAL_HEIGHT = 300;
+    const NATURAL_WIDTH = 200;
     if (this._content === '') {
       this._content = 'https://firebasestorage.googleapis.com/v0/b/page-maker-69fb1.appspot.com/o/assets%2Fimages%2Fimageplaceholder.png?alt=media&token=149d3e60-0fc4-49de-9e23-5fea91458240';
       this._naturalSize = {
-        width: 300,
-        height: 200,
+        width: NATURAL_WIDTH,
+        height: NATURAL_HEIGHT,
         units: Units.px,
       };
       this._containerDimensions = {
-        width: 100,
-        height: 200,
+        width: DEFAULT_WIDTH,
+        height: DEFAULT_HEIGHT,
         units: Units.px,
       };
       this._scaledSize = {
-        width: 100,
-        height: 200,
+        width: DEFAULT_WIDTH,
+        height: DEFAULT_HEIGHT,
         units: Units.px,
       };
+      this._imageTagDimensions = {
+        width: DEFAULT_WIDTH,
+        height: DEFAULT_HEIGHT,
+        units: Units.px,
+      }
     }
     return new ImageElement(this);
   }
