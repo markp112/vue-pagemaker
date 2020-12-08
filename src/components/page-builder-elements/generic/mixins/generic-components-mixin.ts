@@ -11,7 +11,6 @@ import {
 } from '@/classes/page-element/factory/page-element-factory';
 import { ClientCoordinates } from '@/models/components/components';
 
-
 export interface MousePosition {
   x: number,
   y: number,
@@ -28,7 +27,6 @@ export interface MousePosition {
 })
 export class GenericComponentMixins extends Vue {
   name = "GenericComponentMixins";
-  // HTML_TARGET_ELEMENT = '';
   showBorder = false;
   lastMousePosition: MousePosition = {
     x: 0,
@@ -45,7 +43,6 @@ export class GenericComponentMixins extends Vue {
     if (!element) {
       element = document.getElementById(htmlElement) as HTMLDivElement;
     }
-    // console.log('%c⧭', 'color: #607339', element);
     const boundingRect: BoxProperties = {
       width: element.getBoundingClientRect().width,
       height: element.getBoundingClientRect().height,
@@ -121,19 +118,13 @@ export class GenericComponentMixins extends Vue {
     const component: PageElementClasses = this.$props.thisComponent;
     if (component) {
         style = component.getStyles();
-    //   const styles: Style[] = component.styles;
-    //   if (styles.length > 0) {
-    //     styles.forEach(element => {
-    //       style += `${element.style}:${element.value};`;
-    //     });
-    //   }
         style += `${component.boxDimensions.heightAsStyle};${component.boxDimensions.widthAsStyle};`;
     }
     return style;
   }
 
   getClasses(): string {
-    let componentClassSpec = this.$props.thisComponent.classDefinition;
+    let componentClassSpec: string = this.$props.thisComponent.classDefinition;
     if (this.showBorder) {
       componentClassSpec += ' border1';
     }

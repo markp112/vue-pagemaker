@@ -1,21 +1,8 @@
 <template>
   <div 
-    :ref="$props.thisComponent.ref"
     v-if="isText"
-    :style="getStyles()"
-    :id="$props.thisComponent.ref"
-    class="handle" 
-    :class="getClasses()"
-    @click.prevent="onClick($event)"
-    v-html="getData"
   >
-    <resizeable
-      :isActive="isActive"
-      :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"
-      @resizeStarted="resizeStarted($event)"
-      @onResize="onResize($event)"
-    >
-    </resizeable>
+    <text-component :thisComponent="$props.thisComponent"></text-component>
   </div>
   <div 
     v-else-if="isImage">
@@ -43,39 +30,40 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component, { mixins } from 'vue-class-component';
-import { Style } from '@/models//styles/styles';
-import {
-  ComponentTypes,
-  Dimensions,
-  initDimensions,
-} from '@/models/components/components';
-import {
-  BoxDimensions,
-  BoxDimensionsInterface,
-  Dimension,
-  ResizeDimensions,
-} from '@/models/components/box-dimension';
+// import { Style } from '@/models//styles/styles';
+// import {
+//   ComponentTypes,
+//   Dimensions,
+//   initDimensions,
+// } from '@/models/components/components';
+// import {
+//   BoxDimensions,
+//   BoxDimensionsInterface,
+//   Dimension,
+//   ResizeDimensions,
+// } from '@/models/components/box-dimension';
 import Resize from '@/components/base/resizeable/resize.vue';
 import { PageModule } from '@/store/page/page';
 import { GenericComponentMixins } from '@/components/page-builder-elements/generic/mixins/generic-components-mixin';
 import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
-import { ComponentTypesString } from '@/models/components/base-component';
+// import { ComponentTypesString } from '@/models/components/base-component';
 import { PageElement } from '@/classes/page-element/PageElement';
 import { PageElementClasses } from '@/classes/page-element/factory/page-element-factory';
 import ImageComponentBackground from './paritals/image-component-background.vue';
+import TextComponent from './paritals/text-component/text-component.vue';
 
 @Component({
-  
   components: {
     resizeable: Resize,
     'image-component': ImageComponentBackground,
+    'text-component': TextComponent,
   },
 })
 export default class GenericComponent extends mixins(GenericComponentMixins) {
   name = 'generic-component';
   isImage = false;
   isText = false;
-  data: ComponentTypes;
+  // data: ComponentTypes;
   editorComponent = '';
   style = '';
   HTML_TARGET_ELEMENT = '';
@@ -94,7 +82,6 @@ export default class GenericComponent extends mixins(GenericComponentMixins) {
       this.isText = true;
     }
     this.HTML_TARGET_ELEMENT = this.$props.thisComponent.ref;
-
   }
 
   get getData(): string | undefined {

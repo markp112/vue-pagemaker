@@ -13,7 +13,7 @@ export interface MousePostion {
   y: number,
 }
 
-export type ZoomDirection = 'in' | 'out' | '100' | '50';
+export type ZoomDirection = 'in' | 'out' | '100' | '50' | 'zoomToFit';
 
 export class ImageManipulator {
   private _lastMousePosition: MousePostion = {
@@ -59,13 +59,16 @@ export class ImageManipulator {
     const zoom: Zoom = new Zoom(
       this._imageElement.scaledSize,
       this._imageElement.naturalSize,
-      this._imageElement.location
+      this._imageElement.location,
+      this._imageElement.containerDimensions,
     );
     const dimensionLocation = zoom.zoom(direction);
     this._imageElement.scaledSize.height = dimensionLocation.dimensions.height;
     this._imageElement.scaledSize.width = dimensionLocation.dimensions.width;
-    this._imageElement.location = zoom.location;
-    return this.getStyles();
+    this._imageElement.location = dimensionLocation.location;
+    const styles = this.getStyles();
+    
+    return styles;
   }
 
   public pan(currentMousePosition: MousePosition): Style {

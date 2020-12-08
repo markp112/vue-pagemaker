@@ -69,7 +69,7 @@ import DropDown from '@/components/base/pickers/drop-down/drop-down.vue';
 import IconToggleButton from '@/components/base/buttons/icon-toggle-button/icon-toggle-button.vue';
 import {
   IconPickerInterface,
-  fontWeightIconList 
+  fontWeightIconList,
 } from '@/models/components/icon-picker-models';
 import { ButtonIconClassList } from '@/models/styles/builders/button-icon-class-list';
 import { ButtonIconClassInterface } from '@/models/styles/button-icon/button-icon';
@@ -243,8 +243,12 @@ export default class TextEditor extends Vue {
   }
 
   get getClasses(): string {
-    const componentClassSpec = PageModule.editedComponentRef as PageElement;
-    return componentClassSpec.classDefinition;  
+    const componentClassSpec = PageModule.editedComponentRef;
+    const selectedComponent = PageModule.selectedComponent;
+    console.log('%c%s', 'color: #731d6d', selectedComponent)
+    console.log('%c⧭', 'color: #006dcc', componentClassSpec)
+    return '';
+  //  return componentClassSpec.classDefinition;  
   }
 
   get textContent(): string {

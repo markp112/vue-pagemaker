@@ -25,14 +25,14 @@
  
       <div 
         v-if="isActive"
-        class=" bg-site-secondary-light bg-opacity-50 h-10 w-84 absolute bottom-0 left-1/2 flex flex-row justify-center p-1 z-50 ">
-        <img :src="getPath('arrow_bidirectional-32.png')" class="cursor-pointer z-30 h-8 w-8 ml-2" @click="zoom('out')">
-        <img :src="getPath('arrow_vertical-32.png')" class=" z-30 h-8 w-8 ml-2" @click="zoom($event, 'out')">
-        <img :src="getPath('resize2-32.png')" class=" z-30 h-8 w-8 ml-2" @click="zoom('out')">
-        <img :src="getPath('zoom_out-32.png')" class=" z-30 h-8 w-8 ml-2" @click="zoom('out')">
-        <img :src="getPath('zoom_in-32.png')" class=" z-30 h-8 w-8 ml-4" @click="zoom('in')">
-        <img :src="getPath('50-32.png')" class=" z-30 h-8 w-8 ml-4" @click="zoom('50')">
-        <img :src="getPath('100-32.png')" class="cursor-pointer z-30 h-8 w-8 ml-4" @click="zoom('100')">
+        class=" bg-site-secondary-light bg-opacity-50 h-10 w-84 absolute bottom-0 left-0 right-0 mr-auto ml-auto flex flex-row justify-center p-1 z-50 ">
+        <img :src="getPath('arrow_bidirectional-32.png')" class="controlIcon" @click="zoom('out')">
+        <img :src="getPath('arrow_vertical-32.png')" class="controlIcon" @click="zoom($event, 'out')">
+        <img :src="getPath('resize2-32.png')" class="controlIcon" @click="zoom('zoomToFit')">
+        <img :src="getPath('zoom_out-32.png')" class="controlIcon" @click="zoom('out')">
+        <img :src="getPath('zoom_in-32.png')" class="controlIcon" @click="zoom('in')">
+        <img :src="getPath('50-32.png')" class="controlIcon" @click="zoom('50')">
+        <img :src="getPath('100-32.png')" class="controlIcon" @click="zoom('100')">
       </div>
     </div>
 </section>
@@ -45,14 +45,8 @@ import Resize from '@/components/base/resizeable/resize.vue';
 import { ImageElement } from '@/classes/page-element/page-components/image-element/ImageElement';
 import Component, { mixins } from 'vue-class-component';
 import { PageElementClasses } from '@/classes/page-element/factory/page-element-factory';
-import { PageElementBuilder } from '@/classes/page-element/page-element-builder/PageElementBuilder';
 import { PageModule } from '@/store/page/page';
-import { BoxDimensionsInterface, BoxProperties, ResizeDimensions } from '@/models/components/box-dimension';
-import { Units } from '@/models/enums/units/units';
 import { ClientCoordinates, Dimensions } from '@/models/components/components';
-import { Style } from '@/models/styles/styles';
-import { Location } from '@/models/components/components'
-import { PageContainer } from '@/classes/page-element/PageContainer/PageContainer';
 import { ImageManipulator, ZoomDirection } from '@/classes/images/image-manipulation/imageManipulation';
 import { Zoom } from '@/classes/images/image-manipulation/zoom';
 import { Pan } from '@/classes/images/image-manipulation/pan';
@@ -75,7 +69,7 @@ export default class ImageComponentBackground extends mixins(GenericComponentMix
   HTML_IMAGE_PARENT = 'imageContainer';
   draggingStarted = false;
   isResizing = true;
-  isZoomed = false;
+  // isZoomed = false;
 
   parentContainer: HTMLDivElement = this.$refs[this.HTML_IMAGE_PARENT] as HTMLDivElement;
   image: HTMLImageElement = new Image();
@@ -106,6 +100,7 @@ export default class ImageComponentBackground extends mixins(GenericComponentMix
   }
 
   get isActive(): boolean {
+    console.log('%c%s', 'color: #1d5673', 'isActive')
     return PageModule.selectedComponent === this.$props.thisComponent.ref;
   }
 
@@ -181,6 +176,14 @@ export default class ImageComponentBackground extends mixins(GenericComponentMix
 .handle {
   position: relative;
   box-sizing: border-box;
+}
+
+.controlIcon {
+  @apply cursor-pointer;
+  @apply z-30;
+  @apply h-8;
+  @apply w-8;
+  @apply ml-2;
 }
 
 </style>

@@ -9,10 +9,10 @@ import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
 export class ImageElement extends PageElement implements ImageElementInterface {
   private _naturalSize: Dimensions;
   private _scaledSize: Dimensions;
-  private _imageTagDimensions: Dimensions;
+  // private _imageTagDimensions: Dimensions;
   private _ratio: number;
   private _maintainRatio: boolean;
-  private _parentDimensions: Dimensions;
+  // private _parentDimensions: Dimensions;
   private _containerDimensions: Dimensions;
   private _location: Location = {
     top: 0,
@@ -23,11 +23,11 @@ export class ImageElement extends PageElement implements ImageElementInterface {
     super(builder);
     this._maintainRatio = true;
     this._naturalSize = builder.naturalSize;
-    this._parentDimensions = initDimensions;
+    // this._parentDimensions = initDimensions;
     this._containerDimensions = builder.containerDimensions;
     this._ratio = this.calcRatio( this._naturalSize.width, this._naturalSize.height);
     this._scaledSize = builder.scaledSize;
-    this._imageTagDimensions = builder.imageTagDimensions;
+    // this._imageTagDimensions = builder.imageTagDimensions;
   }
 
   get naturalSize(): Dimensions {
@@ -48,13 +48,13 @@ export class ImageElement extends PageElement implements ImageElementInterface {
     this._scaledSize = dimensions;
   }
 
-  get imageTagDimensions(): Dimensions {
-    return this._imageTagDimensions;
-  }
+  // get imageTagDimensions(): Dimensions {
+  //   return this._imageTagDimensions;
+  // }
 
-  set imageTagDimensions(dimension: Dimensions) {
-    this._imageTagDimensions = dimension;
-  }
+  // set imageTagDimensions(dimension: Dimensions) {
+  //   this._imageTagDimensions = dimension;
+  // }
 
   get ratio(): number {
     return this._ratio;
@@ -68,13 +68,13 @@ export class ImageElement extends PageElement implements ImageElementInterface {
     this._maintainRatio = maintainRatio;
   }
 
-  get parentDimensions(): Dimensions {
-    return this._parentDimensions;
-  }
+  // get parentDimensions(): Dimensions {
+  //   return this._parentDimensions;
+  // }
 
-  set parentDimensions(dimensions: Dimensions) {
-    this._parentDimensions = dimensions;
-  }
+  // set parentDimensions(dimensions: Dimensions) {
+  //   this._parentDimensions = dimensions;
+  // }
 
   get containerDimensions(): Dimensions {
     return this._containerDimensions
@@ -112,8 +112,6 @@ export class ImageElement extends PageElement implements ImageElementInterface {
         if (element.style === 'background-size') {
           style += `${element.style}:${this.containerDimensions.width}px ${this.containerDimensions.height}px;`;
           style += `width:${this.containerDimensions.width}px;height:${this.containerDimensions.height}px;`
-        } else {
-          style += `${element.style}:${element.value};`;
         }
       });
     }
@@ -126,9 +124,9 @@ export class ImageElement extends PageElement implements ImageElementInterface {
       scaledSize: this._scaledSize,
       ratio: this._ratio,
       maintainRatio: this._maintainRatio,
-      containerDimensions: this._parentDimensions,
+      containerDimensions: this._containerDimensions,
       location: this._location,
-      imageTagDimensions: this._imageTagDimensions,
+      
     });
   }
 

@@ -6,15 +6,13 @@ export interface ImageElementInterface extends PageElementInterface {
   scaledSize: Dimensions;
   ratio: number;
   maintainRatio: boolean;
-  parentDimensions: Dimensions;
+  // parentDimensions: Dimensions;
   location: Location;
-  
 }
 
 export interface ImageElementFirebaseData extends PageElementFirebaseData {
   naturalSize: Dimensions; /** @description natural size of the image */
   scaledSize: Dimensions; /** @description - this is the background image dimension */
-  imageTagDimensions: Dimensions; /** @description - this is the dimension of the img tag */
   ratio: number;
   maintainRatio: boolean;
   containerDimensions: Dimensions;

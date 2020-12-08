@@ -1,11 +1,12 @@
 <template>
   <div
-    class="absolute triangleTopRight z-30"
+    class="absolute triangleTopRight z-50"
     :class ="{'active': $props.isActive, 'in-active': !$props.isActive}"
     @mousedown.stop.prevent="handleDown($event)"
     @mouseup="handleMouseUp($event)"
     @mousemove="handleMouseMove($event)">
   </div>    
+  
 </template>
 
 <script lang="ts">

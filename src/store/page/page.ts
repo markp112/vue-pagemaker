@@ -145,10 +145,11 @@ class PageStore extends VuexModule implements PageStateInterface {
   }
 
   @Mutation
-  private setEditedComponentRef(ref: PageElementClasses): void {
+  private setEditedComponentRef(component: PageElementClasses): void {
+    console.log('%c%s', 'color: #e57373', 'setEditedComponentRef');
     this._editedComponentRef = undefined;
-    this._editedComponentRef = ref;
-    this._selectedComponent = ref ? ref.ref : '';
+    this._editedComponentRef = component;
+    this._selectedComponent = component ? component.ref : '';
     this._selectedComponentType = this._editedComponentRef ? this._editedComponentRef.type : undefined;
     this._editComponentContent = this._editedComponentRef ? this._editedComponentRef.content : '';
   }
@@ -303,8 +304,7 @@ class PageStore extends VuexModule implements PageStateInterface {
     return this._pageId;
   }
 
-  public get editedComponentRef(): PageElementClasses | undefined {
-    console.log('%c%s', 'color: #1d5673', 'editedComponentRef');
+  public get editedComponentRef(): PageElementClasses {
     return this._editedComponentRef;
   }
 
@@ -313,7 +313,6 @@ class PageStore extends VuexModule implements PageStateInterface {
   }
 
   public get editedComponentData(): string {
-    console.log('%c%s', 'color: #d90000', 'editedComponentData');
     return this._editComponentContent;
 
   }
