@@ -1,7 +1,7 @@
 <template>  
   <section>
     <div class="sidebar-button-panel colour-select"> 
-      <div class="colour-select-radios">
+      <div class="colour-select-radios" v-if="$props.showLabels">
         <div class="sidebar-radio-container">
           <label for="background"
             class="mt-1" 
@@ -55,9 +55,10 @@
           />
         </div>
       </div>
-      <div class="w-3/12">
+      <div class="" :class="getContainerClass()">
         <colour-dropdown
           tooltip="From Palette"
+
           @onColourChange="onColourChange"
         >
           <template
@@ -73,7 +74,7 @@
         </colour-dropdown>
         <colour-dropdown 
           @onColourChange="onColourChange"
-          class="mt-2"
+          :class="getElementClass"
           tooltip="Colour picker"
         >
           <template
@@ -103,11 +104,20 @@ import { SidebarButtonEventManager } from '@/classes/sidebarButtonEventManager/s
 import ColourPicker from './colour-picker.vue';
 import ColourPaletteSidebar from '@/components/base/pickers/colour-picker/colour-palette-sidebar/colour-palette-sidebar.vue';
 
+export type FlexAlignment = 'vertical' | 'horizontal';
+
 @Component({
   components: {
     'colour-dropdown': ColourDropdown,
     'colour-palette': ColourPaletteSidebar,
     'colour-picker': ColourPicker,
+  },
+  props: {
+    showLabels: { default: false },
+    flexAlignment: { default: (): FlexAlignment => {
+          return 'vertical';
+      } 
+    },
   },
 })
 export default  class ColourSelect extends Vue {
@@ -129,12 +139,28 @@ export default  class ColourSelect extends Vue {
     const eventManager = SidebarButtonEventManager.getInstance();
     eventManager.applyValue('colour', style);
     eventManager.updateEditedComponent();
-    return;
+    return this.colour.rgbColour;
   }
 
   onColourPickerChange(colour: string) {
     this.colour.rgbColour = colour;
     this.onColourChange();
+  }
+
+  getContainerClass() {
+    if (this.$props.flexAlignment === 'vertical') {
+      return 'flex flex-col justify-start w-3/12';
+    } else {
+      return 'flex flex-row justify-evenly w-4/12 ml-4';
+    }
+  }
+
+  getElementClass() {
+     if (this.$props.flexAlignment === 'vertical') {
+      return 'mt-2';
+    } else {
+      return 'ml-2';
+    }
   }
 }
 </script>

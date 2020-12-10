@@ -1,5 +1,5 @@
 <template>
-  <div class="w-9/12 h-32 border border-gray-100 z-50 shadow-lg m-0" v-if="show">
+  <div class="w-9/12 h-32 border border-gray-100 z-10 shadow-lg m-0" v-if="show">
     <div class="w-full sidebar-button-panel h-12 justify-start" ref="text-editor-toolbar">
       <span
         @click="reset"
@@ -20,7 +20,7 @@
         @onOutdentClick="onOutdentClick">
       </indent-outdent>
       <text-alignment @alignClick="textAlignClick"></text-alignment>
-      <colour-select @onColourChange="onColourChange"></colour-select>
+      <colour-select @onColourChange="onColourChange" flexAlignment="horizontal" :showLabels="false"></colour-select>
       <drop-down 
         class="ml-1"
         :thisIconButton="fontSizeButton"
@@ -39,7 +39,6 @@
       :class="getClasses"
       @mouseup="getSelection"
       @keydown="onKeyDown"
-      
       >
     </div>
   </div>
@@ -57,6 +56,7 @@ import CloseButton from '@/components/base/buttons/close-button/close-button.vue
 import SideBarTextEditor from '../sidebar-text-editor/sidebar-text-editor.vue';
 import IndentOutdent from '@/components/base/text/text-editor/indent/indent-outdent.vue';
 import TextAlignment from '@/components/base/text/text-editor/justify/justify.vue';
+import ColourSelect from '@/components/base/pickers/colour-picker/colour-select.vue'
 import { Style, StyleTags } from '../../../../models/styles/styles';
 import { SidebarModule } from '@/store/sidebar/sidebar';
 import { Indents, Paragraph } from '@/classes/dom/range/range-base';
@@ -78,10 +78,12 @@ import { ButtonIconNumeric } from '@/models/styles/button-icon/button-numeric-li
 import { StyleElement, TextAttributes } from '@/classes/text-attributes/text-attributes';
 import { TextModule } from '@/store/text-editor/text-editor';
 import { PageElement } from '@/classes/page-element/PageElement';
+import { TextElement } from '@/classes/page-element/page-components/text-element/TextElement';
 @Component({
   components: {
     'close-button': CloseButton,
-    'colour-select': ColourDropdown,
+    'colour-select': ColourSelect,
+
     'indent-outdent': IndentOutdent,
     'text-alignment': TextAlignment,
     'icon-select': IconSelect,
@@ -206,8 +208,9 @@ export default class TextEditor extends Vue {
   }
 
   onFontWeightChange(iconElement:  StyleElement): void {
+    console.log('%c⧭', 'color: #ffcc00', iconElement)
     const textAttributes: TextAttributes = TextAttributes.getInstance();
-    this.setStyle('font-weight', iconElement.value, 'class');
+    this.setStyle('font-weight', iconElement.value, 'style');
   }
 
   onItalicClick(style: StyleElement): void {
@@ -243,12 +246,9 @@ export default class TextEditor extends Vue {
   }
 
   get getClasses(): string {
-    const componentClassSpec = PageModule.editedComponentRef;
+    const componentClassSpec = PageModule.editedComponentRef as TextElement;
     const selectedComponent = PageModule.selectedComponent;
-    console.log('%c%s', 'color: #731d6d', selectedComponent)
-    console.log('%c⧭', 'color: #006dcc', componentClassSpec)
-    return '';
-  //  return componentClassSpec.classDefinition;  
+    return componentClassSpec.classDefinition;  
   }
 
   get textContent(): string {

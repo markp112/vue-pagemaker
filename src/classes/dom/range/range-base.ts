@@ -1,4 +1,4 @@
-import { Style, StyleTags } from '@/models/styles/styles';
+import { Style, StyleTags, StylesMap } from '@/models/styles/styles';
 
 
 interface RangeValuesInterface {
@@ -115,10 +115,13 @@ export class RHBase implements RHBaseInterface {
 
   public setStyle(node: Node, style: Style): void {
     const element = node as HTMLElement;
-    for (const key in element.style) {
-      if (key === style.style) {
-        element.style[key] = style.value;
-        break;
+    const mappedStyleName = StylesMap.get(style.style);
+    if (mappedStyleName) {
+      for (const key in element.style) {
+        if (key === mappedStyleName) {
+          element.style[key] = style.value;
+          break;
+        }
       }
     }
   }

@@ -17,6 +17,7 @@ export class RangeRow extends RHBase {
         return
       }
     }
+    console.log('%c%s', 'color: #408059',  this.rangeValues.ancestorHasChildren );
     this.rangeValues.ancestorHasChildren 
       ? this.createWrapperWithChildren(htmlTag, style, classOrStyle)
       : this.createWrapperNoChildren(htmlTag, style, classOrStyle);

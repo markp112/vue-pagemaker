@@ -28,6 +28,16 @@ export type StyleTags =
 | 'background-repeat'
 | '';
 
+export const StylesMap = new Map([
+  [ 'color', 'color' ],
+  [ 'background-color', 'backgroundColor' ],
+  [ 'font-family', 'fontFamily' ],
+  [ 'font-size', 'fontSize' ],
+  [ 'font-weight', 'fontWeight' ],
+  [ 'font-style', 'fontStyle' ],
+  [ 'text-decoration', 'textDecoration' ],
+]);
+
 export interface Style {
   style: StyleTags;
   value: string;

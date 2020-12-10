@@ -23,9 +23,8 @@
     </div>
     <slot
       :show="show"
-      class="absolute"
+      class="absolute v-10"
     ></slot>
-   
   </section>
 </template>
 
@@ -37,7 +36,6 @@ import ColourPicker from './colour-picker.vue';
 import ColourPaletteSidebar from './colour-palette-sidebar/colour-palette-sidebar.vue';
 import { Colour } from '@/classes/colour/singleton-colour';
 import ToolTip from '../../notifications/tooltip/tooltip.vue';
-
 
 @Component({
   components: {
@@ -54,10 +52,9 @@ import ToolTip from '../../notifications/tooltip/tooltip.vue';
 })
 export default class ColourDropdown extends Vue {
   name='colour-dropdown';
-  colourStore: Colour =  Colour.getInstance();
+  private colourStore: Colour =  Colour.getInstance();
   private show = false;
   private showTooltip = false;
-  
 
   @Emit('onColourChange') 
   emitColour(): string {
