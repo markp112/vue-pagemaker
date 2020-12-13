@@ -7,10 +7,8 @@ import {
   VuexModule,
   getModule,
 } from 'vuex-module-decorators';
-import { 
-  Paragraph,
-  Paragraphs 
-} from '@/models/editor/editor';
+import { Paragraph } from '@/models/editor/paragraph/paragraph';
+import { Paragraphs } from '@/models/editor/paragraph/paragraphs';
 
 export interface TextEditorInterface {
   textEditorParagaphs: Paragraphs;

@@ -12,7 +12,7 @@
      </sidebar-accordian>
     <div class="mt-2 h-full">
       <sidebar-accordian accordianTitle="Colours" class="mb-4">
-        <colour-select></colour-select>
+        <colour-select flexAlignment="vertical" :showLabels="true"></colour-select>
       </sidebar-accordian>
       <sidebar-accordian accordianTitle="Borders" class="mb-4">
         <border-buttons

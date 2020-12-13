@@ -5,7 +5,7 @@
     </span>
     <div class="mr-2 mt-1 text-onPrimary">
       <sidebar-accordian accordianTitle="Colours" class="mb-4">
-        <colour-select></colour-select>
+        <colour-select flexAlignment="vertical" :showLabels="true"></colour-select>
       </sidebar-accordian>
       <sidebar-accordian accordianTitle="Borders" class="mb-4">
         <border-buttons class="mt-2"></border-buttons>

@@ -64,7 +64,7 @@ export default class FontSelect extends Vue {
   fontClicked(fontName: string): StyleElement {
     this.show();
     const style: StyleElement = {
-      styleName: 'fontFamily',
+      styleName: 'font-family',
       value: fontName,
       units: '',
     }

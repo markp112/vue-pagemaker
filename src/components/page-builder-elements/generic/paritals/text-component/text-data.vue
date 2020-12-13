@@ -1,10 +1,11 @@
 <template>
-  <div v-html="getData" ref="textContent"></div>
+  <div ref="textContent" v-html="getContent"></div>
 </template>
 
 <script lang="ts">
 import Component from 'vue-class-component'
 import { Vue, Emit, Prop } from 'vue-property-decorator';
+import { PageModule } from '@/store/page/page'
 
 @Component({
   props: {
@@ -14,8 +15,8 @@ import { Vue, Emit, Prop } from 'vue-property-decorator';
 export default class TextData extends Vue {
   name="text-data";
 
-  get getData(): string {
-    return this.$props.data;
+  get getContent() {
+    return PageModule.editedComponentData;
   }
 
 }

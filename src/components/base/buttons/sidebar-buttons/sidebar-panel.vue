@@ -20,7 +20,7 @@
           <margin-buttons></margin-buttons>
       </sidebar-accordian>
       <sidebar-accordian accordianTitle="Colours" class="mb-4">
-        <colour-select>
+        <colour-select  flexAlignment="vertical" :showLabels="true">
         </colour-select>
       </sidebar-accordian>
       <sidebar-accordian accordianTitle="Borders" class="mb-4">

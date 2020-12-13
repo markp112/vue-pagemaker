@@ -147,7 +147,7 @@ export class Button implements Content {
 
 export type ComponentTypes = Image | Text | Button | undefined;
 export const LOREMIPSUM = '<p id="e673k" class="text-editor">Lorem ipsum But I must explain to you <span class="textDecoration underline">how all this mistaken idea of denouncing pleasure and praising pain was born</span></p>' 
-    + '<p id="e67gk"><span class="textDecoration underline">and I will give you a complete account of the system,<span class="italic"> and expound the <span class="not-italic">actual</span> teachings of the great</span> explorer of the truth</span></p>'
-    + '<p id="e63kfk"><span class="textDecoration underline">No one rejects, dislikes,</span> not underlined <span class="textDecoration underline"> or avoids pleasure</span><span> itself </span><span class="textDecoration underline"> because it is pleasure</span>, the master-builder of human happiness.</p>'
-    + '<p id="e67rfk">but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful.</p>'
-    + '<p id="e67f3wk">Nor again is there anyone who loves or pursues or desires to obtain pain of itself <span style="font-size:22px">because it is pain</span>, but because occasionally circumstances occur.</p>';
+    + '<p id="e67gk" class="text-editor"><span class="textDecoration underline">and I will give you a complete account of the system,<span class="italic"> and expound the <span class="not-italic">actual</span> teachings of the great</span> explorer of the truth</span></p>'
+    + '<p id="e63kfk" class="text-editor"><span class="textDecoration underline">No one rejects, dislikes,</span> not underlined <span class="textDecoration underline"> or avoids pleasure</span><span> itself </span><span class="textDecoration underline"> because it is pleasure</span>, the master-builder of human happiness.</p>'
+    + '<p id="e67rfk" class="text-editor">but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful.</p>'
+    + '<p id="e67f3wk" class="text-editor">Nor again is there anyone who loves or pursues or desires to obtain pain of itself <span style="font-size:22px">because it is pain</span>, but because occasionally circumstances occur.</p>';

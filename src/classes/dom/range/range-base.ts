@@ -38,7 +38,9 @@ export class RHBase implements RHBaseInterface {
 
   constructor(range: Range) {
     console.clear();
+    this.range = new Range();
     this.range = range;
+    console.log('%c⧭', 'color: #cc0036', range);
     this.rangeValues = this.setSelection();
   }
 
@@ -126,9 +128,22 @@ export class RHBase implements RHBaseInterface {
     }
   }
   
-  public setClass(node: Node, style: Style): void {
+  public setClass(node: Node, style: Style): void;
+
+  public setClass(node: Node, style: string): void;
+  
+  public setClass(node: Node, styleOrString: string | Style): void {
     const element = node as HTMLElement;
-    element.className = `${style.style} ${style.value}`;
+    if (typeof(styleOrString) == 'string' ) {
+      element.className = styleOrString;
+    } else {
+      element.className = `${styleOrString.style} ${styleOrString.value}`;
+    }
+  }
+
+  public setElementId(node: Node, id: string): void {
+    const element = node as HTMLElement;
+    element.id = id;
   }
   
   public clearExistingClasses(node: Node, style: Style) {
@@ -265,122 +280,8 @@ export class Indents extends RHBase {
     }
     return node;
   }
+
 }
-export class Paragraph extends RHBase {
-  id = '';
-  constructor(range: Range, id ='') {
-    super(range);
-    this.id = id;
-  }
 
-  public newLine() {
-    if(!this.range) throw new Error('Range not set');
-    let node: Node | Text | null = null;
-    if (this.isRowMiddle()) {
-      node = this.getContent();
-    }
-    if (this.rangeValues.start === this.rangeValues.end) {
-      const paraNode: Node = this.createWrapperNode('p');
-      const element: HTMLElement = paraNode as HTMLElement;
-      element.id = this.id;
-      node !== null ? paraNode.appendChild(node) : element.innerText = ' ';
-      // element.style.lineHeight = '1em';
-      const parentNode: Node | null = this.findNextNodeofType(this.range.commonAncestorContainer, 'DIV');
-      if (parentNode) {
-        const node = this.range.commonAncestorContainer.parentNode 
-          ?  this.findNextNodeofType(this.range.commonAncestorContainer, 'P')
-          : null;
-        const insertAfterNode: Node | null = node?.nextSibling ? node.nextSibling : null;
-        // parentNode.appendChild(paraNode);
-        parentNode.insertBefore(paraNode, insertAfterNode);
-        this.setParagrah(paraNode);
-      }
-    } else {
-      throw new Error('Parent node not found');
-    }
-  }
 
-  private isRowMiddle(): boolean {
-    if(!this.range) throw new Error('Range not set');
-    if (this.range.collapsed) {
-      return !(this.range.startOffset === (this.range.commonAncestorContainer as Text).length)
-    } 
-    return false;
-  }
 
-  private getContent() {
-    const textNode: Text = this.getTextToEndOfLine(); 
-    const spanStyles: Style[] = [];
-    if (this.getParentNodeType(this.range.commonAncestorContainer) === 'span') {
-      const spanNode = this.createWrapperNode('span');
-      this.getNodeStyles(this.range.commonAncestorContainer, spanStyles);
-      this.applyStyles(spanNode, spanStyles);
-      spanNode.appendChild(textNode);
-      return spanNode;
-    }
-    return textNode;
-  }
-
-  private getTextToEndOfLine(): Text {
-    return (this.range.commonAncestorContainer as Text).splitText(this.range.startOffset);
-  }
-
-  private getParentNodeType(node: Node): HTMLTags {
-    if (node.parentNode) {
-      return this.getNodeType(node.parentNode);
-    }
-    return 'undefined';
-  }
-
-  private getNodeStyles(node: Node | null, spanStyles: Style[]): void {
-    if (!node) return;
-    if (this.getParentNodeType(node) === 'span') {
-      this.getNodeStyles(node.parentNode, spanStyles);
-    }
-    const styles = (node as HTMLSpanElement).style;
-    if (styles) {
-      for (let index = 0; index < styles.length; index++) {
-        if(styles[index]) {
-          const styleName = (styles[index] as unknown) as StyleTags;
-          const style: Style = {
-            style: styleName,
-            value: styles.getPropertyValue(styles[index]),
-          };
-          if (style.style !=='') spanStyles.push(style);
-        } else {
-          break;
-        }
-      };
-    }
-  }
-
-  applyStyles(spanNode: Node, styles: Style[]) {
-    if (styles.length === 0) return
-      styles.forEach(style => {
-        this.cleanStyle(style);        
-        this.setStyle(spanNode, style);
-      })
-  }
-
-  private cleanStyle(style: Style) {
-    if (!style.style.includes('-')) return;
-    const index = style.style.indexOf('-');
-    const  styleName = style.style.substring(0, index)
-      + style.style.replace('-','').charAt(index).toUpperCase()
-      + style.style.substring(index + 2);;
-    style.style = styleName as StyleTags;
-  }
-
-  
-
-  private setParagrah(node: Node) {
-    const range = document.createRange();
-    range.setStart(node, 0);
-    const end = node.childNodes.length ? node.childNodes.length : ((node as Text).length ? (node as Text).length : 0);
-    range.setEnd(node, end);
-    range.collapse(true);
-    const selection = window.getSelection() ? window.getSelection() : document.getSelection();
-    selection?.removeAllRanges();
-    selection?.addRange(range);
-  }
-}

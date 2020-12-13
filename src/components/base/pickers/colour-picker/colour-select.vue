@@ -113,7 +113,7 @@ export type FlexAlignment = 'vertical' | 'horizontal';
     'colour-picker': ColourPicker,
   },
   props: {
-    showLabels: { default: false },
+    showLabels: { default: (): boolean => { return false; }},
     flexAlignment: { default: (): FlexAlignment => {
           return 'vertical';
       } 

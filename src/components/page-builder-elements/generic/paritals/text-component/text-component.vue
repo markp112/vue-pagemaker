@@ -4,8 +4,7 @@
       :ref="$props.thisComponent.ref"
       :id="$props.thisComponent.ref"
       class="handle" 
-      :style="getStyles()"
-      :class="getClasses()"
+      
       @click.prevent="onTextClick($event)"
     >
       <text-data :data="this.$props.thisComponent.content"> </text-data>

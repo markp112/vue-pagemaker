@@ -1,46 +1,49 @@
 <template>
-  <div class="w-9/12 h-32 border border-gray-100 z-10 shadow-lg m-0" v-if="show">
-    <div class="w-full sidebar-button-panel h-12 justify-start" ref="text-editor-toolbar">
-      <span
-        @click="reset"
-        class="bg-gray-500 cursor-pointer hover:text-red-600"
-      >
-        Reset
-      </span>
-      <font-select @onChange="onChange"></font-select>
-      <icon-select
-        :buttonIconClassList="fontWeightButton"
-        @selectChange="onFontWeightChange"
-      >
-      </icon-select>
-      <icon-toggle-button :thisIconButton="italicButton" @onChange="onItalicClick" ></icon-toggle-button>
-      <icon-toggle-button :thisIconButton="underLineButton" @onChange="onUnderlineClick" ></icon-toggle-button>
-      <indent-outdent
-        @onIndentClick="onIndentClick"
-        @onOutdentClick="onOutdentClick">
-      </indent-outdent>
-      <text-alignment @alignClick="textAlignClick"></text-alignment>
-      <colour-select @onColourChange="onColourChange" flexAlignment="horizontal" :showLabels="false"></colour-select>
-      <drop-down 
-        class="ml-1"
-        :thisIconButton="fontSizeButton"
-        @onSelectChange="onFontSizeChange"
-      >
-      px
-      </drop-down>
-      <close-button @onClick="onCloseClick()"></close-button>
+  <div class="w-full h-32 border border-gray-100 z-50 shadow-lg m-0" v-if="show">
+    <div class="w-full h-12 flex flex-row justify-between" ref="text-editor-toolbar">
+      <div class="sidebar-button-panel">
+        <span
+          @click="reset"
+          class="bg-gray-500 cursor-pointer hover:text-red-600"
+        >
+          Reset
+        </span>
+        <font-select @onChange="onChange"></font-select>
+        <icon-select
+          :buttonIconClassList="fontWeightButton"
+          @selectChange="onFontWeightChange"
+        >
+        </icon-select>
+        <icon-toggle-button :thisIconButton="italicButton" @onChange="onItalicClick" ></icon-toggle-button>
+        <icon-toggle-button :thisIconButton="underLineButton" @onChange="onUnderlineClick" ></icon-toggle-button>
+        <indent-outdent
+          @onIndentClick="onIndentClick"
+          @onOutdentClick="onOutdentClick">
+        </indent-outdent>
+        <text-alignment @alignClick="textAlignClick"></text-alignment>
+        <colour-select @onColourChange="onColourChange" flexAlignment="horizontal" :showLabels="false"></colour-select>
+        <drop-down 
+          class="ml-1"
+          :thisIconButton="fontSizeButton"
+          @onSelectChange="onFontSizeChange"
+        >
+        px
+        </drop-down>
+      </div>
+      <div>
+        <close-button @onClick="onCloseClick()"></close-button>
+      </div>
     </div>
     <div
       id="texteditorcontent"
-      class="bg-white h-full text-editor"
+      class="bg-white h-full"
       contenteditable="plaintext-only"
       ref="texteditorcontent"
-      data-editor="textContent"
-      :class="getClasses"
       @mouseup="getSelection"
       @keydown="onKeyDown"
       >
     </div>
+    <paragraph-component :content="localContent"></paragraph-component>
   </div>
 </template>
 
@@ -56,10 +59,12 @@ import CloseButton from '@/components/base/buttons/close-button/close-button.vue
 import SideBarTextEditor from '../sidebar-text-editor/sidebar-text-editor.vue';
 import IndentOutdent from '@/components/base/text/text-editor/indent/indent-outdent.vue';
 import TextAlignment from '@/components/base/text/text-editor/justify/justify.vue';
-import ColourSelect from '@/components/base/pickers/colour-picker/colour-select.vue'
+import ColourSelect from '@/components/base/pickers/colour-picker/colour-select.vue';
+import ParagraphComponent from './paragraph/paragraph.vue';
 import { Style, StyleTags } from '../../../../models/styles/styles';
 import { SidebarModule } from '@/store/sidebar/sidebar';
-import { Indents, Paragraph } from '@/classes/dom/range/range-base';
+import { Indents } from '@/classes/dom/range/range-base';
+import { Paragraph } from '@/classes/dom/range/commands/newLine';
 import { RH } from '@/classes/dom/range/RH';
 import { PageModule } from '../../../../store/page/page';
 import { AlignText } from '@/classes/dom/range/commands/align-text';
@@ -83,13 +88,14 @@ import { TextElement } from '@/classes/page-element/page-components/text-element
   components: {
     'close-button': CloseButton,
     'colour-select': ColourSelect,
-
     'indent-outdent': IndentOutdent,
     'text-alignment': TextAlignment,
     'icon-select': IconSelect,
     'font-select': FontSelect,
     'icon-toggle-button': IconToggleButton,
     'drop-down': DropDown,
+    'paragraph-component': ParagraphComponent,
+
   },
   props: {
     content: { default: '' },
@@ -111,20 +117,18 @@ export default class TextEditor extends Vue {
   mounted() {
     this.localContent = this.$props.content;
     TextModule.buildParagraphs(this.localContent);
-    const textEditor: HTMLDivElement = this.$refs.texteditorcontent as HTMLDivElement;
     this.reset();
   }
 
   onCloseClick(): void {
     const textEditor: HTMLParagraphElement = this.$refs.texteditorcontent as HTMLParagraphElement;
+    console.log('%c⧭', 'color: #73998c', textEditor)
     PageModule.updateEditedComponentData(textEditor.innerHTML);
     SidebarModule.updateShowTextModal(false);
   }
 
   reset() {
     const textEditor: HTMLDivElement = this.$refs.texteditorcontent as HTMLDivElement;
-    const paraNode = document.createElement('p');
-    paraNode.innerHTML = this.localContent;
     textEditor.childNodes.forEach(node => node.remove());
     textEditor.innerHTML = this.localContent;
   }
@@ -135,7 +139,10 @@ export default class TextEditor extends Vue {
   }
 
   onKeyDown(key: KeyboardEvent) {
+    
+    key.stopPropagation();
     if (key.code === 'Enter') {
+      key.preventDefault();
       this.getSelection();
       const id = TextModule.createParagraph()
         .then(id => {
@@ -208,7 +215,6 @@ export default class TextEditor extends Vue {
   }
 
   onFontWeightChange(iconElement:  StyleElement): void {
-    console.log('%c⧭', 'color: #ffcc00', iconElement)
     const textAttributes: TextAttributes = TextAttributes.getInstance();
     this.setStyle('font-weight', iconElement.value, 'style');
   }
@@ -262,10 +268,12 @@ export default class TextEditor extends Vue {
 </script>
 
 <style lang="postcss" scoped>
- div p {
-   margin-block-start: 1em;
-   margin-block-end: 1em;
-   margin-inline-start: 0px;
-   margin-inline-end: 0px;
+
+
+  .text-editor {
+    margin-block-start: 0.5em;
+    background-color: bisque;
+    height: 24px;
+    @apply z-50;
  }
 </style>
