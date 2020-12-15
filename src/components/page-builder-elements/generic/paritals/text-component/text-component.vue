@@ -4,10 +4,9 @@
       :ref="$props.thisComponent.ref"
       :id="$props.thisComponent.ref"
       class="handle" 
-      
       @click.prevent="onTextClick($event)"
     >
-      <text-data :data="this.$props.thisComponent.content"> </text-data>
+      <text-data :thisComponent="this.$props.thisComponent"> </text-data>
       <resizeable
         :isActive="isTextActive"
         :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"

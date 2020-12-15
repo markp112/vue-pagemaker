@@ -99,7 +99,7 @@ export class FirebaseDataBuilder {
     .then(response => {
       pageData = response as FirebasePageDataTypes[];
       const rootComponent = this.componentFactory.createElement('rootContainer','ROOT') as PageContainer;
-       const component = pageData as PageContainerFirebaseData[];
+      const component = pageData as PageContainerFirebaseData[];
       this.buildPageElements(pageData, rootComponent);
       PageModule.updatePageElements(rootComponent.elements)
     })

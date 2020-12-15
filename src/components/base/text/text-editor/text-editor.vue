@@ -39,7 +39,7 @@
       class="bg-white h-full"
       contenteditable="plaintext-only"
       ref="texteditorcontent"
-      @mouseup="getSelection"
+      @mouseup="getSelection()"
       @keydown="onKeyDown"
       >
     </div>
@@ -165,6 +165,7 @@ export default class TextEditor extends Vue {
       ? window.getSelection()
       : document.getSelection();
     const content: HTMLParagraphElement = this.getContentRef();
+      console.log('%c⧭', 'color: #00a3cc',document.getSelection())
     if (!selection || !content) {
       return;
     }
@@ -180,6 +181,7 @@ export default class TextEditor extends Vue {
         break;
       }
     }
+        console.log('%c⧭', 'color: #aa00ff', this.range)
   }
 
   restoreSelection(range: Range) {

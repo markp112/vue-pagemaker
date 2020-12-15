@@ -1,11 +1,8 @@
 <template>
-  <div 
-    v-if="isText"
-  >
+  <div v-if="isText">
     <text-component :thisComponent="$props.thisComponent"></text-component>
   </div>
-  <div 
-    v-else-if="isImage">
+  <div v-else-if="isImage">
     <image-component :thisComponent="$props.thisComponent"></image-component>
   </div>
   <div 
@@ -30,23 +27,10 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component, { mixins } from 'vue-class-component';
-// import { Style } from '@/models//styles/styles';
-// import {
-//   ComponentTypes,
-//   Dimensions,
-//   initDimensions,
-// } from '@/models/components/components';
-// import {
-//   BoxDimensions,
-//   BoxDimensionsInterface,
-//   Dimension,
-//   ResizeDimensions,
-// } from '@/models/components/box-dimension';
 import Resize from '@/components/base/resizeable/resize.vue';
 import { PageModule } from '@/store/page/page';
 import { GenericComponentMixins } from '@/components/page-builder-elements/generic/mixins/generic-components-mixin';
 import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
-// import { ComponentTypesString } from '@/models/components/base-component';
 import { PageElement } from '@/classes/page-element/PageElement';
 import { PageElementClasses } from '@/classes/page-element/factory/page-element-factory';
 import ImageComponentBackground from './paritals/image-component-background.vue';

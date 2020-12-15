@@ -17,7 +17,15 @@ export class Paragraph extends RHBase {
   public newLine() {
     if(!this.range) throw new Error('Range not set');
     console.log('%c⧭', 'color: #cc7a1d', this.range);
-  
+    console.log('%c⧭', 'color: #e50000', this.range.commonAncestorContainer.nextSibling);
+    const text = this.range.startContainer;
+    console.log('%c⧭', 'color: #733d00', text);
+    const nextsib = this.range.commonAncestorContainer.nextSibling;
+    console.log('%c⧭', 'color: #00bf00', nextsib);
+    // start Container
+    // common ancestor next sibling
+    // common ancestor parent.nextsibling
+// return;
     console.log('%c%s', 'color: #ff6600', this.isInMiddleOfARow());
     let newParagraph: Node; 
     if (this.isInMiddleOfARow()) {
@@ -66,33 +74,44 @@ export class Paragraph extends RHBase {
     classes = this.getClasses();
     styles = this.getStyling();
     const newParagraph: Node = this.createWrapperNode('p');
-    const newParagraphElement = newParagraph as HTMLParagraphElement;
-    newParagraphElement.className = "text-editor"
-    newParagraphElement.id = this.id;
-    const spanNode = this.createWrapperNode('span');
-    (spanNode as HTMLSpanElement).className = classes;
-    this.applyStyles(spanNode, styles);
-    if (nodeContent) {
-      if (nodeContent.textNode) {
-        spanNode.appendChild(nodeContent.textNode);
-      }
-      newParagraph.appendChild(spanNode);
-      if (nodeContent.siblings) {
-        newParagraph.appendChild(nodeContent.siblings);
-      }
-      if (nodeContent.parentSiblings.length > 0) {
-        nodeContent.parentSiblings.forEach(node => {
-          newParagraph.appendChild(node);
-        })
-      }
+    this.setClass(newParagraph, classes)
+    this.setElementId(newParagraph, this.id);
+    const startNode = this.range.startContainer;
+    const nextSibling = this.range.commonAncestorContainer.nextSibling;
+    const parentNextSibling = this.range.commonAncestorContainer.parentElement?.nextSibling;
+    newParagraph.appendChild(startNode);
+    if (nextSibling) {
+      newParagraph.appendChild(nextSibling);
+    }
+    if (parentNextSibling) {
+      newParagraph.appendChild(parentNextSibling);
     }
     return newParagraph;
+    // const spanNode = this.createWrapperNode('span');
+    // (spanNode as HTMLSpanElement).className = classes;
+    // this.applyStyles(spanNode, styles);
+    // if (nodeContent) {
+    //   if (nodeContent.textNode) {
+    //     spanNode.appendChild(nodeContent.textNode);
+    //   }
+    //   newParagraph.appendChild(spanNode);
+    //   if (nodeContent.siblings) {
+    //     newParagraph.appendChild(nodeContent.siblings);
+    //   }
+    //   if (nodeContent.parentSiblings.length > 0) {
+    //     nodeContent.parentSiblings.forEach(node => {
+    //       newParagraph.appendChild(node);
+    //     })
+    //   }
+    // }
+    // return newParagraph;
   }
 
   private getContent(): ExistingContent {
     const textNode: Text = this.getTextToEndOfLine(); 
     const siblings = (this.range.commonAncestorContainer as Text).nextElementSibling;
-    
+    console.log('%c⧭', 'color: #e50000', this.range.commonAncestorContainer.nextSibling);
+    // it has created the chop
     const parentSiblings: Node[] = [];
     let parent = this.range.commonAncestorContainer.parentNode;
     if (parent) {
