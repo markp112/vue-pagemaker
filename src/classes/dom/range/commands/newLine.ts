@@ -16,12 +16,8 @@ export class Paragraph extends RHBase {
 
   public newLine() {
     if(!this.range) throw new Error('Range not set');
-    console.log('%c⧭', 'color: #cc7a1d', this.range);
-    console.log('%c⧭', 'color: #e50000', this.range.commonAncestorContainer.nextSibling);
     const text = this.range.startContainer;
-    console.log('%c⧭', 'color: #733d00', text);
     const nextsib = this.range.commonAncestorContainer.nextSibling;
-    console.log('%c⧭', 'color: #00bf00', nextsib);
     // start Container
     // common ancestor next sibling
     // common ancestor parent.nextsibling
@@ -59,7 +55,8 @@ export class Paragraph extends RHBase {
           return true;
         };
       }
-      if (!(this.range.startOffset === (this.range.commonAncestorContainer as Text).length)) {
+      if ((this.range.startOffset !== (this.range.commonAncestorContainer as Text).length)) {
+        console.log('%c%s', 'color: #ffa640', this.range.startOffset);
         return true;
       }
     } 
@@ -71,21 +68,40 @@ export class Paragraph extends RHBase {
     let classes = '';
     let styles: Style [] = [];
     nodeContent = this.getContent();
-    classes = this.getClasses();
-    styles = this.getStyling();
     const newParagraph: Node = this.createWrapperNode('p');
+    const spanNode: Node = this.createWrapperNode('span');
     this.setClass(newParagraph, classes)
     this.setElementId(newParagraph, this.id);
     const startNode = this.range.startContainer;
-    const nextSibling = this.range.commonAncestorContainer.nextSibling;
-    const parentNextSibling = this.range.commonAncestorContainer.parentElement?.nextSibling;
-    newParagraph.appendChild(startNode);
-    if (nextSibling) {
-      newParagraph.appendChild(nextSibling);
-    }
+    classes = this.getClasses(startNode);
+    console.log('%c%s', 'color: #f200e2', classes);
+    styles = this.getStyling(startNode, styles);
+    console.log('%c⧭', 'color: #00b300', styles);
+    let siblings: Node[] = [];
+    let parentNextSiblings: Node[] = [];
+    //working code 
+    siblings = this.getSiblings(startNode, siblings);
+    console.log('%c⧭', 'color: #917399', siblings);
+    const parentNextSibling = this.range.commonAncestorContainer.parentElement;
     if (parentNextSibling) {
-      newParagraph.appendChild(parentNextSibling);
+      parentNextSiblings = this.getSiblings(parentNextSibling, parentNextSiblings);
     }
+    console.log('%c⧭', 'color: #d90000', parentNextSiblings);
+
+    spanNode.appendChild(startNode);
+    siblings.forEach(sibling => {
+      spanNode.appendChild(sibling);
+    });
+    newParagraph.appendChild(spanNode);
+    parentNextSiblings.forEach(sibling => {
+      spanNode.appendChild(sibling)
+    });
+      this.applyStyles(spanNode, styles);
+    (spanNode as HTMLSpanElement).className = classes;
+
+    // if (parentNextSibling) {
+    //   newParagraph.appendChild(parentNextSibling);
+    // }
     return newParagraph;
     // const spanNode = this.createWrapperNode('span');
     // (spanNode as HTMLSpanElement).className = classes;
@@ -105,6 +121,16 @@ export class Paragraph extends RHBase {
     //   }
     // }
     // return newParagraph;
+  }
+
+  private  getSiblings(node: Node, siblings: Node[]): Node[] {
+    if (node.nextSibling) {
+      if (node.nodeName !=='SPAN' && node.nodeName !=='#text') return siblings;
+      
+      siblings.push(node.nextSibling);
+      return this.getSiblings(node.nextSibling, siblings);
+  }
+    return siblings;
   }
 
   private getContent(): ExistingContent {
@@ -133,27 +159,24 @@ export class Paragraph extends RHBase {
     };
   }
 
-  private getClasses(): string {
-    const parentNode = this.range.commonAncestorContainer.parentNode;
-    console.log('%c⧭', 'color: #40fff2', parentNode);
-    if (parentNode) {
-      if (parentNode.nodeName === 'SPAN') {
-        return (parentNode as HTMLSpanElement).className;
-      }
-    }
-    return '';
+  private getClasses(node: Node): string {
+    let classes = "";
+    classes +=" " + (node as HTMLSpanElement).className; 
+    if (!node.parentNode) return classes;
+    if (node.parentNode.nodeName === 'P') return classes;
+    classes += this.getClasses(node.parentNode);
+    return classes;
   }
 
-  private getStyling(): Style[] {
-    const parentNode = this.range.commonAncestorContainer.parentNode;
+  private getStyling(node: Node, styles: Style[]): Style[] {
+    const parentNode = node.parentNode;
     if (parentNode) {
       if (parentNode.nodeName === 'SPAN') {
-        const styles: Style[] = [];
-        this.getNodeStyles(parentNode, styles);
+       this.getNodeStyles(parentNode, styles);
         return styles;
       }
     }
-    return [];
+    return styles;
   }
 
   private getTextToEndOfLine(): Text {
@@ -168,15 +191,16 @@ export class Paragraph extends RHBase {
     return 'undefined';
   }
 
-  private getNodeStyles(node: Node | null, spanStyles: Style[]): void {
-    console.log('%c%s', 'color: #cc7033', 'getNodeStyles');
-    if (!node) return;
+  private getNodeStyles(node: Node | null, spanStyles: Style[]): Style[] {
+    if (!node) return spanStyles;
    
     const styles = (node as HTMLSpanElement).style;
     console.log('%c⧭', 'color: #f27999', styles);
     if (styles) {
       for (let index = 0; index < styles.length; index++) {
         if(styles[index]) {
+
+          console.log('%c⧭', 'color: #1d5673', styles[index] );
           const styleName = (styles[index] as unknown) as StyleTags;
           const style: Style = {
             style: styleName,
@@ -190,9 +214,9 @@ export class Paragraph extends RHBase {
       };
     }
     if (this.getParentNodeType(node) === 'span') {
-      this.getNodeStyles(node.parentNode, spanStyles);
-      console.log('%c⧭', 'color: #5200cc', spanStyles);
+      return this.getNodeStyles(node.parentNode, spanStyles);
     }
+    return spanStyles;
   }
 
   applyStyles(spanNode: Node, styles: Style[]) {
