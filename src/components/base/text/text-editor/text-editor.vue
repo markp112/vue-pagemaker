@@ -36,7 +36,7 @@
     </div>
     <div
       id="texteditorcontent"
-      class="bg-white h-full"
+      class="bg-white h-full p-1"
       contenteditable="plaintext-only"
       ref="texteditorcontent"
       @mouseup="getSelection()"
@@ -166,11 +166,13 @@ export default class TextEditor extends Vue {
       : document.getSelection();
     const content: HTMLParagraphElement = this.getContentRef();
       console.log('%c⧭', 'color: #00a3cc',document.getSelection())
+
     if (!selection || !content) {
       return;
     }
     for (let i = 0; i < selection.rangeCount; i++) {
       const range = selection.getRangeAt(0);
+      console.log('%c⧭', 'color: #cc0088', range)
       let start: Node | null = range.startContainer;
       let end: Node | null = range.endContainer;
       // for IE11 : node.contains(textNode) always return false
@@ -180,8 +182,7 @@ export default class TextEditor extends Vue {
         this.range = range;
         break;
       }
-    }
-        console.log('%c⧭', 'color: #aa00ff', this.range)
+    } 
   }
 
   restoreSelection(range: Range) {

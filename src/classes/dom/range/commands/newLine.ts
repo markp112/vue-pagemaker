@@ -1,5 +1,7 @@
 import { Style, StyleTags } from "@/models/styles/styles";
 import { HTMLTags, RHBase } from "../range-base";
+import  Guid  from "@/utils/guid";
+  
 
 interface ExistingContent {
   textNode: Text;
@@ -7,43 +9,77 @@ interface ExistingContent {
   parentSiblings: Node[];
 };
 export class Paragraph extends RHBase {
-
   id = '';
+  
   constructor(range: Range, id ='') {
     super(range);
-    this.id = id;
+    console.log('%c⧭', 'color: #1d3f73', range);
+    this.id = Guid.newSmallGuid();
+
   }
 
   public newLine() {
     if(!this.range) throw new Error('Range not set');
+
     const text = this.range.startContainer;
     const nextsib = this.range.commonAncestorContainer.nextSibling;
     // start Container
     // common ancestor next sibling
     // common ancestor parent.nextsibling
 // return;
-    console.log('%c%s', 'color: #ff6600', this.isInMiddleOfARow());
+    // console.log('%c%s', 'color: #ff6600', this.isInMiddleOfARow());
     let newParagraph: Node; 
-    if (this.isInMiddleOfARow()) {
-      newParagraph = this.splitLine();
-    } else {
-      newParagraph = this.createWrapperNode('p');
-    }
 
+    if (this.isEndOfLine() || this.isStartOfLine() ) {
+      newParagraph = this.createWrapperNode('p');
+      this.setElementId(newParagraph, this.id)
+      newParagraph.textContent = ' ';
+    } else {
+      newParagraph = this.splitLine();
+    }
     const parentNode: Node | null = this.findNextNodeofType(this.range.commonAncestorContainer, 'DIV');
     if (parentNode) {
       const node = this.range.commonAncestorContainer.parentNode 
-        ?  this.findNextNodeofType(this.range.commonAncestorContainer, 'P')
-        : null;
-      const insertAfterNode: Node | null = node?.nextSibling ? node.nextSibling : null;
+      ?  this.findNextNodeofType(this.range.commonAncestorContainer, 'P')
+      : null;
+      console.log('%c⧭', 'color: #997326', node);
+      let insertAfterNode: Node | null;
       // parentNode.appendChild(paraNode);
-      parentNode.insertBefore(newParagraph, insertAfterNode);
+      if (this.isStartOfLine()) {
+        insertAfterNode = node?.previousSibling ? node.previousSibling : null;
+      } else {
+        insertAfterNode = node?.nextSibling ? node.nextSibling : null;
+      }
+      if (insertAfterNode) {
+        console.log('%c⧭', 'color: #bfffc8', insertAfterNode);
+        parentNode.insertBefore(newParagraph, insertAfterNode);
+      } else {
+        parentNode.appendChild(newParagraph);
+      }
       this.setParagrah(newParagraph);
     }
     else {
     throw new Error('Parent node not found');
   }
 }
+  isEndOfLine(): boolean {
+    const startOffset = this.range.startOffset;
+    const endOffset = this.range.endOffset;
+    const length = (this.range.commonAncestorContainer as Text).length;
+    if (startOffset === endOffset && startOffset === length) {
+      return true;
+    }
+    return false;
+  }
+
+  isStartOfLine(): boolean {
+    const startOffset = this.range.startOffset;
+    const endOffset = this.range.endOffset;
+    if (startOffset === 0 && endOffset === 0) {
+      return true;
+    }
+    return false;
+  }
 
   private isInMiddleOfARow(): boolean {
     if(!this.range) throw new Error('Range not set');
@@ -68,6 +104,7 @@ export class Paragraph extends RHBase {
     let classes = '';
     let styles: Style [] = [];
     nodeContent = this.getContent();
+    console.log('%c⧭', 'color: #006dcc', nodeContent);
     const newParagraph: Node = this.createWrapperNode('p');
     const spanNode: Node = this.createWrapperNode('span');
     this.setClass(newParagraph, classes)
@@ -88,7 +125,7 @@ export class Paragraph extends RHBase {
     }
     console.log('%c⧭', 'color: #d90000', parentNextSiblings);
 
-    spanNode.appendChild(startNode);
+    spanNode.appendChild(nodeContent.textNode);
     siblings.forEach(sibling => {
       spanNode.appendChild(sibling);
     });
@@ -98,29 +135,8 @@ export class Paragraph extends RHBase {
     });
       this.applyStyles(spanNode, styles);
     (spanNode as HTMLSpanElement).className = classes;
-
-    // if (parentNextSibling) {
-    //   newParagraph.appendChild(parentNextSibling);
-    // }
     return newParagraph;
-    // const spanNode = this.createWrapperNode('span');
-    // (spanNode as HTMLSpanElement).className = classes;
-    // this.applyStyles(spanNode, styles);
-    // if (nodeContent) {
-    //   if (nodeContent.textNode) {
-    //     spanNode.appendChild(nodeContent.textNode);
-    //   }
-    //   newParagraph.appendChild(spanNode);
-    //   if (nodeContent.siblings) {
-    //     newParagraph.appendChild(nodeContent.siblings);
-    //   }
-    //   if (nodeContent.parentSiblings.length > 0) {
-    //     nodeContent.parentSiblings.forEach(node => {
-    //       newParagraph.appendChild(node);
-    //     })
-    //   }
-    // }
-    // return newParagraph;
+    
   }
 
   private  getSiblings(node: Node, siblings: Node[]): Node[] {
@@ -136,8 +152,6 @@ export class Paragraph extends RHBase {
   private getContent(): ExistingContent {
     const textNode: Text = this.getTextToEndOfLine(); 
     const siblings = (this.range.commonAncestorContainer as Text).nextElementSibling;
-    console.log('%c⧭', 'color: #e50000', this.range.commonAncestorContainer.nextSibling);
-    // it has created the chop
     const parentSiblings: Node[] = [];
     let parent = this.range.commonAncestorContainer.parentNode;
     if (parent) {
@@ -150,14 +164,13 @@ export class Paragraph extends RHBase {
         }
       }
     }
-    console.log('%c⧭', 'color: #ace2e6', parentSiblings);
-
     return {
       textNode,
       siblings,
       parentSiblings,
     };
   }
+
 
   private getClasses(node: Node): string {
     let classes = "";
@@ -180,8 +193,8 @@ export class Paragraph extends RHBase {
   }
 
   private getTextToEndOfLine(): Text {
-    console.log('%c⧭', 'color: #86bf60', this.range.commonAncestorContainer);
-    return (this.range.commonAncestorContainer as Text).splitText(this.range.startOffset);
+    const text = this.range.startContainer as Text;
+    return text.splitText(this.range.startOffset);
   }
 
   private getParentNodeType(node: Node): HTMLTags {
@@ -235,8 +248,6 @@ export class Paragraph extends RHBase {
       + style.style.substring(index + 2);;
     style.style = styleName as StyleTags;
   }
-
-  
 
   private setParagrah(node: Node) {
     const range = document.createRange();
