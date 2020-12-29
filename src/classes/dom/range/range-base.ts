@@ -38,7 +38,6 @@ export class RHBase implements RHBaseInterface {
 
   constructor(range: Range) {
     console.clear();
-    this.range = new Range();
     this.range = range;
     console.log('%c⧭', 'color: #cc0036', range);
     this.rangeValues = this.setSelection();
@@ -117,7 +116,7 @@ export class RHBase implements RHBaseInterface {
 
   public setStyle(node: Node, style: Style): void {
     const element = node as HTMLElement;
-    const mappedStyleName = StylesMap.get(style.style);
+    const mappedStyleName = style.style.includes('-') ? StylesMap.get(style.style) : style.style;
     if (mappedStyleName) {
       for (const key in element.style) {
         if (key === mappedStyleName) {
