@@ -122,7 +122,6 @@ export default class TextEditor extends Vue {
 
   onCloseClick(): void {
     const textEditor: HTMLParagraphElement = this.$refs.texteditorcontent as HTMLParagraphElement;
-    console.log('%c⧭', 'color: #73998c', textEditor)
     PageModule.updateEditedComponentData(textEditor.innerHTML);
     SidebarModule.updateShowTextModal(false);
   }
@@ -139,17 +138,13 @@ export default class TextEditor extends Vue {
   }
 
   onKeyDown(key: KeyboardEvent) {
-    
     key.stopPropagation();
     if (key.code === 'Enter') {
       key.preventDefault();
       this.getSelection();
-      const id = TextModule.createParagraph()
-        .then(id => {
-          const paragraph = new Paragraph(this.range, id);
-          paragraph.newLine();
-          return;
-        })
+      const paragraph = new Paragraph(this.range);
+      paragraph.newLine();
+      return;
     }
     if ( key.code === 'ArrowLeft' 
       || key.code === 'ArrowRight'
@@ -157,7 +152,9 @@ export default class TextEditor extends Vue {
       || key.code === 'ArrowDown'
       || key.code === 'End'
       || key.code === 'Home'
-      ) this.getSelection();
+      ) { 
+        this.getSelection();
+      }
   }
 
   saveCurrentRange() {
@@ -165,8 +162,6 @@ export default class TextEditor extends Vue {
       ? window.getSelection()
       : document.getSelection();
     const content: HTMLParagraphElement = this.getContentRef();
-      console.log('%c⧭', 'color: #00a3cc',document.getSelection())
-
     if (!selection || !content) {
       return;
     }
@@ -218,8 +213,9 @@ export default class TextEditor extends Vue {
   }
 
   onFontWeightChange(iconElement:  StyleElement): void {
+    console.log('%c⧭', 'color: #7f2200', iconElement)
     const textAttributes: TextAttributes = TextAttributes.getInstance();
-    this.setStyle('font-weight', iconElement.value, 'style');
+    this.setStyle('font-weight', iconElement.value, 'class');
   }
 
   onItalicClick(style: StyleElement): void {

@@ -2,20 +2,12 @@ import { Style, StyleTags } from "@/models/styles/styles";
 import { HTMLTags, RHBase } from "../range-base";
 import  Guid  from "@/utils/guid";
   
-
-interface ExistingContent {
-  textNode: Text;
-  siblings: ChildNode | null;
-  parentSiblings: Node[];
-};
 export class Paragraph extends RHBase {
   id = '';
   
-  constructor(range: Range, id ='') {
+  constructor(range: Range) {
     super(range);
-    console.log('%c⧭', 'color: #1d3f73', range);
     this.id = Guid.newSmallGuid();
-
   }
 
   public newLine() {
@@ -28,6 +20,10 @@ export class Paragraph extends RHBase {
     } else {
       newParagraph = this.splitLine();
     }
+    this.insertParagraph(newParagraph);
+  }
+
+  insertParagraph(newParagraph: Node) {
     const textEditorContainer: Node | null = this.findNextNodeofType(this.range.commonAncestorContainer, 'DIV');
     if (textEditorContainer) {
       const node = this.range.commonAncestorContainer.parentNode
@@ -45,8 +41,7 @@ export class Paragraph extends RHBase {
         textEditorContainer.appendChild(newParagraph);
       }
       this.setParagrah(newParagraph);
-    }
-    else {
+    } else {
       throw new Error('Parent node not found');
     }
   }
@@ -55,7 +50,7 @@ export class Paragraph extends RHBase {
     const startOffset = this.range.startOffset;
     const endOffset = this.range.endOffset;
     const length = (this.range.commonAncestorContainer as Text).length;
-    if (startOffset === endOffset && startOffset === length) {
+    if (startOffset === endOffset && startOffset === length && this.range.startContainer.nextSibling === null) {
       return true;
     }
     return false;
@@ -71,36 +66,49 @@ export class Paragraph extends RHBase {
   }
 
   splitLine(): Node {
-    let nodeContent: Text | null = null;
-    let classes = '';
-    let styles: Style [] = [];
-    const newParagraph: Node = this.createWrapperNode('p');
-    const spanNode: Node = this.createWrapperNode('span');
     const startNode = this.range.startContainer;
-    nodeContent = this.getContent();
-    this.setElementId(newParagraph, this.id);
-    classes = this.getClasses(startNode);
-    styles = this.getStyling(startNode, styles);
-    let siblings: Node[] = [];
-    let parentNextSiblings: Node[] = [];
-    siblings = this.getSiblings(startNode, siblings);
-    const parentNextSibling = this.range.commonAncestorContainer.parentElement;
-    if (parentNextSibling) {
-      parentNextSiblings = this.getSiblings(parentNextSibling, parentNextSiblings);
-    }
-    spanNode.appendChild(nodeContent);
-    siblings.forEach(sibling => {
-      spanNode.appendChild(sibling);
-    });
-    newParagraph.appendChild(spanNode);
-    parentNextSiblings.forEach(sibling => {
-      newParagraph.appendChild(sibling)
-    });
+    const spanNode: Node = this.createNewSpanNode();
+    const newParagraph: Node = this.createNewParagraph(spanNode);
+    this.addParentSiblings(newParagraph);
+    this.addSiblings(spanNode);
+    const classes = this.getClasses(startNode);
+    const styles = this.getStyling(startNode, []);
     this.applyStyles(spanNode, styles);
     if (classes) {
       (spanNode as HTMLSpanElement).className = classes;
     }
     return newParagraph;
+  }
+
+  addSiblings(spanNode: Node) {
+    const siblings = this.getSiblings(this.range.startContainer, []);
+    siblings.forEach(sibling => {
+      spanNode.appendChild(sibling);
+    });
+  }
+
+  addParentSiblings(newParagraph: Node) {
+    const parentNextSibling = this.range.commonAncestorContainer.parentElement;
+    if (parentNextSibling) {
+      const parentNextSiblings = this.getSiblings(parentNextSibling, []);
+      parentNextSiblings.forEach(sibling => {
+        newParagraph.appendChild(sibling)
+      });
+    }
+  }
+
+  private createNewParagraph(spanNode: Node): Node {
+    const newParagraph: Node = this.createWrapperNode('p');
+    this.setElementId(newParagraph, this.id);
+    newParagraph.appendChild(spanNode);
+    return newParagraph;
+  }
+
+  private createNewSpanNode(): Node {
+    const nodeContent: Text | null = this.getContent();
+    const spanNode: Node = this.createWrapperNode('span');
+    spanNode.appendChild(nodeContent);
+    return spanNode;
   }
 
   private getSiblings(node: Node, siblings: Node[]): Node[] {
@@ -150,7 +158,6 @@ export class Paragraph extends RHBase {
 
   private getNodeStyles(node: Node | null, spanStyles: Style[]): Style[] {
     if (!node) return spanStyles;
-   
     const styles = (node as HTMLSpanElement).style;
     if (styles) {
       for (let index = 0; index < styles.length; index++) {
@@ -174,11 +181,10 @@ export class Paragraph extends RHBase {
   }
 
   applyStyles(spanNode: Node, styles: Style[]) {
-    if (styles.length === 0) return
-      styles.forEach(style => {
-        this.cleanStyle(style);        
-        this.setStyle(spanNode, style);
-      })
+    styles.forEach(style => {
+      this.cleanStyle(style);        
+      this.setStyle(spanNode, style);
+    })
   }
 
   private cleanStyle(style: Style) {
