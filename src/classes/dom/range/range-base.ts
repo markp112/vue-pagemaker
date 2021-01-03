@@ -114,17 +114,15 @@ export class RHBase implements RHBaseInterface {
     }
   }
 
+  public setStyles(node: Node, styles: Style[]) {
+    styles.forEach(style => {
+      this.setStyle(node, style);
+    })
+  }
+
   public setStyle(node: Node, style: Style): void {
     const element = node as HTMLElement;
-    const mappedStyleName = style.style.includes('-') ? StylesMap.get(style.style) : style.style;
-    if (mappedStyleName) {
-      for (const key in element.style) {
-        if (key === mappedStyleName) {
-          element.style[key] = style.value;
-          break;
-        }
-      }
-    }
+    element.style.setProperty(style.style, style.value)
   }
   
   public setClass(node: Node, style: Style): void;

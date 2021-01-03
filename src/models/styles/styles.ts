@@ -39,7 +39,7 @@ export const StylesMap = new Map([
 ]);
 
 export interface Style {
-  style: StyleTags;
+  style: string;
   value: string;
 }
 

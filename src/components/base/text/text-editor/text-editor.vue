@@ -43,7 +43,7 @@
       @keydown="onKeyDown"
       >
     </div>
-    <paragraph-component :content="localContent"></paragraph-component>
+    
   </div>
 </template>
 
@@ -84,6 +84,7 @@ import { StyleElement, TextAttributes } from '@/classes/text-attributes/text-att
 import { TextModule } from '@/store/text-editor/text-editor';
 import { PageElement } from '@/classes/page-element/PageElement';
 import { TextElement } from '@/classes/page-element/page-components/text-element/TextElement';
+
 @Component({
   components: {
     'close-button': CloseButton,
@@ -198,13 +199,11 @@ export default class TextEditor extends Vue {
   }
 
   setStyle(styleName: StyleTags, value: string, classOrStyle: 'class' | 'style'): void {
-    if (classOrStyle === 'style') {
       const style: Style = { style: styleName, value: value };
       this.rangeClone = this.range.cloneRange();
       const rh = new RH(this.range);
       rh.applyStyle('span', style, classOrStyle);
       this.restoreSelection(this.rangeClone);
-    }
   }
 
   onChange(fontFamilyStyle: StyleElement): void {
@@ -213,7 +212,6 @@ export default class TextEditor extends Vue {
   }
 
   onFontWeightChange(iconElement:  StyleElement): void {
-    console.log('%c⧭', 'color: #7f2200', iconElement)
     const textAttributes: TextAttributes = TextAttributes.getInstance();
     this.setStyle('font-weight', iconElement.value, 'class');
   }
@@ -222,6 +220,7 @@ export default class TextEditor extends Vue {
     this.setStyle('font-style', style.value, 'class');
   }
   onUnderlineClick(style: StyleElement): void {
+    console.log('%c⧭', 'color: #e5de73', style)
     this.setStyle('text-decoration', style.value, 'class');
   }
 
