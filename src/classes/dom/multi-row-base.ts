@@ -60,7 +60,7 @@ public reInsertNodes() {
 
 clearStylingFromExistingSpans(style: Style, ClassOrStyle: ClassOrStyle): void {
   if (!this.fragment) { throw new Error("fragment not set") }
-  const spanList: NodeList = this.fragment?.querySelectorAll('span');
+  const spanList: NodeList = this.fragment.querySelectorAll('span');
   if (this.isStyleTag(ClassOrStyle)) {
     spanList.forEach(span => this.clearExistingStyles(span, style))
   } else {

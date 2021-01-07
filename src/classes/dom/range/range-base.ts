@@ -193,7 +193,9 @@ export class RHBase implements RHBaseInterface {
   }
 
   public insertNode(wrapperNode: Node) {
-    this.range?.insertNode(wrapperNode);
+    if (this.range) {
+      this.range.insertNode(wrapperNode);
+    }
   }
 
   public removeNodesWithEmptyStyles(node: Node) {
@@ -222,11 +224,9 @@ export class RHBase implements RHBaseInterface {
     }
     const element: HTMLElement = node as HTMLElement;
     if (node.nodeName === '#text') return;
-    if (element.style) {
       if (element.style.length > 0) {
         this.setStyle(element, style);
       }
-    }
   }
 
   public findNextNodeofType(node: Node, nodeType: string): Node | null {

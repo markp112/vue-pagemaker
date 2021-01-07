@@ -1,5 +1,5 @@
 import { RHBase, HTMLTags, ClassOrStyle } from '../range-base';
-import { Style, StylesMap } from '@/models/styles/styles';
+import { Style, } from '@/models/styles/styles';
 
 type StringOrNull = string | null;
 
@@ -37,7 +37,7 @@ export class Underline extends RHBase {
   }
 
   private isParentUnderlined(node: Node | null): boolean {
-    if (node === null) return false;
+    if (!node) return false;
     if (node.nodeName !== 'P') {
       if (node.nodeName === 'SPAN') {
         if (this.hasClassUnderline(node)) {
@@ -363,7 +363,9 @@ export class Underline extends RHBase {
         this.clearExistingClasses(wrapperNode, this.underline);
         this.setClass(wrapperNode, this.underline);
         if (fragmentNode) wrapperNode.appendChild(fragmentNode);
-        this.range?.insertNode(wrapperNode);
+        if (this.range) {
+          this.range.insertNode(wrapperNode);
+        }
       }
     }
 }
