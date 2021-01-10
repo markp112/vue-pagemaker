@@ -1,8 +1,10 @@
 import { RHBase, HTMLTags, ClassOrStyle } from "./range/range-base";
 import { Style } from '@/models/styles/styles';
+import { RangeStyles } from "./range/rangeStyling/rangeStyles";
 
 export class MultiRowBase extends RHBase {
- nodeList: Node[] = [];
+ private nodeList: Node[] = [];
+ private rangeStyling = new RangeStyles();
 
   constructor(range: Range) {
     super(range);
@@ -61,16 +63,16 @@ public reInsertNodes() {
 clearStylingFromExistingSpans(style: Style, ClassOrStyle: ClassOrStyle): void {
   if (!this.fragment) { throw new Error("fragment not set") }
   const spanList: NodeList = this.fragment.querySelectorAll('span');
-  if (this.isStyleTag(ClassOrStyle)) {
-    spanList.forEach(span => this.clearExistingStyles(span, style))
+  if (this.rangeStyling.isStyleTag(ClassOrStyle)) {
+    spanList.forEach(span => this.rangeStyling.clearExistingStyles(span, style))
   } else {
-    spanList.forEach(span => this.clearExistingClasses(span, style))
+    spanList.forEach(span => this.rangeStyling.clearExistingClasses(span, style))
   }
 }
 
 insertSpanInPara(node: Node, style: Style, classOrStyle: ClassOrStyle): void {
   const spanNode = this.createWrapperNode('span');
-  this.setStyleOrClass(spanNode, style, classOrStyle);
+  this.rangeStyling.setStyleOrClass(spanNode, style, classOrStyle);
   (spanNode as HTMLSpanElement).innerHTML = (node as HTMLElement).innerHTML;
   (node as HTMLElement).innerHTML ='';
   node.childNodes.forEach(node => node.remove);
@@ -80,14 +82,14 @@ insertSpanInPara(node: Node, style: Style, classOrStyle: ClassOrStyle): void {
 
 extractTextFragmentToSpan(node: Node, style: Style, classOrStyle: ClassOrStyle) {
   const spanNode = this.createWrapperNode('span');
-  this.setStyleOrClass(spanNode, style, classOrStyle);
+  this.rangeStyling.setStyleOrClass(spanNode, style, classOrStyle);
   (spanNode as HTMLSpanElement).innerHTML = (node as HTMLElement).innerHTML;
   this.nodeList.push(spanNode);
 }
 
 wrapTextNode(node: Node, style: Style, classOrStyle: ClassOrStyle) {
   const spanNode = this.createWrapperNode('span');
-  this.setStyleOrClass(spanNode, style, classOrStyle);
+  this.rangeStyling.setStyleOrClass(spanNode, style, classOrStyle);
   spanNode.appendChild(node);
   this.nodeList.push(spanNode);
 }

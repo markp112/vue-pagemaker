@@ -1,9 +1,10 @@
 import { Style } from '@/models/styles/styles';
 import { RHBase, HTMLTags, ClassOrStyle } from './range-base';
-import { Underline } from './commands/underline';
+import { Underline } from './commands/underline/underline';
+import { RangeStyles } from './rangeStyling/rangeStyles';
 
 export class RangeRow extends RHBase {
-
+  private rangeStyling = new RangeStyles();
   constructor(range: Range) {
     super(range);
   }
@@ -28,7 +29,7 @@ export class RangeRow extends RHBase {
     if(!this.range) throw new Error('Range not set');
     this.fragment = this.range.extractContents();
     const wrapperNode: Node = this.createWrapperNode(htmlTag);
-    this.setStyleOrClass(wrapperNode, style, classOrStyle);
+    this.rangeStyling.setStyleOrClass(wrapperNode, style, classOrStyle);
     // add back the content contained when the fragment was extracted
     if (this.fragment) {
       wrapperNode.appendChild(this.fragment)
@@ -57,14 +58,14 @@ export class RangeRow extends RHBase {
     const wrapperNode: Node | null = this.fragment ? this.fragment.querySelector('span') : this.createWrapperNode(htmlTag);
     if (wrapperNode) {
       if (classOrStyle === 'style') {
-        this.clearExistingStyles(wrapperNode, style)
-        this.setStyle(wrapperNode, style);
+        this.rangeStyling.clearExistingStyles(wrapperNode, style)
+        this.rangeStyling.setStyle(wrapperNode, style);
         wrapperNode.childNodes.forEach(node => {
-          this.removeNodesWithEmptyStyles(node);
+          this.rangeStyling.removeNodesWithEmptyStyles(node);
         })
       } else {
-        this.clearExistingClasses(wrapperNode, style);
-        this.setClass(wrapperNode, style);
+        this.rangeStyling.clearExistingClasses(wrapperNode, style);
+        this.rangeStyling.setClass(wrapperNode, style);
       }
         this.insertNode(wrapperNode);
     }
@@ -74,12 +75,12 @@ export class RangeRow extends RHBase {
     if(!this.range) throw new Error('Range not set');
     const wrapperNode = this.createWrapperNode(htmlTag);
     const fragmentNode: Node = this.fragment as Node;
-    this.setStyleOrClass(wrapperNode, style, classOrStyle);
+    this.rangeStyling.setStyleOrClass(wrapperNode, style, classOrStyle);
     if (classOrStyle === 'style') {
-      this.clearExistingStyles(fragmentNode, style)
-      this.removeNodesWithEmptyStyles(fragmentNode);
+      this.rangeStyling.clearExistingStyles(fragmentNode, style)
+      this.rangeStyling.removeNodesWithEmptyStyles(fragmentNode);
     } else {
-      this.clearExistingClasses(fragmentNode, style);
+      this.rangeStyling.clearExistingClasses(fragmentNode, style);
     }
     if (fragmentNode) wrapperNode.appendChild(fragmentNode);
     this.insertNode(wrapperNode);

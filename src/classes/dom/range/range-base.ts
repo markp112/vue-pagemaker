@@ -101,73 +101,10 @@ export class RHBase implements RHBaseInterface {
     const value: HTMLTags = nodeMap[nodeName];
     return value === undefined ? 'undefined' : value;
   }
-  
-  public isStyleTag(classOrStyle: ClassOrStyle): boolean {
-    return classOrStyle === 'style';
-  }
-
-  public setStyleOrClass(node: Node, style: Style, classOrStyle: ClassOrStyle ) {
-    if (this.isStyleTag(classOrStyle)) {
-      this.setStyle(node, style);
-    } else {
-      this.setClass(node, style);
-    }
-  }
-
-  public setStyles(node: Node, styles: Style[]) {
-    styles.forEach(style => {
-      this.setStyle(node, style);
-    })
-  }
-
-  public setStyle(node: Node, style: Style): void {
-    const element = node as HTMLElement;
-    element.style.setProperty(style.style, style.value)
-  }
-  
-  public setClass(node: Node, style: Style): void;
-
-  public setClass(node: Node, style: string): void;
-  
-  public setClass(node: Node, styleOrString: string | Style): void {
-    const element = node as HTMLElement;
-    if (typeof(styleOrString) == 'string' ) {
-      element.className = styleOrString;
-    } else {
-      element.className = `${styleOrString.style} ${styleOrString.value}`;
-    }
-  }
 
   public setElementId(node: Node, id: string): void {
     const element = node as HTMLElement;
     element.id = id;
-  }
-  
-  public clearExistingClasses(node: Node, style: Style) {
-    if (node.hasChildNodes()) {
-      node.childNodes.forEach(node => {
-        this.clearExistingClasses(node, style);
-      })
-    }
-    // each class will have a style name (which does nothing)
-    // followed by the actual Tailwind class
-    // style.style is used to identify if there is already 
-    // a style defined of the same class family e.g. font weight
-    const element: HTMLElement = node as HTMLElement;
-    if (element.className) {
-      if (element.className.includes(style.style)) {
-        const classes = element.className.split(' ');
-          let itemPos = 0;
-          classes.forEach((item, index) => {
-            if (item === style.style) {
-              itemPos = index;
-            }
-          })
-          classes[itemPos] = '';
-          classes[itemPos + 1] = '';
-          element.className = classes.filter(item => item !== '').join(' ');
-      }
-    }
   }
   
   public checkForEmptySpan(node: Node): boolean {
@@ -176,7 +113,7 @@ export class RHBase implements RHBaseInterface {
     return spanElement.className === '' && spanElement.style.length === 0;
   }
 
-  public removeEmptySpan(node: Node): Node {
+  public replaceEmptySpanWithTextNode(node: Node): Node {
     const content = node.textContent;
     const newNode = this.createWrapperNode('text');
     newNode.textContent = content;
@@ -196,37 +133,6 @@ export class RHBase implements RHBaseInterface {
     if (this.range) {
       this.range.insertNode(wrapperNode);
     }
-  }
-
-  public removeNodesWithEmptyStyles(node: Node) {
-    if (!node.hasChildNodes()) return;
-    node.childNodes.forEach(childNode => {
-      if (childNode.hasChildNodes()) this.removeNodesWithEmptyStyles(childNode);
-      if (childNode.nodeName === '#text') return;
-      const element: HTMLElement = childNode as HTMLElement;
-      if (!element) return;
-      if (element.style.length > 0) return;
-        const innerText: string = element.innerText;
-        if (element.previousSibling) {
-          element.previousSibling.textContent += innerText;
-        } else if (element.parentNode) {
-          element.parentNode.textContent += innerText;
-        }
-        childNode.remove();
-    })
-  }
-
-  public clearExistingStyles(node: Node, style: Style): void {
-    if (node.hasChildNodes()) {
-      node.childNodes.forEach(node => {
-        this.clearExistingStyles(node, style)
-      });
-    }
-    const element: HTMLElement = node as HTMLElement;
-    if (node.nodeName === '#text') return;
-      if (element.style.length > 0) {
-        this.setStyle(element, style);
-      }
   }
 
   public findNextNodeofType(node: Node, nodeType: string): Node | null {

@@ -71,4 +71,45 @@ export class RangeStyles {
     return node;
   }
 
+  public clearExistingStyles(node: Node, style: Style): Node {
+    if (node.nodeName === '#text') return node;
+    if (node.hasChildNodes()) {
+      node.childNodes.forEach(node => {
+        return this.clearExistingStyles(node, style)
+      });
+    }
+    const element: HTMLElement = node as HTMLElement;
+    element.style.removeProperty(style.style);
+    return node;
+  }
+
+  public removeNodesWithEmptyStyles(node: Node): Node {
+    if (node.nodeName === '#text') return node;
+    if (node.hasChildNodes()) {
+      node.childNodes.forEach(childNode => {
+        return this.removeNodesWithEmptyStyles(childNode);
+      });
+    }
+    if (node.nodeName === 'SPAN') {
+      const element: HTMLSpanElement = node as HTMLSpanElement;
+      if (!element) return node;
+      const innerText = element.textContent;
+      if (element.style.length > 0 || element.className !== '') return node;
+      if (innerText) {
+        if (element.previousSibling) {
+          element.previousSibling.textContent += innerText;
+        } else if (element.nextSibling) {
+          element.nextSibling.textContent = `${innerText}${element.nextSibling.textContent}`;  
+        }
+        if (element.parentNode) {
+          element.parentNode.textContent += innerText;
+        }
+      }
+      if (node.parentNode) {
+        node.parentNode.removeChild(node);
+      }
+    }
+    return node;
+    
+  }
 }

@@ -1,6 +1,5 @@
 import { Style } from '@/models/styles/styles';
 import { RHBase, HTMLTags, ClassOrStyle } from './range-base';
-import { Underline } from './commands/underline';
 import { MultiRowUnderline } from './commands/underline-multi-row';
 import { MultiRowBase } from '../multi-row-base';
 

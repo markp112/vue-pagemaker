@@ -111,3 +111,51 @@ describe("When clearExistingClasses is called", () => {
     expect(outerHtml.includes('class=""')).toBe(true);
   })
 })
+
+describe("When clearExistingStyles is called", () => {
+  const rangeStyle = new RangeStyles();
+
+  it("It should remove the style from the node", () => {
+      const style: Style = { style: 'color', value: '' };
+      const node: Node = paragraphWithStyledSpan;
+      let outerHtml = (node as HTMLSpanElement).outerHTML;
+      expect(outerHtml.includes('style="color: red;"')).toBe(true);
+      const node2 = rangeStyle.clearExistingStyles(node, style);
+      outerHtml = (node2 as HTMLSpanElement).outerHTML;
+      expect(outerHtml.includes('style="color: red;"')).toBe(false);
+    })
+  })
+describe("When removeNodesWithEmptyStyles is called", () => {
+  const rangeStyle = new RangeStyles();
+
+  it("It should remove the span node if it has an empty class and style", () => {
+      const style: Style = { style: 'color', value: '' };
+      const node: Node = paragraphWithStyledSpan;
+      let outerHtml = (node as HTMLSpanElement).outerHTML;
+      expect(outerHtml.includes('style="color: red;"')).toBe(true);
+      const node2 = rangeStyle.clearExistingStyles(node, style);
+      outerHtml = (node2 as HTMLSpanElement).outerHTML;
+      expect(outerHtml.includes('style="color: red;"')).toBe(false);
+      outerHtml = (node as HTMLElement).outerHTML;
+      expect(outerHtml.includes('span')).toBe(false);
+    })
+    
+    it("It should not remove the span node if it does not have an empty style", () => {
+        const style: Style = {style:'font-size', value: '24px'};
+        const node: Node = paragraphWithPlainSpans;
+        rangeStyle.setStyle(node, style);
+        let outerHtml = (node as HTMLSpanElement).outerHTML;
+        expect(outerHtml.includes('style="font-size: 24px;"')).toBe(true);
+        outerHtml = (node as HTMLElement).outerHTML;
+        expect(outerHtml.includes('span')).toBe(true);
+      })
+      
+    it("It should not remove the span node if it does not have an empty class", () => {
+        const node: Node = paragraphWithUnderlineSpanAndNestedPlainSpan;
+        let outerHtml = (node as HTMLSpanElement).outerHTML;
+        expect(outerHtml.includes('class="underline"')).toBe(true);
+        outerHtml = (node as HTMLElement).outerHTML;
+        expect(outerHtml.includes('span')).toBe(true);
+      })
+
+  })

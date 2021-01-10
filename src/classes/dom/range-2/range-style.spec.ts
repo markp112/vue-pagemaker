@@ -6,7 +6,7 @@ import {
   paragraphWithUnderlineSpanAndNestedPlainSpan,
   paragraphWithUnderlineSpanAndTextnode,
   textEditorSetup
-} from './test-builder-classes';
+} from './test-builder-classes.spec';
 
 
 

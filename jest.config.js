@@ -9,6 +9,6 @@ module.exports = {
     '^@/(.*)$': '<rootDir>/src/$1'
   },
   setupFiles: [
-    "<rootDir>/src/setupTests.js"
+    "<rootDir>/src/setupTests.ts",
   ]
 }

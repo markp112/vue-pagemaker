@@ -1,9 +1,11 @@
 import { Style, StyleTags } from "@/models/styles/styles";
 import { HTMLTags, RHBase } from "../range-base";
 import  Guid  from "@/utils/guid";
+import { RangeStyles } from "../rangeStyling/rangeStyles";
   
 export class Paragraph extends RHBase {
-  id = '';
+  private id = '';
+  private rangeStyling = new RangeStyles();
   
   constructor(range: Range) {
     super(range);
@@ -183,7 +185,7 @@ export class Paragraph extends RHBase {
   applyStyles(spanNode: Node, styles: Style[]) {
     styles.forEach(style => {
       this.cleanStyle(style);        
-      this.setStyle(spanNode, style);
+      this.rangeStyling.setStyle(spanNode, style);
     })
   }
 
