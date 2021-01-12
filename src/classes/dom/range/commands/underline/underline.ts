@@ -297,9 +297,7 @@ export class Underline extends RHBase {
     }
   }
 
-  // add underline
   addUnderline(htmlTag: HTMLTags) {
-    console.log('%c%s', 'color: #997326', 'addUnderline');
     // five scenarios 
     // nothing underlined
     // start not underlined rest is underlined
@@ -313,43 +311,18 @@ export class Underline extends RHBase {
         : this.createWrapperNoChildren(htmlTag);
         return;
       }
-
       if (!this.isElementUnderlined.startContent && this.isElementUnderlined.endContent) {
-        const textContent = this.range.startContainer.textContent?.substring(this.rangeValues.start);
-        const nextSibling = this.range.startContainer.nextSibling;
-        if (nextSibling) {
-          const text = nextSibling.childNodes[0].textContent;
-          nextSibling.childNodes[0].textContent = `${textContent}${text}`;
-          if (this.range.startContainer.textContent){
-            this.range.startContainer.textContent = this.range.startContainer.textContent?.substring(0, this.rangeValues.start);
-          }
+          const nodeWithUnderline = this.getParentNodeWithUnderline(this.range.endContainer)!;
+          const fragment = this.range.extractContents();
+          nodeWithUnderline.insertBefore(fragment, nodeWithUnderline.childNodes[0]);
           return;
-        }
       }
-
-
-    // start of content is underlined and end content is underlined middle is not
-    if (this.isElementUnderlined.startContent && this.isElementUnderlined.endContent) {
-      const startNodeIndex = this.findChildNodeIndex(this.range.commonAncestorContainer, this.range.startContainer.textContent);
-      let endNodeIndex = this.findChildNodeIndex(this.range.commonAncestorContainer, this.range.endContainer.textContent);
-      const childNodes = this.range.commonAncestorContainer.childNodes;
-      for (let index = startNodeIndex + 1; index < endNodeIndex; index++) {
-        const node = childNodes[index];
-        this.underlineChildNode(node);
+      if (this.isElementUnderlined.startContent) {
+          const nodeWithUnderline = this.getParentNodeWithUnderline(this.range.startContainer)!;
+          const fragment = this.range.extractContents();
+          nodeWithUnderline.appendChild(fragment);
+          return;
       }
-      // remove the underline class from the end node index
-      // re-find the index of the end node as this may have changed if nodes have been removed
-      endNodeIndex = this.findChildNodeIndex(this.range.commonAncestorContainer, this.range.endContainer.textContent);
-      this.rangeStyling.clearExistingClasses(childNodes[endNodeIndex], this.underline);
-      this.underlineChildNode(childNodes[endNodeIndex])
-      return;
-    }
-    if (this.isElementUnderlined.startContent && !this.isElementUnderlined.endContent) {
-      const endNodeIndex = this.findChildNodeIndex(this.range.commonAncestorContainer, this.range.endContainer.textContent);
-      const node = this.range.commonAncestorContainer.childNodes[endNodeIndex];
-      this.underlineChildNode(node);
-    }
-    
   }
 
   private createWrapperWithChildren(htmlTag: HTMLTags) {
