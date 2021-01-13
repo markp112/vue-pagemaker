@@ -62,17 +62,6 @@ export class Underline extends RHBase {
     return false;
   }
 
-  private isNextSblingUnderlined(node: Node | null): boolean {
-    if (!node) return false;
-    if (this.hasClassUnderline(node)) {
-      return true;
-    }
-    if (node.textContent === this.range.endContainer.textContent) {
-      return false;
-    }
-    return this.isNextSblingUnderlined(node.nextSibling);
-  }
-
   private findChildNodeIndex(searchNode: Node, contentToMatch: StringOrNull): number {
     for (let index = 0; index < searchNode.childNodes.length; index++) {
       if (searchNode.childNodes[index].textContent === contentToMatch) {
@@ -93,81 +82,131 @@ export class Underline extends RHBase {
 
   // remove the underline if present
   private removeUnderline() {
-    let nodeWithSpan: Node | null = null;
-    let cleanedNode: Node | null = null;
-    nodeWithSpan = this.getParentNodeWithUnderline(this.range.startContainer)!;
-    cleanedNode = this.removeUnderlineClass(nodeWithSpan)!;
-    if (!this.isSandWiched()) {
-      cleanedNode.textContent = this.getTextContent(this.range.startContainer);
-      console.log('%c%s', 'color: #1d3f73', cleanedNode.textContent);
-      const styles: Style[] = this.getParentStyles(this.range.commonAncestorContainer, []);
-      console.log('%c⧭', 'color: #cc0088', styles);
-      if (styles.length > 0) {
-        if (cleanedNode.nodeName === '#text') {
-          const wrapperNode = this.createWrapperNode('span');
-          this.rangeStyling.setStyles(wrapperNode, styles)
-          wrapperNode.appendChild(cleanedNode);
-          this.insertCleanedNode(wrapperNode, nodeWithSpan);
-          return
-        } else {
-          this.rangeStyling.setStyles(cleanedNode, styles);
+    // const fragment = this.range.cloneContents();
+    // console.log('%c⧭', 'color: #73998c', fragment);
+    const nodeWithUnderline = this.getParentNodeWithUnderline(this.range.commonAncestorContainer)!;
+    if (!this.range.collapsed) {
+      const isThisNodeAnOnlyChild = nodeWithUnderline.childNodes.length === 1;
+      if (isThisNodeAnOnlyChild) {
+        // deal with selected text at start including all of the text being selected
+        if (this.range.startOffset === 0) {
+          const fragment = this.range.extractContents();
+          const parentOfUnderline = nodeWithUnderline.parentNode!;
+          parentOfUnderline.insertBefore(fragment, nodeWithUnderline);
+          return;
         }
-      }
-      this.insertCleanedNode(cleanedNode, nodeWithSpan);
-      return;
-    }
-    console.log("Sandwiched")
-    const ancestor = this.getParentNodeWithUnderline(this.range.commonAncestorContainer)!;
-    const startContainerIndex = this.findChildNodeIndex(ancestor, this.range.startContainer.textContent);
-    console.log('%c%s', 'color: #ffcc00', startContainerIndex);
-    const endContainerIndex = this.findChildNodeIndex(ancestor, this.range.endContainer.textContent);
-    console.log('%c%s', 'color: #408059', endContainerIndex);
-    const nodes: Node[] = [];
-    let node: Node | null = null;
-    for (let index = startContainerIndex; index <= endContainerIndex; index++) {
-      if (ancestor.childNodes[index].nodeName === 'SPAN') {
-        node = this.createWrapperNode('span');
-      } else {
-        node = this.createWrapperNode('text');
-      }
-      if (node.nodeName === 'SPAN') {
-        const spanElement = node as HTMLSpanElement;
-        if ((ancestor.childNodes[index] as HTMLSpanElement).style.length > 0) {
-          const childStyles = (ancestor.childNodes[index] as HTMLSpanElement).style;
-          for (let spanIndex = 0; spanIndex < childStyles.length; spanIndex++) {
-            const styleName = childStyles.item(spanIndex);
-            const value = childStyles.getPropertyValue(styleName);
-            spanElement.style.setProperty(styleName, value)
+        // selection is at the end
+        if (this.rangeValues.end === this.range.commonAncestorContainer.textContent?.length) {
+          const nextSibling = nodeWithUnderline.nextSibling;
+          const fragment = this.range.extractContents();
+          if (nextSibling) {
+            nodeWithUnderline.parentNode?.insertBefore(fragment, nextSibling);
+          } else {
+            nodeWithUnderline.parentNode?.appendChild(fragment);
           }
+          return;
         }
-        spanElement.className = (ancestor.childNodes[index] as HTMLSpanElement).className;
+        // selection must be in the middle
+        const fragment = this.range.extractContents();
+        console.log('%c⧭', 'color: #00736b', fragment);
+        const wrapperEnd = this.createWrapperNode('span');
+        const wrapperStart = this.createWrapperNode('span');
+        const className = (nodeWithUnderline as HTMLElement).className;
+        (wrapperEnd as HTMLElement).className = className;
+        (wrapperStart as HTMLElement).className = className;
+        const textContent = this.range.commonAncestorContainer.textContent!;
+        wrapperEnd.textContent = textContent.substring(this.range.endOffset);
+        wrapperStart.textContent = textContent.substring(0, this.range.startOffset);
+        const parentOfUnderline = nodeWithUnderline.parentNode!;
+        const nextSibling = nodeWithUnderline.nextSibling;
+        if (nextSibling) {
+          parentOfUnderline.insertBefore(wrapperStart, nextSibling);
+          parentOfUnderline.insertBefore(fragment, nextSibling);
+          parentOfUnderline.insertBefore(wrapperEnd, nextSibling);
+          parentOfUnderline.removeChild(nodeWithUnderline);
+        }
       }
-      const content = ancestor.childNodes[index].textContent;
-      if (index === startContainerIndex) {
-        node.textContent = content ? content.substring(this.range.startOffset) : '';
-        nodes.push(node);
-        continue;
-      }
-      if (index === endContainerIndex) {
-        node.textContent = content ? content.substring(0, this.range.endOffset) : '';;
-        nodes.push(node);
-        continue;
-      }
-      node.textContent = content;
-      nodes.push(node);
-    }
-    const parentStyles: Style[] = this.getParentStyles(ancestor, []);
-    console.log('%c⧭', 'color: #f279ca', parentStyles);
-    console.log('%c⧭', 'color: #99adcc', nodes);
 
-    // insert node back into tree after wrapping any parent styles around the node 
-    // node will need to be injected outside of the underline range i.e. if in the middle the range will need to be split into several spans
-    // with styles applied to each span in turn.
+    }
+
+
+    // let nodeWithSpan: Node | null = null;
+    // let cleanedNode: Node | null = null;
+    // nodeWithSpan = this.getParentNodeWithUnderline(this.range.startContainer)!;
+    // cleanedNode = this.removeUnderlineClass(nodeWithSpan)!;
+    // if (!this.isSandWiched()) {
+    //   cleanedNode.textContent = this.getTextContent(this.range.startContainer);
+    //   console.log('%c%s', 'color: #1d3f73', cleanedNode.textContent);
+    //   const styles: Style[] = this.getParentStyles(this.range.commonAncestorContainer, []);
+    //   console.log('%c⧭', 'color: #cc0088', styles);
+    //   if (styles.length > 0) {
+    //     if (cleanedNode.nodeName === '#text') {
+    //       const wrapperNode = this.createWrapperNode('span');
+    //       this.rangeStyling.setStyles(wrapperNode, styles)
+    //       wrapperNode.appendChild(cleanedNode);
+    //       this.insertCleanedNode(wrapperNode, nodeWithSpan);
+    //       return
+    //     } else {
+    //       this.rangeStyling.setStyles(cleanedNode, styles);
+    //     }
+    //   }
+    //   this.insertCleanedNode(cleanedNode, nodeWithSpan);
+    //   return;
+    // }
+    // console.log("Sandwiched")
+    // const ancestor = this.getParentNodeWithUnderline(this.range.commonAncestorContainer)!;
+    // const startContainerIndex = this.findChildNodeIndex(ancestor, this.range.startContainer.textContent);
+    // console.log('%c%s', 'color: #ffcc00', startContainerIndex);
+    // const endContainerIndex = this.findChildNodeIndex(ancestor, this.range.endContainer.textContent);
+    // console.log('%c%s', 'color: #408059', endContainerIndex);
+    // const nodes: Node[] = [];
+    // let node: Node | null = null;
+    // for (let index = startContainerIndex; index <= endContainerIndex; index++) {
+    //   if (ancestor.childNodes[index].nodeName === 'SPAN') {
+    //     node = this.createWrapperNode('span');
+    //   } else {
+    //     node = this.createWrapperNode('text');
+    //   }
+    //   if (node.nodeName === 'SPAN') {
+    //     const spanElement = node as HTMLSpanElement;
+    //     if ((ancestor.childNodes[index] as HTMLSpanElement).style.length > 0) {
+    //       const childStyles = (ancestor.childNodes[index] as HTMLSpanElement).style;
+    //       for (let spanIndex = 0; spanIndex < childStyles.length; spanIndex++) {
+    //         const styleName = childStyles.item(spanIndex);
+    //         const value = childStyles.getPropertyValue(styleName);
+    //         spanElement.style.setProperty(styleName, value)
+    //       }
+    //     }
+    //     spanElement.className = (ancestor.childNodes[index] as HTMLSpanElement).className;
+    //   }
+    //   const content = ancestor.childNodes[index].textContent;
+    //   if (index === startContainerIndex) {
+    //     node.textContent = content ? content.substring(this.range.startOffset) : '';
+    //     nodes.push(node);
+    //     continue;
+    //   }
+    //   if (index === endContainerIndex) {
+    //     node.textContent = content ? content.substring(0, this.range.endOffset) : '';;
+    //     nodes.push(node);
+    //     continue;
+    //   }
+    //   node.textContent = content;
+    //   nodes.push(node);
+    // }
+    // const parentStyles: Style[] = this.getParentStyles(ancestor, []);
+    // console.log('%c⧭', 'color: #f279ca', parentStyles);
+    // console.log('%c⧭', 'color: #99adcc', nodes);
+
+    // // insert node back into tree after wrapping any parent styles around the node 
+    // // node will need to be injected outside of the underline range i.e. if in the middle the range will need to be split into several spans
+    // // with styles applied to each span in turn.
   }
 
-  getTextContent(startContainer: Node): string {
-    if (!startContainer) return '';
-    const textcontent = (startContainer as HTMLElement).textContent;
+
+
+  getSelectedTextContent(node: Node): string {
+    if (!node) return '';
+    const textcontent = (node as HTMLElement).textContent;
     if (textcontent) {
       return textcontent.substring(this.range.startOffset, this.range.endOffset);
     }
@@ -246,19 +285,10 @@ export class Underline extends RHBase {
     return this.range.commonAncestorContainer.nodeName !== 'P'
   }
   
-  private getSiblingNodeWithUnderline(node: Node | null): Node | null {
-    if (!node) return null;
-    if (this.hasClassUnderline(node)) {
-      return node;
-    }
-    if (node.textContent === this.range.endContainer.textContent) {
-      return null;
-    }
-    return this.getSiblingNodeWithUnderline(node.nextSibling);
-  }
 
   removeUnderlineClass(node: Node | null): Node | null {
     if (!node) return node;
+    if (node.nodeName !== 'SPAN') return node;
     const spanElement = node as HTMLSpanElement;
     const textDecoration = spanElement.className.includes('text-decoration') ? 'text-decoration' : 'textDecoration'; 
     const className = spanElement.className.replace(`${textDecoration} underline`, '');
@@ -280,22 +310,6 @@ export class Underline extends RHBase {
     return this.getParentNodeWithUnderline(node.parentNode);
   }
 
-  private underlineChildNode(node: ChildNode) {
-    let hasStyleOrClass = false;
-    if (node.nodeName === 'SPAN') {
-      const element = node as HTMLSpanElement;
-      hasStyleOrClass = element.className !== '' && element.style.length !== 0;
-    }
-    if (!hasStyleOrClass) {
-      const startText = this.range.startContainer.textContent ?  this.range.startContainer.textContent : '';
-      const nodeText = node.textContent ? node.textContent : '';
-      this.range.startContainer.textContent = `${startText}${nodeText}`;
-      node.remove();
-    } else {
-      this.range.startContainer.appendChild(node);
-      this.range.commonAncestorContainer.removeChild(node);
-    }
-  }
 
   addUnderline(htmlTag: HTMLTags) {
     // five scenarios 
