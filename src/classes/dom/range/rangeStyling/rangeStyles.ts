@@ -2,17 +2,8 @@ import { Style } from "@/models/styles/styles";
 import { ClassOrStyle } from "../range-base";
 
 export class RangeStyles {
-  getStylesFromNodeHeirarchy(node: Node, nodeWithUnderline: Node): Style[] {
-    console.log('%c%s', 'color: #5200cc', node.nodeName);
-    const styles: Style[] = [];
-    if (!node) return styles;
-    styles.push(...this.getStylesFromNode(node));
-    console.log('%c⧭', 'color: #607339', styles);
-    if (node.isEqualNode(nodeWithUnderline)) return styles;
-    if (node.parentNode) styles.push(...this.getStylesFromNodeHeirarchy(node.parentNode, nodeWithUnderline));
-    return styles;
-  }
-  
+
+
   public isStyleTag(classOrStyle: ClassOrStyle): boolean {
     return classOrStyle === 'style';
   }
@@ -119,19 +110,44 @@ export class RangeStyles {
       }
     }
     return node;
-    
   }
 
   public getStylesFromNode(node: Node): Style[] {
+    if (node.nodeName !=='SPAN') return [];
     const element = node as HTMLElement;
     const styles: Style[] = []; 
     for (let index = 0; index < element.style.length; index++) {
-      const styleName = element.style.getPropertyValue(index.toString());
+      element.style.getPropertyValue('0')
+      const styleName = element.style.item(index);
       const value: string = element.style.getPropertyValue(styleName);
-      const style: Style = {style: styleName, value: value};
+      const style: Style = { style: styleName, value: value };
       styles.push(style);
     }
-    console.log('%c⧭', 'color: #40fff2', styles);
     return styles;
   }
+
+  public getStylesFromNodeHeirarchy(startNode: Node, ultimateParentNode: Node): Style[] {
+    const styles: Style[] = [];
+    if (!startNode) return styles;
+    styles.push(...this.getStylesFromNode(startNode));
+    if (startNode.isEqualNode(ultimateParentNode)) return styles;
+    if (startNode.parentNode) styles.push(...this.getStylesFromNodeHeirarchy(startNode.parentNode, ultimateParentNode));
+    return styles;
+  }
+
+  public getClassesFromNode(node: Node): string {
+    if (node.nodeName !== 'SPAN') return '';
+    return (node as HTMLElement).className;
+  }
+
+  public getClassesFromNodeHiearchy(startNode: Node, ultimateParentNode: Node): string {
+    if (!startNode) return '';
+    let className = this.getClassesFromNode(startNode);
+    if (startNode.isEqualNode(ultimateParentNode)) return className;
+    if (startNode.parentNode) {
+      className += this.getClassesFromNodeHiearchy(startNode.parentNode, ultimateParentNode);
+    } 
+    return className;
+  }
+  
 }

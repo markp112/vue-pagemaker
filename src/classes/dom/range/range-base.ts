@@ -120,8 +120,15 @@ export class RHBase implements RHBaseInterface {
     return newNode;
   }
 
-  public createWrapperNode(htmlTag: HTMLTags): Node {
-    return document.createElement(htmlTag);
+  public createWrapperNode(htmlTag: HTMLTags): Node;
+  public createWrapperNode(htmlTag: HTMLTags, childNode: Node): Node;
+
+  public createWrapperNode(htmlTag: HTMLTags, childNode?: Node): Node {
+    const node = document.createElement(htmlTag);
+    if (childNode) {
+      node.appendChild(childNode);
+    }
+    return node;
   }
 
   public getTextNodeLength(node: Node): number {
