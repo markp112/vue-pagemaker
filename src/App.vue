@@ -50,7 +50,7 @@ export default class extends Vue{
   }
 
   isLoggedIn() {
-    //return AuthModule.isUserLoggedIn;
+    return AuthModule.isUserLoggedIn;
   }
 
   get sidebarToShow() {

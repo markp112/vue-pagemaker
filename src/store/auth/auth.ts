@@ -99,7 +99,9 @@ class AuthStore extends VuexModule implements UserStateInterface {
 
   public get isExistingUser(): boolean {
       const refreshToken = window.localStorage.getItem("pmToken");
-      return refreshToken === null ? false : true;
+      console.log('%c⧭', 'color: #1d5673', refreshToken);
+      return false
+      // refreshToken === null ? false : true;
     }
 
   public get currentUser(): UserInterface {

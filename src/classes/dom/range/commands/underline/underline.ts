@@ -1,6 +1,7 @@
 import { RHBase, HTMLTags, ClassOrStyle } from '@/classes/dom/range/range-base';
 import { Style, } from '@/models/styles/styles';
 import { TriangleDirective } from '@/shared/directives/triangle/triangle';
+import { symbolName } from 'typescript';
 import { RangeStyles } from '../../rangeStyling/rangeStyles';
 
 type StringOrNull = string | null;
@@ -139,81 +140,259 @@ export class Underline extends RHBase {
         }
       }
     } else {
-      const textContent = this.range.startContainer.textContent!;
-      console.log('%c%s', 'color: #733d00', textContent);
-      const fragment = this.range.cloneContents();
-      console.log('%c⧭', 'color: #00bf00', fragment);
-      let nodeWithSelection: Node | null = null;
-      let nodeWithSelectionindex = 0;
-      console.log('%c⧭', 'color: #aa00ff', nodeWithUnderline.childNodes);
-      for (const node of nodeWithUnderline.childNodes) {
-          console.log('%c⧭', 'color: #ffa640', node);
-          console.log('%c%s', 'color: #917399', node.textContent);
-        if (node.textContent === textContent) {
-          nodeWithSelection = node;
-          break;
-        }
-        nodeWithSelectionindex++;
-        console.log('%c%s', 'color: #00e600', nodeWithSelectionindex);
-      }
-      if (nodeWithSelection){
-        console.log('%c⧭', 'color: #d90000', nodeWithSelection);
-        const parentOfUnderline = nodeWithUnderline.parentNode!;
-        console.log('%c⧭', 'color: #9c66cc', fragment);
-        let wrapperEnd = this.createWrapperNode('span');
-        let wrapperStart = this.createWrapperNode('span');
-        let wrapperFragment = this.createWrapperNode('span');
-        wrapperFragment.appendChild(fragment);
-        const className = (nodeWithUnderline as HTMLElement).className;
-        const styles: Style[] = this.rangeStyling.getStylesFromNodeHeirarchy(nodeWithSelection, nodeWithUnderline);
-        console.log('%c⧭', 'color: #ff6600', styles);
+      this.reBuild4();
+    //   const textContent = this.range.startContainer.textContent!;
+    //   console.log('%c%s', 'color: #733d00', textContent);
+    //   const fragment = this.range.cloneContents();
+    //   console.log('%c⧭', 'color: #00bf00', fragment);
+    //   let nodeWithSelection: Node | null = null;
+    //   let nodeWithSelectionindex = 0;
+    //   console.log('%c⧭', 'color: #aa00ff', nodeWithUnderline.childNodes);
+    //   for (const node of nodeWithUnderline.childNodes) {
+    //       console.log('%c⧭', 'color: #ffa640', node);
+    //       console.log('%c%s', 'color: #917399', node.textContent);
+    //     if (node.textContent === textContent) {
+    //       nodeWithSelection = node;
+    //       break;
+    //     }
+    //     nodeWithSelectionindex++;
+    //     console.log('%c%s', 'color: #00e600', nodeWithSelectionindex);
+    //   }
+    //   if (nodeWithSelection){
+    //     console.log('%c⧭', 'color: #d90000', nodeWithSelection);
+    //     const parentOfUnderline = nodeWithUnderline.parentNode!;
+    //     console.log('%c⧭', 'color: #9c66cc', fragment);
+    //     let wrapperEnd = this.createWrapperNode('span');
+    //     let wrapperStart = this.createWrapperNode('span');
+    //     let wrapperFragment = this.createWrapperNode('span');
+    //     wrapperFragment.appendChild(fragment);
+    //     const className = (nodeWithUnderline as HTMLElement).className;
+    //     const styles: Style[] = this.rangeStyling.getStylesFromNodeHeirarchy(nodeWithSelection, nodeWithUnderline);
+    //     console.log('%c⧭', 'color: #ff6600', styles);
 
-        // get the styles going up the tree
-        (wrapperEnd as HTMLElement).className = className;
-        (wrapperStart as HTMLElement).className = className;
-        wrapperEnd = this.rangeStyling.setStyles(wrapperEnd, styles);
-        wrapperStart = this.rangeStyling.setStyles(wrapperStart, styles);
-        wrapperFragment = this.rangeStyling.setStyles(wrapperFragment, styles);
+    //     // get the styles going up the tree
+    //     (wrapperEnd as HTMLElement).className = className;
+    //     (wrapperStart as HTMLElement).className = className;
+    //     wrapperEnd = this.rangeStyling.setStyles(wrapperEnd, styles);
+    //     wrapperStart = this.rangeStyling.setStyles(wrapperStart, styles);
+    //     wrapperFragment = this.rangeStyling.setStyles(wrapperFragment, styles);
         
-        wrapperEnd.textContent = textContent.substring(this.range.endOffset);
-        wrapperStart.textContent = textContent.substring(0, this.range.startOffset);
-        console.log('%c⧭', 'color: #aa00ff', nodeWithUnderline.childNodes.length);
-        console.log('%c⧭', 'color: #aa00ff', nodeWithUnderline.childNodes);
-        let index = 0;
-        let wrapperNode: Node | null = null;
-        for (const node of nodeWithUnderline.childNodes) {
-          console.log('%c⧭', 'color: #cc0036', node);
-          console.log('%c%s', 'color: #00a3cc', index);
-          if (index === nodeWithSelectionindex) {
-            parentOfUnderline.insertBefore(wrapperStart, nodeWithUnderline);
-            parentOfUnderline.insertBefore(wrapperFragment, nodeWithUnderline);
-            parentOfUnderline.insertBefore(wrapperEnd, nodeWithUnderline);
-          }
-          wrapperNode = node.nodeName === '#text' ? this.createWrapperNode('span', node) : node;
-          (wrapperNode as HTMLElement).className = className;
-          parentOfUnderline.insertBefore(wrapperNode, nodeWithUnderline);
-          index++;
-        }
-        parentOfUnderline.removeChild(nodeWithUnderline);
-      }
+    //     wrapperEnd.textContent = textContent.substring(this.range.endOffset);
+    //     wrapperStart.textContent = textContent.substring(0, this.range.startOffset);
+    //     console.log('%c⧭', 'color: #aa00ff', nodeWithUnderline.childNodes.length);
+    //     console.log('%c⧭', 'color: #aa00ff', nodeWithUnderline.childNodes);
+    //     let index = 0;
+    //     let wrapperNode: Node | null = null;
+    //     for (const node of nodeWithUnderline.childNodes) {
+    //       console.log('%c⧭', 'color: #cc0036', node);
+    //       console.log('%c%s', 'color: #00a3cc', index);
+    //       if (index === nodeWithSelectionindex) {
+    //         parentOfUnderline.insertBefore(wrapperStart, nodeWithUnderline);
+    //         parentOfUnderline.insertBefore(wrapperFragment, nodeWithUnderline);
+    //         parentOfUnderline.insertBefore(wrapperEnd, nodeWithUnderline);
+    //       }
+    //       wrapperNode = node.nodeName === '#text' ? this.createWrapperNode('span', node) : node;
+    //       (wrapperNode as HTMLElement).className = className;
+    //       parentOfUnderline.insertBefore(wrapperNode, nodeWithUnderline);
+    //       index++;
+    //     }
+    //     parentOfUnderline.removeChild(nodeWithUnderline);
+    //   }
     }
   }
 
+  reBuild4() {
+  const textContent = this.range.startContainer.textContent!;
+  const nodeWithUnderline = this.getParentNodeWithUnderline(this.range.commonAncestorContainer)!;
+  const parentOfUnderline = nodeWithUnderline.parentNode!;
+  const existingNodes: Node[] = this.getChildNodes(nodeWithUnderline);
+  const newNodes: Node[] = [];
+  const nodeWithSelection = this.findNodeWithSelection(this.range.startContainer, textContent);
+  if (nodeWithSelection) {
+    const styles: Style[] = this.rangeStyling.getStylesFromNodeHeirarchy(nodeWithSelection, nodeWithUnderline);
+    const classNames = this.rangeStyling.getClassesFromNodeHiearchy(nodeWithSelection, nodeWithUnderline);
+    const childInUnderlineWihSelection = this.findNodeInHeirarchy(nodeWithSelection, nodeWithUnderline);
+    let reachedSelectedNode = false;
+    existingNodes.forEach(node => {
+      if (reachedSelectedNode) {
+        let wrapperNode = this.createWrapperNode('span', node);
+        wrapperNode = this.rangeStyling.setStyle(wrapperNode, this.underline);
+        newNodes.push(wrapperNode);
+      }
+      if (node.isEqualNode(childInUnderlineWihSelection)) {
+        newNodes.push(...this.processSelectedNode(node, nodeWithUnderline, styles, classNames))
+        reachedSelectedNode = true;
+      }
+      if (!reachedSelectedNode) {
+        newNodes.push(node);
+      }
+    })
+  }
+  newNodes.forEach(node => {
+    parentOfUnderline.appendChild(node);
+  })
+  console.log('%c⧭', 'color: #00258c', existingNodes);
+  console.log('%c⧭', 'color: #994d75', newNodes);
+}
 
-  private rebuildSelection() {
+private processSelectedNode(parentNode: Node, nodeWithSelection: Node, styles: Style[], className: string): Node[] {
+  const parentNodeWithSelectedNode = this.findNodeInHeirarchy(nodeWithSelection, parentNode);
+  const nodes: Node[]  = [];
+  const newNodes: Node[] = []
+  // for (const node of parentNode.childNodes) {
+  //   if (node.isEqualNode(nodeWithSelection)) {
+  //     break;
+  //   }
+  //   newNodes.push(node);
+  // }
+  let wrapperEnd = this.createWrapperNode('span');
+  let wrapperStart = this.createWrapperNode('span');
+  let wrapperFragment = this.createWrapperNode('span');
+  const fragment = this.range.cloneContents();
+  wrapperFragment.appendChild(fragment);
+  wrapperStart = this.applyStyleAndClasses(wrapperStart, styles, className);
+  wrapperEnd = this.applyStyleAndClasses(wrapperEnd, styles, className);
+  wrapperFragment = this.applyStyleAndClasses(wrapperFragment, styles, className.replace('textDecoration underline',''));
+  const textContent = this.range.startContainer.textContent!;
+  wrapperEnd.textContent = textContent.substring(this.range.endOffset);
+  wrapperStart.textContent = textContent.substring(0, this.range.startOffset);
+  newNodes.push(wrapperStart);
+  newNodes.push(wrapperFragment);
+  newNodes.push(wrapperEnd);
+  
+  
+  let wrapperChildsNextSibling: Node = this.createWrapperNode('span');
+  nodes.push(...this.getChildNodes(parentNode, nodeWithSelection));
+  console.log('%c⧭', 'color: #364cd9', nodes);
+  nodes.forEach(node => {
+    wrapperChildsNextSibling.appendChild(node);
+  })
+  wrapperChildsNextSibling =this.applyStyleAndClasses(wrapperChildsNextSibling, styles, className);
+  console.log('%c⧭', 'color: #33cc99', wrapperChildsNextSibling);
+  newNodes.push(wrapperChildsNextSibling);
+  return newNodes;
+  
+   
+
+}
+
+
+
+  rebuild3() {
     const textContent = this.range.startContainer.textContent!;
     const parentNode = this.range.commonAncestorContainer.parentNode!;
     const nodeWithUnderline = this.getParentNodeWithUnderline(this.range.commonAncestorContainer)!;
+    console.log('%c⧭', 'color: #807160', nodeWithUnderline);
     const parentOfUnderline = nodeWithUnderline.parentNode!;
+    console.log('%c⧭', 'color: #007300', parentOfUnderline);
     const nodeWithSelection = this.findNodeWithSelection(parentNode, textContent);
     if (nodeWithSelection) {
+      const styles: Style[] = this.rangeStyling.getStylesFromNodeHeirarchy(nodeWithSelection, nodeWithUnderline);
+      const classNames = this.rangeStyling.getClassesFromNodeHiearchy(nodeWithSelection, nodeWithUnderline);
+      console.log('%c%s', 'color: #997326', classNames);
+      const node = this.createWrapperNode('span');
+      let wrapperEnd = this.createWrapperNode('span');
+      let wrapperStart = this.createWrapperNode('span');
+      let wrapperFragment = this.createWrapperNode('span');
+      const fragment = this.range.cloneContents();
+      console.log('%c⧭', 'color: #bfffc8', fragment);
+      wrapperFragment.appendChild(fragment);
+      console.log('%c⧭', 'color: #1d3f73', wrapperFragment);
+      wrapperStart = this.applyStyleAndClasses(wrapperStart, styles, classNames);
+      wrapperEnd = this.applyStyleAndClasses(wrapperEnd, styles, classNames);
+      wrapperFragment = this.applyStyleAndClasses(wrapperFragment, styles, classNames.replace('textDecoration underline',''));
+      const textContent = this.range.startContainer.textContent!;
+      wrapperEnd.textContent = textContent.substring(this.range.endOffset);
+      const style: Style = { style: 'textDecoration', value: 'underline' }; 
+      
+      const childInUnderlineWihSelection = this.findNodeInHeirarchy(nodeWithSelection, nodeWithUnderline);
+      let wrapperChildsNextSibling: Node = this.createWrapperNode('span');
+      const nodes: Node[] = this.getChildNodes(childInUnderlineWihSelection, nodeWithSelection);
+      nodes.forEach(node => {
+        wrapperChildsNextSibling.appendChild(node);
+      })
+      wrapperChildsNextSibling = this.rangeStyling.setStyles(wrapperChildsNextSibling, styles);
+      wrapperChildsNextSibling =this.rangeStyling.setClass(wrapperChildsNextSibling, classNames)
+     
 
-    const styles: Style[] = this.rangeStyling.getStylesFromNodeHeirarchy(nodeWithSelection, nodeWithUnderline);
-    let classNames = this.rangeStyling.getClassesFromNodeHiearchy(nodeWithUnderline, nodeWithUnderline);
-    this.processHierarchy(nodeWithUnderline, parentOfUnderline, nodeWithSelection, styles, classNames);  
+      wrapperStart.textContent = textContent.substring(0, this.range.startOffset);
+      console.log('%c⧭', 'color: #ffcc00', wrapperChildsNextSibling);
+      if (wrapperChildsNextSibling) {
+        this.reInsertNode(wrapperChildsNextSibling, nodeWithUnderline);
+      }
+      this.reInsertNode(wrapperEnd, nodeWithUnderline);
+      this.reInsertNode(wrapperFragment, nodeWithUnderline);
+      this.reInsertNode(wrapperStart, nodeWithUnderline);
 
       
+
+      console.log('%c⧭', 'color: #cc0088', nodeWithSelection.parentNode);
+      if (nodeWithSelection.parentNode?.nextSibling) {
+        const nextSibling = nodeWithSelection.parentNode?.nextSibling;
+        let wrapperNode = this.createWrapperNode('span', nextSibling );
+        wrapperNode = this.rangeStyling.setClass(wrapperNode, style);
+        this.reInsertNode(wrapperNode, nodeWithUnderline)
+      }
+      // this.range.extractContents();
+      // parentOfUnderline.removeChild(nodeWithUnderline);
     }
+
+  }
+  
+ private reInsertNode(node: Node, nodeWithUnderline: Node) {
+   const parentOfUnderline = nodeWithUnderline.parentNode!;
+  if (nodeWithUnderline.nextSibling) {
+    const insertBeforeNode = nodeWithUnderline.nextSibling;
+    parentOfUnderline.insertBefore(node, insertBeforeNode);
+  } else {
+    parentOfUnderline.appendChild(node);
+  }
+ }
+
+ private getChildNodes(startNode: Node): Node[];
+ private getChildNodes(startNode: Node, nodeToCheck: Node): Node[];
+
+ private getChildNodes(startNode: Node, nodeToCheck?: Node): Node[] {
+  console.log('%c⧭', 'color: #eeff00', nodeToCheck);
+  console.log('%c⧭', 'color: #ffa280', startNode);
+  let reachedSelectedNode = true;
+  if (nodeToCheck) reachedSelectedNode = false;
+  const nodes: Node[] = [];
+  startNode.childNodes.forEach(childNode => { 
+    if (reachedSelectedNode) {
+      nodes.push(childNode)
+    }
+    if (nodeToCheck) {
+      if (childNode.isEqualNode(nodeToCheck)) {
+        reachedSelectedNode = true;
+      }
+    }
+  })
+  return nodes;
+ }
+
+
+  private getNextSiblings(startNode: Node, wrapperNode: Node ): Node {
+    if (!startNode) return wrapperNode;
+    wrapperNode.appendChild(startNode);
+    if (startNode.nextSibling) return this.getNextSiblings(startNode.nextSibling, wrapperNode);
+    return wrapperNode;
+  }
+
+  // private rebuildSelection() {
+  //   const textContent = this.range.startContainer.textContent!;
+  //   const parentNode = this.range.commonAncestorContainer.parentNode!;
+  //   const nodeWithUnderline = this.getParentNodeWithUnderline(this.range.commonAncestorContainer)!;
+  //   const parentOfUnderline = nodeWithUnderline.parentNode!;
+  //   const nodeWithSelection = this.findNodeWithSelection(parentNode, textContent);
+  //   if (nodeWithSelection) {
+
+  //   const styles: Style[] = this.rangeStyling.getStylesFromNodeHeirarchy(nodeWithSelection, nodeWithUnderline);
+  //   let classNames = this.rangeStyling.getClassesFromNodeHiearchy(nodeWithUnderline, nodeWithUnderline);
+  //   this.processHierarchy(nodeWithUnderline, parentOfUnderline, nodeWithSelection, styles, classNames);  
+
+      
+  //   }
     // console.log('%c%s', 'color: #733d00', textContent);
     // const fragment = this.range.cloneContents();
     // console.log('%c⧭', 'color: #00bf00', fragment);
@@ -253,8 +432,8 @@ export class Underline extends RHBase {
       //   parentOfUnderline.insertBefore(wrapperNode, nodeWithUnderline);
       //   index++;
       // }
-      parentOfUnderline.removeChild(nodeWithUnderline);
-  }
+  //     parentOfUnderline.removeChild(nodeWithUnderline);
+  // }
     
   processHierarchy(nodeWithUnderline: Node, parentOfUnderline: Node & ParentNode, nodeWithSelection: Node, styles: Style[], classNames: string) {
     const newParent = parentOfUnderline.cloneNode();
@@ -262,7 +441,7 @@ export class Underline extends RHBase {
     const nextSibling = childOfParentContainingSelection.nextSibling;
     let trailingSpan = this.createWrapperNode('span');
     trailingSpan = this.applyStyleAndClasses(trailingSpan, styles, classNames);
-    let processedSelection = false;
+    const processedSelection = false;
     parentOfUnderline.childNodes.forEach(childNode => {
       if (childNode.isSameNode(childOfParentContainingSelection)) {
         // process the child hierarchy
@@ -300,9 +479,10 @@ export class Underline extends RHBase {
     }
 
   }
-  findNodeInHeirarchy(node: Node, parentNode: Node & ParentNode): Node {
+
+  findNodeInHeirarchy(node: Node, parentNode: Node): Node {
     if (!parentNode) return node;
-    if (node.parentNode){
+    if (node.parentNode) {
       if (node.parentNode.isEqualNode(parentNode)) {
         return node;
       }

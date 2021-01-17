@@ -145,7 +145,7 @@ export class RangeStyles {
     let className = this.getClassesFromNode(startNode);
     if (startNode.isEqualNode(ultimateParentNode)) return className;
     if (startNode.parentNode) {
-      className += this.getClassesFromNodeHiearchy(startNode.parentNode, ultimateParentNode);
+      className += ` ${this.getClassesFromNodeHiearchy(startNode.parentNode, ultimateParentNode)}`;
     } 
     return className;
   }
