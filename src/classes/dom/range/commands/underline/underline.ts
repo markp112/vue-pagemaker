@@ -30,11 +30,8 @@ export class Underline extends RHBase {
   }
   
   public process(htmlTag: HTMLTags) {
-    console.log('%c%s', 'color: #364cd9', 'process');
     this.isElementUnderlined = this.getNodesInSelectionUnderlineStatus();
     const hasUnderline = this.isElementUnderlined.startContent && this.isElementUnderlined.endContent && this.isAllUnderlined();
-    console.log('%c⧭', 'color: #ffa280', this.isElementUnderlined);
-    console.log('%c⧭', 'color: #33cc99', hasUnderline);
     if (hasUnderline) {
       this.removeUnderline();
     } else {
@@ -208,10 +205,15 @@ export class Underline extends RHBase {
   const existingNodes: Node[] = this.getChildNodes(nodeWithUnderline);
   const newNodes: Node[] = [];
   const nodeWithSelection = this.findNodeWithSelection(this.range.startContainer, textContent);
+  console.log('%c⧭', 'color: #40fff2', nodeWithSelection);
+  const wrapperStart = nodeWithUnderline.cloneNode();
+  wrapperStart.childNodes.forEach(node => {
+    wrapperStart.removeChild(node);
+  })
   if (nodeWithSelection) {
     const styles: Style[] = this.rangeStyling.getStylesFromNodeHeirarchy(nodeWithSelection, nodeWithUnderline);
     const classNames = this.rangeStyling.getClassesFromNodeHiearchy(nodeWithSelection, nodeWithUnderline);
-    const childInUnderlineWihSelection = this.findNodeInHeirarchy(nodeWithSelection, nodeWithUnderline);
+    const childInUnderlineWithSelection = this.findNodeInHeirarchy(nodeWithSelection, nodeWithUnderline);
     let reachedSelectedNode = false;
     existingNodes.forEach(node => {
       if (reachedSelectedNode) {
@@ -219,12 +221,13 @@ export class Underline extends RHBase {
         wrapperNode = this.rangeStyling.setStyle(wrapperNode, this.underline);
         newNodes.push(wrapperNode);
       }
-      if (node.isEqualNode(childInUnderlineWihSelection)) {
+      if (node.isEqualNode(childInUnderlineWithSelection)) {
+        newNodes.push(wrapperStart);
         newNodes.push(...this.processSelectedNode(node, nodeWithUnderline, styles, classNames))
         reachedSelectedNode = true;
       }
       if (!reachedSelectedNode) {
-        newNodes.push(node);
+        wrapperStart.appendChild(node);
       }
     })
   }
@@ -235,40 +238,38 @@ export class Underline extends RHBase {
   console.log('%c⧭', 'color: #994d75', newNodes);
 }
 
-private processSelectedNode(parentNode: Node, nodeWithSelection: Node, styles: Style[], className: string): Node[] {
-  const parentNodeWithSelectedNode = this.findNodeInHeirarchy(nodeWithSelection, parentNode);
-  const nodes: Node[]  = [];
-  const newNodes: Node[] = []
-  // for (const node of parentNode.childNodes) {
-  //   if (node.isEqualNode(nodeWithSelection)) {
-  //     break;
-  //   }
-  //   newNodes.push(node);
-  // }
-  let wrapperEnd = this.createWrapperNode('span');
-  let wrapperStart = this.createWrapperNode('span');
-  let wrapperFragment = this.createWrapperNode('span');
-  const fragment = this.range.cloneContents();
-  wrapperFragment.appendChild(fragment);
-  wrapperStart = this.applyStyleAndClasses(wrapperStart, styles, className);
-  wrapperEnd = this.applyStyleAndClasses(wrapperEnd, styles, className);
-  wrapperFragment = this.applyStyleAndClasses(wrapperFragment, styles, className.replace('textDecoration underline',''));
+private processSelectedNode(parentNode: Node, nodeWithUnderline: Node, styles: Style[], className: string): Node[] {
   const textContent = this.range.startContainer.textContent!;
-  wrapperEnd.textContent = textContent.substring(this.range.endOffset);
-  wrapperStart.textContent = textContent.substring(0, this.range.startOffset);
+  const nodeWithSelection = this.findNodeWithSelection(this.range.startContainer, textContent)!;
+  const newNodes: Node[] = [];
+  const startOffset = this.range.startOffset;
+  const endOffset = this.range.endOffset;
+  const length = textContent.length;
+  const wrapperEnd = this.chopSelectedNode(nodeWithSelection, endOffset, length, styles, className);
+  const wrapperStart = this.chopSelectedNode(nodeWithSelection, 0, startOffset, styles, className);
+  const wrapperFragment = this.chopSelectedNode(nodeWithSelection, startOffset, endOffset, styles, className);
+  (wrapperFragment as HTMLSpanElement).className = (wrapperFragment as HTMLSpanElement).className.replace('textDecoration underline','')
   newNodes.push(wrapperStart);
   newNodes.push(wrapperFragment);
   newNodes.push(wrapperEnd);
   
+  console.log('%c⧭', 'color: #cc7033', nodeWithSelection);
   
   let wrapperChildsNextSibling: Node = this.createWrapperNode('span');
-  nodes.push(...this.getChildNodes(parentNode, nodeWithSelection));
-  console.log('%c⧭', 'color: #364cd9', nodes);
-  nodes.forEach(node => {
-    wrapperChildsNextSibling.appendChild(node);
-  })
-  wrapperChildsNextSibling =this.applyStyleAndClasses(wrapperChildsNextSibling, styles, className);
-  console.log('%c⧭', 'color: #33cc99', wrapperChildsNextSibling);
+  let sibling: Node | null = parentNode.lastChild;
+  let previousSibling : Node | null = sibling;
+  const siblingNodes: Node[] = [];
+  while (sibling) {
+    if (sibling.textContent === textContent) break;
+    if (wrapperChildsNextSibling.childNodes.length === 0) {
+      wrapperChildsNextSibling.appendChild(sibling);
+    } else {
+      wrapperChildsNextSibling.insertBefore(sibling, previousSibling)
+    }
+    previousSibling = sibling;
+    sibling = sibling.previousSibling; 
+  }
+  wrapperChildsNextSibling = this.applyStyleAndClasses(wrapperChildsNextSibling, styles, className);
   newNodes.push(wrapperChildsNextSibling);
   return newNodes;
   
@@ -435,10 +436,24 @@ private processSelectedNode(parentNode: Node, nodeWithSelection: Node, styles: S
   //     parentOfUnderline.removeChild(nodeWithUnderline);
   // }
     
+
+chopSelectedNode(node: Node, start: number, end: number, styles: Style[], classNames: string ): Node {
+  let wrapperNode = this.createWrapperNode('span');
+  wrapperNode = this.applyStyleAndClasses(wrapperNode, styles, classNames);
+  const textContent = node.textContent;
+  if (textContent) {
+    wrapperNode.textContent = textContent.substring(start, end);
+  }
+  return wrapperNode;
+}
+
+
   processHierarchy(nodeWithUnderline: Node, parentOfUnderline: Node & ParentNode, nodeWithSelection: Node, styles: Style[], classNames: string) {
-    const newParent = parentOfUnderline.cloneNode();
+
+    
+
+
     const childOfParentContainingSelection = this.findNodeInHeirarchy(nodeWithSelection, parentOfUnderline);
-    const nextSibling = childOfParentContainingSelection.nextSibling;
     let trailingSpan = this.createWrapperNode('span');
     trailingSpan = this.applyStyleAndClasses(trailingSpan, styles, classNames);
     const processedSelection = false;
