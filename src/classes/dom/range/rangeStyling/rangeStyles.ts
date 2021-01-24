@@ -3,7 +3,6 @@ import { ClassOrStyle } from "../range-base";
 
 export class RangeStyles {
 
-
   public isStyleTag(classOrStyle: ClassOrStyle): boolean {
     return classOrStyle === 'style';
   }
@@ -35,10 +34,14 @@ export class RangeStyles {
   
   public setClass(node: Node, styleOrString: string | Style): Node {
     const element = node as HTMLElement;
+    let leadingSpace = '';
+    if (element.className.replace(' ','').length !== 0) {
+      leadingSpace = ' ';
+    }
     if (typeof(styleOrString) === 'string' ) {
-      element.className += ` ${styleOrString}`;
+      element.className += `${leadingSpace}${styleOrString}`;
     } else {
-      element.className += ` ${styleOrString.style} ${styleOrString.value}`;
+      element.className += `${leadingSpace}${styleOrString.style} ${styleOrString.value}`;
     }
     return node;
   }
@@ -92,7 +95,6 @@ export class RangeStyles {
     }
     if (node.nodeName === 'SPAN') {
       const element: HTMLSpanElement = node as HTMLSpanElement;
-      if (!element) return node;
       const innerText = element.textContent;
       if (element.style.length > 0 || element.className !== '') return node;
       if (innerText) {
@@ -149,5 +151,4 @@ export class RangeStyles {
     } 
     return className;
   }
-  
 }
