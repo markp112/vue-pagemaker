@@ -1,6 +1,5 @@
 import { RHBase } from "../../range-base";
 import { RH } from '../../RH';
-import { Style } from '../../../../../models/styles/styles'
 import {
   UNDERLINE,
   paragraphWithUnderlineSpanAndNestedPlainSpan,
@@ -10,13 +9,10 @@ import {
 } from '../../../range-2/test-builder-classes.spec';
 import { Underline } from "./underline";
 import { setStartMock, setEndMock, setCommonAncestorMock } from '@/mocks/mocks.ts'
-import { RangeStyles } from "../../rangeStyling/rangeStyles";
 
 
 describe("underline", () => {
-  let rangeBase: RHBase;
   let range: Range;
-  let rh: RH;
   let underline: Underline;
 
 
@@ -31,7 +27,6 @@ describe("underline", () => {
           range = document.createRange();
           underline = new Underline(range);
           const underlinedElement = underline.getNodesInSelectionUnderlineStatus();
-          console.log('%c⧭', 'color: #1d5673', underlinedElement);
           expect(underlinedElement.startContent).toBe(true);
           expect(underlinedElement.endContent).toBe(true);
           expect(underlinedElement.selectedContent).toBe(true);

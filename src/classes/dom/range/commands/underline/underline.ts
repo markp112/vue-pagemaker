@@ -3,9 +3,7 @@ import { Style, } from '@/models/styles/styles';
 import { RangeStyles } from '../../rangeStyling/rangeStyles';
 import { RemoveUnderline } from './remove-underline';
 
-type StringOrNull = string | null;
-
-interface SelectedContent {
+export interface SelectedContent {
   startContent: boolean,
   selectedContent: boolean,
   endContent: boolean,

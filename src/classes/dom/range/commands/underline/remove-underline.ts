@@ -93,29 +93,30 @@ export class RemoveUnderline extends RHBase {
   }
 
   getSelectedContent(): string {
-    let  nextSibling = this.range.startContainer.nextSibling; 
+    let  nextSibling = this.range.startContainer.nextSibling;
+    if (!nextSibling) return '';
     let textContent = '';
     if (!this.range.startContainer.isSameNode(this.range.endContainer)) {
-      textContent = this.range.startContainer.textContent?.substring(this.range.startOffset)!;
+      textContent = this.range.startContainer.textContent!.substring(this.range.startOffset)!;
       while (!this.range.endContainer.isSameNode(nextSibling)) {
-        textContent += nextSibling?.textContent;
-        if (nextSibling?.nextSibling) {
-          nextSibling = nextSibling?.nextSibling;
+        textContent += nextSibling.textContent;
+        if (nextSibling.nextSibling) {
+          nextSibling = nextSibling.nextSibling;
         }
       }
-      textContent += this.range.endContainer.textContent?.substring(0, this.range.endOffset);
+      textContent += this.range.endContainer.textContent!.substring(0, this.range.endOffset);
     } else {
-      textContent = this.range.startContainer.textContent?.substring(this.range.startOffset, this.range.endOffset)!;
+      textContent = this.range.startContainer.textContent!.substring(this.range.startOffset, this.range.endOffset)!;
     }
     return textContent;
   }
 
   private reAttachNode(node: nodeOrNull) {
-    if (!node) return;
+    if (!node || !this.parentOfUnderline)  return;
     if (this.underlineNodeNextSibling) {
-      this.parentOfUnderline?.insertBefore(node, this.underlineNodeNextSibling);
+      this.parentOfUnderline.insertBefore(node, this.underlineNodeNextSibling);
     } else {
-      this.parentOfUnderline?.appendChild(node);
+      this.parentOfUnderline.appendChild(node);
     }
   }
 
@@ -199,7 +200,7 @@ export class RemoveUnderline extends RHBase {
 
   private getStartNodeStartContent(): nodeOrNull {
     if (this.range.startOffset > 0) {
-      const textContent = this.range.startContainer.textContent?.substring(0, this.range.startOffset)!;
+      const textContent = this.range.startContainer.textContent!.substring(0, this.range.startOffset)!;
       return this.wrapExistingTextContent(textContent, this.range.startContainer);
     }
     return null;
@@ -241,7 +242,9 @@ export class RemoveUnderline extends RHBase {
   private removeEmptySpans(node: Node) {
     if (node.textContent === '' && !node.hasChildNodes()) {
       const parentNode = node.parentNode;
-      parentNode?.removeChild(node);
+      if (parentNode) {
+        parentNode.removeChild(node);
+      }
     }
     if (node.hasChildNodes()) {
       for (const childNode of node.childNodes) {
