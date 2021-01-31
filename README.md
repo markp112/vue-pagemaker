@@ -1,4 +1,12 @@
-# pagemaker
+# VueJs 2.x Typescript
+
+This project is a base working configuration for a VueJs project comprising of the following:
+* vuex
+* router
+* Chai and Mocha
+* Typescript
+* Tailwind Css
+* Storybook
 
 ## Project setup
 ```
@@ -23,6 +31,11 @@ npm run test:unit
 ### Lints and fixes files
 ```
 npm run lint
+```
+
+### Storybook
+```
+npm run storybook
 ```
 
 ### Customize configuration
