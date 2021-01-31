@@ -6,8 +6,12 @@
       <font-awesome-icon icon="pencil-alt" prefix="fas" @click="editSiteClick()" class="cursor-pointer">
       </font-awesome-icon>
     </div>
-    <div class="flex flex-col justify-center align-middle  h-full">
-      <img src="@/assets/images/Go-Circle-blue.png" alt="" class="object-contain cursor-pointer" @click="goClick()">
+    <div class="flex flex-row justify-center align-middle  h-full">
+      <img
+        src="@/assets/images/Go-Circle-blue.png"
+        alt=""
+        class="object-contain cursor-pointer w-32 h-auto"
+        @click="goClick()">
     </div>
   </div>
 </template>

@@ -89,7 +89,8 @@ describe("When clearExistingClasses is called", () => {
       const style: Style = { style: 'underline', value: '' };
       const node: Node = paragraphWithUnderlineSpanAndNestedPlainSpan.childNodes[0];
       let outerHtml = (node as HTMLSpanElement).outerHTML;
-      expect(outerHtml.includes('class="underline"')).toBe(true);
+      const includesUnderline = outerHtml.includes('class="underline"');
+      expect(includesUnderline).toBe(true);
       const node2 = rangeStyle.clearExistingClasses(node, style);
       outerHtml = (node2 as HTMLSpanElement).outerHTML;
       expect(outerHtml.includes('class=""')).toBe(true);
@@ -157,5 +158,4 @@ describe("When removeNodesWithEmptyStyles is called", () => {
         outerHtml = (node as HTMLElement).outerHTML;
         expect(outerHtml.includes('span')).toBe(true);
       })
-
   })

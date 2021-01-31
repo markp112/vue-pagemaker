@@ -21,29 +21,22 @@ export class RemoveUnderline extends RHBase {
 
   constructor(range: Range) {
     super(range);
-
   }
 
   process() {
     this.underlineNode = this.getParentNodeWithUnderline(this.range.commonAncestorContainer);
     if (this.underlineNode) {
       this.initialiseNodes();
-      console.log('%c⧭', 'color: #ffa280', this.currentStyles);
       this.extractSelectedNode();
       this.reApplyStyling();
       if (this.additionalSiblings) {
         this.additionalSiblings = this.rangeStyles.setClass(this.additionalSiblings, this.UNDERLINE);
       }
       this.reAttachNode(this.previousSiblings);
-      console.log('%c⧭', 'color: #994d75', this.previousSiblings);
       this.reAttachNode(this.startingContentNode);
-      console.log('%c⧭', 'color: #7f2200', this.startingContentNode);
       this.reAttachNode(this.selectedContentNode);
-      console.log('%c⧭', 'color: #ff0000', this.selectedContentNode);
       this.reAttachNode(this.remainingContentNode); 
-      console.log('%c⧭', 'color: #e5de73', this.remainingContentNode);
       this.reAttachNode(this.additionalSiblings);
-      console.log('%c⧭', 'color: #33cc99', this.additionalSiblings);
       let node = this.underlineNode.childNodes[0];
       while (node) {
         this.underlineNode.removeChild(node);

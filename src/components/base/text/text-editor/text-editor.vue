@@ -54,9 +54,7 @@
 
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import ColourDropdown from '@/components/base/pickers/colour-picker/colour-dropdown.vue';
 import CloseButton from '@/components/base/buttons/close-button/close-button.vue';
-import SideBarTextEditor from '../sidebar-text-editor/sidebar-text-editor.vue';
 import IndentOutdent from '@/components/base/text/text-editor/indent/indent-outdent.vue';
 import TextAlignment from '@/components/base/text/text-editor/justify/justify.vue';
 import ColourSelect from '@/components/base/pickers/colour-picker/colour-select.vue';
@@ -73,7 +71,6 @@ import FontSelect from '@/components/base/pickers/font-selector/font-selector.vu
 import DropDown from '@/components/base/pickers/drop-down/drop-down.vue';
 import IconToggleButton from '@/components/base/buttons/icon-toggle-button/icon-toggle-button.vue';
 import {
-  IconPickerInterface,
   fontWeightIconList,
 } from '@/models/components/icon-picker-models';
 import { ButtonIconClassList } from '@/models/styles/builders/button-icon-class-list';
@@ -82,7 +79,6 @@ import { ButtonFactory } from '@/models/styles/button-factory/button-factory';
 import { ButtonIconNumeric } from '@/models/styles/button-icon/button-numeric-list/button-numeric-list';
 import { StyleElement, TextAttributes } from '@/classes/text-attributes/text-attributes';
 import { TextModule } from '@/store/text-editor/text-editor';
-import { PageElement } from '@/classes/page-element/PageElement';
 import { TextElement } from '@/classes/page-element/page-components/text-element/TextElement';
 
 @Component({

@@ -2,7 +2,7 @@ import { RHBase, HTMLTags, ClassOrStyle } from '@/classes/dom/range/range-base';
 import { SelectedContent } from "./underline";
 import { RangeStyles } from '../../rangeStyling/rangeStyles';
 import { Style } from '@/models/styles/styles';
-import { hasClassUnderline } from './helpers';
+// import { hasClassUnderline } from './helpers';
 
 
 export class AddUnderline extends RHBase {
@@ -51,11 +51,20 @@ export class AddUnderline extends RHBase {
       }
   }
 
+  private hasClassUnderline(node: Node): boolean {
+    const spanElement = node as HTMLSpanElement;
+    const className = spanElement.className;
+    if (className) {
+      return className.includes('underline');
+    }
+    return false;
+  }
+
   private getParentNodeWithUnderline(node: Node | null): Node | null {
     if (!node) return null;
     if (node.nodeName === 'P') return null;
     if (node.nodeName === 'SPAN') {
-      if (hasClassUnderline(node) || (node as HTMLSpanElement).innerHTML.includes('underline')) {
+      if (this.hasClassUnderline(node) || (node as HTMLSpanElement).innerHTML.includes('underline')) {
         return node;
       }
     }
