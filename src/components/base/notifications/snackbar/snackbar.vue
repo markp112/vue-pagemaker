@@ -54,7 +54,7 @@ export default class Snackbar extends Vue {
 
 .snackbar-wrapper {
   position: fixed;
-  bottom: 10px;
+  bottom: 10%;
   left: 50%;
   z-index: 10;
   width: 200px;
@@ -70,8 +70,8 @@ export default class Snackbar extends Vue {
 .snackbar-hide {
   opacity: 0;
   visibility: hidden;
-  -webkit-animation: fadeout 0.8s;
-  animation: fadeout 0.8s;
+  -webkit-animation: fadeout 1s;
+  animation: fadeout 1s;
 }
 
 .error {
@@ -92,22 +92,22 @@ export default class Snackbar extends Vue {
   
 
 @-webkit-keyframes fadein {
-    from {bottom: 0; opacity: 0;} 
-    to {bottom: 10px; opacity: 1;}
+    from { bottom: 0; opacity: 0; } 
+    to { bottom: 10px; opacity: 1; }
 }
 
 @keyframes fadein {
-    from {bottom: 0; opacity: 0;}
-    to {bottom: 10px; opacity: 1;}
+    from { bottom: 0; opacity: 0; }
+    to { bottom: 10px; opacity: 1; }
 }
 
 @-webkit-keyframes fadeout {
-    from {bottom: 10px; opacity: 1;} 
-    to {bottom: 0; opacity: 0;}
+    from { bottom: 10px; opacity: 1; } 
+    to { bottom: 0; opacity: 0; }
 }
 
 @keyframes fadeout {
-    from {bottom: 10px; opacity: 1;}
-    to {bottom: 0; opacity: 0;}
+    from { bottom: 10px; opacity: 1; }
+    to { bottom: 0; opacity: 0; }
 }
 </style>

@@ -18,6 +18,13 @@ export class Dimension implements DimensionInterface {
   }
 }
 
+export interface BoxProperties {
+  width: number;
+  height: number;
+  top: number; 
+  left: number;
+};
+
 export interface BoxDimensionsInterface {
   width: Dimension;
   height: Dimension;
@@ -31,7 +38,12 @@ export class BoxDimensions implements BoxDimensionsInterface {
   top: Dimension;
   left: Dimension;
 
-  constructor(width: Dimension, height: Dimension, top: Dimension, left: Dimension){
+  constructor(
+      width: Dimension,
+      height: Dimension,
+      top: Dimension,
+      left: Dimension,
+   ){
     this.height = height;
     this.width = width;
     this.left = left;

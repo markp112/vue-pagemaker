@@ -2,7 +2,7 @@
     <font-awesome-icon 
       icon='times-circle' 
       prefix="far" 
-      class="text-accent-600 ml-3 cursor-pointer hover:text-secondary-100" 
+      class="text-accent-600 cursor-pointer hover:text-secondary-100" 
       @click="onClick()" />
 </template>
 

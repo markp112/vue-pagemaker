@@ -16,6 +16,9 @@ export class RH  {
       multiRow.process(htmlTag, style, classOrStyle)
     } else {
       const singleRow: RangeRow = new RangeRow(this.range);
+      console.log('%c⧭', 'color: #cc0088', classOrStyle);
+      console.log('%c⧭', 'color: #1d3f73', style);
+      console.log('%c⧭', 'color: #bfffc8', htmlTag);
       singleRow.process(htmlTag, style, classOrStyle);
     }
   }

@@ -1,8 +1,7 @@
 <template>
   <section class="mt-2">
-    <p>Text Styles</p>
     <div class="sidebar-button-panel">
-      <font-select @onFontClick="onItemChange"></font-select>
+      <font-select @onChange="onItemChange"></font-select>
       <icon-select
         :buttonIconClassList="fontWeightButton"
         @selectChange="onItemChange"
@@ -10,24 +9,24 @@
       </icon-select>
       <icon-toggle-button :thisIconButton="italicButton" @onChange="onItemChange" ></icon-toggle-button>
       <icon-toggle-button :thisIconButton="underLineButton" @onChange="onItemChange" ></icon-toggle-button>
-    <div class="sidebar-button-container text-input">
-      <span class="font-bold">Text</span>
-      <input
-        type="text"
-        name="text"
-        v-model="textContent"
-        @change="textChange"
-        class="app-input-field w-6/12 text-accent-100"
-        placeholder="Enter content"
-      />
-      <drop-down 
-        class="ml-1"
-        :thisIconButton="fontSizeButton"
-        @onSelectChange="onItemChange"
-      >
-      px
-      </drop-down>
-    </div>
+      <div class="sidebar-button-container text-input">
+        <span class="font-bold inline-block mr-2">Text</span>
+        <input
+          type="text"
+          name="text"
+          v-model="$props.textValue"
+          @change="textChange()"
+          class="app-input-field w-6/12 bg-siteSurface text-onSurface"
+          placeholder="Enter content"
+        />
+        <drop-down 
+          class="ml-1"
+          :thisIconButton="fontSizeButton"
+          @onSelectChange="onItemChange"
+        >
+        px
+        </drop-down>
+      </div>
     </div>
   </section>
 </template>
@@ -70,14 +69,10 @@ export default class SideBarTextEditor extends Vue {
   isFontUnderlined = false;
   fontWeightIconList = fontWeightIconList;
   textContent = '';
-  fontWeightButton: ButtonIconClassList = new ButtonFactory().createButton('class-list', 'fontWeight') as ButtonIconClassList;
+  fontWeightButton: ButtonIconClassList = new ButtonFactory().createButton('class-list', 'font-weight') as ButtonIconClassList;
   italicButton: ButtonIconClassInterface = new ButtonFactory().createButton('class','italic-button') as ButtonIconClassInterface;
   underLineButton: ButtonIconClassInterface = new ButtonFactory().createButton('class','underline-button') as ButtonIconClassInterface;
-  fontSizeButton: ButtonIconNumeric = new ButtonFactory().createButton('numeric','fontSize') as ButtonIconNumeric;
-
-  mounted() {
-    this.textContent = this.$props.textValue;
-  }
+  fontSizeButton: ButtonIconNumeric = new ButtonFactory().createButton('numeric','font-size') as ButtonIconNumeric;
 
   onItemChange(style: StyleElement) {
     const eventManager = SidebarButtonEventManager.getInstance();
@@ -87,7 +82,7 @@ export default class SideBarTextEditor extends Vue {
 
   @Emit('onTextChange')
   textChange(): string {
-    return this.textContent;
+    return this.$props.textValue;
   }
 }
 </script>

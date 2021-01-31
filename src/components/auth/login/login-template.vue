@@ -56,11 +56,20 @@ export default class LoginForm extends Vue {
     submitClick(): void {
       this.loginFailed = false;
       if (this.validateForm()) {
-        const user: UserInterface = initUser ;
-        user.email = this.email;
-        user.password = this.password;
+        const user: UserInterface = {
+          email: this.email,
+          password: this.password,
+          signedIn: false,
+          id: '',
+          refreshToken: '',
+        }
         AuthModule.login(user)
-          .then (() => {
+          .then ((firebaseUser) => {
+            const user = firebaseUser as UserInterface;
+            window.localStorage.setItem("pmToken", user.refreshToken ? user.refreshToken : '');
+            window.localStorage.setItem("pmEmail", user.email);
+            window.localStorage.setItem("id", user.id);
+
             this.$router.push("/sites");
           })
           .catch(err =>{

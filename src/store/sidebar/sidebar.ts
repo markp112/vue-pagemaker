@@ -7,7 +7,6 @@ import {
   VuexModule,
   getModule
 } from 'vuex-module-decorators';
-import { PageData} from '@/models/page/page';
 import { SidebarComponents } from '@/classes/sidebar-toolbar/sidebar-toolbar-buidler';
 import {  
   ComponentDefinitions,
@@ -28,6 +27,7 @@ export interface SidebarStateInterface {
   _showSidebar: boolean;
   _sidebarComponent: SidebarComponents;
   _showTextModal: boolean;
+  _settingsActivePage: string; // sets the page shown on the settings page e.g. colours, palette
 }
 
 @Module({ dynamic: true, name: 'sidebar', store })
@@ -36,6 +36,7 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
   _showSidebar = false;
   _sidebarComponent: SidebarComponents = 'sidebar-components';
   _showTextModal = false;
+  _settingsActivePage = '';
 
   @Mutation
   private addComponent(editorComponent: ComponentDefinitionInterface) {
@@ -62,11 +63,19 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
     this._showTextModal = show;
   }
 
+  @Mutation 
+  private setSettingsActivePage(activePageName: string) {
+    this._settingsActivePage = activePageName;
+  }
+
   @Action({ rawError: true })
   public toggleSidebar(toggle: boolean) {
     this.context.commit('setSidebarVisibility', toggle);
   }
 
+  /**
+   * @description loads the icons for the page builder side bar e.g. button, jumbo etc
+   */
   @Action({ rawError: true })
   public loadSideBarElements(): Promise<Notification> {
     const firestore = firebase.firestore();
@@ -119,10 +128,9 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
    * requires that the PageModule.editedComponetRef is set
    */
   public updateSidebarEditor() {
-    const componentType: PageData | undefined = PageModule.editedComponentRef;
+    const componentType: ComponentTypesString = PageModule.editedComponentType;
     if (componentType) {
-      const whichComponentType: ComponentTypesString = componentType.type;
-      switch (whichComponentType) {
+      switch (componentType) {
         case 'image':
           this.context.commit('setSidebarEditor', 'image-editor' as SidebarComponents);
           break;
@@ -167,6 +175,16 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
     this.context.commit("setShowTextModal", show);
   }
 
+  /**
+   * @description sets the current page when viewing and editing the site settings from the main menu
+   * 
+   * @param activePageName - this should match the name of the component to be displayed
+   */
+  @Action
+  public setSettingsPageActiveComponent(activePageName: string) {
+    this.context.commit("setSettingsActivePage", activePageName);
+  }
+
   get getSidebarElements(): ComponentDefinitionInterface[] {
     return this._sidebarElements.componentDefinitions().filter(elem => elem.isContainer === false);
   }
@@ -179,8 +197,7 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
     return this._sidebarElements.componentDefinitions();
   }
 
-  get getComponentDefinition():
-    (componentName: string)
+  get getComponentDefinition(): (componentName: string)
     => ComponentDefinitionInterface | undefined {
     return (componentName: string) =>
       this._sidebarElements.getComponent(componentName);
@@ -196,6 +213,10 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
 
   get showTextModal(): boolean {
     return this._showTextModal;
+  }
+
+  get siteSettingsActivePage(): string {
+    return this._settingsActivePage;
   }
 }
 

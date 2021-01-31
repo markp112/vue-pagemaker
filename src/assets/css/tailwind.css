@@ -1,7 +1,6 @@
 .page-heading {
-  @apply text-3xl;
   @apply font-bold;
-  @apply text-accent-400;
+  @apply text-onSurface;
 }
 
 .form-page-wrapper {
@@ -14,20 +13,22 @@
 }
 
 .sidebar-panel {
-  @apply mt-8;
-  @apply bg-secondary-800;
+  @apply mt-3;
+  @apply bg-siteDark;
   @apply h-full; 
-  @apply p-1;
+  @apply p-2;
+  @apply px-2;
   @apply flex;
   @apply flex-col;
   @apply justify-start;
-  @apply text-accent-400;
+  @apply text-onPrimary;
+  @apply shadow-lg;
 }
 
 .sidebar-button-panel {
   @apply flex;
   @apply flex-row;
-  @apply justify-evenly;
+  @apply justify-between;
   @apply items-center;
   @apply flex-wrap;
   @apply w-full;
@@ -60,7 +61,7 @@
 
 @screen md {
   .sidebar-button-panel {
-    @apply justify-start ml-2 mt-1;
+    @apply justify-between ml-2 mt-1;
   }
   
   .sidebar-button-container {
@@ -79,26 +80,28 @@
 }
 
 .dropdown-menu-background {
-  @apply bg-accent-900;
-  @apply cursor-pointer;
+  
+  @apply bg-siteSurface;
 }
 
 .dropdown-menu-item {
-  @apply text-accent-600;
+  @apply text-onSurface;
 }
 
 .dropdown-menu-selected {
-  @apply  bg-secondary-400 text-primary-300;
+  @apply text-onPrimary;
+  @apply bg-siteLight;
 }
 
 .dropdown-menu-item:hover {
-  @apply  bg-secondary-200 text-secondary-400;
+  @apply  bg-secondary-200;
+  @apply  text-onPrimary;
 }
 
 .app-input-field {
-  @apply bg-secondary-700;
   @apply border-transparent;
-  @apply text-accent-600;
+  @apply text-onSurface;
+  @apply bg-siteSurface;
 }
 
 @tailwind base;

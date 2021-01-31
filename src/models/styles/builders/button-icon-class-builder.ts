@@ -60,12 +60,9 @@ export class ButtonIconClassBuilder {
   }
 }
 
-
-
 export class ButtonIconClassWrapper {
 
   build(whichButton: ButtonRequestTypes) {
-
     switch(whichButton) {
       case 'italic-button':
         return new ButtonIconClassBuilder()
@@ -77,7 +74,6 @@ export class ButtonIconClassWrapper {
         .withComponentName('icon-toggle-button')
         .withIconIsTypeOf('class')
         .build();
-
       case 'underline-button':
         return new ButtonIconClassBuilder()
         .withStyledElement('text')
@@ -91,6 +87,5 @@ export class ButtonIconClassWrapper {
       default:
         throw new Error(`Button Icon Class does not recognise button of type ${whichButton}`)
     }
-
   }
 }

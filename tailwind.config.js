@@ -129,16 +129,27 @@ module.exports = {
     },
     extend: {
       colors: {
+        sitePrimary: '#323673',
+        siteSurface: '#fffffe',
+        siteDark: '#26265c',
+        siteLight: '#39407f',
+        onPrimary: '#fffffe',
+        siteBackground: '#ffeeff',
+        siteSurface: '#ffffff',
+        onSurface: '#000000',
+        siteSecondary: '#61527a',
+        'site-secondary-light': '#9f91b6',
+
         primary: {
-          100: '#FEC3CE',
-          200: '#FD9BAD',
-          300: '#FD728C',
-          400: '#FC4A6B',
-          500: '#FC224A',
-          600: '#B50323',
-          700: '#730217',
-          800: '#500210',
-          900: '#3C010C',
+          100: '#e8eaf2',
+          200: '#a0a7c8',
+          300: '#7c85b2',
+          400: '#616aa2',
+          500: '#485194',
+          600: '#414a8b',
+          700: '#39407f',
+          800: '#323673',
+          900: '#26265c',
         },
         secondary: {
           100: '#EAE7EF',
@@ -164,7 +175,10 @@ module.exports = {
         },
         accent1: '#D9C4B8',
         accent2: '#F2E3D5',
-      }
+      },
+      backgroundImage:  theme => ({ 
+        'diskette-save': "url('/assets/icons/diskette-dark-48.png')",
+      }),
     },
     spacing: {
       px: '1px',
@@ -186,6 +200,9 @@ module.exports = {
       '48': '12rem',
       '56': '14rem',
       '64': '16rem',
+      '72': '18rem',
+      '84': '20rem',
+      '96': '22rem',
     },
     backgroundColor: theme => theme('colors'),
     backgroundPosition: {
@@ -245,6 +262,7 @@ module.exports = {
       text: 'text',
       move: 'move',
       'not-allowed': 'not-allowed',
+      pan: 'grab',
     },
     fill: {
       current: 'currentColor',
@@ -317,6 +335,9 @@ module.exports = {
     inset: {
       '0': '0',
       auto: 'auto',
+      '1/3': '33%',
+      '1/2': '50%',
+      '1' : '-1rem',
     },
     letterSpacing: {
       tighter: '-0.05em',

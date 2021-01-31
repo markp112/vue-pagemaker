@@ -67,9 +67,6 @@ class AuthStore extends VuexModule implements UserStateInterface {
             user.id = data.user.uid
             user.signedIn = true;
             user.refreshToken = data.user.refreshToken === undefined ? '' : data.user.refreshToken;
-            window.localStorage.setItem("pmToken", user.refreshToken);
-            window.localStorage.setItem("pmEmail", user.email);
-            window.localStorage.setItem("id", user.id);
             resolve(user);
           }
         })
@@ -102,6 +99,8 @@ class AuthStore extends VuexModule implements UserStateInterface {
 
   public get isExistingUser(): boolean {
       const refreshToken = window.localStorage.getItem("pmToken");
+      console.log('%c⧭', 'color: #1d5673', refreshToken);
+      // return false
       return refreshToken === null ? false : true;
     }
 

@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import { PageModule } from '@/store/page/page';
 import { Border } from '@/classes/borders/borders';
-import { StyleTypes } from '@/models/page/page';
+import { StyleTypes } from '@/classes/page-element/PageElement';
 import { SidebarButtonEventManager } from '@/classes/sidebarButtonEventManager/sidebarButtonEventManager';
 
 @Component
@@ -27,7 +27,7 @@ export class BorderButtonsMixin extends Vue {
     PageModule.deleteEditedComponentStyle(styleToRemove);
   }
 
-  onShadowChange(classDef: string): void {
+  onShadowChange(): void {
     const eventManager = SidebarButtonEventManager.getInstance();
     eventManager.updateEditedComponent();
   }

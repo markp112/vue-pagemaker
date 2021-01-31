@@ -5,7 +5,8 @@
         <bread-crumb></bread-crumb>
       </div>
       <div class="flex flex-row justify-between w-full mt-2">
-        <div class="inline-block px-1 w-2/12 ml-2 mr-2" >
+        <div class="inline-block  w-2/12 ml-0 mr-2" >
+           
           <side-bar></side-bar>
         </div>
         <div class="mt-0 px-6 w-10/12 flex-row justify-around h-full" >
@@ -26,6 +27,7 @@ import Component from 'vue-class-component';
 import { AuthModule } from '@/store/auth/auth';
 import { NavMenuItemsModule } from '@/store/menus/nav-menu/nav-menu-module';
 import { SidebarModule } from '@/store/sidebar/sidebar';
+
 @Component({
   components:{
     'nav-bar': nav,
@@ -48,12 +50,14 @@ export default class extends Vue{
   }
 
   isLoggedIn() {
-    //return AuthModule.isUserLoggedIn;
+    return AuthModule.isUserLoggedIn;
   }
 
-  get showSidebar() {
-      return SidebarModule.showSidebar;
-    }
+  get sidebarToShow() {
+    const sidebarToShow = SidebarModule.sidebarToShow;
+    return sidebarToShow === 'site-settings' ? sidebarToShow : 'side-bar';
+  }
+
 }
 </script>
 

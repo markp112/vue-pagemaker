@@ -1,8 +1,7 @@
 <template>
   <div>
-    <P>Actions</P>
     <div class="sidebar-button-panel ">
-      <div class="sidebar-button-container w-full actions-layout">
+     
         <span class="mb-2 p-1 font-semibold "> Navigate To</span>
         <div class="relative flex-row flex justify-start  ">
           <input
@@ -12,11 +11,11 @@
           />
           <img
             :src="getPath('down-24.png')" 
-            class="w-4 h-4 cursor-pointer hover:bg-gray-800 absolute"
+            class="w-4 h-4 cursor-pointer hover:bg-gray-800 absolute right-0"
             @click="show()"
           />
           <ul
-            class="dropdown-menu-background flex flex-col items-center absolute bottom-0 left-0 w-24 shadow-lg max-h-32"
+            class="dropdown-menu-background flex flex-col items-center absolute top-0 right-0 w-24 shadow-lg max-h-32"
             v-if="toggleSelectOptions"
             @mouseleave="show"
             @blur="show"
@@ -32,7 +31,6 @@
           </ul>
           </div>
         </div>
-      </div> 
   </div>
 </template>
 

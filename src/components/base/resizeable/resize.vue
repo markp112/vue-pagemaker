@@ -1,37 +1,24 @@
 <template>
   <div
-    class="absolute triangle1"
+    class="absolute triangleTopRight z-50"
     :class ="{'active': $props.isActive, 'in-active': !$props.isActive}"
     @mousedown.stop.prevent="handleDown($event)"
-    @mouseup="handleMouseUp()"
-    @mousemove="handleMove($event)">
+    @mouseup="handleMouseUp($event)"
+    @mousemove="handleMouseMove($event)">
   </div>    
-
+  
 </template>
 
 <script lang="ts">
 import Component from 'vue-class-component'
 import { Vue, Emit, Prop } from 'vue-property-decorator';
 import { BoxDimensions, ResizeDimensions } from '@/models/components/box-dimension';
-
-interface BoxProperties {
-  width: number;
-  height: number;
-  top: number; 
-  left: number;
-};
+import { ClientCoordinates } from '@/models/components/components';
 
 @Component({
   props: {
     isActive: { default: false },
-    parentContainerDimensions: { 
-      default: (): BoxDimensions => { return new BoxDimensions(
-          { value: 0, units: 'px' },
-          { value: 0, units: 'px' },
-          { value: 0, units: 'px' },
-          { value: 0, units: 'px' }
-        )},
-    },
+    location: { }
   }
 })
 export default class Resize extends Vue {
@@ -39,84 +26,53 @@ export default class Resize extends Vue {
   isSizing = false;
   parentPadding = 0;
 
-  getPaddingOnParent(element: HTMLDivElement): number {
-    for (let index = 0; index < element.classList.length; index++) {
-      if (element.classList[index].includes('p-')) {
-        const padding = element.classList[index].substring(2);
-        return Number(padding);
-      }
-    }
-    return 0;
-  }
-
-  getElementBoxProperties(): BoxProperties | null {
-    const parent: HTMLDivElement | null = this.$el.parentElement as HTMLDivElement;
-    const parentContiner: HTMLDivElement = (parent as Node).parentNode as HTMLDivElement;
-    // padding is in rems 4 = 1rem = 16px
-    this.parentPadding = this.getPaddingOnParent(parentContiner) * 4;
-    if (parent){
-        const boundingRect: BoxProperties = {
-        width: parent.getBoundingClientRect().width,
-        height: parent.getBoundingClientRect().height,
-        top: parent.getBoundingClientRect().top,
-        left: parent.getBoundingClientRect().left,
-      };
-      return boundingRect;
-    }
-    else return null;
-  }
-
-  handleMouseUp() {
+  handleMouseUp(event: MouseEvent) {
     this.isSizing = false;
-    window.removeEventListener('mousemove',() => { this.handleMove(event as MouseEvent) });
-    window.removeEventListener('mouseup',() => { this.handleMouseUp() });
+    window.removeEventListener('mousemove', this.handleMouseMove);
+    window.removeEventListener('mouseup', this.handleMouseUp);
   }
 
   handleDown(ev: MouseEvent) {
     if (!this.$props.isActive) return;
-    if (!this.isSizing) {
-      window.addEventListener('mousemove', () => { this.handleMove(event as MouseEvent) });
-      window.addEventListener('mouseup', () => { this.handleMouseUp() });
+   if (!this.isSizing) {
+     this.resizeStarted(ev);
+   }
+  }
+
+  @Emit('resizeStarted')
+  resizeStarted(ev: MouseEvent) {
+      window.addEventListener('mousemove', this.handleMouseMove);
+      window.addEventListener('mouseup', this.handleMouseUp);
       this.isSizing = true
-    }
   }
 
   @Emit('onResize')
-  handleMove(ev: MouseEvent): ResizeDimensions | undefined {
-    if (this.isSizing) { 
-      const thisElement: BoxProperties | null = this.getElementBoxProperties();
-      if (thisElement) {
-        const newDimensions: ResizeDimensions = this.calcNewDimensions(thisElement, ev.clientX, ev.clientY);
-        return newDimensions;
-      } 
-    } 
-    return undefined;
+  emitResize(clientCoordinates: ClientCoordinates): ClientCoordinates {
+    return clientCoordinates;
   }
 
-  calcNewDimensions(element: BoxProperties, clientX: number, clientY: number): ResizeDimensions {
-    const parentDimensions: BoxDimensions = this.$props.parentContainerDimensions;
-    const boxLeft = element.left + pageXOffset;
-    const boxTop = element.top + pageYOffset;
-    const resizeDimensions: ResizeDimensions = { height: 0, width: 0, }
-    resizeDimensions.width = (clientX - boxLeft);
-    resizeDimensions.height = (clientY - boxTop);
-    if (resizeDimensions.width >= (parentDimensions.width.value - (this.parentPadding * 2))) {
-      resizeDimensions.width = parentDimensions.width.value - (this.parentPadding * 2);
-    }
-    if (resizeDimensions.height > parentDimensions.top.value + parentDimensions.height.value) {
-      resizeDimensions.height = parentDimensions.top.value + parentDimensions.height.value;
-    }
-    return resizeDimensions;
+  handleMouseMove(ev: MouseEvent) {
+    ev.stopPropagation;
+    if (this.isSizing) { 
+      const clientCoordinates: ClientCoordinates = {
+        clientY: ev.pageY,
+        clientX: ev.pageX,
+        offsetWidth: (this.$el as HTMLDivElement).offsetWidth,
+        offsetHeight: (this.$el as HTMLDivElement).offsetHeight,
+      };
+      this.emitResize(clientCoordinates);
+    } 
   }
+
 }
 </script>
 
 <style lang="postcss" scoped>
 
-  .triangle1 {
+  .triangleTopRight, .TriangleBottomLeft {
     content: '';
     position: absolute;
-    bottom: -6px;
+    top: -6px;
     right: -1px;
     box-sizing: border-box;
     cursor: nwse-resize;
@@ -126,9 +82,17 @@ export default class Resize extends Vue {
     border-top: 10px solid transparent;
     border-bottom: 10px solid transparent;
     border-left: 10px solid rgb(56, 55, 56);
-    color: rgb(56, 55, 56);
+    color: rgb(228, 210, 228);
+    filter: invert(1);
     mix-blend-mode: difference;
-    transform:rotate(45deg);
+  }
+
+  .triangleTopRight {
+    transform:rotate(315deg); 
+  }
+
+  .TriangleBottomLeft {
+     transform:rotate(45deg);
   }
     
   .active {

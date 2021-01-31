@@ -6,17 +6,24 @@
       <font-awesome-icon icon="pencil-alt" prefix="fas" @click="editSiteClick()" class="cursor-pointer">
       </font-awesome-icon>
     </div>
-    <div class="flex flex-col justify-center align-middle  h-full">
-      <img src="@/assets/images/Go-Circle-blue.png" alt="" class="object-contain cursor-pointer" @click="goClick()">
+    <div class="flex flex-row justify-center align-middle  h-full">
+      <img
+        src="@/assets/images/Go-Circle-blue.png"
+        alt=""
+        class="object-contain cursor-pointer w-32 h-auto"
+        @click="goClick()">
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Component from 'vue-class-component';
-import { Vue,  Emit, Prop } from 'vue-property-decorator';
+import { Emit, Prop } from 'vue-property-decorator';
 import { Site, initSite} from '@/models/sites/site';
 import { SitesModule } from '@/store/sites/sites';
+import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
+import { SnackbarMixin } from '@/mixins/components/snackbar/snackbar-mixin';
+import { Notification } from '@/models/notifications/notifications';
 
 @Component({
     props: {
@@ -25,19 +32,24 @@ import { SitesModule } from '@/store/sites/sites';
       }
     }
 })
-export default class SiteCard extends Vue{
-  name = "Site Card";
+export default class SiteCard extends SnackbarMixin{
+  name = 'Site Card';
 
   editSiteClick() {
     SitesModule.updateCurrentSiteId(this.$props.site.siteId);
-    this.$router.push({name:"newSite", params:{title:'Edit Site'}});
+    this.$router.push({name: 'newSite', params:{ title: 'Edit Site' }});
   }
 
   goClick() {
-    SitesModule.updateCurrentSiteId(this.$props.site.siteId);
-    this.$router.push({name:"pageList"});
+    const siteId = this.$props.site.siteId;
+    SitesModule.updateCurrentSiteId(siteId);
+    const siteDefaultSettings = SiteDefaults.getInstance();
+    siteDefaultSettings.loadDefaults()
+    .catch(err => {
+      const notification: Notification = err as Notification;
+      this.showSnackbar(notification, 'Site defaults load failed, defaults applied');
+    })
+    this.$router.push({ name: 'pageList' });
   }
-
 }
-
 </script>

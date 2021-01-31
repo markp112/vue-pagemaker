@@ -1,16 +1,26 @@
-import { ButtonIconDimensionInterface, IconType, ComponentNames } from '../button-icon/button-icon';
-import { Dimension, BoxUnits } from '@/models/components/box-dimension';
+import {
+  ButtonIconDimensionInterface,
+  IconType,
+  ComponentNames
+} from '../button-icon/button-icon';
+import {
+  Dimension,
+  BoxUnits
+} from '@/models/components/box-dimension';
 import { Border } from '@/classes/borders/borders';
-import { Style } from '../styles';
+import {
+  Style,
+  StyleTags
+} from '../styles';
 import { ImpactedAttributeTypes } from '@/classes/sidebarButtonEventManager/sidebarButtonEventManager';
 
 export class ButtonIconDimension implements ButtonIconDimensionInterface {
   styledElement: ImpactedAttributeTypes = 'undefined';
-  dimension: Dimension = new Dimension(0, 'px') ;
+  dimension: Dimension = new Dimension(0, 'px');
   style: Style = {
-    style: '', 
+    style: '',
     value: '',
-  }
+  };
   iconImage = '';
   tooltip = '';
   iconIsTypeOf: IconType = 'dimension';
@@ -30,23 +40,23 @@ export class ButtonIconDimension implements ButtonIconDimensionInterface {
 
 export class ButtonIconDimensionBuilder {
   _styledElement: ImpactedAttributeTypes = 'undefined';
-  _dimension: Dimension = new Dimension(0, 'px') ;
+  _dimension: Dimension = new Dimension(0, 'px');
   _iconImage = '';
   _tooltip = '';
   _iconIsTypeOf: IconType = 'dimension';
   _componentName: ComponentNames = 'plus-minus';
   _eventClass: Border = Border.getInstance();
   _style: Style = {
-    style: '', 
+    style: '',
     value: '',
   };
-  
+
   withStyledElement(styledElement: ImpactedAttributeTypes) {
     this._styledElement = styledElement;
     return this;
   }
 
-  withStyle(style: string, value: string) {
+  withStyle(style: StyleTags, value: string) {
     this._style.style = style;
     this._style.value = value;
     return this;

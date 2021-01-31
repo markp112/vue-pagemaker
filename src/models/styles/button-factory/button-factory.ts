@@ -19,12 +19,16 @@ export type ButtonRequestTypes =
   | 'Shadow'
   | 'border-styles'
   | 'border-direction'
-  | 'fontWeight'
-  | 'fontSize'
+  | 'font-weight'
+  | 'font-size'
   | 'italic-button'
   | 'underline-button'
   | 'border-radius'
-  | 'border-thickness';
+  | 'border-thickness'
+  | 'margin-left'
+  | 'margin-right'
+  | 'margin-top'
+  | 'margin-bottom';
 
 export type ClassOfButton =
   | 'class-list'
@@ -64,7 +68,7 @@ export class ButtonFactory {
       .withDimension(0, 'px')
       .withIconImage('thickness-32.png')
       .withToolTip('border thickness')
-      .withStyle('borderWidth', '')
+      .withStyle('border-width', '')
       .build();
   }
 }

@@ -1,4 +1,10 @@
-import { BorderInterface, BorderDirections, BorderStyle, Style } from '@/models/styles/styles';
+import {
+  BorderInterface,
+  BorderDirections,
+  BorderStyle,
+  Style,
+  StyleTags,
+} from '@/models/styles/styles';
 import { DimensionInterface } from '@/models/components/box-dimension';
 import { StyleElement } from '../text-attributes/text-attributes';
 
@@ -9,7 +15,7 @@ export class Border implements BorderInterface {
   _style: BorderStyle = 'solid';
   _width: DimensionInterface = { value: 1, units: 'px' };
   borderRadius: DimensionInterface = { value: 1, units: 'px' };
-  shadow = ''
+  shadow = '';
 
   public static getInstance(): Border {
     if (!Border.instance) {
@@ -17,28 +23,28 @@ export class Border implements BorderInterface {
     }
     return Border.instance;
   }
-  
+
   applyStyle(styleElement: StyleElement): void {
-   switch (styleElement.styleName) {
-     case 'borderEdge':
-       this.borderDirection = styleElement.value as BorderDirections;
-       break;
-    case 'borderStyle':
-      this.style = styleElement.value as BorderStyle;
-      break;
-    case 'borderWidth':
-      this.width = {
-        value: parseInt(styleElement.value),
-        units: styleElement.units,
-      }
-      break;
-    case 'border-radius':
-      this.borderRadius.units = styleElement.units;
-      this.borderRadius.value = Number(styleElement.value);
-      break;
-    case 'shadow':
-      this.shadow = styleElement.value;
-      break;
+    switch (styleElement.styleName) {
+      case 'borderEdge':
+        this.borderDirection = styleElement.value as BorderDirections;
+        break;
+      case 'borderStyle':
+        this.style = styleElement.value as BorderStyle;
+        break;
+      case 'border-width':
+        this.width = {
+          value: parseInt(styleElement.value),
+          units: styleElement.units,
+        }
+        break;
+      case 'border-radius':
+        this.borderRadius.units = styleElement.units;
+        this.borderRadius.value = Number(styleElement.value);
+        break;
+      case 'shadow':
+        this.shadow = styleElement.value;
+        break;
     }
   }
 
@@ -76,7 +82,7 @@ export class Border implements BorderInterface {
         ? this.borderDirection
         : `border-${this.borderDirection}`;
     const border: Style = {
-      style: direction,
+      style: direction as StyleTags,
       value: `${width} ${style} ${color}`,
     };
     return border;

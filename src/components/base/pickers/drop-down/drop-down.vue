@@ -4,15 +4,16 @@
       <input
         v-model="selectedItem"
         class="min-w-6 text-center relative app-input-field"
+        
         @change="onInputChange"
       >
       <img :src="getPath('down-24.png')" 
-        class="w-4 h-4 cursor-pointer hover:bg-gray-800 absolute left-0"
+        class="w-4 h-4 cursor-pointer hover:bg-gray-800 absolute right-0 top-0"
         @click="show()"
         >
     </div>
     <ul
-      class="dropdown-menu-background flex flex-col items-center absolute z-10 w-16 shadow-lg h-auto overflow-auto"
+      class="dropdown-menu-background flex flex-col items-center absolute z-10 w-16 shadow-lg h-auto overflow-auto text-sm"
       v-if="toggleSelectOptions"
       @mouseleave="show"
       @blur="show"
@@ -45,7 +46,10 @@ import { BoxUnits } from '../../../../models/components/box-dimension';
           return new ButtonIconNumericBuilder().build();
         },
       },
+    surface: {
+      default: 'bg-primary-200 text-onPrimary',
     },
+  },
 })
 export default class DropDown extends Vue {
   toggleSelectOptions = false;
@@ -53,6 +57,10 @@ export default class DropDown extends Vue {
 
   mounted () {
     this.selectedItem = this.$props.thisIconButton.defaultValue;
+  }
+
+  getSurface(): string {
+    return this.$props.surface; 
   }
 
   @Emit('onSelectChange')

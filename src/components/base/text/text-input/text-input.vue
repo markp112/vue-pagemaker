@@ -1,17 +1,15 @@
 <template>
-  <div class="sidebar-button-panel">
     <div class="ml-2">
-      <span class="text-sm mr-2 font-bold">Text</span>
+      <span class="text-sm mr-2 font-bold inline-block">Text</span>
       <input
         type="text"
         name="text"
         v-model="textContent"
         @change="textChange"
-        class="text-sm w-32 mb-1 app-input-field"
+        class="text-sm w-32 mb-1 app-input-field bg-site-secondary-light text-onSurface"
         placeholder="Enter content"
       />
     </div>
-  </div>
 </template>
 
 <script lang="ts">

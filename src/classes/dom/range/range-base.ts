@@ -1,9 +1,10 @@
-import { Style } from '@/models/styles/styles';
+import { Style, StyleTags, StylesMap } from '@/models/styles/styles';
 
 
 interface RangeValuesInterface {
   start: number;
   end: number;
+  selectedContent: string;
   startContent: string,
   endContent: string;
   selectionLength: number;
@@ -33,14 +34,13 @@ export type ClassOrStyle = 'class' | 'style';
 export class RHBase implements RHBaseInterface {
   range: Range;
   rangeValues: RangeValuesInterface;
+  fragment: DocumentFragment | null = null;
 
   constructor(range: Range) {
     console.clear();
     this.range = range;
-    console.log('%c⧭', 'color: #eeff00', range);
+    console.log('%c⧭', 'color: #cc0036', range);
     this.rangeValues = this.setSelection();
-    console.log('%c⧭', 'color: #cc7033', this.rangeValues);
-
   }
 
   private setSelection(): RangeValuesInterface {
@@ -50,6 +50,7 @@ export class RHBase implements RHBaseInterface {
       end: this.range.endOffset,
       startContent: '', 
       endContent: '', 
+      selectedContent: '',
       ancestorHasChildren: (this.range.commonAncestorContainer as HTMLElement).hasChildNodes(),
       ancestorNodeType: this.getNodeType(this.range.commonAncestorContainer),
       startContainerNodeType: this.getNodeType(this.range.startContainer),
@@ -61,8 +62,7 @@ export class RHBase implements RHBaseInterface {
       selectionLength: -1,
       selectionSpansRows: false,
     };
-    rv.startContent = this.range.startContainer.textContent ? this.range.startContainer.textContent?.substring(this.range.startOffset) : '';
-    rv.endContent = this.range.endContainer.textContent ? this.range.endContainer.textContent.substring(0, this.range.endOffset) : '';
+    this.getSelectedTextElements(rv);
     if (this.range.commonAncestorContainer.hasChildNodes()) {
       this.range.commonAncestorContainer.childNodes.forEach(node => {
         if (this.getNodeType(node) === 'span') rv.ancestorContainsSpan = true;
@@ -74,6 +74,20 @@ export class RHBase implements RHBaseInterface {
       rv.selectionSpansRows = true;
     }
     return rv;
+  }
+  
+  // needs work to take into account spans between start and end container plus multi row selections
+  private getSelectedTextElements(rv: RangeValuesInterface) {
+    const startContainer = this.range.startContainer;
+    const startContainerText = startContainer.textContent ? startContainer.textContent : '';
+    const endContainerText = this.range.endContainer.textContent ? this.range.endContainer.textContent : '';
+    const textLengthStart = this.range.startOffset === 0 ? startContainerText.length : this.range.startOffset;
+    rv.startContent = startContainerText.substring(0, textLengthStart);
+    rv.endContent = endContainerText.substring(this.range.endOffset);
+    rv.selectedContent = startContainerText.substring(this.range.startOffset, this.range.endOffset);
+    if (this.range.endOffset > rv.selectedContent.length && this.range.endOffset > startContainerText.length) {
+      rv.selectedContent = `${rv.selectedContent}${endContainerText.substring(0, this.range.endOffset)}`;
+    }
   }
 
   public getNodeType(node: Node): HTMLTags {
@@ -87,77 +101,49 @@ export class RHBase implements RHBaseInterface {
     const value: HTMLTags = nodeMap[nodeName];
     return value === undefined ? 'undefined' : value;
   }
-  
-  public isStyleTag(classOrStyle: ClassOrStyle): boolean {
-    return classOrStyle === 'style';
-  }
 
-  public setStyleOrClass(node: Node, style: Style, classOrStyle: ClassOrStyle ) {
-    if (this.isStyleTag(classOrStyle)) {
-      this.setStyle(node, style);
-    } else {
-      this.setClass(node, style);
-    }
-  }
-
-  public setStyle(node: Node, style: Style): void {
+  public setElementId(node: Node, id: string): void {
     const element = node as HTMLElement;
-    for (const key in element.style) {
-      if (key === style.style) {
-        element.style[key] = style.value;
-        break;
-      }
-    }
+    element.id = id;
   }
   
-  public setClass(node: Node, style: Style): void {
-    const element = node as HTMLElement;
-    element.className = `${style.style} ${style.value}`;
-  }
-  
-  public clearExistingClasses(node: Node, style: Style) {
-    if (node.hasChildNodes()) {
-      node.childNodes.forEach(node => {
-        this.clearExistingClasses(node, style);
-      })
-    }
-    // each class will have a style name (which does nothing)
-    // followed by the actual Tailwind class
-    // style.style is used to identify if there is already 
-    // a style defined of the same class family e.g. font weight
-    const element: HTMLElement = node as HTMLElement;
-    if (element.className) {
-      if (element.className.includes(style.style)) {
-        const classes = element.className.split(' ');
-          let itemPos = 0;
-          classes.forEach((item, index) => {
-            if (item === style.style) {
-              itemPos = index;
-            }
-          })
-          classes[itemPos] = '';
-          classes[itemPos + 1] = '';
-          element.className = classes.filter(item => item !== '').join(' ');
-      }
-    }
-  }
-  
-  public createWrapperNode(htmlTag: HTMLTags): Node {
-    return document.createElement(htmlTag);
+  public checkForEmptySpan(node: Node): boolean {
+    if (node.nodeName !== 'SPAN') return false;
+    const spanElement = node as HTMLSpanElement;
+    return spanElement.className === '' && spanElement.style.length === 0;
   }
 
-  public clearExistingStyles(node: Node, style: Style): void {
-    if (node.hasChildNodes()) {
-      node.childNodes.forEach(node => {
-        this.clearExistingStyles(node, style)
-      });
+  public replaceEmptySpanWithTextNode(node: Node): Node {
+    const content = node.textContent;
+    const newNode = this.createWrapperNode('text');
+    newNode.textContent = content;
+    return newNode;
+  }
+
+  public createWrapperNode(htmlTag: HTMLTags): Node;
+  public createWrapperNode(htmlTag: HTMLTags, textContent: string): Node;
+  public createWrapperNode(htmlTag: HTMLTags, childNode: Node): Node;
+
+  public createWrapperNode(htmlTag: HTMLTags, childNode?: Node | string): Node {
+    
+    const node = document.createElement(htmlTag);
+    if (typeof childNode === 'object') {
+      node.appendChild(childNode);
     }
-    const element: HTMLElement = node as HTMLElement;
-    if (node.nodeName === '#text') return;
-    if (element.style) {
-      if (element.style.length > 0) {
-        this.setStyle(element, style);
-      }
+    if (typeof childNode === 'string') {
+      node.textContent = childNode;
+    }
+    return node;
+  }
+
+  public getTextNodeLength(node: Node): number {
+    if (node.nodeName !=='#text') return -1;
+    return (node as Text).length;
+  }
+
+  public insertNode(wrapperNode: Node) {
+    if (this.range) {
+      this.range.insertNode(wrapperNode);
     }
   }
 
@@ -193,6 +179,7 @@ export class Indents extends RHBase {
     else currentIndent === 0 ? currentIndent : currentIndent -= this.INDENT;
     (paraStartNode as HTMLElement).style.marginLeft = `${currentIndent}em`;
   }
+
   private getCurrentIndent(node: Node) {
     const currentMargin = (node as HTMLElement).style.marginLeft;
     if (currentMargin === '') return 0;
@@ -208,121 +195,8 @@ export class Indents extends RHBase {
     }
     return node;
   }
+
 }
-export class Paragraph extends RHBase {
-
-  constructor(range: Range) {
-    super(range);
-  }
-
-  public newLine() {
-    if(!this.range) throw new Error('Range not set');
-    let node: Node | Text | null = null;
-    if (this.isRowMiddle()) {
-      node = this.getContent();
-    }
-    if (this.rangeValues.start === this.rangeValues.end) {
-      const paraNode: Node = this.createWrapperNode('p');
-      const element: HTMLElement = paraNode as HTMLElement;
-      node !== null ? paraNode.appendChild(node) : element.innerText = ' ';
-      // element.style.lineHeight = '1em';
-      const parentNode: Node | null = this.findNextNodeofType(this.range.commonAncestorContainer, 'DIV');
-      if (parentNode) {
-        const node = this.range.commonAncestorContainer.parentNode 
-          ?  this.findNextNodeofType(this.range.commonAncestorContainer, 'P')
-          : null;
-        const insertAfterNode: Node | null = node?.nextSibling ? node.nextSibling : null;
-        // parentNode.appendChild(paraNode);
-        parentNode.insertBefore(paraNode, insertAfterNode);
-        this.setParagrah(paraNode);
-      }
-    } else {
-      throw new Error('Parent node not found');
-    }
-  }
-
-  private isRowMiddle(): boolean {
-    if(!this.range) throw new Error('Range not set');
-    if (this.range.collapsed) {
-      return !(this.range.startOffset === (this.range.commonAncestorContainer as Text).length)
-    } 
-    return false;
-  }
-
-  private getContent() {
-    const textNode: Text = this.getTextToEndOfLine(); 
-    const spanStyles: Style[] = [];
-    if (this.getParentNodeType(this.range.commonAncestorContainer) === 'span') {
-      const spanNode = this.createWrapperNode('span');
-      this.getNodeStyles(this.range.commonAncestorContainer, spanStyles);
-      this.applyStyles(spanNode, spanStyles);
-      spanNode.appendChild(textNode);
-      return spanNode;
-    }
-    return textNode;
-  }
 
 
-  private getTextToEndOfLine(): Text {
-    return (this.range.commonAncestorContainer as Text).splitText(this.range.startOffset);
-  }
 
-  private getParentNodeType(node: Node): HTMLTags {
-    if (node.parentNode) {
-      return this.getNodeType(node.parentNode);
-    }
-    return 'undefined';
-  }
-
-  private getNodeStyles(node: Node | null, spanStyles: Style[]): void {
-    if (!node) return;
-    if (this.getParentNodeType(node) === 'span') {
-      this.getNodeStyles(node.parentNode, spanStyles);
-    }
-    const styles = (node as HTMLSpanElement).style;
-    if (styles) {
-      for (let index = 0; index < styles.length; index++) {
-        if(styles[index]) {
-          const style: Style = {
-            style: styles[index],
-            value: styles.getPropertyValue(styles[index]),
-          };
-          if (style.style !=='') spanStyles.push(style);
-        } else {
-          break;
-        }
-      };
-    }
-  }
-
-  applyStyles(spanNode: Node, styles: Style[]) {
-    if (styles.length === 0) return
-      styles.forEach(style => {
-        this.cleanStyle(style);        
-        this.setStyle(spanNode, style);
-      })
-  }
-
-  private cleanStyle(style: Style) {
-    if (!style.style.includes('-')) return;
-    const index = style.style.indexOf('-');
-    const  styleName = style.style.substring(0, index)
-      + style.style.replace('-','').charAt(index).toUpperCase()
-      + style.style.substring(index + 2);;
-    style.style = styleName;
-  }
-
-  
-
-  private setParagrah(node: Node) {
-    console.log('%c⧭', 'color: #1d0957', node);
-    const range = document.createRange();
-    range.setStart(node, 0);
-    const end = node.childNodes.length ? node.childNodes.length : ((node as Text).length ? (node as Text).length : 0);
-    range.setEnd(node, end);
-    range.collapse(true);
-    const selection = window.getSelection() ? window.getSelection() : document.getSelection();
-    selection?.removeAllRanges();
-    selection?.addRange(range);
-  }
-}

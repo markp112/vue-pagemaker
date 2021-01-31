@@ -10,24 +10,24 @@ import Component from 'vue-class-component';
 import { Emit, Vue } from 'vue-property-decorator';
 import sidebarComponentIcons from './sidebar-component-icons.vue';
 import ImageEditorSidebar from '@/components/core/sidebar/image-editor/image-editor.vue';
+import SidebarPanelSiteSettings  from '@/views/settings/core/sidebar/sidebar-panel.vue';
 import TextEditorSidebar from '@/components/core/sidebar/text-editor//text-editor.vue';
 import ButtonEditor from '@/components/core/sidebar/button-editor/button-editor.vue';
 import SitesMenu from '@/components/core/sidebar/sites-menu/sites-menu.vue'
 import SidebarPanelScreen from '@/components/base/buttons/sidebar-buttons/sidebar-panel.vue';
-import { SidebarPanelBuilder, SidebarComponents } from '@/classes/sidebar-toolbar/sidebar-toolbar-buidler'
+import { SidebarPanelBuilder, SidebarComponents } from '@/classes/sidebar-toolbar/sidebar-toolbar-buidler';
 import { SidebarModule } from '@/store/sidebar/sidebar';
 import { SidebarPanel } from '../../../models/sidebar/button-definition/sidebar-buttons';
 
-
-
 @Component({
-  components:{
+  components: {
     'sidebar-components': sidebarComponentIcons,
     'sites-menu' : SitesMenu,
     'image-editor': ImageEditorSidebar,
     'text-editor': TextEditorSidebar,
     'container-editor': SidebarPanelScreen,
     'button-editor': ButtonEditor,
+    'site-settings': SidebarPanelSiteSettings,
   }
 })
 export default class SideBar extends Vue {
@@ -44,7 +44,7 @@ export default class SideBar extends Vue {
 
   get sidebarPanel(): SidebarPanel {
     const panelType: SidebarComponents = SidebarModule.sidebarComponentType;
-    return new SidebarPanelBuilder('container-editor').sidebarPanel;
+    return panelType !== 'site-settings' ? new SidebarPanelBuilder('container-editor').sidebarPanel : new SidebarPanelBuilder('site-settings').sidebarPanel ;
   }
 }
 </script>

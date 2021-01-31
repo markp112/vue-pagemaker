@@ -12,7 +12,7 @@
       <drop-down
         class="md:ml-1"
         :thisIconButton="$props.thisIconButton"
-        @onSelectChange="onDropdownChange"
+        @onSelectChange="onDropdownChange($event)"
       >
       </drop-down>
    
@@ -27,7 +27,7 @@
   import { ButtonIconNumeric } from '@/models/styles/button-icon/button-numeric-list/button-numeric-list';
   import { ButtonIconNumericBuilder } from '@/models//styles/builders/button-icon-numeric'
   import { Style } from '@/models/styles/styles';
-import { StyleElement } from '../../../../classes/text-attributes/text-attributes';
+  import { StyleElement } from '../../../../classes/text-attributes/text-attributes';
 
   @Component({
     components: {
@@ -56,7 +56,7 @@ import { StyleElement } from '../../../../classes/text-attributes/text-attribute
     }
 
     onDropdownChange(styleOutput: StyleElement) {
-      this.$props.thisIconButton.units = styleOutput.units;
+      this.$props.thisIconButton.units = styleOutput.value;
       this.onChange();
     }
 

@@ -1,16 +1,16 @@
 
 
 <template>
-  <div class="w-screen py-3 bg-primary-800 shadow shadow-lg h-24 ">
-    <nav class=" text-accent-600 flex items-center justify-between">
+  <div class="w-screen py-3 bg-sitePrimary shadow-lg h-24 ">
+    <nav class=" text-onPrimary flex items-center justify-between">
         <div class="ml-8">
-          <font-awesome-icon icon='language' prefix='fas' class="text-secondary-200 icon-size" />
+          <font-awesome-icon icon='language' prefix='fas' class="text-primary-200 icon-size" />
         </div>
         <div class="mr-2 flex justify-between relative">
           <font-awesome-icon 
             icon='bars' 
             prefix="fas" 
-            class="ml-2 text-secondary-200 cursor-pointer hamburger hover:text-primary-100" 
+            class="ml-2 text-primary-200 cursor-pointer hamburger hover:text-primary-100" 
             @click="toggleMenu = !toggleMenu"
           />
         <div class="flex justify-end toggleable z-10 absolute top-0 right-0 " v-if="toggleMenu">
@@ -19,8 +19,9 @@
             @mouseleave="toggleMenu = !toggleMenu"
           >
             <li v-for="(menuItem, idx) in menuItems" 
-              :key="idx" 
-              @click="menuItemClick(idx)" 
+              :key="idx"
+              @click="menuItemClick(idx, menuItem.isVisible)" 
+              v-show="getIsVisible(menuItem.isVisible)"
               class="block p-1 text-left dropdown-menu-item rounded-lg ">
             {{ menuItem.navText }}
             </li>
@@ -34,16 +35,18 @@
 <script lang='ts'>
 
 import Vue from 'vue';
-import { NavMenuItem } from '../../../models/menus/nav-menu';
+import { IsVisible, NavMenuItem } from '../../../models/menus/nav-menu';
 import Component from 'vue-class-component';
 import { NavMenuItemsModule } from '@/store/menus/nav-menu/nav-menu-module';
+import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
 
 @Component
 export default class NavMenuComponent extends Vue {
       name = 'NavMenuComponent'
       toggleMenu = false;
+      siteDefaults = SiteDefaults.getInstance();
 
-  menuItemClick(id: number) {
+  menuItemClick(id: number, isVisbile: IsVisible) {
     this.$router.push(this.menuItems[id].navLink);
     this.toggleMenu = !this.toggleMenu;
   }
@@ -51,6 +54,12 @@ export default class NavMenuComponent extends Vue {
   get menuItems () {
     return  NavMenuItemsModule.navMenuItems;
   }
+
+  get getIsVisible(): (isVisible: IsVisible) => boolean {
+    return (isVisible) =>{
+       return isVisible();
+       }
+  }  
 }
 </script>
 

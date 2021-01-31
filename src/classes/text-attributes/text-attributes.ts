@@ -1,4 +1,5 @@
 import { BoxUnits } from '@/models/components/box-dimension';
+import { StyleTags } from '@/models/styles/styles';
 
 export type StyleTypes =
   | 'background-color'
@@ -19,7 +20,7 @@ export type StyleTypes =
   | 'undefined'
 
 export interface StyleElement {
-  styleName: StyleTypes;
+  styleName: StyleTags | StyleTypes;
   value: string;
   units: BoxUnits;
 }
@@ -46,7 +47,7 @@ export class TextAttributes  {
     this.value = styleElement.value;
     this.classOrStyle = 'style';
     switch (styleElement.styleName) {
-      case 'fontSize':
+      case 'font-size':
         this.units =  styleElement.units;
         break;
       case 'fontWeight':

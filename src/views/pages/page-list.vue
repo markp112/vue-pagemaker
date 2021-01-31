@@ -77,8 +77,14 @@ export default class PageList extends Vue {
 
   created() {
     this.siteId = SitesModule.getCurrentSiteId;
-    PagesModule.loadPages();
+    // PagesModule.loadPages();
   }
+
+  mounted() {
+     PagesModule.loadPages();
+  }
+
+
 
   createNewPage() {
     this.$router.push({

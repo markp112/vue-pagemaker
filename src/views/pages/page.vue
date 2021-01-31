@@ -93,6 +93,7 @@ import { SnackbarModule } from '@/store/snackbar/snackbar';
 import { PagesModule } from '@/store/pages/pages';
 import { ComponentPropsModule } from '@/store/component-props/component-props';
 
+
 @Component({
   components: {
     'icon-picker': IconPicker,
@@ -116,6 +117,7 @@ export default class PageEditor extends Vue {
     };
     this.dateCreated = formatTimeStampAsDate(DateTimeStamp);
     this.formErrors = [];
+   
   }
 
   iconPickerClicked() {

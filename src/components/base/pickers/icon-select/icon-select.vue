@@ -1,11 +1,18 @@
 <template>
   <div>
     <div class="sidebar-button-container relative">
-      <img :src="getPath($props.buttonIconClassList.iconImage)" alt="">
-      <img :src="getPath('down-24.png')" 
-        class="w-4 h-4 cursor-pointer hover:bg-gray-800"
-        @click="show()"
+      <div class="flex flex-row justify-start ">
+        <img
+          :src="getPath($props.buttonIconClassList.iconImage)"
+          alt=""
+          class="cursor-pointer hover:bg-gray-600"
+          @click="show()"
         >
+        <img :src="getPath('down-24.png')" 
+          class="w-4 h-4 cursor-pointer hover:bg-gray-800"
+          @click="show()"
+        >
+      </div>
     </div>
     <div>
       <ul class="dropdown-menu-background flex flex-col items-center absolute w-12 shadow-lg z-20"
@@ -20,7 +27,7 @@
           :class="{'bg-secondary-100': iconElement.className === selectedItem}">
           <img :src="getPath(iconElement.iconImage)"
               class="w-8 h-8"
-              :class="getClass(iconElement.className)"
+              :class="getClass(iconElement.classNameActive)"
               @mouseover="showToolTip=iconElement.classNameActive"
               @mouseleave="showToolTip=''"
               >
@@ -47,7 +54,7 @@ import { StyleElement } from '@/classes/text-attributes/text-attributes';
   props: {
     buttonIconClassList: {
       default: () => {
-        return  new ButtonFactory().createButton('class-list','border-styles');
+        return  new ButtonFactory().createButton('class-list', 'border-styles');
       }},
     iconSelect: { default: '' },
     iconList: { default: () => {
@@ -87,7 +94,7 @@ export default class IconSelect extends Vue {
   }
   
   getClass(classDef: string ) {
-    return classDef === 'hidden' ? '' : classDef 
+    return classDef === 'hidden' ? '' : classDef;
   }
 
   get getShowToolTip(): (classDef: string) => boolean {

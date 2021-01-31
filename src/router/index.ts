@@ -5,10 +5,11 @@ import register from '@/components/auth/register/register.vue';
 import login from '@/components/auth/login/login.vue';
 import siteslist from '@/components/sites/sites-list.vue';
 import newSite from '@/components/sites/new-site.vue';
-import PageList from '@/views/pages/page-list.vue'
-import PageEditor from '@/views/pages/page.vue'
-import PageBuilder from '@/views/page-builders/page-builder-raw.vue'
-import SideBarIconEditor from '@/views/admin/sidebar-icon-editor/sidebar-icon-editor.vue'
+import PageList from '@/views/pages/page-list.vue';
+import PageEditor from '@/views/pages/page.vue';
+import PageBuilder from '@/views/page-builders/page-builder-raw.vue';
+import SideBarIconEditor from '@/views/admin/sidebar-icon-editor/sidebar-icon-editor.vue';
+import SiteSettings  from '@/views/settings/index.vue';
 
 Vue.use(VueRouter);
 
@@ -23,7 +24,6 @@ const routes = [
       ]
     },
   },
- 
   {
     path: "/register",
     name: "register",
@@ -70,14 +70,26 @@ const routes = [
     },
   },
   {
-    path: "/pages",
+    path: "/pageList",
     name: "pageList",
-    component: PageList,
+    component: () => import('@/views/pages/page-list.vue'),
     meta: {
       breadcrumb: [
         { name: 'home', link: 'home' },
         { name: 'sites', link: 'sites' },
-        { name: 'page list' }
+        { name: 'pages' }
+      ]
+    },
+  },
+  {
+    path: "/settings",
+    name: "siteSettings",
+    component: SiteSettings,
+    meta: {
+      breadcrumb: [
+        { name: 'home', link: 'home' },
+        { name: 'sites', link: 'sites' },
+        { name: 'settings', link: 'settings' },
       ]
     },
   },

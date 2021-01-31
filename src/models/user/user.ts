@@ -19,10 +19,10 @@ export const initUser: UserInterface = {
   signedIn: false,
   id: "",
   password:"",
-  }
+}
 
   export const initAuthStatus: AuthStatus = {
-    isSuccess: false,
-    errorCode: ErrorCodes.Undefined,
+  isSuccess: false,
+  errorCode: ErrorCodes.Undefined,
 
-  }
+}

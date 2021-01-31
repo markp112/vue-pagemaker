@@ -1,21 +1,33 @@
 import store from '@/store';
-import { Module, Mutation, Action, VuexModule, getModule } from 'vuex-module-decorators';
-import {  Site,initSite } from '@/models/sites/site.ts';
-import { Notification, notificationDefault } from '@/models/notifications/notifications';
+import {
+  Module,
+  Mutation,
+  Action,
+  VuexModule,
+  getModule,
+} from 'vuex-module-decorators';
+import {
+  Site,
+  initSite,
+} from '@/models/sites/site.ts';
+import {
+  Notification,
+  notificationDefault,
+ } from '@/models/notifications/notifications';
 import firebase from 'firebase';
- import { AuthModule } from '../auth/auth';
+import { AuthModule } from '../auth/auth';
 import Guid from '@/utils/guid';
 
 export interface SitesStateInterface {
   sites: Site[],
-  _currentSiteId?: string,
+  _currentSiteId: string,
   _currentSite: Site,
 }
 @Module({ name: 'sites', store, dynamic: true })
 class SitesStore extends VuexModule implements SitesStateInterface{
 
   sites: Site[] = [];
-  _currentSiteId!: string;
+  _currentSiteId = '';
   _currentSite: Site = initSite;
 
   @Mutation
@@ -97,17 +109,17 @@ class SitesStore extends VuexModule implements SitesStateInterface{
     return this.sites;
   }
 
-  public get getCollectionId():string {
+  public get getCollectionId(): string {
     if(AuthModule.currentUser.id) {
     return  AuthModule.currentUser.id + '::sites';
     } else {return ''}
   }
 
-  public get getCurrentSiteId():string {
-    return this._currentSiteId
+  public get getCurrentSiteId(): string {
+    return this._currentSiteId;
   }
 
-  public get getCurrentSite():Site {
+  public get getCurrentSite(): Site {
     return this._currentSiteId !=='' ? this.sites.filter(site => site.siteId === this._currentSiteId)[0] : initSite;
   }
 }

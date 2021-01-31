@@ -1,21 +1,21 @@
 <template>
   <section>
-    <p class="page-heading">Editing: {{ title }} Page</p>
+    <h2 class="page-heading">Editing: {{ title }} Page</h2>
     <div
       :id="id"
-      class="w-full h-full relative p-4 border border-gray-400 relative"
+      class="w-full h-auto relative p-4 border border-gray-400"
       :class="getClass()"
-      ref="mainDiv"
+      ref="ROOT"
       @dragover.prevent="bgColour = 'bg-gray-600'"
       @dragleave.prevent="bgColour = 'bg-gray-200'"
       @drop.prevent="onDrop"
     >
       <component
-        :is="layout.componentHTMLTag"
-        v-for="(layout, i) in layoutElements"
+        v-for="(component, i) in layoutElements"
+        :is="component.componentHTMLTag"
         :key="i"
         :index="i"
-        :thisComponent="layout"
+        :thisComponent="component"
         z-index="0"
         @dragover.prevent
         @drop.prevent="onDrop"
@@ -31,7 +31,6 @@
         </text-editor>
       </transition>
     </div>
-    
   </section>
 </template>
 
@@ -39,23 +38,24 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import Container from '@/components/page-builder-elements/generic/container.vue';
-import {
-  PageData,
-  ComponentContainer,
-  PageElementBuilder,
-} from '@/models/page/page';
-import { ComponentBuilder } from '@/classes/component-builder/component-builder';
 import EditDeleteOption from '@/components/page-builder-elements/utility/edit-delete-options/edit-delete-options.vue';
 import { PageModule } from '@/store/page/page';
 import { SidebarModule } from '@/store/sidebar/sidebar';
 import { ServicesModule } from '@/store/services/services';
 import { ComponentCounter } from '@/classes/component-counter/singleton-counter';
 import TextEditor from '@/components/base/text/text-editor/text-editor.vue';
+import { PageContainer } from '@/classes/page-element/PageContainer/PageContainer';
+import {
+  PageElementClasses,
+  PageElementFactory,
+} from '@/classes/page-element/factory/page-element-factory';
+import {
+  ComponentDefinitionInterface,
+  initComponentDefinition,
+} from '@/models/components/base-component';
+import { FirebaseDataBuilder } from '@/classes/page-element/firebase-data/FirebaseDataBuilder';
 
 const PARENT = 'ROOT';
-const PARENTCOMPONENT = new ComponentContainer(new PageElementBuilder());
-
-PARENTCOMPONENT.ref = PARENT;
 
 @Component({
   props: {
@@ -73,35 +73,65 @@ export default class PageBuilder extends Vue {
   bgColour = 'bg-gray-200';
   showModal = false;
   private componentCounter: ComponentCounter = ComponentCounter.getInstance();
+  private componentFactory: PageElementFactory = new PageElementFactory();
+  private component: PageElementClasses = undefined;
+  private rootComponent: PageContainer = this.componentFactory.createElement(
+    'rootContainer',
+    PARENT
+  ) as PageContainer;
 
   created() {
     this.title = this.$route.params.title;
+    PageModule.updatePageId(this.title);
     SidebarModule.setSidebarMenuTo('sidebar-components');
+    const firebase = new FirebaseDataBuilder();
+    firebase.retrievePageDataFromFirestore(this.title);
   }
 
-  get layoutElements(): PageData[] {
+  mounted() {
+    const mainPageDiv = this.$refs.ROOT as HTMLDivElement;
+    this.rootComponent.boxDimensions.width.value = mainPageDiv.clientWidth;
+    this.rootComponent.boxDimensions.height.value = mainPageDiv.clientHeight;
+    this.rootComponent.boxDimensions.top.value = mainPageDiv.clientTop;
+    this.rootComponent.boxDimensions.left.value = mainPageDiv.clientLeft;
+  }
+
+
+  getStyleDimension(style: string): number {
+      if (style === '') {
+        return 0;
+      }
+      return parseInt(style.substring(0, style.length - 2));
+    }
+
+  get layoutElements(): PageElementClasses[] {
     return PageModule.pageElements;
   }
 
   onDrop(event: DragEvent): void {
-    const componentBuilder = new ComponentBuilder();
     if (ServicesModule.dragDropEventHandled) {
       return;
     }
     if (event) {
-      const componentName = componentBuilder.getComponentName(event);
+      const componentName = this.getComponentName(event);
       const component = SidebarModule.getComponentDefinition(componentName);
       const id = this.componentCounter.getNextCounter();
       const ref = `${componentName}::${id}`;
       if (component) {
-        const newComponent: PageData = componentBuilder.buildComponent(
-          component,
+        const pageElement = this.componentFactory.createElement(
+          component.type,
           ref,
-          PARENTCOMPONENT
+          component,
+          this.rootComponent
         );
-        PageModule.addNewPageElement(newComponent);
+        PageModule.addNewPageElement(pageElement);
       }
     }
+  }
+
+  getComponentName(event: DragEvent): string {
+    const dataTransfer = event.dataTransfer;
+    return dataTransfer ? dataTransfer.getData('text') : '';
   }
 
   deleteClicked(): void {
@@ -117,7 +147,7 @@ export default class PageBuilder extends Vue {
   }
 
   get editedComponentText(): string {
-    return PageModule.editComponentData;
+    return PageModule.editedComponentData;
   }
 }
 </script>

@@ -28,7 +28,7 @@ export default class DraggableIcon extends Vue {
   }
 
   onDragStart(e: DragEvent): void {
-    if(e.currentTarget)    (e.currentTarget as HTMLDivElement).style.border ='dashed 0.5px'; 
+    if(e.currentTarget) (e.currentTarget as HTMLDivElement).style.border ='dashed 0.5px'; 
     if(e.dataTransfer) {
       if(e.target) {
         e.dataTransfer.setData('text/plain', (e.target as HTMLDivElement).id);
