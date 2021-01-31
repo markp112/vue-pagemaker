@@ -3,7 +3,7 @@
     <div class="relative">
       <div 
         class="w-8 h-8 border border-gray-200 cursor-pointer relative"
-        v-bind:style="{ backgroundColor: colour() }"
+        v-bind:style="{ backgroundColor: getColour() }"
         @click="emitColour()"
         @mouseover="showTooltip=true"
         @mouseleave="showTooltip=false"
@@ -31,11 +31,11 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { Emit } from 'vue-property-decorator';
 import ColourPicker from './colour-picker.vue';
 import ColourPaletteSidebar from './colour-palette-sidebar/colour-palette-sidebar.vue';
-import { Colour } from '@/classes/colour/singleton-colour';
 import ToolTip from '../../notifications/tooltip/tooltip.vue';
+import { Emit } from 'vue-property-decorator';
+import { Colour } from '@/classes/colour/singleton-colour';
 
 @Component({
   components: {
@@ -58,11 +58,12 @@ export default class ColourDropdown extends Vue {
 
   @Emit('onColourChange') 
   emitColour(): string {
+    this.show=false;
     return this.colourStore.rgbColour;
   }
 
-  colour(): string {
-    return this.$props.colourProp !=='' ? this.$props.colourProp : this.colourStore.rgbColour;
+  getColour(): string {
+    return this.$props.colourProp !== '' ? this.$props.colourProp : this.colourStore.rgbColour;
   }
 
  getPath(image: string): string {

@@ -9,6 +9,13 @@
           Reset
         </span>
         <font-select @onChange="onChange"></font-select>
+        <drop-down 
+          class="ml-1"
+          :thisIconButton="fontSizeButton"
+          @onSelectChange="onFontSizeChange"
+        >
+          px
+        </drop-down>
         <icon-select
           :buttonIconClassList="fontWeightButton"
           @selectChange="onFontWeightChange"
@@ -22,13 +29,6 @@
         </indent-outdent>
         <text-alignment @alignClick="textAlignClick"></text-alignment>
         <colour-select @onColourChange="onColourChange" flexAlignment="horizontal" :showLabels="false"></colour-select>
-        <drop-down 
-          class="ml-1"
-          :thisIconButton="fontSizeButton"
-          @onSelectChange="onFontSizeChange"
-        >
-        px
-        </drop-down>
       </div>
       <div>
         <close-button @onClick="onCloseClick()"></close-button>
@@ -59,6 +59,10 @@ import IndentOutdent from '@/components/base/text/text-editor/indent/indent-outd
 import TextAlignment from '@/components/base/text/text-editor/justify/justify.vue';
 import ColourSelect from '@/components/base/pickers/colour-picker/colour-select.vue';
 import ParagraphComponent from './paragraph/paragraph.vue';
+import IconSelect from '@/components/base/pickers/icon-select/icon-select.vue';
+import FontSelect from '@/components/base/pickers/font-selector/font-selector.vue';
+import DropDown from '@/components/base/pickers/drop-down/drop-down.vue';
+import IconToggleButton from '@/components/base/buttons/icon-toggle-button/icon-toggle-button.vue';
 import { Style, StyleTags } from '../../../../models/styles/styles';
 import { SidebarModule } from '@/store/sidebar/sidebar';
 import { Indents } from '@/classes/dom/range/range-base';
@@ -66,13 +70,7 @@ import { Paragraph } from '@/classes/dom/range/commands/newLine';
 import { RH } from '@/classes/dom/range/RH';
 import { PageModule } from '../../../../store/page/page';
 import { AlignText } from '@/classes/dom/range/commands/align-text';
-import IconSelect from '@/components/base/pickers/icon-select/icon-select.vue';
-import FontSelect from '@/components/base/pickers/font-selector/font-selector.vue';
-import DropDown from '@/components/base/pickers/drop-down/drop-down.vue';
-import IconToggleButton from '@/components/base/buttons/icon-toggle-button/icon-toggle-button.vue';
-import {
-  fontWeightIconList,
-} from '@/models/components/icon-picker-models';
+import { fontWeightIconList } from '@/models/components/icon-picker-models';
 import { ButtonIconClassList } from '@/models/styles/builders/button-icon-class-list';
 import { ButtonIconClassInterface } from '@/models/styles/button-icon/button-icon';
 import { ButtonFactory } from '@/models/styles/button-factory/button-factory';

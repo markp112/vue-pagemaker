@@ -33,16 +33,14 @@
 import Vue from 'vue';
 import Component, { mixins } from 'vue-class-component';
 import { Emit } from 'vue-property-decorator';
-import { Style } from '@/models//styles/styles';
 import GenericComponent from '@/components/page-builder-elements/generic/generic.vue';
 import { PageModule } from '@/store/page/page';
 import { ServicesModule } from '@/store/services/services';
 import { SidebarModule } from '@/store/sidebar/sidebar';
 import { ComponentCounter } from '@/classes/component-counter/singleton-counter';
 import Resize from '@/components/base/resizeable/resize.vue';
-import { BoxDimensions, BoxDimensionsInterface, BoxUnits, Dimension } from '../../../models/components/box-dimension';
+import { BoxDimensions, Dimension } from '../../../models/components/box-dimension';
 import { GenericComponentMixins } from '@/components/page-builder-elements/generic/mixins/generic-components-mixin';
-import { PageElementBuilder } from '@/classes/page-element/page-element-builder/PageElementBuilder'
 import { PageContainer } from '@/classes/page-element/PageContainer/PageContainer';
 import { PageElementClasses, PageElementFactory } from '@/classes/page-element/factory/page-element-factory';
 
@@ -56,7 +54,6 @@ import { PageElementClasses, PageElementFactory } from '@/classes/page-element/f
 
 export default class Container extends mixins(GenericComponentMixins) {
   name="container";
-  private isSizing = false;
   private componentStyle = '';
   private componentCounter: ComponentCounter = ComponentCounter.getInstance();
 
@@ -68,7 +65,6 @@ export default class Container extends mixins(GenericComponentMixins) {
   }
 
   mounted() {
-    const parentElement: Element = this.$parent.$el;
     // -- convert width and height into pixels as initial dimension may be a percentage and cannot then be used
     // by the child component to get the actual width / height
     this.$props.thisComponent.boxDimensions.width = { value: this.$el.getBoundingClientRect().width, units: 'px' };

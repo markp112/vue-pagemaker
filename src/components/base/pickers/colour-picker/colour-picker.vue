@@ -23,8 +23,7 @@ import { Colour } from '@/classes/colour/singleton-colour';
 })
 export default class ColourPicker extends Vue {
   name = 'colour-picker';
-  private hue = '#000000';
-  private colour = '#ffeedd';
+  hue = '#000000';
   colourStore: Colour = Colour.getInstance();
 
   @Emit('colour')
@@ -33,7 +32,7 @@ export default class ColourPicker extends Vue {
     return rgbColour;
   }
 
-  @Emit("mouseLeave")
+  @Emit("onMouseLeave")
   mouseLeave()
   {
     return;

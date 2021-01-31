@@ -1,19 +1,20 @@
 <template>
-  <canvas
-    ref="canvasPalette"
-    class="color-palette z-50"
-    width="200"
-    height="200"
-    @mousedown="onMouseDown($event)"
-    @mousemove="onMouseMove($event)"
-    @mouseup="onMouseUp($event)"
-  >
-  </canvas>
+    <canvas
+      ref="canvasPalette"
+      class="color-palette z-50"
+      width="200"
+      height="200"
+      @mousedown="onMouseDown($event)"
+      @mousemove="onMouseMove($event)"
+      @mouseup="onMouseUp($event)"
+    >
+    </canvas>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
+
 import { Emit, Watch } from 'vue-property-decorator';
 
 @Component({

@@ -21,7 +21,7 @@
         </div>
         <div class="sidebar-radio-container">
           <label for="font"
-          class="mt-1"
+            class="mt-1"
             :class="{
               'text-secondary-300': textBackgroundorBorder === 'color',
             }"
@@ -38,10 +38,11 @@
           />
         </div>
         <div class="sidebar-radio-container">
-          <label for="border"
-          class="mt-1"
-          :class="{
-              'text-secondary-300': textBackgroundorBorder === 'border-color',
+          <label 
+            for="border"
+            class="mt-1"
+            :class="{
+                'text-secondary-300': textBackgroundorBorder === 'border-color',
             }"
           >
             border
@@ -55,10 +56,9 @@
           />
         </div>
       </div>
-      <div class="" :class="getContainerClass()">
+      <div class="" :class="getContainerClass()"  @mouseleave="show=false">
         <colour-dropdown
           tooltip="From Palette"
-
           @onColourChange="onColourChange"
         >
           <template
@@ -72,22 +72,6 @@
             </colour-palette>
           </template>
         </colour-dropdown>
-        <colour-dropdown 
-          @onColourChange="onColourChange"
-          :class="getElementClass"
-          tooltip="Colour picker"
-        >
-          <template
-            v-if="show"
-            slot-scope="{ show }"
-          >
-            <colour-picker
-              class="absolute"
-              @colour="onColourPickerChange($event)"
-            >
-            </colour-picker>
-          </template>
-        </colour-dropdown>
       </div>
     </div>
   </section>        
@@ -95,22 +79,19 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import Component, { mixins } from 'vue-class-component';
+import Component from 'vue-class-component';
 import ColourDropdown from '@/components/base/pickers/colour-picker/colour-dropdown.vue';
 import { BackgroundBorderForeground, Colour } from '@/classes/colour/singleton-colour';
 import { Emit } from 'vue-property-decorator';
 import { StyleElement } from '../../../../classes/text-attributes/text-attributes';
 import { SidebarButtonEventManager } from '@/classes/sidebarButtonEventManager/sidebarButtonEventManager';
-import ColourPicker from './colour-picker.vue';
 import ColourPaletteSidebar from '@/components/base/pickers/colour-picker/colour-palette-sidebar/colour-palette-sidebar.vue';
-
 export type FlexAlignment = 'vertical' | 'horizontal';
 
 @Component({
   components: {
     'colour-dropdown': ColourDropdown,
     'colour-palette': ColourPaletteSidebar,
-    'colour-picker': ColourPicker,
   },
   props: {
     showLabels: { default: (): boolean => { return false; }},
@@ -166,9 +147,7 @@ export default  class ColourSelect extends Vue {
 </script>
 
 <style lang="postcss" scoped>
-  .colour-select {
-    
-  }
+  .colour-select {}
 
   .colour-select-radios {
     @apply flex;
@@ -190,6 +169,7 @@ export default  class ColourSelect extends Vue {
      .colour-select-radios {
        @apply w-full;
      }
+  }
   @screen lg {
     .colour-select {
       @apply flex-row;
@@ -200,5 +180,5 @@ export default  class ColourSelect extends Vue {
        @apply w-9/12;
      }
   }
-  }
+  
 </style>
