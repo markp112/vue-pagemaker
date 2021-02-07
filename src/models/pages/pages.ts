@@ -1,5 +1,5 @@
-import { Icon, IconBuilder } from '../font-awesome/icon';
-import { dateFormat } from '@vuejs-community/vue-filter-date-format';
+import { Icon, IconBuilder } from "../font-awesome/icon";
+import { dateFormat } from "@vuejs-community/vue-filter-date-format";
 
 export interface PageInterface {
   name: string;
@@ -17,7 +17,7 @@ export class Page implements PageInterface {
   _active: boolean;
 
   constructor() {
-    this._name = '';
+    this._name = "";
     this._icon = IconBuilder.buildPlaceholderIcon();
     this._created = new Date();
     this._edited = new Date();
@@ -61,7 +61,7 @@ export class Page implements PageInterface {
   }
 
   get createdFormatted(): string {
-    return dateFormat(this._created, 'DD mmm YYYY');
+    return dateFormat(this._created, "DD mmm YYYY");
   }
 
   getPageDataAsObject(): PageInterface {
@@ -70,7 +70,7 @@ export class Page implements PageInterface {
       icon: this._icon,
       created: this._created,
       edited: this.edited,
-      active: this.active,
+      active: this.active
     };
     return page;
   }

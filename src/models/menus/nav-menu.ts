@@ -13,9 +13,16 @@ export class NavMenuItem implements NavMenuInterface {
   _id: number;
   _navText: string;
   _navLink: string;
-  _isVisible: IsVisible
+  _isVisible: IsVisible;
 
-  constructor(id: number, navText: string, navLink: string, isVisible =() => {return true}) {
+  constructor(
+    id: number,
+    navText: string,
+    navLink: string,
+    isVisible = () => {
+      return true;
+    }
+  ) {
     this._id = id;
     this._navLink = navLink;
     this._navText = navText;

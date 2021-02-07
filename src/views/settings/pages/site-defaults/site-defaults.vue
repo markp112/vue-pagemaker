@@ -84,81 +84,79 @@
 </template>
 
 <script lang="ts">
-import Component from 'vue-class-component';
-import MaterialTemplate from './partials/material-template/material-template.vue';
-import ColourOption from './partials/colour-option/colour-option.vue';
-import FontSelect from '@/components/base/pickers/font-selector/font-selector.vue';
-import Palette from '@/views/settings/pages/colour-palette/partials/colour-palette.vue';
-import
-  ColourPills,
-  {
-    Tuple,
-  } from '@/views/settings/pages/site-defaults/partials/colour-pills/colour-pills.vue';
-import { ColourProperties } from './models/site-defaults';
-import { ButtonIconNumeric } from '@/models/styles/button-icon/button-numeric-list/button-numeric-list';
-import { ButtonFactory } from '@/models/styles/button-factory/button-factory';
-import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
-import { Notification } from '@/models/notifications/notifications';
-import { SnackbarMixin } from '@/mixins/components/snackbar/snackbar-mixin';
-import { ColourPalettes } from '@/classes/settings/colour-palette/colour-palette';
-import { SiteIdAndUserId } from '@/models/site-and-user/site-and-user';
+import Component from "vue-class-component";
+import MaterialTemplate from "./partials/material-template/material-template.vue";
+import ColourOption from "./partials/colour-option/colour-option.vue";
+import FontSelect from "@/components/base/pickers/font-selector/font-selector.vue";
+import Palette from "@/views/settings/pages/colour-palette/partials/colour-palette.vue";
+import ColourPills, {
+  Tuple
+} from "@/views/settings/pages/site-defaults/partials/colour-pills/colour-pills.vue";
+import { ColourProperties } from "./models/site-defaults";
+import { ButtonIconNumeric } from "@/models/styles/button-icon/button-numeric-list/button-numeric-list";
+import { ButtonFactory } from "@/models/styles/button-factory/button-factory";
+import { SiteDefaults } from "@/classes/settings/site-defaults/site-defaults";
+import { Notification } from "@/models/notifications/notifications";
+import { SnackbarMixin } from "@/mixins/components/snackbar/snackbar-mixin";
+import { ColourPalettes } from "@/classes/settings/colour-palette/colour-palette";
+import { SiteIdAndUserId } from "@/models/site-and-user/site-and-user";
 
 @Component({
   components: {
-    'material-template': MaterialTemplate,
-    'font-picker': FontSelect,
-    'colour-option': ColourOption,
-    'colour-palette': Palette,
-    'colour-pills': ColourPills,
-  },
+    "material-template": MaterialTemplate,
+    "font-picker": FontSelect,
+    "colour-option": ColourOption,
+    "colour-palette": Palette,
+    "colour-pills": ColourPills
+  }
 })
 export default class SiteDefaultView extends SnackbarMixin {
-  SAVE_ICON = 'diskette-dark-48.png';
-  SAVE_ICON_HOVER = 'diskette-light-48.png';
+  SAVE_ICON = "diskette-dark-48.png";
+  SAVE_ICON_HOVER = "diskette-light-48.png";
   showDefaultIcon = true;
-  dropDownSurface = 'bg-siteSurface text-onSurface';
+  dropDownSurface = "bg-siteSurface text-onSurface";
   siteDefaults: SiteDefaults = SiteDefaults.getInstance();
-  colourPalette: ColourPalettes = new ColourPalettes('#000000');
+  colourPalette: ColourPalettes = new ColourPalettes("#000000");
   siteId = this.$store.getters.getCurrentSiteId;
   userId = this.$store.getters.currentUser.id;
-  selectedColour = '#3322f4';
-  selectedItem: ColourProperties = 'primary';
+  selectedColour = "#3322f4";
+  selectedItem: ColourProperties = "primary";
   primary: Tuple[] = [
-    ['primary - dark', 'primaryDark'],
-    ['primary', 'primary'],
-    ['primary - light', 'primaryLight'],
-    ['text on primary', 'textOnPrimary'],
+    ["primary - dark", "primaryDark"],
+    ["primary", "primary"],
+    ["primary - light", "primaryLight"],
+    ["text on primary", "textOnPrimary"]
   ];
   secondary: Tuple[] = [
-    ['secondary - dark', 'secondaryDark'],
-    ['secondary', 'secondary'],
-    ['secondary - light', 'secondaryLight'],
-    ['text on secondary', 'textOnSecondary'],
+    ["secondary - dark", "secondaryDark"],
+    ["secondary", "secondary"],
+    ["secondary - light", "secondaryLight"],
+    ["text on secondary", "textOnSecondary"]
   ];
   other: Tuple[] = [
-    ['accent', 'accent'],
-    ['error', 'error'],
-    ['surface', 'surface'],
-    ['text on surface', 'textOnSurface'],
-    ['background', 'background'],
-    ['text on background', 'textOnBackground'],
+    ["accent", "accent"],
+    ["error", "error"],
+    ["surface", "surface"],
+    ["text on surface", "textOnSurface"],
+    ["background", "background"],
+    ["text on background", "textOnBackground"]
   ];
 
   fontSizeButton: ButtonIconNumeric = new ButtonFactory().createButton(
-    'numeric',
-    'font-size'
+    "numeric",
+    "font-size"
   ) as ButtonIconNumeric;
 
   mounted() {
     const siteAndUserId: SiteIdAndUserId = {
       siteId: this.siteId,
-      userId: this.userId,
+      userId: this.userId
     };
     this.colourPalette.loadPalette(siteAndUserId);
   }
 
   getPath(image: string): string {
-    const path = require.context('@/assets/icons', false, /\.png$/);
+    const path = require.context("@/assets/icons", false, /\.png$/);
     return path(`./${image}`);
   }
 
@@ -175,14 +173,15 @@ export default class SiteDefaultView extends SnackbarMixin {
   }
 
   saveSiteDefaults() {
-    this.siteDefaults.saveDefaults(this.siteId, this.userId)
+    this.siteDefaults
+      .saveDefaults(this.siteId, this.userId)
       .then(response => {
         const notification = response as Notification;
-        this.showSnackbar(notification, 'Defaults saved');
+        this.showSnackbar(notification, "Defaults saved");
       })
       .catch(err => {
         const notification = err as Notification;
-        this.showSnackbar(notification, 'Error Saving Defaults');
+        this.showSnackbar(notification, "Error Saving Defaults");
       });
   }
 }

@@ -1,28 +1,25 @@
-import {
-  SidebarPanel,
-} from '@/models/sidebar/button-definition/sidebar-buttons';
-import { ContainerEditorBuilder } from './builders/container-editor';
-import { SiteSettingsBuilder } from './builders/site-settings';
+import { SidebarPanel } from "@/models/sidebar/button-definition/sidebar-buttons";
+import { ContainerEditorBuilder } from "./builders/container-editor";
+import { SiteSettingsBuilder } from "./builders/site-settings";
 
 export type SidebarComponents =
-  'image-editor'
-  | 'sidebar-components'
-  | 'container-editor'
-  | 'sites-menu'
-  | 'button-editor'
-  | 'site-settings';
+  | "image-editor"
+  | "sidebar-components"
+  | "container-editor"
+  | "sites-menu"
+  | "button-editor"
+  | "site-settings";
 
 export class SidebarPanelBuilder {
-
   sidebarPanel: SidebarPanel;
 
-  constructor (sidebarToCreate: SidebarComponents) {
+  constructor(sidebarToCreate: SidebarComponents) {
     this.sidebarPanel = new SidebarPanel();
     switch (sidebarToCreate) {
-      case 'container-editor':
+      case "container-editor":
         this.sidebarPanel = this.buildContainerSidePanel();
         break;
-      case ('site-settings'):
+      case "site-settings":
         this.sidebarPanel = this.buildSiteSettings();
         break;
     }

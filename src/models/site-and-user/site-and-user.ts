@@ -1,4 +1,4 @@
 export interface SiteIdAndUserId {
-  siteId: string,
-  userId: string,
+  siteId: string;
+  userId: string;
 }

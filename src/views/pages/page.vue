@@ -20,7 +20,8 @@
       <div>
         <span
           class="h-8 w-8 bg-accent1 text-center font-bold align-middle border cursor-pointer relative inline-block"
-          @click="iconPickerClicked()">
+          @click="iconPickerClicked()"
+        >
           ...
         </span>
         <span>
@@ -29,26 +30,17 @@
               v-if="!page.icon.isImagge"
               class="ml-2 inline-block text-lg align-middle"
               :icon="page.icon.icon"
-              :prefix="page.icon.prefix" name="icon">
+              :prefix="page.icon.prefix"
+              name="icon"
+            >
             </font-awesome-icon>
-            <img
-              v-if="page.icon.isImagge"
-              :src="page.icon.path"
-            />
+            <img v-if="page.icon.isImagge" :src="page.icon.path" />
           </div>
         </span>
-        <icon-picker
-          @icon-clicked="iconClick"
-          id="icon"
-        >
-        </icon-picker>
+        <icon-picker @icon-clicked="iconClick" id="icon"> </icon-picker>
       </div>
       <label for="created">Created:</label>
-      <datepicker
-        :value="page.created"
-        id="created"
-        name="created"
-      >
+      <datepicker :value="page.created" id="created" name="created">
       </datepicker>
       <label for="edited">edited:</label>
       <p class="block border-2 rounded-md w-full p-1" id="edited">
@@ -62,7 +54,7 @@
           id="active"
           :value="page.active"
           class="mt-5 w-1/12"
-        >
+        />
       </div>
       <submit-cancel
         v-on:cancelClicked="cancelClick"
@@ -75,32 +67,31 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Page } from '@/models/pages/pages';
-import IconPicker from '@/components/base/pickers/icon-picker/icon-picker.vue';
-import { Icon } from '../../models/font-awesome/icon';
-import InvalidForm from '@/components/base/notifications/invalid-form.vue';
-import { Notification } from '@/models/notifications/notifications';
+import Vue from "vue";
+import Component from "vue-class-component";
+import { Page } from "@/models/pages/pages";
+import IconPicker from "@/components/base/pickers/icon-picker/icon-picker.vue";
+import { Icon } from "../../models/font-awesome/icon";
+import InvalidForm from "@/components/base/notifications/invalid-form.vue";
+import { Notification } from "@/models/notifications/notifications";
 import {
   SnackbarMessage,
   SnackBarGenerator
-} from '@/models/notifications/snackbar';
-import SubmitCancel from '@/components/base/buttons/submit-cancel/submit-cancel.vue';
-import FormButton from '@/components/base/buttons/form-button.vue';
-import { TimeStamp, formatTimeStampAsDate } from '@/models/Types/generic-types';
-import { SnackbarModule } from '@/store/snackbar/snackbar';
-import { PagesModule } from '@/store/pages/pages';
-import { ComponentPropsModule } from '@/store/component-props/component-props';
-
+} from "@/models/notifications/snackbar";
+import SubmitCancel from "@/components/base/buttons/submit-cancel/submit-cancel.vue";
+import FormButton from "@/components/base/buttons/form-button.vue";
+import { TimeStamp, formatTimeStampAsDate } from "@/models/Types/generic-types";
+import { SnackbarModule } from "@/store/snackbar/snackbar";
+import { PagesModule } from "@/store/pages/pages";
+import { ComponentPropsModule } from "@/store/component-props/component-props";
 
 @Component({
   components: {
-    'icon-picker': IconPicker,
-    'submit-cancel': SubmitCancel,
-    'invalid-form': InvalidForm,
-    FormButton,
-  },
+    "icon-picker": IconPicker,
+    "submit-cancel": SubmitCancel,
+    "invalid-form": InvalidForm,
+    FormButton
+  }
 })
 export default class PageEditor extends Vue {
   pageTitle!: string;
@@ -128,7 +119,7 @@ export default class PageEditor extends Vue {
   }
 
   cancelClick() {
-    this.$router.push({ name: 'pageList' });
+    this.$router.push({ name: "pageList" });
   }
 
   saveClick() {
@@ -145,12 +136,12 @@ export default class PageEditor extends Vue {
   validateForm(): string[] {
     const errors: string[] = [];
     if (this.page.name.length === 0) {
-      errors.push('page name is required');
+      errors.push("page name is required");
     }
     const pageList: Page[] = PagesModule.pageList;
     if (pageList !== undefined) {
       if (pageList.filter(page => page.name === this.page.name)) {
-        errors.push('Page name must be unique');
+        errors.push("Page name must be unique");
       }
     }
     return errors;
@@ -160,18 +151,18 @@ export default class PageEditor extends Vue {
     PagesModule.saveThePage(this.page)
       .then(result => {
         const notification = result as Notification;
-        if (notification.status === 'ok') {
+        if (notification.status === "ok") {
           const snackbarMessage: SnackbarMessage = SnackBarGenerator.snackbarSuccess(
             `The ${this.page.name} page has been created`,
-            'Page Saved'
+            "Page Saved"
           );
           SnackbarModule.showSnackbar(snackbarMessage);
         } else {
-          this.showErrorsnackbar(notification.message, 'Error on Save');
+          this.showErrorsnackbar(notification.message, "Error on Save");
         }
       })
       .catch(err => {
-        this.showErrorsnackbar(err, 'System Error');
+        this.showErrorsnackbar(err, "System Error");
       });
   }
 

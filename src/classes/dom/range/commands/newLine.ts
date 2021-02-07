@@ -1,24 +1,24 @@
 import { Style, StyleTags } from "@/models/styles/styles";
 import { HTMLTags, RHBase } from "../range-base";
-import  Guid  from "@/utils/guid";
+import Guid from "@/utils/guid";
 import { RangeStyles } from "../rangeStyling/rangeStyles";
-  
+
 export class Paragraph extends RHBase {
-  private id = '';
+  private id = "";
   private rangeStyling = new RangeStyles();
-  
+
   constructor(range: Range) {
     super(range);
     this.id = Guid.newSmallGuid();
   }
 
   public newLine() {
-    if(!this.range) throw new Error('Range not set');
-    let newParagraph: Node; 
-    if (this.isEndOfLine() || this.isStartOfLine() ) {
-      newParagraph = this.createWrapperNode('p');
-      this.setElementId(newParagraph, this.id)
-      newParagraph.textContent = ' ';
+    if (!this.range) throw new Error("Range not set");
+    let newParagraph: Node;
+    if (this.isEndOfLine() || this.isStartOfLine()) {
+      newParagraph = this.createWrapperNode("p");
+      this.setElementId(newParagraph, this.id);
+      newParagraph.textContent = " ";
     } else {
       newParagraph = this.splitLine();
     }
@@ -26,14 +26,20 @@ export class Paragraph extends RHBase {
   }
 
   insertParagraph(newParagraph: Node) {
-    const textEditorContainer: Node | null = this.findNextNodeofType(this.range.commonAncestorContainer, 'DIV');
+    const textEditorContainer: Node | null = this.findNextNodeofType(
+      this.range.commonAncestorContainer,
+      "DIV"
+    );
     if (textEditorContainer) {
       const node = this.range.commonAncestorContainer.parentNode
-        ?  this.findNextNodeofType(this.range.commonAncestorContainer, 'P')
+        ? this.findNextNodeofType(this.range.commonAncestorContainer, "P")
         : null;
       let insertAfterNode: Node | null;
       if (this.isStartOfLine()) {
-        insertAfterNode = this.findNextNodeofType(this.range.startContainer, 'P');
+        insertAfterNode = this.findNextNodeofType(
+          this.range.startContainer,
+          "P"
+        );
       } else {
         insertAfterNode = node?.nextSibling ? node.nextSibling : null;
       }
@@ -44,7 +50,7 @@ export class Paragraph extends RHBase {
       }
       this.setParagrah(newParagraph);
     } else {
-      throw new Error('Parent node not found');
+      throw new Error("Parent node not found");
     }
   }
 
@@ -52,7 +58,11 @@ export class Paragraph extends RHBase {
     const startOffset = this.range.startOffset;
     const endOffset = this.range.endOffset;
     const length = (this.range.commonAncestorContainer as Text).length;
-    if (startOffset === endOffset && startOffset === length && this.range.startContainer.nextSibling === null) {
+    if (
+      startOffset === endOffset &&
+      startOffset === length &&
+      this.range.startContainer.nextSibling === null
+    ) {
       return true;
     }
     return false;
@@ -94,13 +104,13 @@ export class Paragraph extends RHBase {
     if (parentNextSibling) {
       const parentNextSiblings = this.getSiblings(parentNextSibling, []);
       parentNextSiblings.forEach(sibling => {
-        newParagraph.appendChild(sibling)
+        newParagraph.appendChild(sibling);
       });
     }
   }
 
   private createNewParagraph(spanNode: Node): Node {
-    const newParagraph: Node = this.createWrapperNode('p');
+    const newParagraph: Node = this.createWrapperNode("p");
     this.setElementId(newParagraph, this.id);
     newParagraph.appendChild(spanNode);
     return newParagraph;
@@ -108,29 +118,30 @@ export class Paragraph extends RHBase {
 
   private createNewSpanNode(): Node {
     const nodeContent: Text | null = this.getContent();
-    const spanNode: Node = this.createWrapperNode('span');
+    const spanNode: Node = this.createWrapperNode("span");
     spanNode.appendChild(nodeContent);
     return spanNode;
   }
 
   private getSiblings(node: Node, siblings: Node[]): Node[] {
     if (node.nextSibling) {
-      if (node.nodeName !=='SPAN' && node.nodeName !=='#text') return siblings;
+      if (node.nodeName !== "SPAN" && node.nodeName !== "#text")
+        return siblings;
       siblings.push(node.nextSibling);
       return this.getSiblings(node.nextSibling, siblings);
-  }
+    }
     return siblings;
   }
 
   private getContent(): Text {
-    return this.getTextToEndOfLine(); 
+    return this.getTextToEndOfLine();
   }
 
   private getClasses(node: Node): string {
     let classes = "";
-    classes += " " + (node as HTMLSpanElement).className; 
+    classes += " " + (node as HTMLSpanElement).className;
     if (!node.parentNode) return classes;
-    if (node.parentNode.nodeName === 'P') return classes;
+    if (node.parentNode.nodeName === "P") return classes;
     classes += this.getClasses(node.parentNode);
     return classes;
   }
@@ -138,8 +149,8 @@ export class Paragraph extends RHBase {
   private getStyling(node: Node, styles: Style[]): Style[] {
     const parentNode = node.parentNode;
     if (parentNode) {
-      if (parentNode.nodeName === 'SPAN') {
-       this.getNodeStyles(parentNode, styles);
+      if (parentNode.nodeName === "SPAN") {
+        this.getNodeStyles(parentNode, styles);
         return styles;
       }
     }
@@ -155,7 +166,7 @@ export class Paragraph extends RHBase {
     if (node.parentNode) {
       return this.getNodeType(node.parentNode);
     }
-    return 'undefined';
+    return "undefined";
   }
 
   private getNodeStyles(node: Node | null, spanStyles: Style[]): Style[] {
@@ -163,20 +174,19 @@ export class Paragraph extends RHBase {
     const styles = (node as HTMLSpanElement).style;
     if (styles) {
       for (let index = 0; index < styles.length; index++) {
-        if(styles[index]) {
+        if (styles[index]) {
           const styleName = (styles[index] as unknown) as StyleTags;
           const style: Style = {
             style: styleName,
-            value: styles.getPropertyValue(styles[index]),
+            value: styles.getPropertyValue(styles[index])
           };
-          if (style.style !=='') spanStyles.push(style);
-        
+          if (style.style !== "") spanStyles.push(style);
         } else {
           break;
         }
-      };
+      }
     }
-    if (this.getParentNodeType(node) === 'span') {
+    if (this.getParentNodeType(node) === "span") {
       return this.getNodeStyles(node.parentNode, spanStyles);
     }
     return spanStyles;
@@ -184,27 +194,37 @@ export class Paragraph extends RHBase {
 
   applyStyles(spanNode: Node, styles: Style[]) {
     styles.forEach(style => {
-      this.cleanStyle(style);        
+      this.cleanStyle(style);
       this.rangeStyling.setStyle(spanNode, style);
-    })
+    });
   }
 
   private cleanStyle(style: Style) {
-    if (!style.style.includes('-')) return;
-    const index = style.style.indexOf('-');
-    const styleName = style.style.substring(0, index)
-      + style.style.replace('-','').charAt(index).toUpperCase()
-      + style.style.substring(index + 2);;
+    if (!style.style.includes("-")) return;
+    const index = style.style.indexOf("-");
+    const styleName =
+      style.style.substring(0, index) +
+      style.style
+        .replace("-", "")
+        .charAt(index)
+        .toUpperCase() +
+      style.style.substring(index + 2);
     style.style = styleName as StyleTags;
   }
 
   private setParagrah(node: Node) {
     const range = document.createRange();
     range.setStart(node, 0);
-    const end = node.childNodes.length ? node.childNodes.length : ((node as Text).length ? (node as Text).length : 0);
+    const end = node.childNodes.length
+      ? node.childNodes.length
+      : (node as Text).length
+      ? (node as Text).length
+      : 0;
     range.setEnd(node, end);
     range.collapse(true);
-    const selection = window.getSelection() ? window.getSelection() : document.getSelection();
+    const selection = window.getSelection()
+      ? window.getSelection()
+      : document.getSelection();
     selection?.removeAllRanges();
     selection?.addRange(range);
   }

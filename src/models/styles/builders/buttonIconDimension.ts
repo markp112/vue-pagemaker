@@ -2,29 +2,23 @@ import {
   ButtonIconDimensionInterface,
   IconType,
   ComponentNames
-} from '../button-icon/button-icon';
-import {
-  Dimension,
-  BoxUnits
-} from '@/models/components/box-dimension';
-import { Border } from '@/classes/borders/borders';
-import {
-  Style,
-  StyleTags
-} from '../styles';
-import { ImpactedAttributeTypes } from '@/classes/sidebarButtonEventManager/sidebarButtonEventManager';
+} from "../button-icon/button-icon";
+import { Dimension, BoxUnits } from "@/models/components/box-dimension";
+import { Border } from "@/classes/borders/borders";
+import { Style, StyleTags } from "../styles";
+import { ImpactedAttributeTypes } from "@/classes/sidebarButtonEventManager/sidebarButtonEventManager";
 
 export class ButtonIconDimension implements ButtonIconDimensionInterface {
-  styledElement: ImpactedAttributeTypes = 'undefined';
-  dimension: Dimension = new Dimension(0, 'px');
+  styledElement: ImpactedAttributeTypes = "undefined";
+  dimension: Dimension = new Dimension(0, "px");
   style: Style = {
-    style: '',
-    value: '',
+    style: "",
+    value: ""
   };
-  iconImage = '';
-  tooltip = '';
-  iconIsTypeOf: IconType = 'dimension';
-  componentName: ComponentNames = 'plus-minus';
+  iconImage = "";
+  tooltip = "";
+  iconIsTypeOf: IconType = "dimension";
+  componentName: ComponentNames = "plus-minus";
   eventClass: Border;
 
   constructor(buttonIconDimensionBuilder: ButtonIconDimensionBuilder) {
@@ -39,16 +33,16 @@ export class ButtonIconDimension implements ButtonIconDimensionInterface {
 }
 
 export class ButtonIconDimensionBuilder {
-  _styledElement: ImpactedAttributeTypes = 'undefined';
-  _dimension: Dimension = new Dimension(0, 'px');
-  _iconImage = '';
-  _tooltip = '';
-  _iconIsTypeOf: IconType = 'dimension';
-  _componentName: ComponentNames = 'plus-minus';
+  _styledElement: ImpactedAttributeTypes = "undefined";
+  _dimension: Dimension = new Dimension(0, "px");
+  _iconImage = "";
+  _tooltip = "";
+  _iconIsTypeOf: IconType = "dimension";
+  _componentName: ComponentNames = "plus-minus";
   _eventClass: Border = Border.getInstance();
   _style: Style = {
-    style: '',
-    value: '',
+    style: "",
+    value: ""
   };
 
   withStyledElement(styledElement: ImpactedAttributeTypes) {

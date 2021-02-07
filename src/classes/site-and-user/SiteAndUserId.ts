@@ -1,7 +1,6 @@
-import { SiteIdAndUserId } from '@/models/site-and-user/site-and-user';
+import { SiteIdAndUserId } from "@/models/site-and-user/site-and-user";
 
 export class SiteAndUserId implements SiteIdAndUserId {
-
   constructor(siteAndUserId: SiteIdAndUserId) {
     this._siteId = siteAndUserId.siteId;
     this._userId = siteAndUserId.userId;
@@ -19,10 +18,10 @@ export class SiteAndUserId implements SiteIdAndUserId {
 
   validate(): boolean {
     if (!this.siteId) {
-      throw new Error('Failed validation: invalid siteId');
+      throw new Error("Failed validation: invalid siteId");
     }
-    if(!this.userId) {
-      throw new Error('Failed validation: invalid siteId');
+    if (!this.userId) {
+      throw new Error("Failed validation: invalid siteId");
     }
     return true;
   }

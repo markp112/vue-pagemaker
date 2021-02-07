@@ -6,7 +6,7 @@ export interface IconInterface {
 export class Icon implements IconInterface {
   private _isImage: boolean;
   private _icon: string;
-  private _prefix: string
+  private _prefix: string;
 
   constructor(isImage: boolean, icon: string, prefix: string) {
     this._isImage = isImage;
@@ -40,22 +40,21 @@ export class Icon implements IconInterface {
 }
 
 export const initIcon = {
-  icon: 'meh-blank',
-  prefix: 'fas',
-  isImage: false,
-}
+  icon: "meh-blank",
+  prefix: "fas",
+  isImage: false
+};
 
 export class IconBuilder {
-
   buildImageIcon(image: string, prefix: string): IconInterface {
-    return { isImage: true , icon: image, prefix: prefix };
-  } 
+    return { isImage: true, icon: image, prefix: prefix };
+  }
 
   buildFontAwesomeIcon(icon: string, prefix: string): IconInterface {
-    return { isImage: false , icon: icon, prefix: prefix };
+    return { isImage: false, icon: icon, prefix: prefix };
   }
 
   public static buildPlaceholderIcon(): Icon {
-    return new Icon(false,  'meh-blank', 'fas');
+    return new Icon(false, "meh-blank", "fas");
   }
 }

@@ -13,37 +13,37 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Site } from '../../models/sites/site';
-import { SitesModule } from '@/store/sites/sites';
-import { SidebarModule } from '@/store/sidebar//sidebar';
-import CreateNewButton from '@/components/base/buttons/create-new/create-new.vue';
-import SiteCard from '@/components/base/cards/site-card/site-card.vue';
+import Vue from "vue";
+import Component from "vue-class-component";
+import { Site } from "../../models/sites/site";
+import { SitesModule } from "@/store/sites/sites";
+import { SidebarModule } from "@/store/sidebar//sidebar";
+import CreateNewButton from "@/components/base/buttons/create-new/create-new.vue";
+import SiteCard from "@/components/base/cards/site-card/site-card.vue";
 
 @Component({
-  components :{
-    'create-new-button' : CreateNewButton,
-    'site-card': SiteCard,
+  components: {
+    "create-new-button": CreateNewButton,
+    "site-card": SiteCard
   }
 })
 export default class SitesList extends Vue {
-  name = 'SitesList' ;
-  
+  name = "SitesList";
+
   created() {
     SitesModule.getSites();
-    SidebarModule.setSidebarMenuTo('sites-menu');
+    SidebarModule.setSidebarMenuTo("sites-menu");
   }
 
   createNewSite(): void {
-    this.$router.push({ name:'newSite', params: { title: 'New Site' }});
+    this.$router.push({ name: "newSite", params: { title: "New Site" } });
   }
 
   isPublished(datePublished: string): string {
-    if(datePublished === '' || datePublished === undefined){
-      return 'unpublished';
+    if (datePublished === "" || datePublished === undefined) {
+      return "unpublished";
     } else {
-      return  datePublished;
+      return datePublished;
     }
   }
 

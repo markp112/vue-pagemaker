@@ -10,7 +10,7 @@ export interface Site {
   hostRepo?: string;
 }
 
-export const initSite: Site = { siteId: '', name: '', created: new Date() };
+export const initSite: Site = { siteId: "", name: "", created: new Date() };
 
 export class ASite implements Site {
   _userId?: string | undefined;
@@ -22,31 +22,31 @@ export class ASite implements Site {
   _image?: string | undefined;
   _published?: Date | undefined;
   _hostRepo?: string | undefined;
-  
-  constructor( siteId: string, name: string, created: Date) {
+
+  constructor(siteId: string, name: string, created: Date) {
     this._siteId = siteId;
     this._name = name;
     this._created = created;
   }
 
   get getSiteAsSite(): Site {
-    const site : Site = {
+    const site: Site = {
       siteId: this._siteId,
       userId: this._userId,
       name: this._name,
-      created: this._created,
-    }
-    if(this._description !== undefined) {
+      created: this._created
+    };
+    if (this._description !== undefined) {
       site.description = this._description;
     }
-    if(this._url !== undefined) {
+    if (this._url !== undefined) {
       site.url = this._url;
     }
     return site;
   }
 
   get userId(): string {
-    return this._userId === undefined ? '' : this._userId;
+    return this._userId === undefined ? "" : this._userId;
   }
 
   set userId(id: string) {
@@ -54,9 +54,9 @@ export class ASite implements Site {
   }
 
   get siteId(): string {
-    return  this._siteId;
+    return this._siteId;
   }
-  
+
   set siteId(id: string) {
     this._siteId = id;
   }
@@ -64,45 +64,45 @@ export class ASite implements Site {
   get name(): string {
     return this._name;
   }
-  
+
   set name(name: string) {
     this._name = name;
   }
-  
+
   get description(): string {
-    return this._description === undefined ? '' : this._description;
+    return this._description === undefined ? "" : this._description;
   }
-  
+
   set description(description: string) {
-    this._description = description
+    this._description = description;
   }
 
   get url(): string {
-    return this._url === undefined ? '' : this._url;
+    return this._url === undefined ? "" : this._url;
   }
-  
+
   set url(url: string) {
     this._url = url;
   }
-    
+
   get image(): string {
-    return this._image === undefined ? '' : this._image;
+    return this._image === undefined ? "" : this._image;
   }
-  
+
   set image(image: string) {
     this._image = image;
   }
 
   get hostRepo(): string {
-    return this._hostRepo === undefined ? '' : this._hostRepo;
+    return this._hostRepo === undefined ? "" : this._hostRepo;
   }
-  
+
   set hostRepo(hostRepo: string) {
     this._hostRepo = hostRepo;
   }
 
   get created(): Date {
-  return this._created;
+    return this._created;
   }
 
   set created(created: Date) {
@@ -118,6 +118,6 @@ export class ASite implements Site {
   }
 
   getSiteDocumentId(): string {
-    return  this._userId + '::' + this._siteId;
+    return this._userId + "::" + this._siteId;
   }
 }

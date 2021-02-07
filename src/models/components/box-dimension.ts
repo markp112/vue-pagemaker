@@ -1,18 +1,18 @@
-export type BoxUnits = 'px' | '%' | 'em' | '';
+export type BoxUnits = "px" | "%" | "em" | "";
 export interface ResizeDimensions {
   height: number;
   width: number;
 }
 export interface DimensionInterface {
-  value: number,
-  units:  BoxUnits
+  value: number;
+  units: BoxUnits;
 }
 
 export class Dimension implements DimensionInterface {
   value: number;
   units: BoxUnits;
 
-  constructor (value: number, units: BoxUnits) {
+  constructor(value: number, units: BoxUnits) {
     this.value = value;
     this.units = units;
   }
@@ -21,16 +21,16 @@ export class Dimension implements DimensionInterface {
 export interface BoxProperties {
   width: number;
   height: number;
-  top: number; 
+  top: number;
   left: number;
-};
+}
 
 export interface BoxDimensionsInterface {
   width: Dimension;
   height: Dimension;
-  top: Dimension; 
+  top: Dimension;
   left: Dimension;
-};
+}
 
 export class BoxDimensions implements BoxDimensionsInterface {
   width: Dimension;
@@ -39,11 +39,11 @@ export class BoxDimensions implements BoxDimensionsInterface {
   left: Dimension;
 
   constructor(
-      width: Dimension,
-      height: Dimension,
-      top: Dimension,
-      left: Dimension,
-   ){
+    width: Dimension,
+    height: Dimension,
+    top: Dimension,
+    left: Dimension
+  ) {
     this.height = height;
     this.width = width;
     this.left = left;
@@ -65,7 +65,7 @@ export class BoxDimensions implements BoxDimensionsInterface {
   get leftAsStyle(): string {
     return `width:${this.left.value}${this.left.units}`;
   }
-  
+
   get getDimensionsAsStyleString(): string {
     return `${this.topAsStyle};${this.leftAsStyle};${this.widthAsStyle};${this.heightAsStyle}`;
   }
@@ -75,9 +75,7 @@ export class BoxDimensions implements BoxDimensionsInterface {
       height: { value: this.height.value, units: this.height.units },
       width: { value: this.width.value, units: this.width.units },
       left: { value: this.left.value, units: this.left.units },
-      top: { value: this.top.value, units: this.top.units },
-    }
+      top: { value: this.top.value, units: this.top.units }
+    };
   }
 }
-
-

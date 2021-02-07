@@ -35,50 +35,50 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import Container from '@/components/page-builder-elements/generic/container.vue';
-import EditDeleteOption from '@/components/page-builder-elements/utility/edit-delete-options/edit-delete-options.vue';
-import { PageModule } from '@/store/page/page';
-import { SidebarModule } from '@/store/sidebar/sidebar';
-import { ServicesModule } from '@/store/services/services';
-import { ComponentCounter } from '@/classes/component-counter/singleton-counter';
-import TextEditor from '@/components/base/text/text-editor/text-editor.vue';
-import { PageContainer } from '@/classes/page-element/PageContainer/PageContainer';
+import Vue from "vue";
+import Component from "vue-class-component";
+import Container from "@/components/page-builder-elements/generic/container.vue";
+import EditDeleteOption from "@/components/page-builder-elements/utility/edit-delete-options/edit-delete-options.vue";
+import { PageModule } from "@/store/page/page";
+import { SidebarModule } from "@/store/sidebar/sidebar";
+import { ServicesModule } from "@/store/services/services";
+import { ComponentCounter } from "@/classes/component-counter/singleton-counter";
+import TextEditor from "@/components/base/text/text-editor/text-editor.vue";
+import { PageContainer } from "@/classes/page-element/PageContainer/PageContainer";
 import {
   PageElementClasses,
-  PageElementFactory,
-} from '@/classes/page-element/factory/page-element-factory';
-import { FirebaseDataBuilder } from '@/classes/page-element/firebase-data/FirebaseDataBuilder';
+  PageElementFactory
+} from "@/classes/page-element/factory/page-element-factory";
+import { FirebaseDataBuilder } from "@/classes/page-element/firebase-data/FirebaseDataBuilder";
 
-const PARENT = 'ROOT';
+const PARENT = "ROOT";
 
 @Component({
   props: {
-    id: { default: '' },
+    id: { default: "" }
   },
   components: {
-    'edit-delete-option': EditDeleteOption,
-    'text-editor': TextEditor,
-    container: Container,
-  },
+    "edit-delete-option": EditDeleteOption,
+    "text-editor": TextEditor,
+    container: Container
+  }
 })
 export default class PageBuilder extends Vue {
-  name = 'page-builder';
+  name = "page-builder";
   title!: string;
-  bgColour = 'bg-gray-200';
+  bgColour = "bg-gray-200";
   showModal = false;
   private componentCounter: ComponentCounter = ComponentCounter.getInstance();
   private componentFactory: PageElementFactory = new PageElementFactory();
   private rootComponent: PageContainer = this.componentFactory.createElement(
-    'rootContainer',
+    "rootContainer",
     PARENT
   ) as PageContainer;
 
   created() {
     this.title = this.$route.params.title;
     PageModule.updatePageId(this.title);
-    SidebarModule.setSidebarMenuTo('sidebar-components');
+    SidebarModule.setSidebarMenuTo("sidebar-components");
     const firebase = new FirebaseDataBuilder();
     firebase.retrievePageDataFromFirestore(this.title);
   }
@@ -91,13 +91,12 @@ export default class PageBuilder extends Vue {
     this.rootComponent.boxDimensions.left.value = mainPageDiv.clientLeft;
   }
 
-
   getStyleDimension(style: string): number {
-      if (style === '') {
-        return 0;
-      }
-      return parseInt(style.substring(0, style.length - 2));
+    if (style === "") {
+      return 0;
     }
+    return parseInt(style.substring(0, style.length - 2));
+  }
 
   get layoutElements(): PageElementClasses[] {
     return PageModule.pageElements;
@@ -126,7 +125,7 @@ export default class PageBuilder extends Vue {
 
   getComponentName(event: DragEvent): string {
     const dataTransfer = event.dataTransfer;
-    return dataTransfer ? dataTransfer.getData('text') : '';
+    return dataTransfer ? dataTransfer.getData("text") : "";
   }
 
   deleteClicked(): void {

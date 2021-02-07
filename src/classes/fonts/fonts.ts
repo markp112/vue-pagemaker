@@ -1,14 +1,20 @@
+import axios from "axios";
+import { secrets } from "@/firebase/secrets";
+import * as WebFont from "webfontloader";
 
-import axios from 'axios';
-import { secrets } from '@/firebase/secrets';
-import * as WebFont from 'webfontloader';
-
-const googleApi = axios.create({ baseURL:'https://www.googleapis.com/webfonts/v1/webfonts' });
+const googleApi = axios.create({
+  baseURL: "https://www.googleapis.com/webfonts/v1/webfonts"
+});
 
 //instance.defaults.headers.common['authorisation1']='auth';
 
-
-type FontTypes = 'serif' | 'sans-serif' | 'display' | 'handwriting' | 'monospace' | null;
+type FontTypes =
+  | "serif"
+  | "sans-serif"
+  | "display"
+  | "handwriting"
+  | "monospace"
+  | null;
 
 export interface FontItemInterface {
   fontName: string;
@@ -27,7 +33,7 @@ export interface GoogleFontItemInterface {
   variants: string[];
   subsets: string[];
   version: string;
-  lastModified:string;
+  lastModified: string;
   files: FilesInterface;
 }
 
@@ -68,42 +74,44 @@ export class Fonts {
     return Fonts.instance;
   }
 
-  private constructor()  {
-      this.getFontsFromGoogle()
-      .then (() => {
-        this.initialiseFontNames()
-        .then(() => {
-          this.initialiseWebFont();
-        });
-      });
-    };
-    
-  private getFontsFromGoogle(): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      googleApi.get(this.fontApi)
-      .then ((data: any) => {
-        data.data.items.forEach((fontItem : GoogleFontItemInterface) => {
-          this.fontItems.push(fontItem);
-        });
-        resolve(true);
-      })
-      .catch((err: Error) => {
-        console.log(err);
-        reject(false);
+  private constructor() {
+    this.getFontsFromGoogle().then(() => {
+      this.initialiseFontNames().then(() => {
+        this.initialiseWebFont();
       });
     });
   }
 
+  private getFontsFromGoogle(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      googleApi
+        .get(this.fontApi)
+        .then((data: any) => {
+          data.data.items.forEach((fontItem: GoogleFontItemInterface) => {
+            this.fontItems.push(fontItem);
+          });
+          resolve(true);
+        })
+        .catch((err: Error) => {
+          console.log(err);
+          reject(false);
+        });
+    });
+  }
+
   private initialiseFontNames(): Promise<boolean> {
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
       if (this.fontItems) {
-          this.fontItems.forEach(element => {
-          const fontItem: FontItemInterface = { fontName: element.family, fontType: element.category as FontTypes };
+        this.fontItems.forEach(element => {
+          const fontItem: FontItemInterface = {
+            fontName: element.family,
+            fontType: element.category as FontTypes
+          };
           this.fontNames.push(fontItem);
           this.fontNamesList.push(fontItem.fontName);
         });
         resolve(true);
-      };
+      }
       reject(false);
     });
   }
@@ -111,8 +119,8 @@ export class Fonts {
   private initialiseWebFont() {
     WebFont.load({
       google: {
-        families: this.fontNamesList,
-      },
+        families: this.fontNamesList
+      }
     });
   }
 

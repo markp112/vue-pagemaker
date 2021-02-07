@@ -1,6 +1,9 @@
-import { StyleElement } from '../text-attributes/text-attributes';
+import { StyleElement } from "../text-attributes/text-attributes";
 
-export type BackgroundBorderForeground = 'background-color' | 'color' | 'border-color';
+export type BackgroundBorderForeground =
+  | "background-color"
+  | "color"
+  | "border-color";
 
 export interface ColourInterface {
   _rgbColour: string;
@@ -8,39 +11,38 @@ export interface ColourInterface {
 }
 
 export class Colour implements ColourInterface {
-    _rgbColour ='#ffeedd';
-    _backgroundBorderForeground: BackgroundBorderForeground = 'color';
+  _rgbColour = "#ffeedd";
+  _backgroundBorderForeground: BackgroundBorderForeground = "color";
 
-    private static instance: Colour;
+  private static instance: Colour;
 
-    public static getInstance(): Colour {
-        if (!Colour.instance) {
-            Colour.instance = new Colour();
-            Colour.instance.rgbColour = '#ffeedd';
-            Colour.instance._backgroundBorderForeground = 'color';
-        }
-        return Colour.instance;
+  public static getInstance(): Colour {
+    if (!Colour.instance) {
+      Colour.instance = new Colour();
+      Colour.instance.rgbColour = "#ffeedd";
+      Colour.instance._backgroundBorderForeground = "color";
     }
+    return Colour.instance;
+  }
 
-    applyStyle(style: StyleElement) {
-      this._rgbColour = style.value;
-      this._backgroundBorderForeground = style.styleName as BackgroundBorderForeground;
-    }
+  applyStyle(style: StyleElement) {
+    this._rgbColour = style.value;
+    this._backgroundBorderForeground = style.styleName as BackgroundBorderForeground;
+  }
 
-    set rgbColour(colour: string) {
-        this._rgbColour = colour;
-    }
-    
-    get rgbColour(): string {
-        return this._rgbColour;
-    }
+  set rgbColour(colour: string) {
+    this._rgbColour = colour;
+  }
 
-    get backgroundBorderForeground(): BackgroundBorderForeground {
-      return this._backgroundBorderForeground
-    }
+  get rgbColour(): string {
+    return this._rgbColour;
+  }
 
-    set backgroundBorderForeground(bfb: BackgroundBorderForeground) {
-      this._backgroundBorderForeground = bfb;
-    }
+  get backgroundBorderForeground(): BackgroundBorderForeground {
+    return this._backgroundBorderForeground;
+  }
 
+  set backgroundBorderForeground(bfb: BackgroundBorderForeground) {
+    this._backgroundBorderForeground = bfb;
+  }
 }

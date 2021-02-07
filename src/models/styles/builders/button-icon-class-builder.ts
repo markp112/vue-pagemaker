@@ -1,17 +1,20 @@
-import { IconType, ComponentNames, ButtonIconClassInterface } from '../button-icon/button-icon';
-import { ButtonRequestTypes } from '../button-factory/button-factory';
-import { ImpactedAttributeTypes } from '@/classes/sidebarButtonEventManager/sidebarButtonEventManager';
-
+import {
+  IconType,
+  ComponentNames,
+  ButtonIconClassInterface
+} from "../button-icon/button-icon";
+import { ButtonRequestTypes } from "../button-factory/button-factory";
+import { ImpactedAttributeTypes } from "@/classes/sidebarButtonEventManager/sidebarButtonEventManager";
 
 export class ButtonIconClassBuilder {
-  _styledElement: ImpactedAttributeTypes = 'undefined';
-  _iconImage = '';
-  _tooltip = '';
-  _classNameActive = '';
-  _classNameInActive = '';
-  _iconIsTypeOf: IconType = 'class';
-  _componentName: ComponentNames = 'icon-picker';
-  
+  _styledElement: ImpactedAttributeTypes = "undefined";
+  _iconImage = "";
+  _tooltip = "";
+  _classNameActive = "";
+  _classNameInActive = "";
+  _iconIsTypeOf: IconType = "class";
+  _componentName: ComponentNames = "icon-picker";
+
   build(): ButtonIconClassInterface {
     return {
       styledElement: this._styledElement,
@@ -20,8 +23,8 @@ export class ButtonIconClassBuilder {
       classNameActive: this._classNameActive,
       classNameInActive: this._classNameInActive,
       componentName: this._componentName,
-      iconIsTypeOf: this._iconIsTypeOf,
-    }
+      iconIsTypeOf: this._iconIsTypeOf
+    };
   }
 
   withStyledElement(styledElement: ImpactedAttributeTypes) {
@@ -44,7 +47,7 @@ export class ButtonIconClassBuilder {
     return this;
   }
 
-  withToolTip(tooltip: string){
+  withToolTip(tooltip: string) {
     this._tooltip = tooltip;
     return this;
   }
@@ -61,31 +64,32 @@ export class ButtonIconClassBuilder {
 }
 
 export class ButtonIconClassWrapper {
-
   build(whichButton: ButtonRequestTypes) {
-    switch(whichButton) {
-      case 'italic-button':
+    switch (whichButton) {
+      case "italic-button":
         return new ButtonIconClassBuilder()
-        .withStyledElement('text')
-        .withClassNameActive('italic')
-        .withClassNameInActive('not-italic')
-        .withIconImage('font_italic-32.png')
-        .withToolTip('italic')
-        .withComponentName('icon-toggle-button')
-        .withIconIsTypeOf('class')
-        .build();
-      case 'underline-button':
+          .withStyledElement("text")
+          .withClassNameActive("italic")
+          .withClassNameInActive("not-italic")
+          .withIconImage("font_italic-32.png")
+          .withToolTip("italic")
+          .withComponentName("icon-toggle-button")
+          .withIconIsTypeOf("class")
+          .build();
+      case "underline-button":
         return new ButtonIconClassBuilder()
-        .withStyledElement('text')
-        .withClassNameActive('underline')
-        .withClassNameInActive('no-underline')
-        .withIconImage('font_underlined-32.png')
-        .withToolTip('underline')
-          .withComponentName('icon-toggle-button')
-          .withIconIsTypeOf('class')
+          .withStyledElement("text")
+          .withClassNameActive("underline")
+          .withClassNameInActive("no-underline")
+          .withIconImage("font_underlined-32.png")
+          .withToolTip("underline")
+          .withComponentName("icon-toggle-button")
+          .withIconIsTypeOf("class")
           .build();
       default:
-        throw new Error(`Button Icon Class does not recognise button of type ${whichButton}`)
+        throw new Error(
+          `Button Icon Class does not recognise button of type ${whichButton}`
+        );
     }
   }
 }

@@ -1,68 +1,73 @@
-import {  TextAttributes, StyleElement } from '../text-attributes/text-attributes';
+import {
+  TextAttributes,
+  StyleElement
+} from "../text-attributes/text-attributes";
 
-import { PageModule } from '@/store/page/page';
-import { Style, StyleTags } from '@/models/styles/styles';
-import { Border } from '../borders/borders';
-import { Colour } from '../colour/singleton-colour';
+import { PageModule } from "@/store/page/page";
+import { Style, StyleTags } from "@/models/styles/styles";
+import { Border } from "../borders/borders";
+import { Colour } from "../colour/singleton-colour";
 
-export type ImpactedAttributeTypes = 
-  | 'border'
-  | 'text'
-  | 'colour'
-  | 'shadow'
-  | 'undefined'
+export type ImpactedAttributeTypes =
+  | "border"
+  | "text"
+  | "colour"
+  | "shadow"
+  | "undefined";
 
 export class SidebarButtonEventManager {
   private static instance: SidebarButtonEventManager;
-  impactedAtrribute: ImpactedAttributeTypes = 'undefined';
+  impactedAtrribute: ImpactedAttributeTypes = "undefined";
 
   public static getInstance(): SidebarButtonEventManager {
-    if(!SidebarButtonEventManager.instance) {
+    if (!SidebarButtonEventManager.instance) {
       SidebarButtonEventManager.instance = new SidebarButtonEventManager();
     }
     return SidebarButtonEventManager.instance;
   }
 
-  applyValue(impactedAtrribute: ImpactedAttributeTypes, styleElement: StyleElement) {
+  applyValue(
+    impactedAtrribute: ImpactedAttributeTypes,
+    styleElement: StyleElement
+  ) {
     this.impactedAtrribute = impactedAtrribute;
     const colour = Colour.getInstance();
     const border: Border = Border.getInstance();
     const textAttribute: TextAttributes = TextAttributes.getInstance();
     switch (impactedAtrribute) {
-      case 'text':
+      case "text":
         textAttribute.applyStyle(styleElement);
         break;
-      case 'border':
+      case "border":
         border.applyStyle(styleElement);
         break;
-      case 'shadow': 
+      case "shadow":
         border.applyStyle(styleElement);
         break;
-      case 'colour':
+      case "colour":
         colour.applyStyle(styleElement);
         break;
       default:
         break;
-    } 
+    }
   }
 
- updateEditedComponent() {
+  updateEditedComponent() {
     switch (this.impactedAtrribute) {
-      case 'text':
+      case "text":
         this.applyTextStyle();
         break;
-      case 'border':
+      case "border":
         this.applyBorderStyle();
         break;
-      case 'shadow':
+      case "shadow":
         this.applyShadowClass();
         break;
-      case 'colour':
+      case "colour":
         this.applyColour();
         break;
       default:
         throw new Error("Unrecognised Event Manager type");
-        
     }
   }
   /** @description retrieve the values set on the textAttributes and apply them
@@ -73,13 +78,13 @@ export class SidebarButtonEventManager {
     const styleName = textAttribute.styleName as StyleTags;
     const style: Style = {
       style: styleName,
-      value: `${textAttribute.value}${textAttribute.units}`,
-    }
+      value: `${textAttribute.value}${textAttribute.units}`
+    };
     switch (textAttribute.classOrStyle) {
-      case 'class':
+      case "class":
         PageModule.updateComponentClassProperties(textAttribute.value);
         break;
-      case 'style':
+      case "style":
         PageModule.updateEditedComponentStyles(style);
         break;
     }
@@ -98,16 +103,16 @@ export class SidebarButtonEventManager {
 
   private applyColour() {
     const colour: Colour = Colour.getInstance();
-    if (colour.backgroundBorderForeground !=='border-color') {
+    if (colour.backgroundBorderForeground !== "border-color") {
       const style: Style = {
         style: colour.backgroundBorderForeground,
-        value: colour.rgbColour,
+        value: colour.rgbColour
       };
       PageModule.updateEditedComponentStyles(style);
     } else {
-        const borderDefintion = Border.getInstance();
-        borderDefintion.colour = colour.rgbColour;
-        PageModule.updateEditedComponentStyles(borderDefintion.getStyle());
+      const borderDefintion = Border.getInstance();
+      borderDefintion.colour = colour.rgbColour;
+      PageModule.updateEditedComponentStyles(borderDefintion.getStyle());
     }
   }
 }

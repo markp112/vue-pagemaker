@@ -14,16 +14,13 @@
     "baseUrl": "./",
     "types": [
       "webpack-env",
-      "mocha",
-      "chai"
+      "jest"
     ],
     "paths": {
       "@/*": [
         "./src/*"
       ],
-      "@/src/*": [
-        "./src/*"
-      ]
+     
     },
     "lib": [
       "esnext",

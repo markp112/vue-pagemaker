@@ -1,4 +1,4 @@
-<template> 
+<template>
   <section>
     <div class="text-primary-800 text-3xl mb-8">
       <p class="flex flex-row justify-between">
@@ -21,7 +21,7 @@
     </div>
     <div class="flex flex-row justify-start mb-4 w-full">
       <span class="px-2">Select base colour</span>
-      <colour-dropdown 
+      <colour-dropdown
         @onColourChange="onColourChange($event)"
         :colourProp="colourPalettes.colour"
       >
@@ -37,13 +37,10 @@
           id="saturation"
           v-model="saturationValue"
           @input="onSaturationChange()"
-        >
+        />
       </div>
       <div class="self-end ml-16">
-        <span
-          class="reset-button"
-          @click="onResetClick()"
-        >
+        <span class="reset-button" @click="onResetClick()">
           Reset
         </span>
       </div>
@@ -51,44 +48,48 @@
     <p class="ml-8">scheme</p>
     <div class="flex flex-row justify-start w-full ml-8 mb-6 mt-0">
       <span class="w-2/12">
-      <label for="complementary">complementary</label>
-      <input 
-        type="radio"
-        name="colour-scheme"
-        id="complementary"
-        value="complementary"
-        :checked="isThisColourScheme('Complementary')"
-        @change="changeScheme('Complementary')">
+        <label for="complementary">complementary</label>
+        <input
+          type="radio"
+          name="colour-scheme"
+          id="complementary"
+          value="complementary"
+          :checked="isThisColourScheme('Complementary')"
+          @change="changeScheme('Complementary')"
+        />
       </span>
       <span class="w-2/12">
-      <label for="analagous">analogous</label>
-      <input
-        type="radio"
-        name="colour-scheme"
-        id="analagous"
-        value="analogous"
-        :checked="isThisColourScheme('Analogous')"
-        @change="changeScheme('Analogous')">
+        <label for="analagous">analogous</label>
+        <input
+          type="radio"
+          name="colour-scheme"
+          id="analagous"
+          value="analogous"
+          :checked="isThisColourScheme('Analogous')"
+          @change="changeScheme('Analogous')"
+        />
       </span>
       <span class="w-2/12">
-      <label for="triadic">triadic</label>
-      <input
-        type="radio"
-        name="colour-scheme"
-        id="triadic"
-        value="triadic"
-        :checked="isThisColourScheme('Triadic')"
-        @change="changeScheme('Triadic')">
+        <label for="triadic">triadic</label>
+        <input
+          type="radio"
+          name="colour-scheme"
+          id="triadic"
+          value="triadic"
+          :checked="isThisColourScheme('Triadic')"
+          @change="changeScheme('Triadic')"
+        />
       </span>
       <span class="w-2/12">
-      <label for="compound">compound</label>
-      <input
-        type="radio"
-        name="colour-scheme"
-        id="compound"
-        value="compound"
-        :checked="isThisColourScheme('Compound')"
-        @change="changeScheme('Compound')">
+        <label for="compound">compound</label>
+        <input
+          type="radio"
+          name="colour-scheme"
+          id="compound"
+          value="compound"
+          :checked="isThisColourScheme('Compound')"
+          @change="changeScheme('Compound')"
+        />
       </span>
     </div>
     <div class="flex flex-col justify-start ml-8">
@@ -117,37 +118,40 @@
 </template>
 
 <script lang="ts">
-import Component from 'vue-class-component';
-import { ColourPalettes, ColourSchemes } from '@/classes/settings/colour-palette/colour-palette';
-import ColourDropdown from '@/components/base/pickers/colour-picker/colour-dropdown.vue'; 
-import { ButtonIconNumeric } from '@/models/styles/button-icon/button-numeric-list/button-numeric-list';
-import { ButtonFactory } from '@/models/styles/button-factory/button-factory';
-import { SiteIdAndUserId } from '@/models/site-and-user/site-and-user';
-import { SnackbarMixin } from '@/mixins/components/snackbar/snackbar-mixin';
-import { Notification } from '@/models/notifications/notifications';
-import PaletteStrip from './partials/colour-palette.vue';
+import Component from "vue-class-component";
+import {
+  ColourPalettes,
+  ColourSchemes
+} from "@/classes/settings/colour-palette/colour-palette";
+import ColourDropdown from "@/components/base/pickers/colour-picker/colour-dropdown.vue";
+import { ButtonIconNumeric } from "@/models/styles/button-icon/button-numeric-list/button-numeric-list";
+import { ButtonFactory } from "@/models/styles/button-factory/button-factory";
+import { SiteIdAndUserId } from "@/models/site-and-user/site-and-user";
+import { SnackbarMixin } from "@/mixins/components/snackbar/snackbar-mixin";
+import { Notification } from "@/models/notifications/notifications";
+import PaletteStrip from "./partials/colour-palette.vue";
 
 @Component({
   components: {
-    'colour-dropdown': ColourDropdown,
-    'palette-strip': PaletteStrip,
-  },
+    "colour-dropdown": ColourDropdown,
+    "palette-strip": PaletteStrip
+  }
 })
 export default class PaletteGenerator extends SnackbarMixin {
-  name = 'colour-palettes';
-  SAVE_ICON = 'diskette-dark-48.png';
-  SAVE_ICON_HOVER = 'diskette-light-48.png';
+  name = "colour-palettes";
+  SAVE_ICON = "diskette-dark-48.png";
+  SAVE_ICON_HOVER = "diskette-light-48.png";
   showDefaultIcon = true;
   saturationPreviousValue = 0;
   saturationValue = 0;
-  colourPalettes: ColourPalettes = new ColourPalettes('#ee443e'); 
-    fontSizeButton: ButtonIconNumeric = new ButtonFactory().createButton(
-    'numeric',
-    'font-size'
+  colourPalettes: ColourPalettes = new ColourPalettes("#ee443e");
+  fontSizeButton: ButtonIconNumeric = new ButtonFactory().createButton(
+    "numeric",
+    "font-size"
   ) as ButtonIconNumeric;
 
   getPath(image: string): string {
-    const path = require.context('@/assets/icons', false, /\.png$/);
+    const path = require.context("@/assets/icons", false, /\.png$/);
     return path(`./${image}`);
   }
 
@@ -170,7 +174,8 @@ export default class PaletteGenerator extends SnackbarMixin {
   }
 
   onSaturationChange() {
-    const value = this.saturationValue > this.saturationPreviousValue ? 0.1 : -0.1;
+    const value =
+      this.saturationValue > this.saturationPreviousValue ? 0.1 : -0.1;
     this.colourPalettes.changeSaturation(value);
     this.saturationPreviousValue = this.saturationValue;
   }
@@ -181,16 +186,17 @@ export default class PaletteGenerator extends SnackbarMixin {
   }
 
   saveColourPalette() {
-    const siteAndUserId = this.getSiteAndUserID(); 
-    this.colourPalettes.savePalette(siteAndUserId)
-    .then (response => {
-      const notification = response as Notification;
-      this.showSnackbar(notification, 'Palettes Saved');
-    })
-    .catch(err => {
-      const notification = err as Notification;
-      this.showSnackbar(notification, 'Error saving Palettes');
-    });
+    const siteAndUserId = this.getSiteAndUserID();
+    this.colourPalettes
+      .savePalette(siteAndUserId)
+      .then(response => {
+        const notification = response as Notification;
+        this.showSnackbar(notification, "Palettes Saved");
+      })
+      .catch(err => {
+        const notification = err as Notification;
+        this.showSnackbar(notification, "Error saving Palettes");
+      });
   }
 
   loadPalette() {
@@ -202,10 +208,10 @@ export default class PaletteGenerator extends SnackbarMixin {
     this.onColourChange(colour);
   }
 
-  private getSiteAndUserID():SiteIdAndUserId {
+  private getSiteAndUserID(): SiteIdAndUserId {
     return {
       siteId: this.$store.getters.getCurrentSiteId,
-      userId: this.$store.getters.currentUser.id,
+      userId: this.$store.getters.currentUser.id
     };
   }
 }
@@ -216,12 +222,12 @@ export default class PaletteGenerator extends SnackbarMixin {
   -webkit-appearance: none;
   width: 100%;
   height: 12px;
-  border-radius: 5px;  
+  border-radius: 5px;
   background: #d3d3d3;
   outline: none;
   opacity: 0.7;
-  -webkit-transition: .2s;
-  transition: opacity .2s;
+  -webkit-transition: 0.2s;
+  transition: opacity 0.2s;
 }
 
 .slider::-webkit-slider-thumb {
@@ -229,7 +235,7 @@ export default class PaletteGenerator extends SnackbarMixin {
   appearance: none;
   width: 20px;
   height: 20px;
-  border-radius: 50%; 
+  border-radius: 50%;
   background: #4a3d94;
   cursor: pointer;
 }
