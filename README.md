@@ -1,42 +1,12 @@
-# VueJs 2.x Typescript
+# Vue-Pagemaker 
 
-This project is a base working configuration for a VueJs project comprising of the following:
-* vuex
-* router
-* Chai and Mocha
-* Typescript
-* Tailwind Css
-* Storybook
+Vue Pagemaker is a project for building static websites using VueJS, with Typescript and Tailwind CSS.
 
-## Project setup
-```
-npm install
-```
+It uses Firebase as the backend to store the site being created, this includes details about the site as well as the content.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## installation
 
-### Compiles and minifies for production
-```
-npm run build
-```
+1 Clone the repo from the main branch, not master.
+2 run npm install
+3 An account will need to created on google firebase with the secrets saved to src/firebase/secrets.ts
 
-### Run your unit tests
-```
-npm run test:unit
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Storybook
-```
-npm run storybook
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
