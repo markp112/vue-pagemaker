@@ -2,7 +2,7 @@ import { RangeStyles } from "../../../../../../src/classes/dom/range/rangeStylin
 import { DomTestCaseData } from "./test-builder-classes";
 import { Style } from "@/models/styles/styles";
 
-describe("RangeStyles",() => {
+describe("RangeStyles", () => {
 
   let domTestCaseData: DomTestCaseData = new DomTestCaseData();
 
@@ -96,9 +96,9 @@ describe("RangeStyles",() => {
   describe("clearExistingClasses", () => {
     const rangeStyle = new RangeStyles();
 
-    it("It should clear all class content from the node of that class type", () => {
+  it("It should clear all class content from the node of that class type", () => {
       const style: Style
-      = { style: "underline", value: "" };
+        = { style: "underline", value: "" };
       const node: Node =
         domTestCaseData.paragraphWithUnderlineSpanAndNestedPlainSpan.childNodes[0];
       let outerHtml = (node as HTMLSpanElement).outerHTML;
@@ -110,20 +110,19 @@ describe("RangeStyles",() => {
     });
 
     it("It should clear all class content from the node and child nodes of that class type", () => {
-      const style: Style = { style: "underline", value: "" };
-      const node: Node =
-        domTestCaseData.paragraphWithUnderlineSpanAndNestedUnderlineSpan.childNodes[0];
-      console.log((node as HTMLSpanElement).innerHTML, node.childNodes.length);
-      let childNode: Node = node.childNodes[1];
-      let outerHtml = (childNode as HTMLSpanElement).outerHTML;
-      expect(outerHtml.includes('class="underline"')).toBe(true);
-      const node2 = rangeStyle.clearExistingClasses(node, style);
-      outerHtml = (node2 as HTMLSpanElement).outerHTML;
-      expect(outerHtml.includes('class=""')).toBe(true);
-      childNode = node2.childNodes[1];
-      outerHtml = (childNode as HTMLSpanElement).outerHTML;
-      expect(outerHtml.includes('class=""')).toBe(true);
-    });
+        const style: Style = { style: "underline", value: "" };
+        const node: Node =
+          domTestCaseData.paragraphWithUnderlineSpanAndNestedUnderlineSpan.childNodes[0];
+        let childNode: Node = node.childNodes[1];
+        let outerHtml = (childNode as HTMLSpanElement).outerHTML;
+        expect(outerHtml.includes('class="underline"')).toBe(true);
+        const node2 = rangeStyle.clearExistingClasses(node, style);
+        outerHtml = (node2 as HTMLSpanElement).outerHTML;
+        expect(outerHtml.includes('class=""')).toBe(true);
+        childNode = node2.childNodes[1];
+        outerHtml = (childNode as HTMLSpanElement).outerHTML;
+        expect(outerHtml.includes('class=""')).toBe(true);
+      });
   })
 
   describe("clearExistingStyles", () => {
@@ -171,16 +170,19 @@ describe("RangeStyles",() => {
       let outerHtml = (node as HTMLSpanElement).outerHTML;
       expect(outerHtml.includes('class="underline"')).toBe(true);
       const node2 = rangeStyle.removeNodesWithEmptyStyles(node);
-      outerHtml = (node2.childNodes[1] as HTMLElement).outerHTML;
-      expect(outerHtml.includes("span")).toBe(true);
+      outerHtml = (node2 as HTMLElement).outerHTML;
+      expect(outerHtml.includes('<span class="underline"')).toBe(true);
     });
-    
+
     it("It should remove empty child spans without styling or classes", () => {
       const node: Node = domTestCaseData.paragraphWithUnderlineSpanAndNestedPlainSpan;
       expect(node.childNodes.length).toEqual(3);
       const node2 = rangeStyle.removeNodesWithEmptyStyles(node);
-      expect(node2.childNodes.length).toEqual(2);
+      const outerHtml = (node2 as HTMLElement).outerHTML;
+      expect(countSpans(outerHtml)).toEqual(2);
     });
+
+
   })
 
   describe("getStylesFromNode", () => {
@@ -227,12 +229,12 @@ describe("RangeStyles",() => {
     const rangeStyle = new RangeStyles();
 
     it("it should return a string containing all of the claases attached to the span", () => {
-        const node: Node = domTestCaseData.paragraphWithUnderlineSpanAndNestedPlainSpan;
-        const classes: string = rangeStyle.getClassesFromNode(node.childNodes[0]);
-        expect(classes).toContain("underline");
-      });
-  
-  it("it should return an empty string if no classes are present", () => {
+      const node: Node = domTestCaseData.paragraphWithUnderlineSpanAndNestedPlainSpan;
+      const classes: string = rangeStyle.getClassesFromNode(node.childNodes[0]);
+      expect(classes).toContain("underline");
+    });
+
+    it("it should return an empty string if no classes are present", () => {
       const node: Node = domTestCaseData.paragraphWithUnderlineSpanAndNestedPlainSpan;
       const classes: string = rangeStyle.getClassesFromNode(node.childNodes[1]);
       expect(classes).toEqual("");
@@ -244,14 +246,14 @@ describe("RangeStyles",() => {
     const rangeStyle = new RangeStyles();
 
     it("it should return a string containing all of the claases attached to the span and its parents", () => {
-        const node: Node = domTestCaseData.textEditorSetup;
-        const paragraph = node.childNodes[0];
-        const childUnderlineSpan = paragraph.childNodes[0]; 
-        const classes: string = rangeStyle.getClassesFromNodeHiearchy(childUnderlineSpan.childNodes[1], paragraph);
-        expect(classes).toContain("italic underline");
-      });
-  
-  it("it should return an empty string if no classes are present", () => {
+      const node: Node = domTestCaseData.textEditorSetup;
+      const paragraph = node.childNodes[0];
+      const childUnderlineSpan = paragraph.childNodes[0];
+      const classes: string = rangeStyle.getClassesFromNodeHiearchy(childUnderlineSpan.childNodes[1], paragraph);
+      expect(classes).toContain("italic underline");
+    });
+
+    it("it should return an empty string if no classes are present", () => {
       const node: Node = domTestCaseData.paragraphWithUnderlineSpanAndNestedPlainSpan;
       const classes: string = rangeStyle.getClassesFromNodeHiearchy(node.childNodes[1], node);
       expect(classes).toEqual("");
@@ -260,3 +262,8 @@ describe("RangeStyles",() => {
   })
 
 });
+
+function countSpans(outerHtml: string): number {
+  // the first node will be the paragraph node
+  return outerHtml.split('<span').length - 1;
+}
