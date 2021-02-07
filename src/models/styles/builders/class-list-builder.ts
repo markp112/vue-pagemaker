@@ -1,57 +1,57 @@
-import { ButtonRequestTypes } from '@/models/styles/button-factory/button-factory';
+import { ButtonRequestTypes } from "@/models/styles/button-factory/button-factory";
 import {
   ButtonIconClassList,
-  ButtonIconClassListBuilder,
-} from '@/models/styles/builders/button-icon-class-list';
+  ButtonIconClassListBuilder
+} from "@/models/styles/builders/button-icon-class-list";
 import {
   shadowIconList,
   borderEdgeIconList,
   lineStyleIconList,
   fontWeightIconList,
-  IconPickerInterface,
-} from '@/models/components/icon-picker-models';
-import { ButtonIconClassInterface } from '../button-icon/button-icon';
-import { ButtonIconClassBuilder } from './button-icon-class-builder';
-import { StyleTypes } from '@/classes/text-attributes/text-attributes';
-import { ImpactedAttributeTypes } from '@/classes/sidebarButtonEventManager/sidebarButtonEventManager';
+  IconPickerInterface
+} from "@/models/components/icon-picker-models";
+import { ButtonIconClassInterface } from "../button-icon/button-icon";
+import { ButtonIconClassBuilder } from "./button-icon-class-builder";
+import { StyleTypes } from "@/classes/text-attributes/text-attributes";
+import { ImpactedAttributeTypes } from "@/classes/sidebarButtonEventManager/sidebarButtonEventManager";
 
 export class ButtonIconBuilder {
   build(whichButton: ButtonRequestTypes): ButtonIconClassList {
     switch (whichButton) {
-      case 'Shadow':
+      case "Shadow":
         return this.buildIconList(
-          'shadow',
-          'shadow',
+          "shadow",
+          "shadow",
           shadowIconList,
-          'shadows',
-          'shadows-32.png'
+          "shadows",
+          "shadows-32.png"
         );
-      case 'border-direction':
+      case "border-direction":
         return this.buildIconList(
-          'border',
-          'borderEdge',
+          "border",
+          "borderEdge",
           borderEdgeIconList,
-          'border edge',
-          'border_all-32.png'
+          "border edge",
+          "border_all-32.png"
         );
-      case 'border-styles':
+      case "border-styles":
         return this.buildIconList(
-          'border',
-          'borderStyle',
+          "border",
+          "borderStyle",
           lineStyleIconList,
-          'border style',
-          'sketch-32.png'
+          "border style",
+          "sketch-32.png"
         );
-      case 'font-weight':
+      case "font-weight":
         return this.buildIconList(
-          'text',
-          'fontWeight',
+          "text",
+          "fontWeight",
           fontWeightIconList,
-          'font weight',
-          'font_bold-32.png'
+          "font weight",
+          "font_bold-32.png"
         );
       default:
-        throw new Error('ButtonIconBuilder: unknown Button List Type');
+        throw new Error("ButtonIconBuilder: unknown Button List Type");
     }
   }
 

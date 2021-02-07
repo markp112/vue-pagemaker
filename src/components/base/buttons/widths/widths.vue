@@ -1,5 +1,7 @@
 <template>
-  <div class="font-widths flex flex-row justify-evenly text-sm bg-gray-300 p-2 h-10 mt-2 h-12">
+  <div
+    class="font-widths flex flex-row justify-evenly text-sm bg-gray-300 p-2 h-10 mt-2 h-12"
+  >
     <span class="circle-widths" @click="click(20)">20%</span>
     <span class="circle-widths" @click="click(40)">40%</span>
     <span class="circle-widths" @click="click(50)">50%</span>
@@ -10,23 +12,23 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Emit } from 'vue-property-decorator';
+import Vue from "vue";
+import Component from "vue-class-component";
+import { Emit } from "vue-property-decorator";
 
 @Component
-export default class WidthsButtons extends Vue{
-  @Emit('setWidthClick') click(value: number){
+export default class WidthsButtons extends Vue {
+  @Emit("setWidthClick") click(value: number) {
     return value;
   }
 }
 </script>
 
 <style lang="postcss" scoped>
-  .circle-widths {
-    @apply rounded-full bg-siteSurface text-onSurface h-8 w-8 flex items-center justify-center cursor-pointer;
-  }
-  .circle-widths:hover {
-    @apply bg-sitePrimary text-accent1;
-  }
+.circle-widths {
+  @apply rounded-full bg-siteSurface text-onSurface h-8 w-8 flex items-center justify-center cursor-pointer;
+}
+.circle-widths:hover {
+  @apply bg-sitePrimary text-accent1;
+}
 </style>

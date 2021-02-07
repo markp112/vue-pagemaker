@@ -4,13 +4,13 @@
       <input
         v-model="selectedItem"
         class="min-w-6 text-center relative app-input-field"
-        
         @change="onInputChange"
-      >
-      <img :src="getPath('down-24.png')" 
+      />
+      <img
+        :src="getPath('down-24.png')"
         class="w-4 h-4 cursor-pointer hover:bg-gray-800 absolute right-0 top-0"
         @click="show()"
-        >
+      />
     </div>
     <ul
       class="dropdown-menu-background flex flex-col items-center absolute z-10 w-16 shadow-lg h-auto overflow-auto text-sm"
@@ -20,10 +20,11 @@
     >
       <li
         v-for="item in $props.thisIconButton.valuesList"
-        :key="item" 
-        @click="itemClicked(item)" 
+        :key="item"
+        @click="itemClicked(item)"
         class="dropdown-menu-item block w-full text-center mt-2"
-        :class="{'dropdown-menu-selected': item === selectedItem}">
+        :class="{ 'dropdown-menu-selected': item === selectedItem }"
+      >
         {{ item }}
       </li>
     </ul>
@@ -31,51 +32,51 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Emit } from 'vue-property-decorator';
-import { ButtonIconNumeric } from '@/models/styles/button-icon/button-numeric-list/button-numeric-list';
-import { ButtonIconNumericBuilder } from '@/models//styles/builders/button-icon-numeric';
-import { StyleElement } from '@/classes/text-attributes/text-attributes';
-import { BoxUnits } from '../../../../models/components/box-dimension';
+import Vue from "vue";
+import Component from "vue-class-component";
+import { Emit } from "vue-property-decorator";
+import { ButtonIconNumeric } from "@/models/styles/button-icon/button-numeric-list/button-numeric-list";
+import { ButtonIconNumericBuilder } from "@/models//styles/builders/button-icon-numeric";
+import { StyleElement } from "@/classes/text-attributes/text-attributes";
+import { BoxUnits } from "../../../../models/components/box-dimension";
 
 @Component({
-   props: {
+  props: {
     thisIconButton: {
-        default: (): ButtonIconNumeric => {
-          return new ButtonIconNumericBuilder().build();
-        },
-      },
-    surface: {
-      default: 'bg-primary-200 text-onPrimary',
+      default: (): ButtonIconNumeric => {
+        return new ButtonIconNumericBuilder().build();
+      }
     },
-  },
+    surface: {
+      default: "bg-primary-200 text-onPrimary"
+    }
+  }
 })
 export default class DropDown extends Vue {
   toggleSelectOptions = false;
-  selectedItem = '';
+  selectedItem = "";
 
-  mounted () {
+  mounted() {
     this.selectedItem = this.$props.thisIconButton.defaultValue;
   }
 
   getSurface(): string {
-    return this.$props.surface; 
+    return this.$props.surface;
   }
 
-  @Emit('onSelectChange')
+  @Emit("onSelectChange")
   itemClicked(classElement: string): StyleElement {
     const style: StyleElement = {
       styleName: this.$props.thisIconButton.style.style,
       value: classElement,
-      units: this.$props.thisIconButton.units,
-    }
+      units: this.$props.thisIconButton.units
+    };
     this.selectedItem = classElement;
     this.show();
     return style;
   }
 
-  @Emit('onSelectChange')
+  @Emit("onSelectChange")
   onInputChange() {
     return this.selectedItem;
   }
@@ -85,10 +86,9 @@ export default class DropDown extends Vue {
   }
 
   getPath(image: string): string {
-    const path = require.context('@/assets/icons',false,/\.png$/);
+    const path = require.context("@/assets/icons", false, /\.png$/);
     return path(`./${image}`);
   }
-  
 }
 </script>
 

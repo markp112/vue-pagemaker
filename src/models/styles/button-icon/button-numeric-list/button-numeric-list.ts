@@ -1,12 +1,12 @@
 import {
   ButtonIconStyleInterface,
   IconType,
-  ComponentNames,
-} from '../button-icon';
-import { Style } from '../../styles';
-import { ButtonIconNumericBuilder } from '../../builders/button-icon-numeric';
-import { BoxUnits } from '@/models/components/box-dimension';
-import { ImpactedAttributeTypes } from '@/classes/sidebarButtonEventManager/sidebarButtonEventManager';
+  ComponentNames
+} from "../button-icon";
+import { Style } from "../../styles";
+import { ButtonIconNumericBuilder } from "../../builders/button-icon-numeric";
+import { BoxUnits } from "@/models/components/box-dimension";
+import { ImpactedAttributeTypes } from "@/classes/sidebarButtonEventManager/sidebarButtonEventManager";
 
 export interface ButtonIconNumericInterface extends ButtonIconStyleInterface {
   valuesList: string[];

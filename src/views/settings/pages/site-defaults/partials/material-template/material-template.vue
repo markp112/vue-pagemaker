@@ -10,7 +10,7 @@
             class="w-full p-1"
             :style="{
               color: $props.materialSettings.colours.textOnPrimary,
-              backgroundColor: $props.materialSettings.colours.primaryDark,
+              backgroundColor: $props.materialSettings.colours.primaryDark
             }"
           >
             Primary Dark
@@ -25,7 +25,7 @@
             class="self-end w-full p-1"
             :style="{
               color: $props.materialSettings.colours.textOnPrimary,
-              backgroundColor: $props.materialSettings.colours.primaryLight,
+              backgroundColor: $props.materialSettings.colours.primaryLight
             }"
           >
             Primary Light
@@ -33,13 +33,15 @@
         </div>
         <div
           class="section-wrapper"
-          :style="{ backgroundColor: $props.materialSettings.colours.secondary }"
+          :style="{
+            backgroundColor: $props.materialSettings.colours.secondary
+          }"
         >
           <p
             class="w-full p-1"
             :style="{
               color: $props.materialSettings.colours.textOnSecondary,
-              backgroundColor: $props.materialSettings.colours.secondaryDark,
+              backgroundColor: $props.materialSettings.colours.secondaryDark
             }"
           >
             Secondary Dark
@@ -54,7 +56,7 @@
             class="self-end w-full p-1"
             :style="{
               color: $props.materialSettings.colours.textOnSecondary,
-              backgroundColor: $props.materialSettings.colours.secondaryLight,
+              backgroundColor: $props.materialSettings.colours.secondaryLight
             }"
           >
             Secondary Light
@@ -70,7 +72,7 @@
             class="w-full p-1"
             :style="{
               color: $props.materialSettings.colours.textOnError,
-              backgroundColor: $props.materialSettings.colours.error,
+              backgroundColor: $props.materialSettings.colours.error
             }"
           >
             Error
@@ -80,13 +82,13 @@
           <div
             class="h-84"
             :style="{
-              backgroundColor: $props.materialSettings.colours.background,
+              backgroundColor: $props.materialSettings.colours.background
             }"
           >
             <p
               class="p-1"
               :style="{
-                color: $props.materialSettings.colours.textOnBackground,
+                color: $props.materialSettings.colours.textOnBackground
               }"
             >
               Text on background
@@ -96,21 +98,22 @@
                 <div
                   class="p-1"
                   :style="{
-                    backgroundColor: $props.materialSettings.colours.primary,
+                    backgroundColor: $props.materialSettings.colours.primary
                   }"
                 >
                   <h2
                     :style="{
-                      color: $props.materialSettings.colours.textOnPrimary,
-                    }">
+                      color: $props.materialSettings.colours.textOnPrimary
+                    }"
+                  >
                     Text on primary
                   </h2>
-                </div> 
+                </div>
                 <div
                   class="h-32 p-1 relative"
                   :style="{
                     backgroundColor: $props.materialSettings.colours.surface,
-                    color: $props.materialSettings.colours.textOnSurface,
+                    color: $props.materialSettings.colours.textOnSurface
                   }"
                 >
                   Text on surface
@@ -124,7 +127,7 @@
                       class="absolute bottom-0 ml-2 mb-1 rounded-full h-12 w-12 flex items-center justify-center shadow-lg"
                       :style="{
                         backgroundColor: $props.materialSettings.colours.accent,
-                        color: $props.materialSettings.colours.textOnSurface,
+                        color: $props.materialSettings.colours.textOnSurface
                       }"
                     >
                       accent
@@ -135,7 +138,7 @@
                   class="p-1"
                   :style="{
                     backgroundColor: $props.materialSettings.colours.secondary,
-                    color: $props.materialSettings.colours.textOnSecondary,
+                    color: $props.materialSettings.colours.textOnSecondary
                   }"
                 >
                   Text on secondary
@@ -150,18 +153,17 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { SiteDefaultsInterface } from '../../models/site-defaults';
+import Vue from "vue";
+import Component from "vue-class-component";
+import { SiteDefaultsInterface } from "../../models/site-defaults";
 
 @Component({
   props: {
     materialSettings: {
-      type: Object as () => SiteDefaultsInterface,
-    },
+      type: Object as () => SiteDefaultsInterface
+    }
   },
-  components: {
-  },
+  components: {}
 })
 export default class MaterialTemplate extends Vue {}
 </script>

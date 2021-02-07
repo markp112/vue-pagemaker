@@ -5,13 +5,13 @@
   <div v-else-if="isImage">
     <image-component :thisComponent="$props.thisComponent"></image-component>
   </div>
-  <div 
+  <div
     :ref="$props.thisComponent.ref"
     v-else
     :style="getStyles()"
     :class="getClasses()"
     :id="$props.thisComponent.ref"
-    class="handle flex flex-row justify-center items-center" 
+    class="handle flex flex-row justify-center items-center"
     @click.prevent="onClick($event)"
   >
     {{ getData }}
@@ -25,43 +25,43 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component, { mixins } from 'vue-class-component';
-import Resize from '@/components/base/resizeable/resize.vue';
-import { PageModule } from '@/store/page/page';
-import { GenericComponentMixins } from '@/components/page-builder-elements/generic/mixins/generic-components-mixin';
-import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
-import { PageElement } from '@/classes/page-element/PageElement';
-import { PageElementClasses } from '@/classes/page-element/factory/page-element-factory';
-import ImageComponentBackground from './paritals/image-component-background.vue';
-import TextComponent from './paritals/text-component/text-component.vue';
+import Vue from "vue";
+import Component, { mixins } from "vue-class-component";
+import Resize from "@/components/base/resizeable/resize.vue";
+import { PageModule } from "@/store/page/page";
+import { GenericComponentMixins } from "@/components/page-builder-elements/generic/mixins/generic-components-mixin";
+import { SiteDefaults } from "@/classes/settings/site-defaults/site-defaults";
+import { PageElement } from "@/classes/page-element/PageElement";
+import { PageElementClasses } from "@/classes/page-element/factory/page-element-factory";
+import ImageComponentBackground from "./paritals/image-component-background.vue";
+import TextComponent from "./paritals/text-component/text-component.vue";
 
 @Component({
   components: {
     resizeable: Resize,
-    'image-component': ImageComponentBackground,
-    'text-component': TextComponent,
-  },
+    "image-component": ImageComponentBackground,
+    "text-component": TextComponent
+  }
 })
 export default class GenericComponent extends mixins(GenericComponentMixins) {
-  name = 'generic-component';
+  name = "generic-component";
   isImage = false;
   isText = false;
   // data: ComponentTypes;
-  editorComponent = '';
-  style = '';
-  HTML_TARGET_ELEMENT = '';
- 
+  editorComponent = "";
+  style = "";
+  HTML_TARGET_ELEMENT = "";
+
   created() {
     const pageElement: PageElementClasses = this.$props.thisComponent;
     if (pageElement) {
       pageElement.setDefaultStyle();
     }
-    if (this.$props.thisComponent.type === 'image') {
+    if (this.$props.thisComponent.type === "image") {
       this.isImage = true;
       this.isText = false;
     }
-    if (this.$props.thisComponent.type === 'text') {
+    if (this.$props.thisComponent.type === "text") {
       this.isImage = false;
       this.isText = true;
     }
@@ -71,13 +71,16 @@ export default class GenericComponent extends mixins(GenericComponentMixins) {
   get getData(): string | undefined {
     const component: PageElementClasses = this.$props.thisComponent;
     if (component) {
-        return this.$props.thisComponent.content;
+      return this.$props.thisComponent.content;
     }
-    return '';
+    return "";
   }
 
   get isActive(): boolean {
-    return PageModule.selectedComponent === (this.$props.thisComponent as PageElement).ref;
+    return (
+      PageModule.selectedComponent ===
+      (this.$props.thisComponent as PageElement).ref
+    );
   }
 
   onClick(event: Event) {

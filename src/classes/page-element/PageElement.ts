@@ -1,20 +1,23 @@
-import { ComponentTypes } from '../../models/components/components';
+import { ComponentTypes } from "../../models/components/components";
 import {
   ComponentRef,
   ComponentTypesString,
   ActionEvent,
   ActionEventInterface
-} from '@/models/components/base-component';
+} from "@/models/components/base-component";
 import {
   BoxDimensions,
   BoxDimensionsInterface
-} from '../../models/components/box-dimension';
-import { Style, StyleTags } from '@/models/styles/styles';
-import { PageElementFirebaseData, PageElementInterface, } from '@/classes/page-element/models/pageElements/pageElement';
-import { PageElementBuilder } from '@/classes/page-element/page-element-builder/PageElementBuilder';
-import { PageContainer } from './PageContainer/PageContainer';
+} from "../../models/components/box-dimension";
+import { Style, StyleTags } from "@/models/styles/styles";
+import {
+  PageElementFirebaseData,
+  PageElementInterface
+} from "@/classes/page-element/models/pageElements/pageElement";
+import { PageElementBuilder } from "@/classes/page-element/page-element-builder/PageElementBuilder";
+import { PageContainer } from "./PageContainer/PageContainer";
 
-export type StyleTypes = 'border';
+export type StyleTypes = "border";
 
 export class PageElement implements Partial<PageElementInterface> {
   private _name: string; //** name of the component  */
@@ -31,7 +34,6 @@ export class PageElement implements Partial<PageElementInterface> {
   private _actionEvent: ActionEvent; //** if this component support events ActionEvent defines the event type and action */
   private _content: string;
   private classList: string[] = [];
-  
 
   constructor(pageElementBuilder: PageElementBuilder) {
     this._name = pageElementBuilder.name;
@@ -46,7 +48,7 @@ export class PageElement implements Partial<PageElementInterface> {
     this._data = pageElementBuilder.data;
     this._boxDimensions = pageElementBuilder.boxDimensions;
     this._actionEvent = pageElementBuilder.actionEvent;
-    this.classList = pageElementBuilder.classDefinition.split(' ');
+    this.classList = pageElementBuilder.classDefinition.split(" ");
     this._content = pageElementBuilder.content;
   }
 
@@ -139,7 +141,7 @@ export class PageElement implements Partial<PageElementInterface> {
   }
 
   get id(): number {
-    const index = this._ref.indexOf('::');
+    const index = this._ref.indexOf("::");
     return parseInt(this._ref.substring(index + 1));
   }
 
@@ -156,30 +158,29 @@ export class PageElement implements Partial<PageElementInterface> {
       boxDimensions.width,
       boxDimensions.height,
       boxDimensions.top,
-      boxDimensions.left,
+      boxDimensions.left
     );
   }
-  
+
   getAction(): ActionEventInterface {
     return this._actionEvent.toObject;
   }
 
-
-public getBaseElementContent(): PageElementFirebaseData {
-  return {
-    name: this._name,
-    ref: this._ref,
-    componentHTMLTag: this._componentHTMLTag,
-    isContainer: this._isContainer,
-    styles: this._styles,
-    parentRef: this._parentRef,
-    classDefinition: this.classDefinition,
-    type: this._type,
-    actionEvent: this._actionEvent.toObject,
-    boxDimensions: this._boxDimensions.toObject,
-    content: this._content,
+  public getBaseElementContent(): PageElementFirebaseData {
+    return {
+      name: this._name,
+      ref: this._ref,
+      componentHTMLTag: this._componentHTMLTag,
+      isContainer: this._isContainer,
+      styles: this._styles,
+      parentRef: this._parentRef,
+      classDefinition: this.classDefinition,
+      type: this._type,
+      actionEvent: this._actionEvent.toObject,
+      boxDimensions: this._boxDimensions.toObject,
+      content: this._content
+    };
   }
-}
 
   public reSize(boxDimensions: BoxDimensionsInterface): void {
     this._boxDimensions.height = boxDimensions.height;
@@ -187,14 +188,14 @@ public getBaseElementContent(): PageElementFirebaseData {
   }
 
   constructStyle(styleName: StyleTags, value: string): Style {
-    const style: Style ={
+    const style: Style = {
       style: styleName,
-      value: value,
-    }
+      value: value
+    };
     return style;
   }
 
-  setDefaultStyle(){
+  setDefaultStyle() {
     // to be implemented in inherited classes
   }
 
@@ -212,22 +213,22 @@ public getBaseElementContent(): PageElementFirebaseData {
   }
 
   public updateRefWithNewId(id: string) {
-    const index = this._ref.indexOf('::');
+    const index = this._ref.indexOf("::");
     const newRef = this._ref.substring(0, index + 1);
     this._ref = `${newRef}${id}`;
   }
 
   addClass(classDef: string): void {
-    const stem = !classDef.includes('-')
+    const stem = !classDef.includes("-")
       ? classDef
-      : classDef.substr(0, classDef.indexOf('-') + 1);
+      : classDef.substr(0, classDef.indexOf("-") + 1);
     this.removeClass(stem);
     this.classList.push(classDef);
-    this.classDefinition = this.classList.join(' ');
+    this.classDefinition = this.classList.join(" ");
   }
 
   getStyles(): string {
-    let style = '';
+    let style = "";
     const styles: Style[] = this.styles;
     if (styles.length > 0) {
       styles.forEach(element => {
@@ -246,5 +247,3 @@ public getBaseElementContent(): PageElementFirebaseData {
     this.classList = tempClassList;
   }
 }
-
-

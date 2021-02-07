@@ -28,9 +28,9 @@ export interface SidebarToolbarInterface {
 /** @description contains the list of icons that make up a toolbar  */
 export class SidebarToolbar implements SidebarToolbarInterface {
   toolbarIcons: SidebarIcon[] = [];
-  private _toolbarTitle = '';  
+  private _toolbarTitle = "";
 
-  addIcon(icon: string, className: string, tooltip = '') {
+  addIcon(icon: string, className: string, tooltip = "") {
     const sidebarIcon = new SidebarIcon(icon, className, tooltip);
     this.toolbarIcons.push(sidebarIcon);
   }

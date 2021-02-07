@@ -6,25 +6,25 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
-  import Component from 'vue-class-component';
-  import { Emit } from 'vue-property-decorator';
-  import FormButton  from '@/components/base/buttons/form-button.vue';
+import Vue from "vue";
+import Component from "vue-class-component";
+import { Emit } from "vue-property-decorator";
+import FormButton from "@/components/base/buttons/form-button.vue";
 
-  @Component({
-    components: {
-      FormButton,
-    }
-  })
-  export default class SubmitCancel extends Vue {
-    name = "submit-cancel";
-    
-    @Emit('cancelClicked') cancelClick() {
-      return
-    }
-
-    @Emit('saveClicked') saveClick() {
-      return
-    }
+@Component({
+  components: {
+    FormButton
   }
+})
+export default class SubmitCancel extends Vue {
+  name = "submit-cancel";
+
+  @Emit("cancelClicked") cancelClick() {
+    return;
+  }
+
+  @Emit("saveClicked") saveClick() {
+    return;
+  }
+}
 </script>

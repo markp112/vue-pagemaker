@@ -1,13 +1,14 @@
 import {
   ComponentRef,
   ComponentTypesString,
-  ActionEventInterface,
-} from '@/models/components/base-component';
+  ActionEventInterface
+} from "@/models/components/base-component";
 import {
-  BoxDimensions, BoxDimensionsInterface,
-} from '@/models/components/box-dimension';
-import { Dimensions, Location } from '@/models/components/components';
-import { Style } from '@/models/styles/styles';
+  BoxDimensions,
+  BoxDimensionsInterface
+} from "@/models/components/box-dimension";
+import { Dimensions, Location } from "@/models/components/components";
+import { Style } from "@/models/styles/styles";
 //interface for an html Style
 
 // represents the definition of the object the user has dropped on the page

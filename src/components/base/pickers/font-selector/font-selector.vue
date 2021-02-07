@@ -1,13 +1,15 @@
 <template>
-  <div class="sidebar-button-container relative" >
+  <div class="sidebar-button-container relative">
     <div class="flex flex-row justify-start ">
-      <img src="@/assets/icons/alphabet_latin-32.png"
-            class="cursor-pointer hover:bg-gray-600"
+      <img
+        src="@/assets/icons/alphabet_latin-32.png"
+        class="cursor-pointer hover:bg-gray-600"
       />
-      <img src="@/assets/icons/down-24.png" 
+      <img
+        src="@/assets/icons/down-24.png"
         class="w-4 h-4 cursor-pointer hover:bg-gray-800"
         @click="show()"
-        >
+      />
     </div>
     <div
       v-if="toggleSelectOptions"
@@ -22,14 +24,17 @@
         <span class="font-filter" @click="filterFonts('serif')">s</span>
         <span class="font-filter" @click="filterFonts('sans-serif')">ss</span>
       </div>
-      <ul class="dropdown-menu-background flex flex-col items-start w-48 h-64 shadow-lg overflow-y-scroll">
-        <li v-for="font in listOfFonts"
-          :key="font.fontName" 
-          @click="fontClicked(font.fontName)" 
+      <ul
+        class="dropdown-menu-background flex flex-col items-start w-48 h-64 shadow-lg overflow-y-scroll"
+      >
+        <li
+          v-for="font in listOfFonts"
+          :key="font.fontName"
+          @click="fontClicked(font.fontName)"
           class="dropdown-menu-item mb-2 relative z-auto text-sm w-full"
           :class="{ 'bg-secondary-100': font.fontName === selectedItem }"
           :style="{ 'font-family': font.fontName }"
-          >
+        >
           {{ font.fontName }}
         </li>
       </ul>
@@ -38,35 +43,35 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Emit } from 'vue-property-decorator';
-import { Fonts, FontItemInterface } from '@/classes/fonts/fonts';
-import { StyleElement } from '@/classes/text-attributes/text-attributes';
+import Vue from "vue";
+import Component from "vue-class-component";
+import { Emit } from "vue-property-decorator";
+import { Fonts, FontItemInterface } from "@/classes/fonts/fonts";
+import { StyleElement } from "@/classes/text-attributes/text-attributes";
 
 @Component
 export default class FontSelect extends Vue {
   fonts: Fonts = Fonts.getInstance();
   toggleSelectOptions = false;
-  selectedItem = '';
+  selectedItem = "";
   fontList: FontItemInterface[] = [];
-  
+
   created() {
     this.fontList = this.fonts.getListofFonts();
   }
-  
+
   show() {
     this.toggleSelectOptions = !this.toggleSelectOptions;
   }
 
-  @Emit('onChange')
+  @Emit("onChange")
   fontClicked(fontName: string): StyleElement {
     this.show();
     const style: StyleElement = {
-      styleName: 'font-family',
+      styleName: "font-family",
       value: fontName,
-      units: '',
-    }
+      units: ""
+    };
     return style;
   }
 

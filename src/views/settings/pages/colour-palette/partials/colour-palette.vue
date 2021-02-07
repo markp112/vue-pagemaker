@@ -16,30 +16,30 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Emit } from 'vue-property-decorator';
+import Vue from "vue";
+import Component from "vue-class-component";
+import { Emit } from "vue-property-decorator";
 
 @Component({
   props: {
     palette: {
       default: (): string[] => {
         return [];
-      },
+      }
     },
-    label: { default: '' },
-  },
+    label: { default: "" }
+  }
 })
 export default class PaletteStrip extends Vue {
-  name = 'Palette-strip';
+  name = "Palette-strip";
 
   getFontColour(index: number): string {
-    const BLACK = '#000000';
-    const WHITE = '#ffffff';
+    const BLACK = "#000000";
+    const WHITE = "#ffffff";
     return index < 5 ? BLACK : WHITE;
   }
 
-  @Emit('colourClicked')
+  @Emit("colourClicked")
   colourClicked(colour: string) {
     return colour;
   }

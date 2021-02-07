@@ -1,6 +1,6 @@
-import { ErrorCodes } from '../enums/errors/errors'
+import { ErrorCodes } from "../enums/errors/errors";
 
-export  interface  UserInterface {
+export interface UserInterface {
   email: string;
   signedIn: boolean;
   id: string;
@@ -11,18 +11,16 @@ export  interface  UserInterface {
 export interface AuthStatus {
   isSuccess: boolean;
   errorCode: ErrorCodes;
-
 }
 
 export const initUser: UserInterface = {
   email: "",
   signedIn: false,
   id: "",
-  password:"",
-}
+  password: ""
+};
 
-  export const initAuthStatus: AuthStatus = {
+export const initAuthStatus: AuthStatus = {
   isSuccess: false,
-  errorCode: ErrorCodes.Undefined,
-
-}
+  errorCode: ErrorCodes.Undefined
+};

@@ -1,6 +1,17 @@
-import { ButtonIconClassListInterface, ButtonIconClassInterface, IconType, ComponentNames } from '../button-icon/button-icon';
-import { StyleTypes, StyleElement } from '@/classes/text-attributes/text-attributes';
-import { SidebarButtonEventManager, ImpactedAttributeTypes } from '@/classes/sidebarButtonEventManager/sidebarButtonEventManager';
+import {
+  ButtonIconClassListInterface,
+  ButtonIconClassInterface,
+  IconType,
+  ComponentNames
+} from "../button-icon/button-icon";
+import {
+  StyleTypes,
+  StyleElement
+} from "@/classes/text-attributes/text-attributes";
+import {
+  SidebarButtonEventManager,
+  ImpactedAttributeTypes
+} from "@/classes/sidebarButtonEventManager/sidebarButtonEventManager";
 
 export class ButtonIconClassList implements ButtonIconClassListInterface {
   styledElement: ImpactedAttributeTypes;
@@ -13,7 +24,7 @@ export class ButtonIconClassList implements ButtonIconClassListInterface {
   private eventManager = SidebarButtonEventManager.getInstance();
 
   constructor(bICLBuilder: ButtonIconClassListBuilder) {
-    this.styledElement =bICLBuilder._styledElement;
+    this.styledElement = bICLBuilder._styledElement;
     this.classType = bICLBuilder._classType;
     this.classNames = bICLBuilder._classNames;
     this.componentName = bICLBuilder._componentName;
@@ -26,20 +37,20 @@ export class ButtonIconClassList implements ButtonIconClassListInterface {
     const style: StyleElement = {
       styleName: this.classType,
       value: iconElement.classNameActive,
-      units: 'px',
+      units: "px"
     };
     this.eventManager.applyValue(this.styledElement, style);
   }
 }
 
 export class ButtonIconClassListBuilder {
-  _styledElement: ImpactedAttributeTypes = 'undefined';
-  _classType: StyleTypes = 'undefined';
+  _styledElement: ImpactedAttributeTypes = "undefined";
+  _classType: StyleTypes = "undefined";
   _classNames: ButtonIconClassInterface[] = [];
-  _iconImage = '';
-  _tooltip = '';
-  _iconIsTypeOf: IconType = 'class-list';
-  _componentName: ComponentNames = 'icon-picker';
+  _iconImage = "";
+  _tooltip = "";
+  _iconIsTypeOf: IconType = "class-list";
+  _componentName: ComponentNames = "icon-picker";
 
   withStyledElement(impactedAttribute: ImpactedAttributeTypes) {
     this._styledElement = impactedAttribute;
@@ -61,7 +72,7 @@ export class ButtonIconClassListBuilder {
     return this;
   }
 
-  withToolTip(tooltip: string){
+  withToolTip(tooltip: string) {
     this._tooltip = tooltip;
     return this;
   }

@@ -1,9 +1,8 @@
 export enum ErrorCodes {
-    NotSet,
-    Undefined,
-    LoginFailed,
-    RegistrationFailed,
-    AlreadyRegistered,
-    CannotConnectToFireBase,
-
+  NotSet,
+  Undefined,
+  LoginFailed,
+  RegistrationFailed,
+  AlreadyRegistered,
+  CannotConnectToFireBase
 }

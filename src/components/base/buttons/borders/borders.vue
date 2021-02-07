@@ -1,8 +1,8 @@
 <template>
   <section>
     <div class="sidebar-button-panel text-accent-600">
-      <icon-select 
-        :buttonIconClassList="borderDirectionButton" 
+      <icon-select
+        :buttonIconClassList="borderDirectionButton"
         @selectChange="onItemChange($event, 'border')"
       >
       </icon-select>
@@ -19,68 +19,85 @@
         @onChange="onItemChange($event, 'border')"
       >
       </plus-minus-icon>
-      <numeric-input-dropdown 
+      <numeric-input-dropdown
         :thisIconButton="borderRadiusButton"
-        @onChange="onItemChange($event, 'border') "
-        >
+        @onChange="onItemChange($event, 'border')"
+      >
       </numeric-input-dropdown>
     </div>
   </section>
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
-  import Component from 'vue-class-component';
-  import { Border } from '@/classes/borders/borders';
-  import IconSelect  from  '@/components/base/pickers/icon-select/icon-select.vue';
-  import DropDown  from '@/components/base/pickers/drop-down/drop-down.vue';
-  import PlusMinusIcon from '@/components/base/buttons/plus-minus-icon/plus-minus-icon.vue'
-  import NumericInputDropdown from '@/components/base/buttons/numeric-input-drop-down/numeric-input-dropdown.vue'
-  import {
-    shadowIconList,
-    lineStyleIconList,
-    borderEdgeIconList } from '@/models/components/icon-picker-models';
-import { ButtonIconDimension } from '@/models/styles/builders/buttonIconDimension';
-import { ButtonIconClassList } from '@/models/styles/builders/button-icon-class-list';
-import { ButtonIconNumeric } from '../../../../models/styles/button-icon/button-numeric-list/button-numeric-list';
-import { ButtonFactory } from '@/models/styles/button-factory/button-factory';
-import { StyleElement } from '../../../../classes/text-attributes/text-attributes';
-import { SidebarButtonEventManager, ImpactedAttributeTypes } from '@/classes/sidebarButtonEventManager/sidebarButtonEventManager';
+import Vue from "vue";
+import Component from "vue-class-component";
+import { Border } from "@/classes/borders/borders";
+import IconSelect from "@/components/base/pickers/icon-select/icon-select.vue";
+import DropDown from "@/components/base/pickers/drop-down/drop-down.vue";
+import PlusMinusIcon from "@/components/base/buttons/plus-minus-icon/plus-minus-icon.vue";
+import NumericInputDropdown from "@/components/base/buttons/numeric-input-drop-down/numeric-input-dropdown.vue";
+import {
+  shadowIconList,
+  lineStyleIconList,
+  borderEdgeIconList
+} from "@/models/components/icon-picker-models";
+import { ButtonIconDimension } from "@/models/styles/builders/buttonIconDimension";
+import { ButtonIconClassList } from "@/models/styles/builders/button-icon-class-list";
+import { ButtonIconNumeric } from "../../../../models/styles/button-icon/button-numeric-list/button-numeric-list";
+import { ButtonFactory } from "@/models/styles/button-factory/button-factory";
+import { StyleElement } from "../../../../classes/text-attributes/text-attributes";
+import {
+  SidebarButtonEventManager,
+  ImpactedAttributeTypes
+} from "@/classes/sidebarButtonEventManager/sidebarButtonEventManager";
 
-  @Component({
-    components: {
-      'icon-select': IconSelect,
-      'drop-down': DropDown,
-      'plus-minus-icon': PlusMinusIcon,
-      'numeric-input-dropdown': NumericInputDropdown,
-    },
-  })
-  export default class BorderButtons extends Vue {
-    name = 'border-buttons';
-    shadowIconList = shadowIconList;
-    lineStyleIconList = lineStyleIconList;
-    borderEdgeIconList  = borderEdgeIconList;
-    borderRadius = 0;
-    borderDefinition: Border = Border.getInstance();
-    borderUnits = ['em', 'px', '%']
-    buttonIconDimension: ButtonIconDimension = new ButtonFactory().createButton('dimension', 'border-thickness') as ButtonIconDimension;
-    shadowButton: ButtonIconClassList = new ButtonFactory().createButton('class-list', 'Shadow') as ButtonIconClassList;
-    borderDirectionButton: ButtonIconClassList = new ButtonFactory().createButton('class-list', 'border-direction') as ButtonIconClassList;
-    borderStyleButton: ButtonIconClassList = new ButtonFactory().createButton('class-list', 'border-styles') as ButtonIconClassList;
-    borderRadiusButton: ButtonIconNumeric = new ButtonFactory().createButton('numeric', 'border-radius') as ButtonIconNumeric;
-
-    onItemChange( style: StyleElement, itemType: ImpactedAttributeTypes) {
-      const eventManager = SidebarButtonEventManager.getInstance();
-      eventManager.applyValue(itemType, style);
-      eventManager.updateEditedComponent();
-    }
+@Component({
+  components: {
+    "icon-select": IconSelect,
+    "drop-down": DropDown,
+    "plus-minus-icon": PlusMinusIcon,
+    "numeric-input-dropdown": NumericInputDropdown
   }
-  </script>
+})
+export default class BorderButtons extends Vue {
+  name = "border-buttons";
+  shadowIconList = shadowIconList;
+  lineStyleIconList = lineStyleIconList;
+  borderEdgeIconList = borderEdgeIconList;
+  borderRadius = 0;
+  borderDefinition: Border = Border.getInstance();
+  borderUnits = ["em", "px", "%"];
+  buttonIconDimension: ButtonIconDimension = new ButtonFactory().createButton(
+    "dimension",
+    "border-thickness"
+  ) as ButtonIconDimension;
+  shadowButton: ButtonIconClassList = new ButtonFactory().createButton(
+    "class-list",
+    "Shadow"
+  ) as ButtonIconClassList;
+  borderDirectionButton: ButtonIconClassList = new ButtonFactory().createButton(
+    "class-list",
+    "border-direction"
+  ) as ButtonIconClassList;
+  borderStyleButton: ButtonIconClassList = new ButtonFactory().createButton(
+    "class-list",
+    "border-styles"
+  ) as ButtonIconClassList;
+  borderRadiusButton: ButtonIconNumeric = new ButtonFactory().createButton(
+    "numeric",
+    "border-radius"
+  ) as ButtonIconNumeric;
 
-  <style lang="postcss" scoped>
+  onItemChange(style: StyleElement, itemType: ImpactedAttributeTypes) {
+    const eventManager = SidebarButtonEventManager.getInstance();
+    eventManager.applyValue(itemType, style);
+    eventManager.updateEditedComponent();
+  }
+}
+</script>
 
-
-  .bg-secondary-hidden {
-    background-image: url("../../../../assets/icons/hidden-32.png");
-  } 
-  </style>
+<style lang="postcss" scoped>
+.bg-secondary-hidden {
+  background-image: url("../../../../assets/icons/hidden-32.png");
+}
+</style>

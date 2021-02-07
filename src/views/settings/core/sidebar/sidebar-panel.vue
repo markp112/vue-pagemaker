@@ -9,45 +9,41 @@
         v-for="(toolbar, index) in $props.toolbarPanel.sidebarPanels"
         :key="index"
       >
-        <sidebar-toolbar
-          :toolbarItems="toolbar"
-          @iconClick="iconClick($event)"
-        >
+        <sidebar-toolbar :toolbarItems="toolbar" @iconClick="iconClick($event)">
         </sidebar-toolbar>
       </div>
-    </div>  
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-
-import Vue from 'vue';
-import { Component, Emit } from 'vue-property-decorator';
-import CloseButton from '@/components/base/buttons/close-button/close-button.vue';
-import { SidebarPanel } from '@/models/sidebar/button-definition/sidebar-buttons';
-import { SidebarModule } from '@/store/sidebar/sidebar';
-import SidebarToolbarScreen from '@/components/base/buttons/sidebar-buttons/sidebar-toolbar.vue';
+import Vue from "vue";
+import { Component, Emit } from "vue-property-decorator";
+import CloseButton from "@/components/base/buttons/close-button/close-button.vue";
+import { SidebarPanel } from "@/models/sidebar/button-definition/sidebar-buttons";
+import { SidebarModule } from "@/store/sidebar/sidebar";
+import SidebarToolbarScreen from "@/components/base/buttons/sidebar-buttons/sidebar-toolbar.vue";
 
 @Component({
-   props: {
-      toolbarPanel: {
-        default: (): SidebarPanel => {
-          return new SidebarPanel();
-        },
-      },
-    },
+  props: {
+    toolbarPanel: {
+      default: (): SidebarPanel => {
+        return new SidebarPanel();
+      }
+    }
+  },
   components: {
-    'close-button': CloseButton,
-    'sidebar-toolbar': SidebarToolbarScreen,
+    "close-button": CloseButton,
+    "sidebar-toolbar": SidebarToolbarScreen
   }
 })
 export default class SidebarPanelSiteSettings extends Vue {
-  name='Site Settings sidebar panel';
-  data= '';
+  name = "Site Settings sidebar panel";
+  data = "";
 
-  @Emit('iconClick')
+  @Emit("iconClick")
   iconClick(nameOfComponent: string) {
-    this.$store.dispatch('setSettingsPageActiveComponent', nameOfComponent);
+    this.$store.dispatch("setSettingsPageActiveComponent", nameOfComponent);
   }
 
   closeButtonClick(): void {
@@ -57,15 +53,15 @@ export default class SidebarPanelSiteSettings extends Vue {
 </script>
 
 <style lang="postcss" scoped>
-  .icon-list-sidebar {
-    @apply flex flex-row flex-wrap text-4xl justify-evenly w-full ;
-  }
+.icon-list-sidebar {
+  @apply flex flex-row flex-wrap text-4xl justify-evenly w-full;
+}
 
-  .icon {
-    @apply transform cursor-pointer mr-2;
-  }
+.icon {
+  @apply transform cursor-pointer mr-2;
+}
 
-  .icon:hover {
-    @apply shadow-xl -translate-x-1 -translate-y-1;
-  }
+.icon:hover {
+  @apply shadow-xl -translate-x-1 -translate-y-1;
+}
 </style>

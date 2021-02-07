@@ -1,26 +1,26 @@
 // Controls the sidebar
-import store from '@/store';
+import store from "@/store";
 import {
   Module,
   Mutation,
   Action,
   VuexModule,
   getModule
-} from 'vuex-module-decorators';
-import { SidebarComponents } from '@/classes/sidebar-toolbar/sidebar-toolbar-builder';
-import {  
+} from "vuex-module-decorators";
+import { SidebarComponents } from "@/classes/sidebar-toolbar/sidebar-toolbar-builder";
+import {
   ComponentDefinitions,
   ComponentDefinitionInterface,
   ComponentTypesString
-} from '@/models/components/base-component';
+} from "@/models/components/base-component";
 import {
   Notification,
-  notificationDefault,
-} from '@/models/notifications/notifications';
-import  { PageModule } from '@/store/page/page';
-import firebase from 'firebase';
+  notificationDefault
+} from "@/models/notifications/notifications";
+import { PageModule } from "@/store/page/page";
+import firebase from "firebase";
 
-const SIDEBARCOLLECTION = 'component-definitions';
+const SIDEBARCOLLECTION = "component-definitions";
 
 export interface SidebarStateInterface {
   _sidebarElements: ComponentDefinitions;
@@ -30,13 +30,13 @@ export interface SidebarStateInterface {
   _settingsActivePage: string; // sets the page shown on the settings page e.g. colours, palette
 }
 
-@Module({ dynamic: true, name: 'sidebar', store })
+@Module({ dynamic: true, name: "sidebar", store })
 class SidebarStore extends VuexModule implements SidebarStateInterface {
   _sidebarElements: ComponentDefinitions = new ComponentDefinitions();
   _showSidebar = false;
-  _sidebarComponent: SidebarComponents = 'sidebar-components';
+  _sidebarComponent: SidebarComponents = "sidebar-components";
   _showTextModal = false;
-  _settingsActivePage = '';
+  _settingsActivePage = "";
 
   @Mutation
   private addComponent(editorComponent: ComponentDefinitionInterface) {
@@ -63,14 +63,14 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
     this._showTextModal = show;
   }
 
-  @Mutation 
+  @Mutation
   private setSettingsActivePage(activePageName: string) {
     this._settingsActivePage = activePageName;
   }
 
   @Action({ rawError: true })
   public toggleSidebar(toggle: boolean) {
-    this.context.commit('setSidebarVisibility', toggle);
+    this.context.commit("setSidebarVisibility", toggle);
   }
 
   /**
@@ -81,28 +81,30 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
     const firestore = firebase.firestore();
     const notification: Notification = notificationDefault;
     return new Promise((resolve, reject) => {
-      this.context.commit('clearComponents');
+      this.context.commit("clearComponents");
       firestore
         .collection(SIDEBARCOLLECTION)
         .get()
         .then(collection => {
-          this.context.commit('clearComponents');
+          this.context.commit("clearComponents");
           collection.forEach(sidebarElements => {
             const component: ComponentDefinitionInterface = sidebarElements.data() as ComponentDefinitionInterface;
-            this.context.commit('addComponent', component);
+            this.context.commit("addComponent", component);
           });
           resolve(notification);
         })
         .catch(err => {
           notification.message = err;
-          notification.status = 'Error';
+          notification.status = "Error";
           reject(notification);
         });
     });
   }
 
   @Action({ rawError: true })
-  public saveEditorElement(editorComponent: ComponentDefinitionInterface): Promise<Notification> {
+  public saveEditorElement(
+    editorComponent: ComponentDefinitionInterface
+  ): Promise<Notification> {
     const notification: Notification = notificationDefault;
     return new Promise((resolve, reject) => {
       const firestore = firebase.firestore();
@@ -111,16 +113,16 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
         .collection(SIDEBARCOLLECTION)
         .doc(data.componentName)
         .set(data)
-          .then(() => {
-            this.context.commit('addComponent', editorComponent);
-            resolve(notification);
-          })
-          .catch(err => {
-            notification.status = 'Error';
-            notification.message = err;
-            reject(notification);
-          });
-    })
+        .then(() => {
+          this.context.commit("addComponent", editorComponent);
+          resolve(notification);
+        })
+        .catch(err => {
+          notification.status = "Error";
+          notification.message = err;
+          reject(notification);
+        });
+    });
   }
 
   @Action({ rawError: true })
@@ -131,26 +133,41 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
     const componentType: ComponentTypesString = PageModule.editedComponentType;
     if (componentType) {
       switch (componentType) {
-        case 'image':
-          this.context.commit('setSidebarEditor', 'image-editor' as SidebarComponents);
+        case "image":
+          this.context.commit(
+            "setSidebarEditor",
+            "image-editor" as SidebarComponents
+          );
           break;
-        case 'text':
-          this.context.commit('setShowTextModal', true);
+        case "text":
+          this.context.commit("setShowTextModal", true);
           break;
-        case 'jumbo':
-          this.context.commit('setSidebarEditor', 'container-editor' as SidebarComponents);
+        case "jumbo":
+          this.context.commit(
+            "setSidebarEditor",
+            "container-editor" as SidebarComponents
+          );
           break;
-        case 'pageTemplate':
-          this.context.commit('setSidebarEditor', 'container-editor' as SidebarComponents);
+        case "pageTemplate":
+          this.context.commit(
+            "setSidebarEditor",
+            "container-editor" as SidebarComponents
+          );
           break;
-        case 'groupingContainer':
-          this.context.commit('setSidebarEditor', 'container-editor' as SidebarComponents);
+        case "groupingContainer":
+          this.context.commit(
+            "setSidebarEditor",
+            "container-editor" as SidebarComponents
+          );
           break;
-        case 'navBar':
-          this.context.commit('setSidebarEditor', 'container-editor' as SidebarComponents);
+        case "navBar":
+          this.context.commit(
+            "setSidebarEditor",
+            "container-editor" as SidebarComponents
+          );
           break;
-        case 'button':
-          this.context.commit('setSidebarEditor', 'button-editor');
+        case "button":
+          this.context.commit("setSidebarEditor", "button-editor");
           break;
       }
     }
@@ -161,15 +178,15 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
    * @params sidebarMenu = name of the menu to show based on type of SidebarComponents
    */
   public setSidebarMenuTo(sidebarMenu: SidebarComponents) {
-    this.context.commit('setSidebarEditor', sidebarMenu);
+    this.context.commit("setSidebarEditor", sidebarMenu);
   }
 
   @Action
   public closeEditor() {
-    const sidebarComponent: SidebarComponents = 'sidebar-components';
-    this.context.commit('setSidebarEditor', sidebarComponent);
+    const sidebarComponent: SidebarComponents = "sidebar-components";
+    this.context.commit("setSidebarEditor", sidebarComponent);
   }
- 
+
   @Action
   public updateShowTextModal(show: boolean) {
     this.context.commit("setShowTextModal", show);
@@ -177,7 +194,7 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
 
   /**
    * @description sets the current page when viewing and editing the site settings from the main menu
-   * 
+   *
    * @param activePageName - this should match the name of the component to be displayed
    */
   @Action
@@ -186,19 +203,24 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
   }
 
   get getSidebarElements(): ComponentDefinitionInterface[] {
-    return this._sidebarElements.componentDefinitions().filter(elem => elem.isContainer === false);
+    return this._sidebarElements
+      .componentDefinitions()
+      .filter(elem => elem.isContainer === false);
   }
 
   get getSidebarContainers(): ComponentDefinitionInterface[] {
-    return this._sidebarElements.componentDefinitions().filter(elem => elem.isContainer === true);
+    return this._sidebarElements
+      .componentDefinitions()
+      .filter(elem => elem.isContainer === true);
   }
 
   get getSidebarAllIcons(): ComponentDefinitionInterface[] {
     return this._sidebarElements.componentDefinitions();
   }
 
-  get getComponentDefinition(): (componentName: string)
-    => ComponentDefinitionInterface | undefined {
+  get getComponentDefinition(): (
+    componentName: string
+  ) => ComponentDefinitionInterface | undefined {
     return (componentName: string) =>
       this._sidebarElements.getComponent(componentName);
   }

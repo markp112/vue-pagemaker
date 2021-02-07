@@ -30,10 +30,10 @@
               {{ page.name }}
             </span>
             <span class="w-2/12">
-              {{ page.created | dateFormat('DD MMM YYYY')  }}
+              {{ page.created | dateFormat("DD MMM YYYY") }}
             </span>
             <span class="w-2/12">
-              {{ page.edited | dateFormat('DD MMM YYYY') }}
+              {{ page.edited | dateFormat("DD MMM YYYY") }}
             </span>
             <span class="w-2/12 self-start">
               <input type="checkbox" value="page.active" readonly />
@@ -44,7 +44,7 @@
             alt="Edit pencil"
             @click="editPencilClick(page.name)"
             class="w-8 hover:shadow-xl cursor-pointer"
-          >
+          />
         </div>
       </li>
     </ul>
@@ -52,25 +52,25 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import CreateNewButton from '@/components/base/buttons/create-new/create-new.vue';
-import { Page } from '@/models/pages/pages';
-import { PagesModule } from '@/store/pages/pages';
-import { SitesModule } from '@/store/sites/sites';
+import Vue from "vue";
+import Component from "vue-class-component";
+import CreateNewButton from "@/components/base/buttons/create-new/create-new.vue";
+import { Page } from "@/models/pages/pages";
+import { PagesModule } from "@/store/pages/pages";
+import { SitesModule } from "@/store/sites/sites";
 
 @Component({
   components: {
-    'create-new-button': CreateNewButton,
-  },
+    "create-new-button": CreateNewButton
+  }
 })
 export default class PageList extends Vue {
-  name = 'pageList';
-  siteId = '';
+  name = "pageList";
+  siteId = "";
 
   editPencilClick(pageName: string) {
     PagesModule.updateCurrentPage(pageName);
-    this.$router.push({ name: 'page-editor', params: { title: 'Edit Page' } });
+    this.$router.push({ name: "page-editor", params: { title: "Edit Page" } });
   }
 
   created() {
@@ -79,24 +79,24 @@ export default class PageList extends Vue {
   }
 
   mounted() {
-     PagesModule.loadPages();
+    PagesModule.loadPages();
   }
 
   createNewPage() {
     this.$router.push({
-      name: 'page-editor',
+      name: "page-editor",
       params: {
-        title: 'Create New Page',
-      },
+        title: "Create New Page"
+      }
     });
   }
 
   pageRowClick(pageName: string) {
     this.$router.push({
-      name: 'page-builder',
+      name: "page-builder",
       params: {
-        title: pageName,
-      },
+        title: pageName
+      }
     });
   }
 

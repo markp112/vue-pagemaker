@@ -1,21 +1,9 @@
-import { SiteIdAndUserId } from '@/models/site-and-user/site-and-user';
-import { ServicesModule } from '@/store/services/services';
-import Color from 'color';
-import { Notification } from '@/models/notifications/notifications';
+import { SiteIdAndUserId } from "@/models/site-and-user/site-and-user";
+import { ServicesModule } from "@/store/services/services";
+import Color from "color";
+import { Notification } from "@/models/notifications/notifications";
 
-const contrastRatios =  [
-  0.15,
-  0.3,
-  0.5,
-  0.7,
-  0.85,
-  1,
-  0.85,
-  0.7,
-  0.5,
-  0.35
-];
-
+const contrastRatios = [0.15, 0.3, 0.5, 0.7, 0.85, 1, 0.85, 0.7, 0.5, 0.35];
 
 export interface PalettesInterface {
   colour: string;
@@ -26,28 +14,27 @@ export interface PalettesInterface {
 }
 
 export type ColourSchemes =
-  | 'Analogous'
-  | 'Complementary'
-  | 'Triadic'
-  | 'Compound' 
+  | "Analogous"
+  | "Complementary"
+  | "Triadic"
+  | "Compound";
 
 export class ColourPalettes implements PalettesInterface {
-
-  private _colour = '#0';
+  private _colour = "#0";
   private _primary: string[] = [];
   private _secondary: string[] = [];
   private _accent: string[] = [];
   private _accentAngle = 30;
   private _secondaryAngle = 180;
-  private _colourScheme: ColourSchemes = 'Complementary';
+  private _colourScheme: ColourSchemes = "Complementary";
 
   private MAX_SHADES = 10;
 
-  constructor(colour = '') {
-    if(colour !== '') {
+  constructor(colour = "") {
+    if (colour !== "") {
       this._colour = colour;
       this.newPalette(this._colour);
-      this._colourScheme = 'Complementary';
+      this._colourScheme = "Complementary";
     }
   }
 
@@ -73,7 +60,7 @@ export class ColourPalettes implements PalettesInterface {
 
   set primary(primary: string[]) {
     if (primary.length === this.MAX_SHADES) {
-      this._primary = primary; 
+      this._primary = primary;
     }
   }
 
@@ -113,15 +100,16 @@ export class ColourPalettes implements PalettesInterface {
   }
 
   private applySaturation(multiplier: number, palette: string[]): string[] {
-      const newPalette: string[] = [];
-        palette.forEach(colour => {
-          const newColour = Color(colour);
-          const saturatedColour = multiplier > 0 
+    const newPalette: string[] = [];
+    palette.forEach(colour => {
+      const newColour = Color(colour);
+      const saturatedColour =
+        multiplier > 0
           ? newColour.saturate(multiplier).hex()
-          : newColour.desaturate(multiplier * -1 ).hex();
-          newPalette.push(saturatedColour);
-        });
-        return newPalette;
+          : newColour.desaturate(multiplier * -1).hex();
+      newPalette.push(saturatedColour);
+    });
+    return newPalette;
   }
 
   public savePalette(siteAndUserId: SiteIdAndUserId): Promise<Notification> {
@@ -130,103 +118,107 @@ export class ColourPalettes implements PalettesInterface {
       colourScheme: this.colourScheme,
       primary: this.primary,
       secondary: this.secondary,
-      accent: this.accent,
+      accent: this.accent
     };
     const data = {
       siteAndUserId: siteAndUserId,
-      colourPalette: selectedPalette,
-    }
+      colourPalette: selectedPalette
+    };
     return new Promise((resolve, reject) => {
       ServicesModule.firestoreSaveColourPalette(data)
-      .then ((response: Notification) => {
-        resolve(response);
-      })
-      .catch((err: Notification) => {
-        reject(err)
-      })
-    })
+        .then((response: Notification) => {
+          resolve(response);
+        })
+        .catch((err: Notification) => {
+          reject(err);
+        });
+    });
   }
 
   public loadPalette(siteAndUserId: SiteIdAndUserId): Promise<Notification> {
     return new Promise((resolve, reject) => {
       ServicesModule.firestoreLoadSitePalette(siteAndUserId)
-      .then (response => {
-        const palettes = response as PalettesInterface;
-        this._colour = palettes.colour;
-        this.colourScheme = palettes.colourScheme;
-        this.primary = palettes.primary;
-        this.secondary = palettes.secondary;
-        this.accent = palettes.accent;
-        const notification: Notification = {
-          message: "loaded palette",
-          status: "ok",
-        };
-        resolve(notification);
-      })
-      .catch((err: Notification) => {
-        this._colour = '#454cF4' // blue
-        this._colourScheme = 'Complementary';
-        this.newPalette(this._colour);
-        reject(err);
-      })
-    })
+        .then(response => {
+          const palettes = response as PalettesInterface;
+          this._colour = palettes.colour;
+          this.colourScheme = palettes.colourScheme;
+          this.primary = palettes.primary;
+          this.secondary = palettes.secondary;
+          this.accent = palettes.accent;
+          const notification: Notification = {
+            message: "loaded palette",
+            status: "ok"
+          };
+          resolve(notification);
+        })
+        .catch((err: Notification) => {
+          this._colour = "#454cF4"; // blue
+          this._colourScheme = "Complementary";
+          this.newPalette(this._colour);
+          reject(err);
+        });
+    });
   }
 
   private setAngles() {
     switch (this._colourScheme) {
-      case 'Complementary':
+      case "Complementary":
         this._secondaryAngle = 180;
         this._accentAngle = -30;
         break;
 
-      case 'Analogous':
+      case "Analogous":
         this._secondaryAngle = 30;
         this._accentAngle = -30;
         break;
 
-      case 'Compound':
+      case "Compound":
         this._secondaryAngle = 210;
         this._accentAngle = 150;
         break;
-      
-      case 'Triadic':
+
+      case "Triadic":
         this._secondaryAngle = 120;
         this._accentAngle = 240;
         break;
     }
   }
-  
-  public generate(colour: string):string[] {
+
+  public generate(colour: string): string[] {
     const palette: string[] = [];
-    const rootColour = new Color(colour)
+    const rootColour = new Color(colour);
     for (let index = 0; index < this.MAX_SHADES; index++) {
       if (index < 5) {
         palette.push(
           Color("white")
-          .mix(rootColour, contrastRatios[index])
-          .hex()
+            .mix(rootColour, contrastRatios[index])
+            .hex()
         );
       } else if (index === 5) {
         palette.push(colour);
-      } else if (index >= 6 ) {
+      } else if (index >= 6) {
         palette.push(
-          Color('black')
-          .mix(rootColour, contrastRatios[index])
-          .hex());
+          Color("black")
+            .mix(rootColour, contrastRatios[index])
+            .hex()
+        );
       }
-    }    
+    }
     return palette;
   }
 
   private generateSecondary(colour: string): string[] {
     const rootColour = new Color(colour);
     const secondaryColour = rootColour.rotate(this._secondaryAngle).hex();
-    return(this.generate(secondaryColour));
+    return this.generate(secondaryColour);
   }
 
   private generateAccent(colour: string): string[] {
     const rootColour = new Color(colour);
-    const accentColour = rootColour.saturate(10).rotate(this._accentAngle).hex();
-    return(this.generate(accentColour));
+    const accentColour = rootColour
+      .saturate(10)
+      .rotate(this._accentAngle)
+      .hex();
+    return this.generate(accentColour);
   }
 }

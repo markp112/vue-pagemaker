@@ -11,7 +11,6 @@ export const secrets = {
     measurementId: "G-DRRJT5356L"
   },
   testing: {
-    secret: 'J9T7D*3d9-e$f',
+    secret: "J9T7D*3d9-e$f"
   }
-
 };

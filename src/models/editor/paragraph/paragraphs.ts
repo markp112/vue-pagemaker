@@ -1,7 +1,7 @@
 import { Paragraph } from "./paragraph";
 
 /**..
- * @description maintains a list of the paragraphs in the text editor each paragraph is given a unique id 
+ * @description maintains a list of the paragraphs in the text editor each paragraph is given a unique id
  */
 export class Paragraphs {
   private paragraphs: Paragraph[] = [];
@@ -20,7 +20,7 @@ export class Paragraphs {
     this.paragraphs = [];
   }
 
-  remove(id: string){
+  remove(id: string) {
     this.paragraphs = this.paragraphs.filter(para => para.id !== id);
   }
 

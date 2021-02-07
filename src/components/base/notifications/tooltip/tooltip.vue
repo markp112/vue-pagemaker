@@ -1,18 +1,19 @@
 <template>
   <transition name="fade">
-    <div v-show="show" 
+    <div
+      v-show="show"
       class="absolute text-xs z-20 tooltip-box dropdown-menu-background border-t-4 border-secondary-300
           rounded-md py-2 shadow-lg tooltip-box w-32 text-center text-onSurface"
       role="alert"
     >
-    {{ $props.tooltip }}
+      {{ $props.tooltip }}
     </div>
   </transition>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
+import Vue from "vue";
+import Component from "vue-class-component";
 
 @Component({
   props: {
@@ -20,9 +21,9 @@ import Component from 'vue-class-component';
       default: false
     },
     tooltip: {
-      default: ''
-    },
-  },
+      default: ""
+    }
+  }
 })
 export default class ToolTip extends Vue {
   get show(): boolean {
@@ -32,7 +33,6 @@ export default class ToolTip extends Vue {
 </script>
 
 <style lang="postcss">
-
 .fade-enter-active {
   transition: opacity 0.5s;
 }
@@ -40,14 +40,14 @@ export default class ToolTip extends Vue {
 .fade-leave-active {
   transition: opacity 0.7s;
 }
-.fade-enter, .fade-leave-to  {
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
 }
 
 .tooltip-box {
-  height: auto; 
+  height: auto;
   right: -129px;
   top: 0%;
 }
-
 </style>

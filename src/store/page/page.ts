@@ -1,30 +1,28 @@
-import store from '@/store';
+import store from "@/store";
 import {
   Module,
   Mutation,
   Action,
   VuexModule,
-  getModule,
-} from 'vuex-module-decorators';
+  getModule
+} from "vuex-module-decorators";
 // import {
 //   PageData,
 //   StyleTypes,
 // } from '@/models/page/page';
-import {
-  PageElement, StyleTypes
-} from '@/classes/page-element/PageElement';
-import { PageContainer } from '@/classes/page-element/PageContainer/PageContainer';
-import { Style } from '@/models/styles/styles';
+import { PageElement, StyleTypes } from "@/classes/page-element/PageElement";
+import { PageContainer } from "@/classes/page-element/PageContainer/PageContainer";
+import { Style } from "@/models/styles/styles";
 import {
   ComponentTypesString,
-  ActionEvent,
-} from '@/models/components/base-component';
-import { BoxDimensionsInterface } from '@/models/components/box-dimension';
-import { Image } from '@/models/components/components';
-import { PageElementClasses } from '@/classes/page-element/factory/page-element-factory';
-import { ImageElement } from '@/classes/page-element/page-components/image-element/ImageElement';
-import { Notification } from '@/models/notifications/notifications';
-import { FirebaseDataBuilder } from '@/classes/page-element/firebase-data/FirebaseDataBuilder';
+  ActionEvent
+} from "@/models/components/base-component";
+import { BoxDimensionsInterface } from "@/models/components/box-dimension";
+import { Image } from "@/models/components/components";
+import { PageElementClasses } from "@/classes/page-element/factory/page-element-factory";
+import { ImageElement } from "@/classes/page-element/page-components/image-element/ImageElement";
+import { Notification } from "@/models/notifications/notifications";
+import { FirebaseDataBuilder } from "@/classes/page-element/firebase-data/FirebaseDataBuilder";
 
 export interface PageStateInterface {
   _pageId: string;
@@ -35,10 +33,10 @@ export interface PageStateInterface {
   _selectedComponentType: ComponentTypesString;
 }
 
-@Module({ name: 'pagestore', store, dynamic: true })
+@Module({ name: "pagestore", store, dynamic: true })
 class PageStore extends VuexModule implements PageStateInterface {
-  ROOT = 'ROOT';
-  public _pageId = '';
+  ROOT = "ROOT";
+  public _pageId = "";
   //stores all the elements that make up a page
   // public _pageElements: PageData[] = [];
   public _pageElements: PageElementClasses[] = [];
@@ -47,11 +45,11 @@ class PageStore extends VuexModule implements PageStateInterface {
   // show the toolbar for selecting edit // delete
   public _showEditDelete = false;
   // used to ensure only one component can be selected in the UI
-  public _selectedComponent = '';
+  public _selectedComponent = "";
   // holds the type of the selected component to be reactive
   public _selectedComponentType: ComponentTypesString = undefined;
   // create reactive content
-  public _editComponentContent = '';
+  public _editComponentContent = "";
 
   @Mutation
   private setPageId(pageId: string) {
@@ -63,14 +61,14 @@ class PageStore extends VuexModule implements PageStateInterface {
     if (element) {
       if (element.parentRef === this.ROOT) {
         this._pageElements.push(element);
-      } else 
-      { // component is nested within another
+      } else {
+        // component is nested within another
         if (this._pageElements.length > 0) {
-          const parentElement = this._pageElements.filter(elem => { 
-              if (elem) {
-                return elem.ref === element.parentRef;
-              }
-            })[0] as PageContainer;
+          const parentElement = this._pageElements.filter(elem => {
+            if (elem) {
+              return elem.ref === element.parentRef;
+            }
+          })[0] as PageContainer;
           parentElement.addNewElement(element);
         }
       }
@@ -90,10 +88,9 @@ class PageStore extends VuexModule implements PageStateInterface {
         });
       } else {
         const parentComponent = this._editedComponentRef.parent;
-        (parentComponent as PageContainer)
-          .deleteElement(
-            this._editedComponentRef.ref
-          );
+        (parentComponent as PageContainer).deleteElement(
+          this._editedComponentRef.ref
+        );
       }
     }
   }
@@ -118,7 +115,8 @@ class PageStore extends VuexModule implements PageStateInterface {
   @Mutation
   private setEditedComponentClass(classDef: string) {
     if (this._editedComponentRef) {
-      const component: PageElementClasses = this._editedComponentRef as PageElementClasses;
+      const component: PageElementClasses = this
+        ._editedComponentRef as PageElementClasses;
       if (component) {
         component.addClass(classDef);
       }
@@ -131,7 +129,8 @@ class PageStore extends VuexModule implements PageStateInterface {
   @Mutation
   private removeEditedComponentClass(classDef: string) {
     if (this._editedComponentRef) {
-      const component: PageElementClasses = this._editedComponentRef as PageElementClasses;
+      const component: PageElementClasses = this
+        ._editedComponentRef as PageElementClasses;
       if (component) {
         component.removeClass(classDef);
       }
@@ -146,15 +145,19 @@ class PageStore extends VuexModule implements PageStateInterface {
 
   @Mutation
   private setEditedComponentRef(component: PageElementClasses): void {
-    console.log('%c%s', 'color: #e57373', 'setEditedComponentRef');
+    console.log("%c%s", "color: #e57373", "setEditedComponentRef");
     this._editedComponentRef = undefined;
     this._editedComponentRef = component;
-    this._selectedComponent = component ? component.ref : '';
-    this._selectedComponentType = this._editedComponentRef ? this._editedComponentRef.type : undefined;
-    this._editComponentContent = this._editedComponentRef ? this._editedComponentRef.content : '';
+    this._selectedComponent = component ? component.ref : "";
+    this._selectedComponentType = this._editedComponentRef
+      ? this._editedComponentRef.type
+      : undefined;
+    this._editComponentContent = this._editedComponentRef
+      ? this._editedComponentRef.content
+      : "";
   }
-  
-  @Mutation 
+
+  @Mutation
   private setEditedComponentContent(content: string): void {
     if (this._editedComponentRef) {
       this._editedComponentRef.content = content;
@@ -170,7 +173,7 @@ class PageStore extends VuexModule implements PageStateInterface {
   @Mutation
   private setComponentImage(image: Image): void {
     if (this._editedComponentRef) {
-      if (this._editedComponentRef.type === 'image') {
+      if (this._editedComponentRef.type === "image") {
         (this._editedComponentRef as ImageElement).setImage(image);
       }
     }
@@ -201,39 +204,39 @@ class PageStore extends VuexModule implements PageStateInterface {
   //#region  Actions
   @Action
   public updatePageId(pageId: string) {
-    this.context.commit('setPageId', pageId)
+    this.context.commit("setPageId", pageId);
   }
 
   @Action
   public updateEditedComponentRef(element: PageElementClasses) {
-    this.context.commit('setEditedComponentRef', element);
+    this.context.commit("setEditedComponentRef", element);
   }
 
   @Action
   public updateShowEditDelete(show: boolean) {
-    this.context.commit('setShowEditDelete', show);
+    this.context.commit("setShowEditDelete", show);
   }
 
   @Action
   public addNewPageElement(element: PageElementClasses) {
-    this.context.commit('pushPageElement', element);
+    this.context.commit("pushPageElement", element);
   }
 
   @Action
   public deletePageElement() {
-    this.context.commit('deleteAPageElement');
+    this.context.commit("deleteAPageElement");
   }
 
   @Action
   public updateComponentImage(image: Image) {
-    this.context.commit('setComponentImage', image);
+    this.context.commit("setComponentImage", image);
   }
 
   @Action
   public updateBoxDimensionHeightandWidth(
     newDimensions: BoxDimensionsInterface
   ) {
-    this.context.commit('setBoxDimensionsHeightandWidth', newDimensions);
+    this.context.commit("setBoxDimensionsHeightandWidth", newDimensions);
   }
 
   @Action
@@ -248,22 +251,22 @@ class PageStore extends VuexModule implements PageStateInterface {
 
   @Action
   public deleteEditedComponentStyle(styleToRemove: StyleTypes): void {
-    this.context.commit('removeEditedComponentStyle', styleToRemove);
+    this.context.commit("removeEditedComponentStyle", styleToRemove);
   }
 
   @Action
   public updateEditedComponentStyles(newStyle: Style): void {
-    this.context.commit('setEditedComponentStyles', newStyle);
+    this.context.commit("setEditedComponentStyles", newStyle);
   }
 
   @Action
   public updateComponentClassProperties(classDef: string): void {
-    this.context.commit('setEditedComponentClass', classDef);
+    this.context.commit("setEditedComponentClass", classDef);
   }
 
   @Action
   public deleteClassFromEditedComponent(classDef: string): void {
-    this.context.commit('removeEditedComponentClass', classDef);
+    this.context.commit("removeEditedComponentClass", classDef);
   }
 
   @Action
@@ -273,7 +276,7 @@ class PageStore extends VuexModule implements PageStateInterface {
 
   @Action
   public updateEditedComponentActionEvent(actionEvent: ActionEvent) {
-    this.context.commit('setEditedComponentActionEvent', actionEvent);
+    this.context.commit("setEditedComponentActionEvent", actionEvent);
   }
 
   @Action
@@ -282,20 +285,20 @@ class PageStore extends VuexModule implements PageStateInterface {
     return new Promise((resolve, reject) => {
       const pageElements = this.pageElements;
       const pageId = this.PageId;
-      firebaseData.savePageData(pageElements, pageId)
-      .then(result => {
-        resolve(result);
-      })
-      .catch(err => {
-        reject(err);
-      })
+      firebaseData
+        .savePageData(pageElements, pageId)
+        .then(result => {
+          resolve(result);
+        })
+        .catch(err => {
+          reject(err);
+        });
     });
-   
   }
 
   @Action
   public updatePageElements(elements: PageElementClasses[]) {
-    this.context.commit('setPageElements', elements);
+    this.context.commit("setPageElements", elements);
   }
   // #region Actions
   // #region getters
@@ -314,7 +317,6 @@ class PageStore extends VuexModule implements PageStateInterface {
 
   public get editedComponentData(): string {
     return this._editComponentContent;
-
   }
 
   public get showEditDelete(): boolean {

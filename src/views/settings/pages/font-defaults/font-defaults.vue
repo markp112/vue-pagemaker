@@ -43,15 +43,19 @@
           <p
             :style="{
               fontFamily: $props.materialSettings.typography.fontName,
-              fontSize: $props.materialSettings.typography.fontSizeBody, 
+              fontSize: $props.materialSettings.typography.fontSizeBody
             }"
           >
-              <span class="block"> Font - {{ $props.materialSettings.typography.fontName }}</span>
-              <span class="block"> Size - {{ $props.materialSettings.typography.fontSizeBody }}</span>
-              <span class="bg-gray-400 border-gray-800 p-2 overflow-hidden block">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              </span>
-            </p>  
+            <span class="block">
+              Font - {{ $props.materialSettings.typography.fontName }}</span
+            >
+            <span class="block">
+              Size - {{ $props.materialSettings.typography.fontSizeBody }}</span
+            >
+            <span class="bg-gray-400 border-gray-800 p-2 overflow-hidden block">
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+            </span>
+          </p>
         </div>
       </section>
     </div>
@@ -59,9 +63,6 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-export default class FontDefaults extends Vue {
-
-}
-  
+import Vue from "vue";
+export default class FontDefaults extends Vue {}
 </script>

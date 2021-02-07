@@ -1,14 +1,14 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import home from '@/components/core/home/home.vue'
-import register from '@/components/auth/register/register.vue';
-import login from '@/components/auth/login/login.vue';
-import siteslist from '@/components/sites/sites-list.vue';
-import newSite from '@/components/sites/new-site.vue';
-import PageEditor from '@/views/pages/page.vue';
-import PageBuilder from '@/views/page-builders/page-builder-raw.vue';
-import SideBarIconEditor from '@/views/admin/sidebar-icon-editor/sidebar-icon-editor.vue';
-import SiteSettings  from '@/views/settings/index.vue';
+import home from "@/components/core/home/home.vue";
+import register from "@/components/auth/register/register.vue";
+import login from "@/components/auth/login/login.vue";
+import siteslist from "@/components/sites/sites-list.vue";
+import newSite from "@/components/sites/new-site.vue";
+import PageEditor from "@/views/pages/page.vue";
+import PageBuilder from "@/views/page-builders/page-builder-raw.vue";
+import SideBarIconEditor from "@/views/admin/sidebar-icon-editor/sidebar-icon-editor.vue";
+import SiteSettings from "@/views/settings/index.vue";
 
 Vue.use(VueRouter);
 
@@ -18,43 +18,32 @@ const routes = [
     name: "home",
     component: home,
     meta: {
-      breadcrumb: [
-        { name: 'home' }
-      ]
-    },
+      breadcrumb: [{ name: "home" }]
+    }
   },
   {
     path: "/register",
     name: "register",
     component: register,
     meta: {
-      breadcrumb: [
-        { name: 'home', link: 'home' },
-        { name: 'register' }
-      ]
-    },
+      breadcrumb: [{ name: "home", link: "home" }, { name: "register" }]
+    }
   },
   {
     path: "/login",
     name: "login",
     component: login,
     meta: {
-      breadcrumb: [
-        { name: 'home', link: 'home' },
-        { name: 'login' }
-      ]
-    },
+      breadcrumb: [{ name: "home", link: "home" }, { name: "login" }]
+    }
   },
   {
     path: "/sites",
     name: "sites",
     component: siteslist,
     meta: {
-      breadcrumb: [
-        { name: 'home', link: 'home' },
-        { name: 'sites' }
-      ]
-    },
+      breadcrumb: [{ name: "home", link: "home" }, { name: "sites" }]
+    }
   },
   {
     path: "/newSite",
@@ -62,23 +51,23 @@ const routes = [
     component: newSite,
     meta: {
       breadcrumb: [
-        { name: 'home', link: 'home' },
-        { name: 'sites', link: 'sites' },
-        { name: 'new site' }
+        { name: "home", link: "home" },
+        { name: "sites", link: "sites" },
+        { name: "new site" }
       ]
-    },
+    }
   },
   {
     path: "/pageList",
     name: "pageList",
-    component: () => import('@/views/pages/page-list.vue'),
+    component: () => import("@/views/pages/page-list.vue"),
     meta: {
       breadcrumb: [
-        { name: 'home', link: 'home' },
-        { name: 'sites', link: 'sites' },
-        { name: 'pages' }
+        { name: "home", link: "home" },
+        { name: "sites", link: "sites" },
+        { name: "pages" }
       ]
-    },
+    }
   },
   {
     path: "/settings",
@@ -86,11 +75,11 @@ const routes = [
     component: SiteSettings,
     meta: {
       breadcrumb: [
-        { name: 'home', link: 'home' },
-        { name: 'sites', link: 'sites' },
-        { name: 'settings', link: 'settings' },
+        { name: "home", link: "home" },
+        { name: "sites", link: "sites" },
+        { name: "settings", link: "settings" }
       ]
-    },
+    }
   },
   {
     path: "/pageEditor/:title",
@@ -98,12 +87,12 @@ const routes = [
     component: PageEditor,
     meta: {
       breadcrumb: [
-        { name: 'home', link: 'home' },
-        { name: 'sites', link: 'sites' },
-        { name: 'page list', link: 'pageList' },
-        { name: 'page-editor' }
+        { name: "home", link: "home" },
+        { name: "sites", link: "sites" },
+        { name: "page list", link: "pageList" },
+        { name: "page-editor" }
       ]
-    },
+    }
   },
   {
     path: "/pagebuilder/:title",
@@ -111,24 +100,21 @@ const routes = [
     component: PageBuilder,
     meta: {
       breadcrumb: [
-        { name: 'home', link: 'home' },
-        { name: 'sites', link: 'sites' },
-        { name: 'page list', link: 'pageList' },
-        { name: 'page-Builder' }
+        { name: "home", link: "home" },
+        { name: "sites", link: "sites" },
+        { name: "page list", link: "pageList" },
+        { name: "page-Builder" }
       ]
-    },
+    }
   },
   {
     path: "/iconeditor",
     name: "icon-editor",
     component: SideBarIconEditor,
     meta: {
-      breadcrumb: [
-        { name: 'home', link: 'home' },
-        { name: 'icon editor' }
-      ]
-    },
-  },
+      breadcrumb: [{ name: "home", link: "home" }, { name: "icon editor" }]
+    }
+  }
 ];
 
 const router = new VueRouter({
@@ -138,8 +124,8 @@ const router = new VueRouter({
 });
 
 export interface BreadcrumbLink {
-  name: string,
-  link?: string,
+  name: string;
+  link?: string;
 }
 
 export default router;

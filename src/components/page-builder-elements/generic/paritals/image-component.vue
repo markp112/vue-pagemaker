@@ -1,36 +1,51 @@
 <template>
-<section>
-  <div 
-    ref="imageContainer"
-    class="handle overflow-hidden object-contain " 
-    :id="$props.thisComponent.ref"
-    @click.prevent="onClick($event)"
-  >
-    <img
-      ref="imageElmnt"
-      class="absolute"
-      :src="getData"
-      :class="{ 'cursor-pan': draggingStarted }"
-      @mousedown="onDraggingStarted($event)"
-      @mouseup="onDraggingStop($event)"
-    />
-    <resizeable
-      :isActive="isActive"
-      :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"
-      @resizeStarted="resizeStarted($event)"
-      @onResize="resizeImage($event)"
+  <section>
+    <div
+      ref="imageContainer"
+      class="handle overflow-hidden object-contain "
+      :id="$props.thisComponent.ref"
+      @click.prevent="onClick($event)"
     >
-    </resizeable>
-  </div>
-    <div class="w-full bg-site-secondary-light bg-opacity-50 h-10 absolute bottom-0 flex flex-row justify-center p-1 ">
-      <img :src="getPath('zoom_out-32.png')" class=" z-30 h-8 w-8 ml-2" @click="zoom($event, 'out')">
-      <img :src="getPath('zoom_in-32.png')" class=" z-30 h-8 w-8 ml-4" @click="zoom($event, 'in')">
-      <img :src="getPath('100-32.png')" class=" z-30 h-8 w-8 ml-4" @click="zoom($event, '100')">
+      <img
+        ref="imageElmnt"
+        class="absolute"
+        :src="getData"
+        :class="{ 'cursor-pan': draggingStarted }"
+        @mousedown="onDraggingStarted($event)"
+        @mouseup="onDraggingStop($event)"
+      />
+      <resizeable
+        :isActive="isActive"
+        :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"
+        @resizeStarted="resizeStarted($event)"
+        @onResize="resizeImage($event)"
+      >
+      </resizeable>
     </div>
-</section>
+    <div
+      class="w-full bg-site-secondary-light bg-opacity-50 h-10 absolute bottom-0 flex flex-row justify-center p-1 "
+    >
+      <img
+        :src="getPath('zoom_out-32.png')"
+        class=" z-30 h-8 w-8 ml-2"
+        @click="zoom($event, 'out')"
+      />
+      <img
+        :src="getPath('zoom_in-32.png')"
+        class=" z-30 h-8 w-8 ml-4"
+        @click="zoom($event, 'in')"
+      />
+      <img
+        :src="getPath('100-32.png')"
+        class=" z-30 h-8 w-8 ml-4"
+        @click="zoom($event, '100')"
+      />
+    </div>
+  </section>
 </template>
 
-// <script lang="ts">
+//
+<script lang="ts">
 // import Vue from 'vue'
 // import { GenericComponentMixins, MousePosition } from '../mixins/generic-components-mixin';
 // import Resize from '@/components/base/resizeable/resize.vue';
@@ -198,7 +213,7 @@
 //   }
 
 //   zoom(event: MouseEvent, direction: string) {
-//     const scale = 1.1; 
+//     const scale = 1.1;
 //     const component = this.$props.thisComponent;
 //     const boxDimensions = component.boxDimensions;
 //     let newHeight = boxDimensions.height.value;
@@ -235,12 +250,12 @@
 //   }
 
 // }
-// </script>
+//
+</script>
 
 <style scoped>
 .handle {
   position: relative;
   box-sizing: border-box;
 }
-
 </style>

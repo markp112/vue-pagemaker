@@ -5,44 +5,44 @@ import {
   height,
   left,
   top,
-  ActionEvent,
-} from '@/models/components/base-component';
+  ActionEvent
+} from "@/models/components/base-component";
 import {
   BoxDimensions,
   BoxDimensionsInterface
-} from '@/models/components/box-dimension';
+} from "@/models/components/box-dimension";
 import {
   ComponentTypes,
   Dimensions,
   LOREMIPSUM
-} from '@/models/components/components';
-import { Style } from '@/models/styles/styles';
-import { ButtonElement } from '../page-components/button-element/ButtonElement';
-import { PageContainer } from '../PageContainer/PageContainer';
-import { PageElement } from '../PageElement';
-import { TextElement } from '../page-components/text-element/TextElement';
-import { ImageElement } from '../page-components/image-element/ImageElement';
-import { Units } from '@/models/enums/units/units';
+} from "@/models/components/components";
+import { Style } from "@/models/styles/styles";
+import { ButtonElement } from "../page-components/button-element/ButtonElement";
+import { PageContainer } from "../PageContainer/PageContainer";
+import { PageElement } from "../PageElement";
+import { TextElement } from "../page-components/text-element/TextElement";
+import { ImageElement } from "../page-components/image-element/ImageElement";
+import { Units } from "@/models/enums/units/units";
 
 export class PageElementBuilder {
-  private _name = ''; //name of the component
-  private _ref: ComponentRef = ''; // unique ref of this component in the Dom
-  private _componentHTMLTag = ''; // component tag
+  private _name = ""; //name of the component
+  private _ref: ComponentRef = ""; // unique ref of this component in the Dom
+  private _componentHTMLTag = ""; // component tag
   private _isContainer = false; // can contain  other elements
   private _styles: Style[] = []; // css styles
   private _parent!: PageContainer; // parent Object
-  private _parentRef: ComponentRef = ''; // string ref to the parent
-  private _classDefinition = '';
+  private _parentRef: ComponentRef = ""; // string ref to the parent
+  private _classDefinition = "";
   private _type: ComponentTypesString = undefined; // what is this component as in image text etc
   private _data: ComponentTypes = undefined;
   private _boxDimensions: BoxDimensions = new BoxDimensions(
     width,
     height,
     top,
-    left,
+    left
   );
-  private _actionEvent: ActionEvent = new ActionEvent('Navigation', '');
-  private _content ='';
+  private _actionEvent: ActionEvent = new ActionEvent("Navigation", "");
+  private _content = "";
   private _naturalSize!: Dimensions;
   private _scaledSize!: Dimensions;
   private _containerDimensions!: Dimensions;
@@ -51,7 +51,7 @@ export class PageElementBuilder {
     this._name = name;
     return this;
   }
-  
+
   setRef(ref: string) {
     this._ref = ref;
     return this;
@@ -76,7 +76,7 @@ export class PageElementBuilder {
     this._parent = parent;
     return this;
   }
- 
+
   setParentRef(parentRef: string): PageElementBuilder {
     this._parentRef = parentRef;
     return this;
@@ -97,13 +97,15 @@ export class PageElementBuilder {
     return this;
   }
 
-  setBoxDimensions(boxDimensionsData: BoxDimensionsInterface): PageElementBuilder {
+  setBoxDimensions(
+    boxDimensionsData: BoxDimensionsInterface
+  ): PageElementBuilder {
     const boxDimensions = new BoxDimensions(
       boxDimensionsData.width,
       boxDimensionsData.height,
       boxDimensionsData.top,
-      boxDimensionsData.left,
-    )
+      boxDimensionsData.left
+    );
     this._boxDimensions = boxDimensions;
     return this;
   }
@@ -128,7 +130,7 @@ export class PageElementBuilder {
       height: scaledSize.height,
       width: scaledSize.width,
       units: scaledSize.units
-    }
+    };
     return this;
   }
 
@@ -136,7 +138,7 @@ export class PageElementBuilder {
     this._containerDimensions = dimensions;
     return this;
   }
-  
+
   public get name(): string {
     return this._name;
   }
@@ -201,20 +203,20 @@ export class PageElementBuilder {
     return this._containerDimensions;
   }
 
-// required to create an empty container / element when initialising props.
+  // required to create an empty container / element when initialising props.
   public build(): PageElement {
     return new PageElement(this);
   }
 
   public buildAButton(): ButtonElement {
-    if (this._content === '') {
-      this._content = 'click me';
+    if (this._content === "") {
+      this._content = "click me";
     }
     return new ButtonElement(this);
   }
 
   public buildATextElement(): TextElement {
-    if (this._content === '') {
+    if (this._content === "") {
       this._content = LOREMIPSUM;
     }
     return new TextElement(this);
@@ -225,22 +227,23 @@ export class PageElementBuilder {
     const DEFAULT_WIDTH = 100;
     const NATURAL_HEIGHT = 300;
     const NATURAL_WIDTH = 200;
-    if (this._content === '') {
-      this._content = 'https://firebasestorage.googleapis.com/v0/b/page-maker-69fb1.appspot.com/o/assets%2Fimages%2Fimageplaceholder.png?alt=media&token=149d3e60-0fc4-49de-9e23-5fea91458240';
+    if (this._content === "") {
+      this._content =
+        "https://firebasestorage.googleapis.com/v0/b/page-maker-69fb1.appspot.com/o/assets%2Fimages%2Fimageplaceholder.png?alt=media&token=149d3e60-0fc4-49de-9e23-5fea91458240";
       this._naturalSize = {
         width: NATURAL_WIDTH,
         height: NATURAL_HEIGHT,
-        units: Units.px,
+        units: Units.px
       };
       this._containerDimensions = {
         width: DEFAULT_WIDTH,
         height: DEFAULT_HEIGHT,
-        units: Units.px,
+        units: Units.px
       };
       this._scaledSize = {
         width: DEFAULT_WIDTH,
         height: DEFAULT_HEIGHT,
-        units: Units.px,
+        units: Units.px
       };
     }
     return new ImageElement(this);

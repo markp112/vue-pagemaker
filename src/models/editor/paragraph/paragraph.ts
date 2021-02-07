@@ -1,8 +1,8 @@
-import Guid from '@/utils//guid';
+import Guid from "@/utils//guid";
 
 export class Paragraph {
   _hasUnderline: boolean;
-  _id = '';
+  _id = "";
 
   constructor(hasUnderline: boolean, id = Guid.newSmallGuid()) {
     this._hasUnderline = hasUnderline;

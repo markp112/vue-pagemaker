@@ -2,12 +2,12 @@ import {
   SiteDefaultsInterface,
   siteDefaultSettings,
   MaterialColourInterface,
-  TypographyInterface,
-} from '@/views/settings/pages/site-defaults/models/site-defaults';
-import { ServicesModule } from '@/store/services/services';
-import { AuthModule } from '@/store/auth/auth';
-import { Notification } from '@/models/notifications/notifications';
-import { SitesModule } from '@/store/sites/sites';
+  TypographyInterface
+} from "@/views/settings/pages/site-defaults/models/site-defaults";
+import { ServicesModule } from "@/store/services/services";
+import { AuthModule } from "@/store/auth/auth";
+import { Notification } from "@/models/notifications/notifications";
+import { SitesModule } from "@/store/sites/sites";
 
 export class SiteDefaults implements SiteDefaultsInterface {
   private _colours: MaterialColourInterface = siteDefaultSettings.colours;
@@ -15,7 +15,7 @@ export class SiteDefaults implements SiteDefaultsInterface {
   private _siteId = SitesModule.getCurrentSiteId;
   private _userId = AuthModule.currentUser.id;
   private _isLoaded = false;
-  
+
   private static instance: SiteDefaults;
 
   public static getInstance(): SiteDefaults {
@@ -45,35 +45,34 @@ export class SiteDefaults implements SiteDefaultsInterface {
     return this._userId;
   }
 
-
-  public loadDefaults():Promise<Notification> {
+  public loadDefaults(): Promise<Notification> {
     const data = {
       userId: this.userId,
-      siteId: this.siteId,
-    }
+      siteId: this.siteId
+    };
     return new Promise((resolve, reject) => {
       ServicesModule.firestoreGetSiteDefaultSettings(data)
-      .then (response => {
-        const siteDefaults: SiteDefaultsInterface = response as SiteDefaultsInterface;
-        this._colours = siteDefaults.colours;
-        this._typography = siteDefaults.typography;
-        this._isLoaded = true;
-        const notification: Notification = {
-          message: 'Sucess',
-          status: 'ok',
-        }
-        resolve(notification)
-      })
-      .catch(err => {
-        const notification = err as Notification;
-        notification.status = 'Error';
-        // if error load the default settings
-        this._colours = siteDefaultSettings.colours;
-        this._typography = siteDefaultSettings.typography;
-        this._isLoaded = false;
-        reject(notification);
-      })
-    })
+        .then(response => {
+          const siteDefaults: SiteDefaultsInterface = response as SiteDefaultsInterface;
+          this._colours = siteDefaults.colours;
+          this._typography = siteDefaults.typography;
+          this._isLoaded = true;
+          const notification: Notification = {
+            message: "Sucess",
+            status: "ok"
+          };
+          resolve(notification);
+        })
+        .catch(err => {
+          const notification = err as Notification;
+          notification.status = "Error";
+          // if error load the default settings
+          this._colours = siteDefaultSettings.colours;
+          this._typography = siteDefaultSettings.typography;
+          this._isLoaded = false;
+          reject(notification);
+        });
+    });
   }
 
   public saveDefaults(siteId: string, userId: string): Promise<Notification> {
@@ -82,19 +81,15 @@ export class SiteDefaults implements SiteDefaultsInterface {
         colours: this._colours,
         typography: this._typography,
         siteId: siteId,
-        userId: AuthModule.currentUser.id,
-      },
+        userId: AuthModule.currentUser.id
+      }
     };
     return new Promise((resolve, reject) => {
       ServicesModule.firestoreSaveSiteDefaults(data)
         .then(notificaton => {
           resolve(notificaton);
         })
-        .catch (notification => 
-          reject(notification))
-    })
+        .catch(notification => reject(notification));
+    });
   }
-
 }
-
-

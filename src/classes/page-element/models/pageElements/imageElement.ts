@@ -1,5 +1,5 @@
-import { Dimensions, Location } from '@/models/components/components';
-import { PageElementFirebaseData, PageElementInterface } from './pageElement';
+import { Dimensions, Location } from "@/models/components/components";
+import { PageElementFirebaseData, PageElementInterface } from "./pageElement";
 
 export interface ImageElementInterface extends PageElementInterface {
   naturalSize: Dimensions;
@@ -11,11 +11,10 @@ export interface ImageElementInterface extends PageElementInterface {
 }
 
 export interface ImageElementFirebaseData extends PageElementFirebaseData {
-  naturalSize: Dimensions; /** @description natural size of the image */
-  scaledSize: Dimensions; /** @description - this is the background image dimension */
+  naturalSize: Dimensions /** @description natural size of the image */;
+  scaledSize: Dimensions /** @description - this is the background image dimension */;
   ratio: number;
   maintainRatio: boolean;
   containerDimensions: Dimensions;
   location: Location;
 }
-

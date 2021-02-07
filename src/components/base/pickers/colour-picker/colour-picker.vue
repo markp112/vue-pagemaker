@@ -2,50 +2,48 @@
   <div>
     <div class="flex flex-row justify-start z-50" @mouseleave="onMouseLeave">
       <colour-palette :hue="hue" @colour="setColour"></colour-palette>
-      <colour-slider  @colour="setHue"></colour-slider>
+      <colour-slider @colour="setHue"></colour-slider>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import { Emit } from 'vue-property-decorator';
-import ColourPalette from './colour-palette.vue';
-import ColourSlider from './colour-slider.vue';
-import { Colour } from '@/classes/colour/singleton-colour';
+import Vue from "vue";
+import Component from "vue-class-component";
+import { Emit } from "vue-property-decorator";
+import ColourPalette from "./colour-palette.vue";
+import ColourSlider from "./colour-slider.vue";
+import { Colour } from "@/classes/colour/singleton-colour";
 
 @Component({
   components: {
-    'colour-slider': ColourSlider,
-    'colour-palette': ColourPalette,
-  },
+    "colour-slider": ColourSlider,
+    "colour-palette": ColourPalette
+  }
 })
 export default class ColourPicker extends Vue {
-  name = 'colour-picker';
-  hue = '#000000';
+  name = "colour-picker";
+  hue = "#000000";
   colourStore: Colour = Colour.getInstance();
 
-  @Emit('colour')
+  @Emit("colour")
   setColour(rgbColour: string) {
     this.colourStore.rgbColour = rgbColour;
     return rgbColour;
   }
 
   @Emit("onMouseLeave")
-  onMouseLeave()
-  {
+  onMouseLeave() {
     return;
   }
 
   setHue(hue: string) {
     this.hue = hue;
   }
-
 }
 </script>
 
-<style lang="postcss" >
+<style lang="postcss">
 :host {
   display: block;
   width: auto;
@@ -74,10 +72,9 @@ export default class ColourPicker extends Vue {
 
 .text {
   flex: 1;
-  font-size: 14px;   
+  font-size: 14px;
   font-family: Montserrat;
   line-height: 24px;
-  
 }
 
 .text-style {
@@ -96,9 +93,7 @@ export default class ColourPicker extends Vue {
   box-shadow: inset 10px 15px 39px -6px rgba(25, 11, 151, 0.58);
   cursor: pointer;
   &:hover {
-      background-color: rgb(189, 173, 173);
+    background-color: rgb(189, 173, 173);
   }
-
 }
-
 </style>

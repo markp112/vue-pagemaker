@@ -1,12 +1,13 @@
-<template>  
+<template>
   <section>
-    <div class="sidebar-button-panel colour-select"> 
+    <div class="sidebar-button-panel colour-select">
       <div class="colour-select-radios" v-if="$props.showLabels">
         <div class="sidebar-radio-container">
-          <label for="background"
-            class="mt-1" 
+          <label
+            for="background"
+            class="mt-1"
             :class="{
-              'text-secondary-300': textBackgroundorBorder === 'background', 
+              'text-secondary-300': textBackgroundorBorder === 'background'
             }"
           >
             background
@@ -20,10 +21,11 @@
           />
         </div>
         <div class="sidebar-radio-container">
-          <label for="font"
+          <label
+            for="font"
             class="mt-1"
             :class="{
-              'text-secondary-300': textBackgroundorBorder === 'color',
+              'text-secondary-300': textBackgroundorBorder === 'color'
             }"
           >
             font
@@ -38,11 +40,11 @@
           />
         </div>
         <div class="sidebar-radio-container">
-          <label 
+          <label
             for="border"
             class="mt-1"
             :class="{
-                'text-secondary-300': textBackgroundorBorder === 'border-color',
+              'text-secondary-300': textBackgroundorBorder === 'border-color'
             }"
           >
             border
@@ -56,43 +58,49 @@
           />
         </div>
       </div>
-  
       <colour-dropdown
         tooltip="From Palette"
-        @onColourChange="onColourChange"
+        @onColourChange="onColourChange($event)"
       >
-        
       </colour-dropdown>
     </div>
-  </section>        
+  </section>
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import ColourDropdown from '@/components/base/pickers/colour-picker/colour-dropdown.vue';
-import { BackgroundBorderForeground, Colour } from '@/classes/colour/singleton-colour';
-import { Emit } from 'vue-property-decorator';
-import { StyleElement } from '../../../../classes/text-attributes/text-attributes';
-import { SidebarButtonEventManager } from '@/classes/sidebarButtonEventManager/sidebarButtonEventManager';
-import ColourPaletteSidebar from '@/components/base/pickers/colour-picker/colour-palette-sidebar/colour-palette-sidebar.vue';
-export type FlexAlignment = 'vertical' | 'horizontal';
+import Vue from "vue";
+import Component from "vue-class-component";
+import ColourDropdown from "@/components/base/pickers/colour-picker/colour-dropdown.vue";
+import {
+  BackgroundBorderForeground,
+  Colour
+} from "@/classes/colour/singleton-colour";
+import { Emit } from "vue-property-decorator";
+import { StyleElement } from "../../../../classes/text-attributes/text-attributes";
+import { SidebarButtonEventManager } from "@/classes/sidebarButtonEventManager/sidebarButtonEventManager";
+import ColourPaletteSidebar from "@/components/base/pickers/colour-picker/colour-palette-sidebar/colour-palette-sidebar.vue";
+export type FlexAlignment = "vertical" | "horizontal";
 
 @Component({
   components: {
-    'colour-dropdown': ColourDropdown,
-    'colour-palette-sidebar': ColourPaletteSidebar,
+    "colour-dropdown": ColourDropdown,
+    "colour-palette-sidebar": ColourPaletteSidebar
   },
   props: {
-    showLabels: { default: (): boolean => { return false; }},
-    flexAlignment: { default: (): FlexAlignment => {
-          return 'vertical';
-      } 
+    showLabels: {
+      default: (): boolean => {
+        return false;
+      }
     },
-  },
+    flexAlignment: {
+      default: (): FlexAlignment => {
+        return "vertical";
+      }
+    }
+  }
 })
-export default  class ColourSelect extends Vue {
-  textBackgroundorBorder: BackgroundBorderForeground = 'color';
+export default class ColourSelect extends Vue {
+  textBackgroundorBorder: BackgroundBorderForeground = "color";
   colour: Colour = Colour.getInstance();
 
   onRadioChange(bbf: BackgroundBorderForeground) {
@@ -101,74 +109,70 @@ export default  class ColourSelect extends Vue {
   }
 
   @Emit("onColourChange")
-  onColourChange() {
+  onColourChange(colour: string) {
+    console.log("%c⧭", "color: #00bf00", colour);
     const style: StyleElement = {
       styleName: this.textBackgroundorBorder,
-      value: this.colour.rgbColour,
-      units: 'px',
-    }
+      value: colour,
+      units: "px"
+    };
     const eventManager = SidebarButtonEventManager.getInstance();
-    eventManager.applyValue('colour', style);
+    eventManager.applyValue("colour", style);
     eventManager.updateEditedComponent();
-    return this.colour.rgbColour;
-  }
-
-  onColourPickerChange(colour: string) {
-    this.colour.rgbColour = colour;
-    this.onColourChange();
+    return colour;
   }
 
   getContainerClass() {
-    if (this.$props.flexAlignment === 'vertical') {
-      return 'flex flex-col justify-start w-3/12';
+    if (this.$props.flexAlignment === "vertical") {
+      return "flex flex-col justify-start w-3/12";
     } else {
-      return 'flex flex-row justify-evenly w-4/12 ml-4';
+      return "flex flex-row justify-evenly w-4/12 ml-4";
     }
   }
 
   getElementClass() {
-     if (this.$props.flexAlignment === 'vertical') {
-      return 'mt-2';
+    if (this.$props.flexAlignment === "vertical") {
+      return "mt-2";
     } else {
-      return 'ml-2';
+      return "ml-2";
     }
   }
 }
 </script>
 
 <style lang="postcss" scoped>
-  .colour-select {}
+.colour-select {
+}
 
-  .colour-select-radios {
-    @apply flex;
+.colour-select-radios {
+  @apply flex;
+  @apply flex-col;
+  @apply justify-start;
+  @apply flex-nowrap;
+  @apply w-9/12;
+  @apply p-1;
+  @apply mt-0;
+  @apply leading-none;
+}
+
+@screen md {
+  .colour-select {
     @apply flex-col;
     @apply justify-start;
-    @apply flex-nowrap;
+  }
+
+  .colour-select-radios {
+    @apply w-full;
+  }
+}
+@screen lg {
+  .colour-select {
+    @apply flex-row;
+    @apply justify-start;
+  }
+
+  .colour-select-radios {
     @apply w-9/12;
-    @apply p-1;
-    @apply mt-0;
-    @apply leading-none;
   }
-
-  @screen md {
-     .colour-select {
-      @apply flex-col;
-      @apply justify-start;
-     }
-
-     .colour-select-radios {
-       @apply w-full;
-     }
-  }
-  @screen lg {
-    .colour-select {
-      @apply flex-row;
-      @apply justify-start;
-     }
-
-     .colour-select-radios {
-       @apply w-9/12;
-     }
-  }
-  
+}
 </style>
