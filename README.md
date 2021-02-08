@@ -6,7 +6,6 @@ It uses Firebase as the backend to store the site being created, this includes d
 
 ## installation
 
-1 Clone the repo from the main branch, not master.
-2 run npm install
-3 An account will need to created on google firebase with the secrets saved to src/firebase/secrets.ts
-
+1. Clone the repo from the main branch, not master.
+2. run npm install
+3. An account will need to created on google firebase with the secrets saved to src/firebase/secrets.ts

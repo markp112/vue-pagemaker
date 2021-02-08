@@ -1,7 +1,7 @@
 <template>
   <ul
     v-if="isShowMe"
-    class="w-20 bg-gray-800 p-2 z-10 flex flex-row flex-wrap justify-start shadow-lg rounded-md absolute "
+    class="w-24 bg-gray-800 p-2 z-10 flex flex-row flex-wrap justify-start shadow-lg rounded-md absolute "
   >
     <li v-for="(icon, idx) in icons" :key="idx" class="icon-list ">
       <icon-image
@@ -35,21 +35,20 @@ export default class IconPicker extends Vue {
 
   buildIcons() {
     const iconBuilder = new IconBuilder();
-    this.icons.push(iconBuilder.buildFontAwesomeIcon("home", "fas"));
-    this.icons.push(iconBuilder.buildFontAwesomeIcon("question", "fas"));
-    this.icons.push(iconBuilder.buildFontAwesomeIcon("question-circle", "fas"));
-    this.icons.push(iconBuilder.buildFontAwesomeIcon("blog", "fas"));
+    this.icons.push(iconBuilder.buildImageIcon(`home-32.png`, `group`));
+    this.icons.push(iconBuilder.buildImageIcon(`faq-32.png`, `group`));
+    this.icons.push(iconBuilder.buildImageIcon(`help-32.png`, `group`));
+    this.icons.push(iconBuilder.buildImageIcon(`blog-32.png`, `group`));
     this.icons.push(iconBuilder.buildImageIcon(`compass-32.png`, `group`));
-    this.icons.push(iconBuilder.buildFontAwesomeIcon("photo-video", "fas"));
-    this.icons.push(iconBuilder.buildFontAwesomeIcon("camera", "fas"));
-    this.icons.push(iconBuilder.buildFontAwesomeIcon("images", "fas"));
+    this.icons.push(iconBuilder.buildImageIcon(`video_library2-32.png`, `group`));
+    this.icons.push(iconBuilder.buildImageIcon(`camera-32.png`, `group`));
+    this.icons.push(iconBuilder.buildImageIcon(`camera_view-32.png`, `group`));
+    this.icons.push(iconBuilder.buildImageIcon(`gallery-32.png`, `group`));
     this.icons.push(iconBuilder.buildImageIcon(`image-32.png`, `group`));
-    this.icons.push(iconBuilder.buildFontAwesomeIcon("id-card", "fas"));
-    this.icons.push(iconBuilder.buildFontAwesomeIcon("phone", "fas"));
-    this.icons.push(iconBuilder.buildFontAwesomeIcon("envelope", "fas"));
-    this.icons.push(iconBuilder.buildFontAwesomeIcon("align-justify", "fas"));
-    this.icons.push(iconBuilder.buildFontAwesomeIcon("clone", "fas"));
-    this.icons.push(iconBuilder.buildFontAwesomeIcon("bahai", "fas"));
+    this.icons.push(iconBuilder.buildImageIcon(`id-32.png`, `group`));
+    this.icons.push(iconBuilder.buildImageIcon(`phone_vintage-32.png`, `group`));
+    this.icons.push(iconBuilder.buildImageIcon(`phone-32.png`, `group`));
+    this.icons.push(iconBuilder.buildImageIcon(`envelope-32.png`, `group`));
     this.icons.push(iconBuilder.buildImageIcon(`icons8-page-32.png`, "Page"));
     this.icons.push(
       iconBuilder.buildImageIcon(`icons8-group-objects-32.png`, "group")
