@@ -104,7 +104,6 @@ export default class ImageComponentBackground extends mixins(
   draggingStarted = false;
   isResizing = true;
   // isZoomed = false;
-
   parentContainer: HTMLDivElement = this.$refs[
     this.HTML_IMAGE_PARENT
   ] as HTMLDivElement;
@@ -196,9 +195,6 @@ export default class ImageComponentBackground extends mixins(
       boxProperties.clientX,
       boxProperties.clientY,
       this.HTML_IMAGE_PARENT
-    );
-    const resizedDimensions = this.imageManipulator.resize(
-      currentMousePosition
     );
     this.parentContainer.style.height =
       this.imageManipulator.imageElement.containerDimensions.height + "px";

@@ -35,7 +35,7 @@
     "src/**/*.vue",
     "tests/**/*.ts",
     "tests/**/*.tsx"
-  ],
+, "src/stories/components/page-builder-elements/generic/partials/text-component/textdata.stories.js"  ],
   "exclude": [
     "node_modules"
   ]

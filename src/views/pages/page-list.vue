@@ -15,16 +15,11 @@
       <li v-for="page in pageList" :key="page.name" class="">
         <div class="flex flex-row justify-start">
           <span
-            class="hover:bg-site-secondary-light hover:text-accent1 w-11/12 p-1 mt-1 flex flex-row justify-evenly cursor-pointer rounded-md"
+            class="hover:bg-site-secondary-light hover:text-accent1 w-11/12 p-1 mt-1 flex flex-row justify-evenly items-center cursor-pointer rounded-md"
             @click="pageRowClick(page.name)"
           >
-            <span class="w-1/12">
-              <font-awesome-icon
-                v-if="page.icon.icon !== ''"
-                :icon="page.icon.icon"
-                :prefix="page.icon.prefix"
-              >
-              </font-awesome-icon>
+            <span class="w-8 shadow-md">
+              <img :src="getIcon(page.icon)" alt="">
             </span>
             <span class="w-2/12">
               {{ page.name }}
@@ -43,7 +38,7 @@
             src="@/assets/icons/pencil-24.png"
             alt="Edit pencil"
             @click="editPencilClick(page.name)"
-            class="w-8 hover:shadow-xl cursor-pointer"
+            class="w-8 h-8 hover:shadow-xl cursor-pointer "
           />
         </div>
       </li>
@@ -76,6 +71,11 @@ export default class PageList extends Vue {
   created() {
     this.siteId = SitesModule.getCurrentSiteId;
     // PagesModule.loadPages();
+  }
+
+  getIcon(iconName: string): string {
+    const path = require.context("@/assets/icons", false, /\.png$/);
+    return path(`./${iconName}`);
   }
 
   mounted() {

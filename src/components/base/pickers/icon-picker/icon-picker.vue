@@ -7,7 +7,7 @@
       <icon-image
         :icon="icon"
         classDef="icon-picker"
-        @iconClick="iconClicked"
+        @iconClick="iconClicked(icon)"
       ></icon-image>
     </li>
   </ul>
@@ -71,7 +71,7 @@ export default class IconPicker extends Vue {
   }
 
   @Emit("icon-clicked")
-  iconClicked(icon: IconInterface) {
+  iconClicked(icon: string) {
     ComponentPropsModule.toggleIconPicker(false);
     return icon;
   }

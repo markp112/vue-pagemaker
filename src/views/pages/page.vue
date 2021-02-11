@@ -17,7 +17,7 @@
         placeholder="e.g Home, Blog Home and must be unique"
       />
       <label for="icon">Select Icon</label>
-      <div>
+      <div class="flex flex-row justify-start">
         <span
           class="h-8 w-8 bg-accent1 text-center font-bold align-middle border cursor-pointer relative inline-block"
           @click="iconPickerClicked()"
@@ -25,19 +25,9 @@
           ...
         </span>
         <span>
-          <div v-if="page.icon !== ''">
-            <font-awesome-icon
-              v-if="!page.icon.isImagge"
-              class="ml-2 inline-block text-lg align-middle"
-              :icon="page.icon.icon"
-              :prefix="page.icon.prefix"
-              name="icon"
-            >
-            </font-awesome-icon>
-            <img v-if="page.icon.isImagge" :src="page.icon.path" />
-          </div>
+        <img :src="getIcon(page.icon)" alt="">
         </span>
-        <icon-picker @icon-clicked="iconClick" id="icon"> </icon-picker>
+        <icon-picker @icon-clicked="iconClick($event)" id="icon"> </icon-picker>
       </div>
       <label for="created">Created:</label>
       <datepicker :value="page.created" id="created" name="created">
@@ -57,8 +47,8 @@
         />
       </div>
       <submit-cancel
-        v-on:cancelClicked="cancelClick"
-        v-on:saveClicked="saveClick()"
+        @cancelClicked="cancelClick"
+        @saveClicked="saveClick()"
       >
       </submit-cancel>
       <invalid-form :formErrors="formErrors"></invalid-form>
@@ -71,7 +61,6 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import { Page } from "@/models/pages/pages";
 import IconPicker from "@/components/base/pickers/icon-picker/icon-picker.vue";
-import { Icon } from "../../models/font-awesome/icon";
 import InvalidForm from "@/components/base/notifications/invalid-form.vue";
 import { Notification } from "@/models/notifications/notifications";
 import {
@@ -84,6 +73,7 @@ import { TimeStamp, formatTimeStampAsDate } from "@/models/Types/generic-types";
 import { SnackbarModule } from "@/store/snackbar/snackbar";
 import { PagesModule } from "@/store/pages/pages";
 import { ComponentPropsModule } from "@/store/component-props/component-props";
+import { Icon } from "@/models/font-awesome/icon";
 
 @Component({
   components: {
@@ -110,12 +100,18 @@ export default class PageEditor extends Vue {
     this.formErrors = [];
   }
 
+  getIcon(iconName: string): string {
+    if (iconName === '') return '';
+    const path = require.context("@/assets/icons", false, /\.png$/);
+    return path(`./${iconName}`);
+  }
+
   iconPickerClicked() {
     ComponentPropsModule.toggleIconPicker(true);
   }
 
   iconClick(icon: Icon) {
-    this.page.icon = icon;
+    this.page.icon = icon.icon;
   }
 
   cancelClick() {
@@ -140,7 +136,7 @@ export default class PageEditor extends Vue {
     }
     const pageList: Page[] = PagesModule.pageList;
     if (pageList !== undefined) {
-      if (pageList.filter(page => page.name === this.page.name)) {
+      if (pageList.filter(page => page.name === this.page.name).length > 0) {
         errors.push("Page name must be unique");
       }
     }

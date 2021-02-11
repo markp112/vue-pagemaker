@@ -4,9 +4,10 @@
       :ref="$props.thisComponent.ref"
       :id="$props.thisComponent.ref"
       class="handle"
+      :style="getStyles()"
       @click.prevent="onTextClick($event)"
     >
-      <text-data :thisComponent="this.$props.thisComponent"> </text-data>
+      <text-data :content="this.$props.thisComponent.content"> </text-data>
       <resizeable
         :isActive="isTextActive"
         :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"
@@ -61,6 +62,10 @@ export default class TextComponent extends mixins(GenericComponentMixins) {
   get isTextActive(): boolean {
     return PageModule.selectedComponent === this.$props.thisComponent.ref;
   }
+
+get getStyle(): string {
+  return (this.$props.thisComponent).getStyles();
+}
 
   onTextClick(event: Event) {
     event.stopPropagation();

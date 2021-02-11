@@ -3,7 +3,7 @@ import { dateFormat } from "@vuejs-community/vue-filter-date-format";
 
 export interface PageInterface {
   name: string;
-  icon: Icon;
+  icon: string;
   created: Date;
   edited: Date;
   active: boolean;
@@ -11,14 +11,14 @@ export interface PageInterface {
 
 export class Page implements PageInterface {
   _name: string;
-  _icon: Icon;
+  _icon: string;
   _created: Date;
   _edited: Date;
   _active: boolean;
 
   constructor() {
     this._name = "";
-    this._icon = IconBuilder.buildPlaceholderIcon();
+    this._icon = "";
     this._created = new Date();
     this._edited = new Date();
     this._active = false;
@@ -27,20 +27,22 @@ export class Page implements PageInterface {
   get name(): string {
     return this._name;
   }
+
   set name(name: string) {
     this._name = name;
   }
 
-  get icon(): Icon {
+  get icon(): string {
     return this._icon;
   }
-  set icon(icon: Icon) {
+  set icon(icon:string) {
     this._icon = icon;
   }
 
   get created(): Date {
     return this._created;
   }
+
   set created(created: Date) {
     this._created = created;
   }
@@ -48,6 +50,7 @@ export class Page implements PageInterface {
   get edited(): Date {
     return this._edited;
   }
+
   set edited(edited: Date) {
     this._edited = edited;
   }
@@ -61,7 +64,7 @@ export class Page implements PageInterface {
   }
 
   get createdFormatted(): string {
-    return dateFormat(this._created, "DD mmm YYYY");
+    return dateFormat(this._created, 'DD mmm YYYY');
   }
 
   getPageDataAsObject(): PageInterface {

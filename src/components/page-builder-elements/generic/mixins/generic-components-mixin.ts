@@ -119,7 +119,7 @@ export class GenericComponentMixins extends Vue {
         const offSetWidth = boxProperties.offsetWidth;
         if (
           boxDimensions.width.value + offSetWidth >
-          parentDimensions.width.value
+            parentDimensions.width.value
         ) {
           boxDimensions.width.value =
             parentDimensions.width.value - offSetWidth;

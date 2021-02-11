@@ -8,8 +8,10 @@ import "firebase/firestore";
 import { secrets } from "./firebase/secrets";
 import VueFilterDateFormat from "@vuejs-community/vue-filter-date-format";
 import VueFilterDateParse from "@vuejs-community/vue-filter-date-parse";
-
+import Datepicker from 'vuejs-datepicker';
 import("@/assets/styles/index.css");
+
+Vue.component('datepicker', Datepicker);
 
 export const firebaseApp = Firebase.initializeApp(secrets.google);
 
