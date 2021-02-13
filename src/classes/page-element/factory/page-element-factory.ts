@@ -104,12 +104,7 @@ export class PageElementFactory {
   private getBoxDimensions(
     boxDimensionsInterface: BoxDimensionsInterface
   ): BoxDimensions {
-    const boxDimensions: BoxDimensions = new BoxDimensions(
-      boxDimensionsInterface.width,
-      boxDimensionsInterface.height,
-      boxDimensionsInterface.top,
-      boxDimensionsInterface.left
-    );
+    const boxDimensions: BoxDimensions = new BoxDimensions(boxDimensionsInterface);
     return boxDimensions;
   }
 

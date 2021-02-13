@@ -1,7 +1,7 @@
 <template>
   <div
     :id="$props.thisComponent.ref"
-    class="handle overflow-hidden flex-no-wrap"
+    class="handle overflow-hidden flex-no-wrap relative"
     :class="getClasses()"
     :style="getStyles()"
     :ref="$props.thisComponent.ref"
@@ -31,7 +31,6 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
 import Component, { mixins } from "vue-class-component";
 import { Emit } from "vue-property-decorator";
 import GenericComponent from "@/components/page-builder-elements/generic/generic.vue";
@@ -42,6 +41,7 @@ import { ComponentCounter } from "@/classes/component-counter/singleton-counter"
 import Resize from "@/components/base/resizeable/resize.vue";
 import {
   BoxDimensions,
+  BoxDimensionsInterface,
   Dimension
 } from "../../../models/components/box-dimension";
 import { GenericComponentMixins } from "@/components/page-builder-elements/generic/mixins/generic-components-mixin";
@@ -154,8 +154,13 @@ export default class Container extends mixins(GenericComponentMixins) {
       value: this.$el.getBoundingClientRect().height,
       units: "px"
     };
-
-    return new BoxDimensions(boxWidth, boxHeight, boxTop, boxLeft);
+    const boxDimension: BoxDimensionsInterface = {
+      left: boxLeft,
+      height: boxHeight,
+      width: boxWidth,
+      top: boxTop
+    };
+    return new BoxDimensions(boxDimension);
   }
 }
 </script>

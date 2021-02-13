@@ -1,5 +1,9 @@
 <template>
-  <div ref="textContent" v-html="getContent"></div>
+  <div 
+    ref="textContent"
+    v-html="getContent"
+  >
+  </div>
 </template>
 
 <script lang="ts">

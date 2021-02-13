@@ -133,8 +133,8 @@ export class GenericComponentMixins extends Vue {
     let style = "";
     const component: PageElementClasses = this.$props.thisComponent;
     if (component) {
-      style = component.getStyles();
-      style += `${component.boxDimensions.heightAsStyle};${component.boxDimensions.widthAsStyle};`;
+      style = component.getStylesToString();
+      console.log('%c%s', 'color: #731d1d', style);
     }
     return style;
   }

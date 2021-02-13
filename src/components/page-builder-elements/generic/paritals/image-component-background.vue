@@ -74,7 +74,6 @@ import {
 import Resize from "@/components/base/resizeable/resize.vue";
 import { ImageElement } from "@/classes/page-element/page-components/image-element/ImageElement";
 import Component, { mixins } from "vue-class-component";
-import { PageElementClasses } from "@/classes/page-element/factory/page-element-factory";
 import { PageModule } from "@/store/page/page";
 import { ClientCoordinates } from "@/models/components/components";
 import {
@@ -82,12 +81,13 @@ import {
   ZoomDirection
 } from "@/classes/images/image-manipulation/imageManipulation";
 import { Style } from "@/models/styles/styles";
+import { PageElementBuilder } from "@/classes/page-element/page-element-builder/PageElementBuilder";
 
 @Component({
   props: {
     thisComponent: {
-      default: (): PageElementClasses => {
-        return undefined;
+      default: (): ImageElement => {
+        return new PageElementBuilder().buildAnImage();
       }
     }
   },
@@ -118,7 +118,7 @@ export default class ImageComponentBackground extends mixins(
   mounted() {
     this.parentContainer = this.$refs[this.HTML_IMAGE_PARENT] as HTMLDivElement;
     this.image = this.$refs[this.HTML_IMAGE_ELEMENT] as HTMLImageElement;
-    const imageElement = this.component as ImageElement;
+    const imageElement = this.component;
     let styles: string = this.component.getContainerStyles();
     this.parentContainer.setAttribute("style", styles);
     this.imageManipulator = new ImageManipulator(imageElement);
@@ -135,7 +135,6 @@ export default class ImageComponentBackground extends mixins(
   }
 
   get isActive(): boolean {
-    console.log("%c%s", "color: #1d5673", "isActive");
     return PageModule.selectedComponent === this.$props.thisComponent.ref;
   }
 

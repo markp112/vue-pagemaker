@@ -245,12 +245,7 @@ export default class SidebarIconEditor extends Vue {
     this.editorComponent.isContainer = component.isContainer;
     this.editorComponent.sidebarIcon = component.sidebarIcon;
     this.editorComponent.type = component.type;
-    this.editorComponent.boxDimensions = new BoxDimensions(
-      component.boxDimensions.width,
-      component.boxDimensions.height,
-      component.boxDimensions.left,
-      component.boxDimensions.top
-    );
+    this.editorComponent.boxDimensions = new BoxDimensions(component.boxDimensions);
     this.iconLocal = icon;
     this.classDef = this.editorComponent.class;
   }

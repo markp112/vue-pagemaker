@@ -25,12 +25,10 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
 import Component, { mixins } from "vue-class-component";
 import Resize from "@/components/base/resizeable/resize.vue";
 import { PageModule } from "@/store/page/page";
 import { GenericComponentMixins } from "@/components/page-builder-elements/generic/mixins/generic-components-mixin";
-import { SiteDefaults } from "@/classes/settings/site-defaults/site-defaults";
 import { PageElement } from "@/classes/page-element/PageElement";
 import { PageElementClasses } from "@/classes/page-element/factory/page-element-factory";
 import ImageComponentBackground from "./paritals/image-component-background.vue";

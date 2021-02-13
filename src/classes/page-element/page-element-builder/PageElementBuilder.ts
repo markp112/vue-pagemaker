@@ -35,12 +35,7 @@ export class PageElementBuilder {
   private _classDefinition = "";
   private _type: ComponentTypesString = undefined; // what is this component as in image text etc
   private _data: ComponentTypes = undefined;
-  private _boxDimensions: BoxDimensions = new BoxDimensions(
-    width,
-    height,
-    top,
-    left
-  );
+  private _boxDimensions: BoxDimensions = new BoxDimensions({ width, height, top, left });
   private _actionEvent: ActionEvent = new ActionEvent("Navigation", "");
   private _content = "";
   private _naturalSize!: Dimensions;
@@ -100,12 +95,7 @@ export class PageElementBuilder {
   setBoxDimensions(
     boxDimensionsData: BoxDimensionsInterface
   ): PageElementBuilder {
-    const boxDimensions = new BoxDimensions(
-      boxDimensionsData.width,
-      boxDimensionsData.height,
-      boxDimensionsData.top,
-      boxDimensionsData.left
-    );
+    const boxDimensions = new BoxDimensions(boxDimensionsData);
     this._boxDimensions = boxDimensions;
     return this;
   }

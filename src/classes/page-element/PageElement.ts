@@ -1,4 +1,3 @@
-import { ComponentTypes } from "../../models/components/components";
 import {
   ComponentRef,
   ComponentTypesString,
@@ -29,7 +28,6 @@ export class PageElement implements Partial<PageElementInterface> {
   private _parentRef: ComponentRef; //** string ref to the parent */
   private _classDefinition: string; //** String of tailwind classes to be applied to an element */
   private _type: ComponentTypesString; //** what is this component as in image text etc */
-  private _data: ComponentTypes; //** holds associated user data i.e. the data the user inputs */
   private _boxDimensions: BoxDimensions;
   private _actionEvent: ActionEvent; //** if this component support events ActionEvent defines the event type and action */
   private _content: string;
@@ -45,7 +43,6 @@ export class PageElement implements Partial<PageElementInterface> {
     this._parentRef = pageElementBuilder.parentRef;
     this._classDefinition = pageElementBuilder.classDefinition;
     this._type = pageElementBuilder.type;
-    this._data = pageElementBuilder.data;
     this._boxDimensions = pageElementBuilder.boxDimensions;
     this._actionEvent = pageElementBuilder.actionEvent;
     this.classList = pageElementBuilder.classDefinition.split(" ");
@@ -97,6 +94,8 @@ export class PageElement implements Partial<PageElementInterface> {
   }
 
   get classDefinition(): string {
+    console.log('%c%s', 'color: #aa00ff', 'classDefinition');
+    console.log('%c%s', 'color: #00bf00', this._classDefinition);
     return this._classDefinition;
   }
 
@@ -118,14 +117,6 @@ export class PageElement implements Partial<PageElementInterface> {
 
   set parentRef(parentRef: string) {
     this._parentRef = parentRef;
-  }
-
-  get data(): ComponentTypes {
-    return this._data;
-  }
-
-  set data(data: ComponentTypes) {
-    this._data = data;
   }
 
   get boxDimensions(): BoxDimensions {
@@ -154,16 +145,7 @@ export class PageElement implements Partial<PageElementInterface> {
   }
 
   buildBoxDimensions(boxDimensions: BoxDimensionsInterface): void {
-    this._boxDimensions = new BoxDimensions(
-      boxDimensions.width,
-      boxDimensions.height,
-      boxDimensions.top,
-      boxDimensions.left
-    );
-  }
-
-  getAction(): ActionEventInterface {
-    return this._actionEvent.toObject;
+    this._boxDimensions = new BoxDimensions(boxDimensions);
   }
 
   public getBaseElementContent(): PageElementFirebaseData {
@@ -208,7 +190,7 @@ export class PageElement implements Partial<PageElementInterface> {
     this._styles = [...styles];
   }
 
-  removeStyle(styleToRemove: StyleTypes) {
+  removeStyle(styleToRemove: string) {
     this._styles = this._styles.filter(el => !el.style.includes(styleToRemove));
   }
 
@@ -224,10 +206,10 @@ export class PageElement implements Partial<PageElementInterface> {
       : classDef.substr(0, classDef.indexOf("-") + 1);
     this.removeClass(stem);
     this.classList.push(classDef);
-    this.classDefinition = this.classList.join(" ");
+    this.classDefinition = this.classList.join(" ").trim();
   }
 
-  getStyles(): string {
+  getStylesToString(): string {
     let style = "";
     const styles: Style[] = this.styles;
     if (styles.length > 0) {
@@ -236,6 +218,7 @@ export class PageElement implements Partial<PageElementInterface> {
       });
     }
     style += `${this.boxDimensions.heightAsStyle};${this.boxDimensions.widthAsStyle};`;
+    // style += `${this.boxDimensions.topAsStyle};${this.boxDimensions.leftAsStyle};`;
     return style;
   }
 

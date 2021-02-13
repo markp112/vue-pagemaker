@@ -33,21 +33,16 @@ export interface BoxDimensionsInterface {
 }
 
 export class BoxDimensions implements BoxDimensionsInterface {
-  width: Dimension;
-  height: Dimension;
-  top: Dimension;
-  left: Dimension;
+  width: Dimension = new Dimension(0,'px');
+  height: Dimension = new Dimension(0,'px');;
+  top: Dimension = new Dimension(0,'px');;
+  left: Dimension = new Dimension(0,'px');;
 
-  constructor(
-    width: Dimension,
-    height: Dimension,
-    top: Dimension,
-    left: Dimension
-  ) {
-    this.height = height;
-    this.width = width;
-    this.left = left;
-    this.top = top;
+  constructor(boxDimensions: BoxDimensionsInterface) {
+    this.height = { ...boxDimensions.height }
+    this.width = { ...boxDimensions.width }
+    this.left = { ...boxDimensions.left };
+    this.top = { ...boxDimensions.top };
   }
 
   get heightAsStyle(): string {

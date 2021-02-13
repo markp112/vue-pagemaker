@@ -189,12 +189,7 @@ export class FirebaseDataBuilder {
         )
       )
       .setBoxDimensions(
-        new BoxDimensions(
-          item.boxDimensions.width,
-          item.boxDimensions.height,
-          item.boxDimensions.top,
-          item.boxDimensions.left
-        )
+        new BoxDimensions(item.boxDimensions)
       )
       .setRef(item.ref)
       .setIsContainer(item.isContainer)
@@ -222,12 +217,7 @@ export class FirebaseDataBuilder {
         )
       )
       .setBoxDimensions(
-        new BoxDimensions(
-          item.boxDimensions.width,
-          item.boxDimensions.height,
-          item.boxDimensions.top,
-          item.boxDimensions.left
-        )
+        new BoxDimensions(item.boxDimensions)
       )
       .setRef(item.ref)
       .setIsContainer(item.isContainer)
@@ -255,12 +245,7 @@ export class FirebaseDataBuilder {
         )
       )
       .setBoxDimensions(
-        new BoxDimensions(
-          item.boxDimensions.width,
-          item.boxDimensions.height,
-          item.boxDimensions.top,
-          item.boxDimensions.left
-        )
+        new BoxDimensions(item.boxDimensions)
       )
       .setRef(item.ref)
       .setIsContainer(item.isContainer)
@@ -291,12 +276,7 @@ export class FirebaseDataBuilder {
         )
       )
       .setBoxDimensions(
-        new BoxDimensions(
-          item.boxDimensions.width,
-          item.boxDimensions.height,
-          item.boxDimensions.top,
-          item.boxDimensions.left
-        )
+        new BoxDimensions(item.boxDimensions)
       )
       .setRef(item.ref)
       .setIsContainer(item.isContainer)

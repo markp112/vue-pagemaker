@@ -49,7 +49,7 @@ export const initComponentDefinition = {
   isContainer: false,
   sidebarIcon: initIcon,
   type: undefined,
-  boxDimensions: new BoxDimensions(width, height, top, left)
+  boxDimensions: new BoxDimensions({ width: width, height: height, top: top, left: left })
 };
 
 export class ComponentDefinition implements ComponentDefinitionInterface {
@@ -59,7 +59,7 @@ export class ComponentDefinition implements ComponentDefinitionInterface {
   isContainer = false;
   sidebarIcon: IconInterface = initIcon;
   type: ComponentTypesString = undefined;
-  boxDimensions: BoxDimensions = new BoxDimensions(width, height, top, left);
+  boxDimensions: BoxDimensions = new BoxDimensions({ width: width, height: height, top: top, left: left });
 
   get toObject(): Record<string, any> {
     return {
@@ -82,7 +82,7 @@ export interface ActionEventInterface {
 }
 
 export class ActionEvent implements ActionEventInterface {
-  private _actionType: ActionEventTypes = "Navigation";
+  private _actionType: ActionEventTypes = 'Navigation';
   private _eventAction: string;
 
   constructor(actionType: ActionEventTypes, eventAction: string) {
@@ -140,11 +140,11 @@ export class ComponentDefinitions {
   }
 
   getComponent(
-    componentName = "",
-    componentRef = ""
+    componentName = '',
+    componentRef = ''
   ): ComponentDefinitionTypes | undefined {
-    if (componentName === "" && componentRef === "") return;
-    if (componentRef !== "") {
+    if (componentName === '' && componentRef === '') return;
+    if (componentRef !== '') {
       return this._componentDefinitions.filter(
         comp => comp.componentRef === componentRef
       )[0];

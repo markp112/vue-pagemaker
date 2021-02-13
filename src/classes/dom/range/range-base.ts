@@ -1,4 +1,3 @@
-import { Style, StyleTags, StylesMap } from "@/models/styles/styles";
 
 interface RangeValuesInterface {
   start: number;
@@ -47,7 +46,7 @@ export class RHBase implements RHBaseInterface {
   constructor(range: Range) {
     console.clear();
     this.range = range;
-    console.log("%c⧭", "color: #cc0036", range);
+    // console.log("%c⧭", "color: #cc0036", range);
     this.rangeValues = this.setSelection();
   }
 
