@@ -128,7 +128,36 @@ export class GenericComponentMixins extends Vue {
       PageModule.updateBoxDimensionHeightandWidth(boxDimensions);
     }
   }
+  
+  startDrag(event: MouseEvent) {
+    this.$props.thisComponent.addClass('absolute');
+    this.isDragging = true;
+    this.lastMousePosition = { x: event.pageX, y: event.pageY };
+    this.$props.thisComponent.isAbsolute = true;
+    const textEditor = this.$refs[this.$props.thisComponent.ref] as HTMLDivElement;
+    textEditor.classList.add('cursor-move');
+  }
 
+  stopDrag(event: MouseEvent): void {
+    event.stopPropagation;
+    this.isDragging = false;
+    const textEditor = this.$refs[this.$props.thisComponent.ref] as HTMLDivElement;
+    textEditor.classList.remove('cursor-move');
+  }
+
+  dragElement(event: MouseEvent) {
+    if (!this.isDragging) return;
+    event.stopPropagation;
+    const currentMousePosition: MousePosition = { x: event.pageX, y: event.pageY };
+    const deltaX = currentMousePosition.x - this.lastMousePosition.x;
+    const deltaY = currentMousePosition.y - this.lastMousePosition.y;
+    this.$props.thisComponent.boxDimensions.top.value += deltaY;
+    this.$props.thisComponent.boxDimensions.left.value += deltaX;
+    this.lastMousePosition.x = event.pageX;
+    this.lastMousePosition.y = event.pageY;
+  }
+
+  
   getStyles(): string {
     let style = "";
     const component: PageElementClasses = this.$props.thisComponent;

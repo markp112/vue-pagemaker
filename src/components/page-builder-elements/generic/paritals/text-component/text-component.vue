@@ -26,11 +26,9 @@ import Component, { mixins } from "vue-class-component";
 import Resize from "@/components/base/resizeable/resize.vue";
 import TextData from "./text-data.vue";
 import { PageModule } from "@/store/page/page";
-import { GenericComponentMixins, MousePosition } from "@/components/page-builder-elements/generic/mixins/generic-components-mixin";
+import { GenericComponentMixins } from "@/components/page-builder-elements/generic/mixins/generic-components-mixin";
 import { TextElement } from "@/classes/page-element/page-components/text-element/TextElement";
 import { PageElementBuilder } from "@/classes/page-element/page-element-builder/PageElementBuilder";
-import { MousePostion } from "@/classes/images/image-manipulation/imageManipulation";
-import { Dimension } from "@/models/components/box-dimension";
 
 @Component({
   props: {
@@ -64,34 +62,6 @@ export default class TextComponent extends mixins(GenericComponentMixins) {
 
   get getClass(): string {
     return this.$props.thisComponent.classDefinition;
-  }
-
-  startDrag(event: MouseEvent) {
-    this.$props.thisComponent.addClass('absolute');
-    this.isDragging = true;
-    this.lastMousePosition = { x: event.pageX, y: event.pageY };
-    this.$props.thisComponent.isAbsolute = true;
-    const textEditor = this.$refs[this.$props.thisComponent.ref] as HTMLDivElement;
-    textEditor.classList.add('cursor-move');
-  }
-
-  stopDrag(event: MouseEvent): void {
-    event.stopPropagation;
-    this.isDragging = false;
-    const textEditor = this.$refs[this.$props.thisComponent.ref] as HTMLDivElement;
-    textEditor.classList.remove('cursor-move');
-  }
-
-  dragElement(event: MouseEvent) {
-    if (!this.isDragging) return;
-    event.stopPropagation;
-    const currentMousePosition: MousePosition = { x: event.pageX, y: event.pageY };
-    const deltaX = currentMousePosition.x - this.lastMousePosition.x;
-    const deltaY = currentMousePosition.y - this.lastMousePosition.y;
-    this.$props.thisComponent.boxDimensions.top.value += deltaY;
-    this.$props.thisComponent.boxDimensions.left.value += deltaX;
-    this.lastMousePosition.x = event.pageX;
-    this.lastMousePosition.y = event.pageY;
   }
 
   onTextClick(event: Event) {
