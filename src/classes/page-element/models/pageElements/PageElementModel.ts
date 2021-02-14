@@ -24,7 +24,7 @@ export interface PageElementInterface {
   boxDimensions: BoxDimensions;
   actionEvent: ActionEventInterface;
   content: string;
-  isAbsoltue: boolean;
+  isAbsolute: boolean;
 }
 
 export interface PageElementFirebaseData {
@@ -39,6 +39,7 @@ export interface PageElementFirebaseData {
   boxDimensions: BoxDimensionsInterface;
   actionEvent: ActionEventInterface;
   content: string;
+  isAbsolute: boolean;
 }
 
 export interface PageElementImage extends PageElementFirebaseData {

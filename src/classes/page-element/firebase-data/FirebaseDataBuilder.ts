@@ -16,7 +16,6 @@ import { PageContainerFirebaseData } from "../models/page-container/PageContaine
 import {
   PageElementFirebaseData,
   PageElementImage,
-  PageElementInterface
 } from "../models/pageElements/PageElementModel";
 import { PageElementBuilder } from "@/classes/page-element/page-element-builder/PageElementBuilder";
 import { PageContainer } from "../PageContainer/PageContainer";
@@ -49,7 +48,8 @@ export class FirebaseDataBuilder {
       parentRef: container.parentRef,
       ref: container.ref,
       styles: container.styles,
-      type: container.type
+      type: container.type,
+      isAbsolute: container.isAbsolute,
     };
   }
 
@@ -86,11 +86,11 @@ export class FirebaseDataBuilder {
         const pageContainer = container as PageContainer;
         const containerData = this.getContainerProperties(
           pageContainer
-        ) as PageContainerFirebaseData;
-        containerData.elements = this.getElements(pageContainer.elements);
-        pageData.push(containerData);
-      }
-    });
+          ) as PageContainerFirebaseData;
+          containerData.elements = this.getElements(pageContainer.elements);
+          pageData.push(containerData);
+        }
+      });
     const firebaseData: PageContainerFirebaseDataInterface = {
       pageIdentity: {
         siteId: siteId,
@@ -105,6 +105,7 @@ export class FirebaseDataBuilder {
           resolve(notification);
         })
         .catch(err => {
+          console.log('%c⧭', 'color: #bfffc8', err);
           reject(err);
         });
     });
@@ -124,7 +125,6 @@ export class FirebaseDataBuilder {
           "rootContainer",
           "ROOT"
         ) as PageContainer;
-        const component = pageData as PageContainerFirebaseData[];
         this.buildPageElements(pageData, rootComponent);
         PageModule.updatePageElements(rootComponent.elements);
       })
@@ -229,6 +229,7 @@ export class FirebaseDataBuilder {
       .setClassDefintion(item.classDefinition)
       .setComponentHtmlTag(item.componentHTMLTag)
       .setContent(item.content)
+      .setIsAbsolute(item.isAbsolute)
       .buildAButton();
     return pageElement;
   }
@@ -287,6 +288,7 @@ export class FirebaseDataBuilder {
       .setClassDefintion(item.classDefinition)
       .setComponentHtmlTag(item.componentHTMLTag)
       .setContent(item.content)
+      .setIsAbsolute(item.isAbsolute)
       .buildATextElement();
     return pageElement;
   }

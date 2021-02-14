@@ -2,7 +2,6 @@ import {
   ComponentRef,
   ComponentTypesString,
   ActionEvent,
-  ActionEventInterface
 } from "@/models/components/base-component";
 import {
   BoxDimensions,
@@ -97,7 +96,6 @@ export class PageElement implements Partial<PageElementInterface> {
   }
 
   get classDefinition(): string {
-    console.log('%c%s', 'color: #00bf00', this._classDefinition);
     return this._classDefinition;
   }
 
@@ -146,12 +144,12 @@ export class PageElement implements Partial<PageElementInterface> {
     this._content = content;
   }
 
-  get isAbsoltue(): boolean {
+  get isAbsolute(): boolean {
     return this._isAbsolute;
   }
 
-  set isAbsolute(isAbsoltue: boolean) {
-    this._isAbsolute = isAbsoltue;
+  set isAbsolute(isAbsolute: boolean) {
+    this._isAbsolute = isAbsolute;
   }
 
   buildBoxDimensions(boxDimensions: BoxDimensionsInterface): void {
@@ -170,7 +168,8 @@ export class PageElement implements Partial<PageElementInterface> {
       type: this._type,
       actionEvent: this._actionEvent.toObject,
       boxDimensions: this._boxDimensions.toObject,
-      content: this._content
+      content: this._content,
+      isAbsolute: this._isAbsolute
     };
   }
 
@@ -233,7 +232,7 @@ export class PageElement implements Partial<PageElementInterface> {
       });
     }
     style += `${this.boxDimensions.heightAsStyle};${this.boxDimensions.widthAsStyle};`;
-    if (this.isAbsoltue) {
+    if (this.isAbsolute) {
       style += `${this.boxDimensions.topAsStyle};${this.boxDimensions.leftAsStyle};`;
     }
     return style;
