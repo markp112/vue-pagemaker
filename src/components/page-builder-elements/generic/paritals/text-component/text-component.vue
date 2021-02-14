@@ -67,17 +67,9 @@ export default class TextComponent extends mixins(GenericComponentMixins) {
   }
 
   startDrag(event: MouseEvent) {
-    // event.stopPropagation;
     this.$props.thisComponent.addClass('absolute');
     this.isDragging = true;
     this.lastMousePosition = { x: event.pageX, y: event.pageY };
-    const boxProperties = this.getElementBoxProperties(this.$props.thisComponent.ref);
-    console.log('%c⧭', 'color: #731d6d', boxProperties)
-    const parentBoxProperties = this.getElementBoxProperties(this.$props.thisComponent.parent.ref);
-    console.log('%c⧭', 'color: #006dcc', parentBoxProperties)
-    // const top: Dimension = new Dimension(boxProperties.top - parentBoxProperties.top, 'px');
-    // const left: Dimension = new Dimension( 0, 'px');
-    // this.$props.thisComponent.setLocation(top, left);
     this.$props.thisComponent.isAbsolute = true;
     const textEditor = this.$refs[this.$props.thisComponent.ref] as HTMLDivElement;
     textEditor.classList.add('cursor-move');
@@ -93,19 +85,13 @@ export default class TextComponent extends mixins(GenericComponentMixins) {
   dragElement(event: MouseEvent) {
     if (!this.isDragging) return;
     event.stopPropagation;
-    // const currentMousePosition: MousePostion = this.getMousePosition(event.pageX, event.pageY, this.$props.thisComponent.ref);
     const currentMousePosition: MousePosition = { x: event.pageX, y: event.pageY };
     const deltaX = currentMousePosition.x - this.lastMousePosition.x;
     const deltaY = currentMousePosition.y - this.lastMousePosition.y;
-    console.log('%c⧭', 'color: #e57373', this.lastMousePosition)
-    console.log('%c⧭', 'color: #007300', currentMousePosition)
     this.$props.thisComponent.boxDimensions.top.value += deltaY;
     this.$props.thisComponent.boxDimensions.left.value += deltaX;
-    console.log('%c⧭', 'color: #807160', this.$props.thisComponent.boxDimensions.left.value)
-    console.log('%c⧭', 'color: #807160', this.$props.thisComponent.boxDimensions.width.value)
     this.lastMousePosition.x = event.pageX;
     this.lastMousePosition.y = event.pageY;
-
   }
 
   onTextClick(event: Event) {
