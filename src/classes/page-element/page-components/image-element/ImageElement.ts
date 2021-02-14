@@ -2,14 +2,13 @@ import { PageElementBuilder } from "@/classes/page-element/page-element-builder/
 import { PageElement } from "../../PageElement";
 import {
   Dimensions,
-  initDimensions,
   Location
 } from "@/models/components/components";
 import { Image } from "@/models/components/components";
 import {
   ImageElementFirebaseData,
   ImageElementInterface
-} from "../../models/pageElements/imageElement";
+} from "../../models/pageElements/ImageElementModel";
 import { Style } from "@/models/styles/styles";
 import { SiteDefaults } from "@/classes/settings/site-defaults/site-defaults";
 

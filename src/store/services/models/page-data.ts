@@ -1,6 +1,5 @@
 import { PageElementClasses } from "@/classes/page-element/factory/page-element-factory";
-import { PageContainerFirebaseData } from "@/classes/page-element/models/page-container/PageContainer";
-import { PageElementFirebaseData } from "@/classes/page-element/models/pageElements/pageElement";
+import { PageElementFirebaseData } from "@/classes/page-element/models/pageElements/PageElementModel";
 
 export interface PageIdentity {
   siteId: string;

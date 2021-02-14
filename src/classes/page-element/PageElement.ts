@@ -6,13 +6,14 @@ import {
 } from "@/models/components/base-component";
 import {
   BoxDimensions,
-  BoxDimensionsInterface
+  BoxDimensionsInterface,
+  Dimension
 } from "../../models/components/box-dimension";
 import { Style, StyleTags } from "@/models/styles/styles";
 import {
   PageElementFirebaseData,
   PageElementInterface
-} from "@/classes/page-element/models/pageElements/pageElement";
+} from "@/classes/page-element/models/pageElements/PageElementModel";
 import { PageElementBuilder } from "@/classes/page-element/page-element-builder/PageElementBuilder";
 import { PageContainer } from "./PageContainer/PageContainer";
 
@@ -32,6 +33,7 @@ export class PageElement implements Partial<PageElementInterface> {
   private _actionEvent: ActionEvent; //** if this component support events ActionEvent defines the event type and action */
   private _content: string;
   private classList: string[] = [];
+  private _isAbsolute = false;
 
   constructor(pageElementBuilder: PageElementBuilder) {
     this._name = pageElementBuilder.name;
@@ -47,6 +49,7 @@ export class PageElement implements Partial<PageElementInterface> {
     this._actionEvent = pageElementBuilder.actionEvent;
     this.classList = pageElementBuilder.classDefinition.split(" ");
     this._content = pageElementBuilder.content;
+    this._isAbsolute = pageElementBuilder.isAbsolute;
   }
 
   get name(): string {
@@ -94,7 +97,6 @@ export class PageElement implements Partial<PageElementInterface> {
   }
 
   get classDefinition(): string {
-    console.log('%c%s', 'color: #aa00ff', 'classDefinition');
     console.log('%c%s', 'color: #00bf00', this._classDefinition);
     return this._classDefinition;
   }
@@ -144,6 +146,14 @@ export class PageElement implements Partial<PageElementInterface> {
     this._content = content;
   }
 
+  get isAbsoltue(): boolean {
+    return this._isAbsolute;
+  }
+
+  set isAbsolute(isAbsoltue: boolean) {
+    this._isAbsolute = isAbsoltue;
+  }
+
   buildBoxDimensions(boxDimensions: BoxDimensionsInterface): void {
     this._boxDimensions = new BoxDimensions(boxDimensions);
   }
@@ -167,6 +177,11 @@ export class PageElement implements Partial<PageElementInterface> {
   public reSize(boxDimensions: BoxDimensionsInterface): void {
     this._boxDimensions.height = boxDimensions.height;
     this._boxDimensions.width = boxDimensions.width;
+  }
+
+  public setLocation(top: Dimension, left: Dimension): void {
+    this._boxDimensions.top = top;
+    this._boxDimensions.left = left;
   }
 
   constructStyle(styleName: StyleTags, value: string): Style {
@@ -218,7 +233,9 @@ export class PageElement implements Partial<PageElementInterface> {
       });
     }
     style += `${this.boxDimensions.heightAsStyle};${this.boxDimensions.widthAsStyle};`;
-    // style += `${this.boxDimensions.topAsStyle};${this.boxDimensions.leftAsStyle};`;
+    if (this.isAbsoltue) {
+      style += `${this.boxDimensions.topAsStyle};${this.boxDimensions.leftAsStyle};`;
+    }
     return style;
   }
 

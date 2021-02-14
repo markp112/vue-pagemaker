@@ -1,5 +1,5 @@
 import { Dimensions, Location } from "@/models/components/components";
-import { PageElementFirebaseData, PageElementInterface } from "./pageElement";
+import { PageElementFirebaseData, PageElementInterface } from "./PageElementModel";
 
 export interface ImageElementInterface extends PageElementInterface {
   naturalSize: Dimensions;

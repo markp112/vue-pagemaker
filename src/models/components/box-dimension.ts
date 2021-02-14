@@ -58,7 +58,7 @@ export class BoxDimensions implements BoxDimensionsInterface {
   }
 
   get leftAsStyle(): string {
-    return `width:${this.left.value}${this.left.units}`;
+    return `left:${this.left.value}${this.left.units}`;
   }
 
   get getDimensionsAsStyleString(): string {

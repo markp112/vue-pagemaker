@@ -1,10 +1,6 @@
 <template>
-  <div v-if="isText">
-    <text-component :thisComponent="$props.thisComponent"></text-component>
-  </div>
-  <div v-else-if="isImage">
-    <image-component :thisComponent="$props.thisComponent"></image-component>
-  </div>
+  <text-component v-if="isText" :thisComponent="$props.thisComponent"></text-component>
+  <image-component v-else-if="isImage" :thisComponent="$props.thisComponent"></image-component>
   <div
     :ref="$props.thisComponent.ref"
     v-else

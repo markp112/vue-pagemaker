@@ -1,7 +1,7 @@
 import { PageElementBuilder } from "@/classes/page-element/page-element-builder/PageElementBuilder";
 import { PageElement } from "../../PageElement";
 import { SiteDefaults } from "@/classes/settings/site-defaults/site-defaults";
-import { PageElementFirebaseData } from "../../models/pageElements/pageElement";
+import { PageElementFirebaseData } from "@/classes/page-element/models/pageElements/PageElementModel";
 
 export class TextElement extends PageElement {
   constructor(builder: PageElementBuilder) {
