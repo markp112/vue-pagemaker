@@ -38,7 +38,6 @@ import { Emit } from "vue-property-decorator";
 import { ButtonIconNumeric } from "@/models/styles/button-icon/button-numeric-list/button-numeric-list";
 import { ButtonIconNumericBuilder } from "@/models//styles/builders/button-icon-numeric";
 import { StyleElement } from "@/classes/text-attributes/text-attributes";
-import { BoxUnits } from "../../../../models/components/box-dimension";
 
 @Component({
   props: {

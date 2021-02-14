@@ -129,7 +129,8 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
   /** @description update the side bar menu with the editor linked to the component being edited
    * requires that the PageModule.editedComponetRef is set
    */
-  public updateSidebarEditor() {
+  public updateSidebarEditor(editPenClicked?: boolean) {
+    if (!editPenClicked) editPenClicked = false;
     const componentType: ComponentTypesString = PageModule.editedComponentType;
     if (componentType) {
       switch (componentType) {
@@ -140,7 +141,14 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
           );
           break;
         case "text":
-          this.context.commit("setShowTextModal", true);
+          if (editPenClicked) {
+            this.context.commit("setShowTextModal", true);
+          } else {
+            this.context.commit(
+              "setSidebarEditor",
+              "text-component-sidebar" as SidebarComponents
+            );
+          }
           break;
         case "jumbo":
           this.context.commit(

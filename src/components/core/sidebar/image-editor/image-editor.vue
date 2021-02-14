@@ -32,7 +32,6 @@ import Accordian from "@/components/base/accordian/sidebar-accordian/sidebar-acc
 import { PageModule } from "@/store/page/page";
 import { SidebarModule } from "@/store//sidebar/sidebar";
 import { Image } from "@/models/components/components";
-import { PageElement } from "@/classes/page-element/PageElement";
 import { ImageElement } from "@/classes/page-element/page-components/image-element/ImageElement";
 
 @Component({

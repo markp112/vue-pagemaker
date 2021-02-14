@@ -45,8 +45,6 @@ import { PageElementBuilder } from "@/classes/page-element/page-element-builder/
 })
 export default class TextComponent extends mixins(GenericComponentMixins) {
   name = "textComponent";
-  top = 0;
-  left = 0;
 
   created() {
     this.$props.thisComponent.setDefaultStyle();

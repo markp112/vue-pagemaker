@@ -102,6 +102,14 @@ export default class PageBuilder extends Vue {
     return PageModule.pageElements;
   }
 
+  get showTextModal(): boolean {
+    return this.$store.getters.showTextModal;
+  }
+
+  get editedComponentText(): string {
+    return PageModule.editedComponentData;
+  }
+  
   onDrop(event: DragEvent): void {
     if (ServicesModule.dragDropEventHandled) {
       return;
@@ -136,12 +144,5 @@ export default class PageBuilder extends Vue {
     return this.bgColour;
   }
 
-  get showTextModal(): boolean {
-    return this.$store.getters.showTextModal;
-  }
-
-  get editedComponentText(): string {
-    return PageModule.editedComponentData;
-  }
 }
 </script>

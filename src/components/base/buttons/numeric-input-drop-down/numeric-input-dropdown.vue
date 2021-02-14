@@ -27,7 +27,6 @@ import DropDown from "@/components/base/pickers/drop-down/drop-down.vue";
 import { Emit } from "vue-property-decorator";
 import { ButtonIconNumeric } from "@/models/styles/button-icon/button-numeric-list/button-numeric-list";
 import { ButtonIconNumericBuilder } from "@/models//styles/builders/button-icon-numeric";
-import { Style } from "@/models/styles/styles";
 import { StyleElement } from "../../../../classes/text-attributes/text-attributes";
 
 @Component({

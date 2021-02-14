@@ -3,7 +3,7 @@
     <nav class=" text-onPrimary flex items-center justify-between">
       <div class="ml-8">
         <img
-          :src="getPath('speech_ballon-48.png')"
+          :src="getPath('layout-48.png')"
           class="ml-2 text-primary-200 cursor-pointer hover:text-primary-100 self-start"
         />
       </div>

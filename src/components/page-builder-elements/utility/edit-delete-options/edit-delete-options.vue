@@ -3,24 +3,56 @@
     class="bg-gray-500 w-24 h-8 flex flex-row justify-between absolute p-1 rounded-md z-10 right-0 top-0 shadow-xl"
     v-if="isVisible"
   >
-    <img
-      src="@/assets/icons/pencil-24.png"
-      alt="Edit pencil"
-      @click="editClick()"
-      class="cursor-pointer hover:bg-site-secondary-light"
-    />
-    <img
-      src="@/assets/icons/trash_can-24.png"
-      alt="Edit pencil"
-      @click="trashClick()"
-      class="cursor-pointer hover:bg-site-secondary-light"
-    />
+    <div class="relative">
+      <img
+        src="@/assets/icons/pencil-24.png"
+        alt="Edit pencil"
+        @click="editClick()"
+        @mouseover="showPencilToolTip=true"
+        @mouseleave="showPencilToolTip=!showPencilToolTip"
+        class="cursor-pointer hover:bg-site-secondary-light"
+      />
+        <tooltip
+          tooltip="Edit element"
+          :showToolTip="showPencilToolTip"
+        ></tooltip>
+    </div>
+    <div class="relative" v-if="showPen">
+      <img
+        src="@/assets/icons/fountain_pen-24.png"
+        alt="edit text"
+        @click="editPenClick()"
+        @mouseover="showPenToolTip=true"
+        @mouseleave="showPenToolTip=!showPenToolTip"
+        class="cursor-pointer hover:bg-site-secondary-light"
+      />
+        <tooltip
+          tooltip="Edit text"
+          :showToolTip="showPenToolTip"
+        ></tooltip>
+
+    </div>
+    <div class="relative">
+      <img
+        src="@/assets/icons/trash_can-24.png"
+        alt="remove item"
+        @click="trashClick()"
+        @mouseover="showBinToolTip=true"
+        @mouseleave="showBinToolTip=!showBinToolTip"
+        class="cursor-pointer hover:bg-site-secondary-light"
+      />
+        <tooltip
+          tooltip="delete element"
+          :showToolTip="showBinToolTip"
+        ></tooltip>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
+import ToolTip from "@/components/base/notifications/tooltip/tooltip.vue";
 import { Emit } from "vue-property-decorator";
 import { PageModule } from "@/store/page/page";
 import { SidebarModule } from "@/store/sidebar/sidebar";
@@ -28,17 +60,35 @@ import { SidebarModule } from "@/store/sidebar/sidebar";
 @Component({
   props: {
     showMe: { default: false }
+  },
+  components: {
+    tooltip: ToolTip
   }
 })
 export default class EditDeleteOption extends Vue {
+  name = 'edit menu'
   localShowMe = false;
+  showPencilToolTip = false;
+  showPenToolTip = false;
+  showBinToolTip = false;
+  
   created() {
     this.localShowMe = this.$props.showMe;
   }
 
+  updated() {
+    this.showPencilToolTip = this.showPenToolTip = this.showBinToolTip = false;
+  }
+
+
   editClick(): void {
     PageModule.updateShowEditDelete(false);
-    SidebarModule.updateSidebarEditor();
+    SidebarModule.updateSidebarEditor(false);
+  }
+
+  editPenClick(): void {
+    PageModule.updateShowEditDelete(false);
+    SidebarModule.updateSidebarEditor(true);
   }
 
   @Emit("deleteClicked")
@@ -51,6 +101,10 @@ export default class EditDeleteOption extends Vue {
   get isVisible(): boolean {
     this.localShowMe = PageModule.showEditDelete;
     return this.localShowMe;
+  }
+
+  get showPen(): boolean {
+    return PageModule.editedComponentType === 'text';
   }
 }
 </script>
