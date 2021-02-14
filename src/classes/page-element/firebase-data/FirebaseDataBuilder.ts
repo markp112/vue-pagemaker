@@ -17,7 +17,7 @@ import {
   PageElementFirebaseData,
   PageElementImage,
   PageElementInterface
-} from "../models/pageElements/pageElement";
+} from "../models/pageElements/PageElementModel";
 import { PageElementBuilder } from "@/classes/page-element/page-element-builder/PageElementBuilder";
 import { PageContainer } from "../PageContainer/PageContainer";
 import { ButtonElement } from "../page-components/button-element/ButtonElement";

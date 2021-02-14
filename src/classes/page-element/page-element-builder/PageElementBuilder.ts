@@ -41,6 +41,7 @@ export class PageElementBuilder {
   private _naturalSize!: Dimensions;
   private _scaledSize!: Dimensions;
   private _containerDimensions!: Dimensions;
+  private _isAbsolute = false;
 
   setName(name: string) {
     this._name = name;
@@ -129,6 +130,11 @@ export class PageElementBuilder {
     return this;
   }
 
+  setIsAbsolute(isAbsolute: boolean) {
+    this._isAbsolute = isAbsolute;
+    return this;
+  }
+
   public get name(): string {
     return this._name;
   }
@@ -191,6 +197,10 @@ export class PageElementBuilder {
 
   public get containerDimensions(): Dimensions {
     return this._containerDimensions;
+  }
+
+  public get isAbsolute(): boolean {
+    return this._isAbsolute;
   }
 
   // required to create an empty container / element when initialising props.

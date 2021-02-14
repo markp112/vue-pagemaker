@@ -28,6 +28,7 @@ export interface MousePosition {
 export class GenericComponentMixins extends Vue {
   name = "GenericComponentMixins";
   showBorder = false;
+  isDragging = false;
   lastMousePosition: MousePosition = {
     x: 0,
     y: 0
@@ -39,9 +40,7 @@ export class GenericComponentMixins extends Vue {
   }
 
   getElementBoxProperties(htmlElement: string): BoxProperties {
-    let element: HTMLDivElement | null = this.$refs[
-      htmlElement
-    ] as HTMLDivElement;
+    let element = this.$refs[htmlElement] as HTMLDivElement;
     if (!element) {
       element = document.getElementById(htmlElement) as HTMLDivElement;
     }
@@ -49,7 +48,7 @@ export class GenericComponentMixins extends Vue {
       width: element.getBoundingClientRect().width,
       height: element.getBoundingClientRect().height,
       top: element.getBoundingClientRect().top,
-      left: element.getBoundingClientRect().left
+      left: element.getBoundingClientRect().left,
     };
     return boundingRect;
   }
@@ -95,6 +94,7 @@ export class GenericComponentMixins extends Vue {
   }
 
   onResize(boxProperties: ClientCoordinates) {
+    if (this.isDragging) return;
     const thisComponent = this.$props.thisComponent;
     const boundingRect: BoxProperties | null = this.getElementBoxProperties(
       thisComponent.ref

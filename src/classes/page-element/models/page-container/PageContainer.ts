@@ -3,7 +3,7 @@ import { FirebasePageDataTypes } from "../../firebase-data/FirebaseDataBuilder";
 import {
   PageElementFirebaseData,
   PageElementInterface
-} from "../pageElements/pageElement";
+} from "../pageElements/PageElementModel";
 
 export type StyleTypes = "border";
 export type ContainerOrientation = "column" | "row";

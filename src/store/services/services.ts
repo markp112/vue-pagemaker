@@ -23,7 +23,7 @@ import {
   PageContainerFirebaseDataInterface,
   PageIdentity
 } from "./models/page-data";
-import { PageElementFirebaseData } from "@/classes/page-element/models/pageElements/pageElement";
+import { PageElementFirebaseData } from "@/classes/page-element/models/pageElements/PageElementModel";
 
 export interface ServicesStateInterface {
   _percentComplete?: number;

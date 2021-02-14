@@ -1,14 +1,14 @@
 <template>
-  <section>
     <div
       :ref="$props.thisComponent.ref"
       :id="$props.thisComponent.ref"
-      class="handle cursor-move"
+      class="handle select-none"
       :class="getClass"
       :style="getStyles()"
       @click.prevent="onTextClick($event)"
       @mousedown="startDrag($event)"
-      @mousemove="moveElement($event)"
+      @mousemove="dragElement($event)"
+      @mouseup="stopDrag($event)"
     >
       <text-data :content="this.$props.thisComponent.content"> </text-data>
       <resizeable
@@ -19,7 +19,6 @@
       >
       </resizeable>
     </div>
-  </section>
 </template>
 
 <script lang="ts">
@@ -31,6 +30,7 @@ import { GenericComponentMixins, MousePosition } from "@/components/page-builder
 import { TextElement } from "@/classes/page-element/page-components/text-element/TextElement";
 import { PageElementBuilder } from "@/classes/page-element/page-element-builder/PageElementBuilder";
 import { MousePostion } from "@/classes/images/image-manipulation/imageManipulation";
+import { Dimension } from "@/models/components/box-dimension";
 
 @Component({
   props: {
@@ -49,8 +49,6 @@ export default class TextComponent extends mixins(GenericComponentMixins) {
   name = "textComponent";
   top = 0;
   left = 0;
-  isMoving = false;
-  lastMousePosition!: MousePosition;
 
   created() {
     this.$props.thisComponent.setDefaultStyle();
@@ -69,21 +67,45 @@ export default class TextComponent extends mixins(GenericComponentMixins) {
   }
 
   startDrag(event: MouseEvent) {
+    // event.stopPropagation;
     this.$props.thisComponent.addClass('absolute');
-    this.isMoving = true;
-    this.lastMousePosition = this.getMousePosition(event.pageX, event.pageY, this.$props.thisComponent.ref);
+    this.isDragging = true;
+    this.lastMousePosition = { x: event.pageX, y: event.pageY };
+    const boxProperties = this.getElementBoxProperties(this.$props.thisComponent.ref);
+    console.log('%c⧭', 'color: #731d6d', boxProperties)
+    const parentBoxProperties = this.getElementBoxProperties(this.$props.thisComponent.parent.ref);
+    console.log('%c⧭', 'color: #006dcc', parentBoxProperties)
+    // const top: Dimension = new Dimension(boxProperties.top - parentBoxProperties.top, 'px');
+    // const left: Dimension = new Dimension( 0, 'px');
+    // this.$props.thisComponent.setLocation(top, left);
+    this.$props.thisComponent.isAbsolute = true;
+    const textEditor = this.$refs[this.$props.thisComponent.ref] as HTMLDivElement;
+    textEditor.classList.add('cursor-move');
   }
 
-  moveElement(event: MouseEvent) {
-    const currentMousePosition: MousePostion = this.getMousePosition(event.pageX, event.pageY, this.$props.thisComponent.ref);
+  stopDrag(event: MouseEvent): void {
+    event.stopPropagation;
+    this.isDragging = false;
+    const textEditor = this.$refs[this.$props.thisComponent.ref] as HTMLDivElement;
+    textEditor.classList.remove('cursor-move');
+  }
+
+  dragElement(event: MouseEvent) {
+    if (!this.isDragging) return;
+    event.stopPropagation;
+    // const currentMousePosition: MousePostion = this.getMousePosition(event.pageX, event.pageY, this.$props.thisComponent.ref);
+    const currentMousePosition: MousePosition = { x: event.pageX, y: event.pageY };
     const deltaX = currentMousePosition.x - this.lastMousePosition.x;
     const deltaY = currentMousePosition.y - this.lastMousePosition.y;
+    console.log('%c⧭', 'color: #e57373', this.lastMousePosition)
     console.log('%c⧭', 'color: #007300', currentMousePosition)
     this.$props.thisComponent.boxDimensions.top.value += deltaY;
     this.$props.thisComponent.boxDimensions.left.value += deltaX;
     console.log('%c⧭', 'color: #807160', this.$props.thisComponent.boxDimensions.left.value)
-    this.lastMousePosition = currentMousePosition;
-    
+    console.log('%c⧭', 'color: #807160', this.$props.thisComponent.boxDimensions.width.value)
+    this.lastMousePosition.x = event.pageX;
+    this.lastMousePosition.y = event.pageY;
+
   }
 
   onTextClick(event: Event) {

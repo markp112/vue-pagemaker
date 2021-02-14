@@ -146,4 +146,16 @@ describe('PageElement', () => {
     });
     
   });
+
+  describe('setLocation', () => {
+    
+    it('should set the top and left properties of the component', () => {
+      const top: Dimension = new Dimension(100, 'px');
+      const left: Dimension = new Dimension(15, 'px');
+      pageElement.setLocation(top, left);
+      expect(pageElement.boxDimensions.left.value).toEqual(15);
+      expect(pageElement.boxDimensions.top.value).toEqual(100);
+
+    });
+  });
 })
