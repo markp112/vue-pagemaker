@@ -3,8 +3,7 @@
     <div class="sidebar-button-panel text-accent-600">
       <plus-minus-icon
         :thisIconButton="buttonIconDimension"
-        
-        @onChange="onItemChange($event, 'border')"
+        @onChange="onItemChange($event, 'text')"
       >
       </plus-minus-icon>
       
@@ -34,24 +33,22 @@ import { ButtonIconDimension } from '@/models/styles/builders/buttonIconDimensio
     'plus-minus-icon': PlusMinusIcon,
   }
 })
-export default class TextComponetSideButtons extends Vue {
+export default class TextComponentSideButtons extends Vue {
   name = 'border-buttons';
   shadowIconList = shadowIconList;
   lineStyleIconList = lineStyleIconList;
   borderEdgeIconList = borderEdgeIconList;
   borderRadius = 0;
+  paddingValue = 0;
   borderUnits = ['em', 'px', '%'];
   buttonIconDimension: ButtonIconDimension = new ButtonFactory().createButton(
     "padding",
     "padding"
   ) as ButtonIconDimension;
 
-  created() {
-    console.log('%c⧭', 'color: #99adcc', this.buttonIconDimension)
-
-  }
-
   onItemChange(style: StyleElement, itemType: ImpactedAttributeTypes) {
+    this.paddingValue += parseInt(style.value);
+    style.value = this.paddingValue.toString();
     const eventManager = SidebarButtonEventManager.getInstance();
     eventManager.applyValue(itemType, style);
     eventManager.updateEditedComponent();

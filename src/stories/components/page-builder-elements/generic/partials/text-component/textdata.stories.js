@@ -17,8 +17,8 @@ Default.args = {
   content: "this is some content"
 };
 
-export const SpanWithSyle = Template.bind({});
-SpanWithSyle.args = {
+export const SpanWithStyle = Template.bind({});
+SpanWithStyle.args = {
   content: "<span style='color:red;'> Some red text </span> and text that is not red"
 }
 

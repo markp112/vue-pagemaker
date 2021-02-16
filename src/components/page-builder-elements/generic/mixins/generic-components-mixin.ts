@@ -1,15 +1,15 @@
-import Vue from "vue";
-import Component from "vue-class-component";
-import { PageModule } from "@/store/page/page";
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import { PageModule } from '@/store/page/page';
 import {
   BoxDimensionsInterface,
   BoxProperties
-} from "@/models/components/box-dimension";
+} from '@/models/components/box-dimension';
 import {
   PageElementClasses,
   PageElementFactory
-} from "@/classes/page-element/factory/page-element-factory";
-import { ClientCoordinates } from "@/models/components/components";
+} from '@/classes/page-element/factory/page-element-factory';
+import { ClientCoordinates } from '@/models/components/components';
 
 export interface MousePosition {
   x: number;
@@ -26,7 +26,7 @@ export interface MousePosition {
   }
 })
 export class GenericComponentMixins extends Vue {
-  name = "GenericComponentMixins";
+  name = 'GenericComponentMixins';
   showBorder = false;
   isDragging = false;
   lastMousePosition: MousePosition = {
@@ -35,7 +35,7 @@ export class GenericComponentMixins extends Vue {
   };
 
   getPath(image: string): string {
-    const path = require.context("@/assets/icons", false, /\.png$/);
+    const path = require.context('@/assets/icons', false, /\.png$/);
     return path(`./${image}`);
   }
 
@@ -54,7 +54,7 @@ export class GenericComponentMixins extends Vue {
   }
 
   getStyleDimension(style: string): number {
-    if (style === "") {
+    if (style === '') {
       return 0;
     }
     return parseInt(style.substring(0, style.length - 2));
@@ -66,10 +66,10 @@ export class GenericComponentMixins extends Vue {
     changeX: number
   ): BoxDimensionsInterface {
     return {
-      height: { value: boundingRect.height + changeY, units: "px" },
-      width: { value: boundingRect.width + changeX, units: "px" },
-      top: { value: boundingRect.top, units: "px" },
-      left: { value: boundingRect.left, units: "px" }
+      height: { value: boundingRect.height + changeY, units: 'px' },
+      width: { value: boundingRect.width + changeX, units: 'px' },
+      top: { value: boundingRect.top, units: 'px' },
+      left: { value: boundingRect.left, units: 'px' }
     };
   }
 
@@ -157,13 +157,11 @@ export class GenericComponentMixins extends Vue {
     this.lastMousePosition.y = event.pageY;
   }
 
-  
   getStyles(): string {
-    let style = "";
+    let style = '';
     const component: PageElementClasses = this.$props.thisComponent;
     if (component) {
       style = component.getStylesToString();
-      console.log('%c%s', 'color: #731d1d', style);
     }
     return style;
   }
@@ -171,7 +169,7 @@ export class GenericComponentMixins extends Vue {
   getClasses(): string {
     let componentClassSpec: string = this.$props.thisComponent.classDefinition;
     if (this.showBorder) {
-      componentClassSpec += " border1";
+      componentClassSpec += ' border1';
     }
     return componentClassSpec;
   }

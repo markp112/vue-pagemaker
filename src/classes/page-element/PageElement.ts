@@ -196,8 +196,17 @@ export class PageElement implements Partial<PageElementInterface> {
   }
 
   addStyle(newStyle: Style) {
-    this._styles = this._styles.filter(el => el.style !== newStyle.style);
-    this._styles.push(newStyle);
+    if (newStyle.style === 'transparency') {
+      const backgroundColour = this._styles.filter(el => el.style === 'backgroundColor');
+      if (backgroundColour.length > 0) {
+        const currentStyle = backgroundColour[0];
+        const hexValue = parseInt(newStyle.value).toString(16);
+        currentStyle.value = `${currentStyle.value.substring(0,7)}${hexValue}`;
+        currentStyle.style = 'backgroundColor'
+      }
+      this._styles = this._styles.filter(el => el.style !== newStyle.style);
+      this._styles.push(newStyle);
+    }
   }
 
   addStyles(styles: Style[]) {

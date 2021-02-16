@@ -26,9 +26,9 @@
 <script lang='ts'>
 import Vue from 'vue';
 import Component from 'vue-class-component';
+import ToolTip from '@/components/base/notifications/tooltip/tooltip.vue';
 import { Emit } from 'vue-property-decorator';
 import { SidebarToolbar } from '@/models/sidebar/button-definition/sidebar-buttons';
-import ToolTip from '@/components/base/notifications/tooltip/tooltip.vue';
 
 @Component({
   props: {

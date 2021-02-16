@@ -27,7 +27,7 @@ import Component from "vue-class-component";
 import CloseButton from "@/components/base/buttons/close-button/close-button.vue";
 import ColourSelect from "@/components/base/pickers/colour-picker/colour-select.vue";
 import BorderButtons from "@/components/base/buttons/borders/borders.vue";
-import TextComponetSideButtons from '@/components/base/buttons/text-component-sidebar/textComponentSidebar.vue';
+import TextComponentSideButtons from '@/components/base/buttons/text-component-sidebar/textComponentSidebar-Buttons.vue';
 import { PageModule } from "@/store/page/page";
 import { SidebarModule } from "@/store//sidebar/sidebar";
 import { ActionEvent } from "../../../../models/components/base-component";
@@ -39,7 +39,7 @@ import Accordian from "@/components/base/accordian/sidebar-accordian/sidebar-acc
     "colour-select": ColourSelect,
     "border-buttons": BorderButtons,
     "sidebar-accordian": Accordian,
-    'text-component': TextComponetSideButtons,
+    'text-component': TextComponentSideButtons,
   }
 })
 export default class TextComponentSidebar extends Vue {
