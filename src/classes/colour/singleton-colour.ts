@@ -27,6 +27,7 @@ export class Colour implements ColourInterface {
   }
 
   applyStyle(style: StyleElement) {
+    console.log('%c⧭', 'color: #e48461', style);
     this._rgbColour = style.value;
     this._backgroundBorderForeground = style.styleName as BackgroundBorderForeground;
   }

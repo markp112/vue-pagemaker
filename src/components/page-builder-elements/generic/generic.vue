@@ -52,7 +52,9 @@ export default class GenericComponent extends mixins(GenericComponentMixins) {
   created() {
     const pageElement: PageElementClasses = this.$props.thisComponent;
     if (pageElement) {
-      pageElement.setDefaultStyle();
+      if (pageElement.styles.length === 0) {
+        pageElement.setDefaultStyle();
+      }
     }
     if (this.$props.thisComponent.type === 'image') {
       this.isImage = true;

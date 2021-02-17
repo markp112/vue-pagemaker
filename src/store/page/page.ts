@@ -207,6 +207,11 @@ class PageStore extends VuexModule implements PageStateInterface {
   }
 
   @Action
+  public clear() {
+    this.context.commit('clearPageElements')
+  }
+
+  @Action
   public updateEditedComponentRef(element: PageElementClasses) {
     this.context.commit('setEditedComponentRef', element);
   }

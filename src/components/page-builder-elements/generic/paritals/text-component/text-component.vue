@@ -47,7 +47,9 @@ export default class TextComponent extends mixins(GenericComponentMixins) {
   name = "textComponent";
 
   created() {
-    this.$props.thisComponent.setDefaultStyle();
+    if (this.$props.thisComponent.styles.length === 0) {
+      this.$props.thisComponent.setDefaultStyle();
+    }
   }
 
   get getData(): string {

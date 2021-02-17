@@ -102,6 +102,7 @@ export class FirebaseDataBuilder {
     return new Promise((resolve, reject) => {
       ServicesModule.firestoreSavePage(firebaseData)
         .then(notification => {
+          console.log('%c⧭', 'color: #f27999', notification);
           resolve(notification);
         })
         .catch(err => {

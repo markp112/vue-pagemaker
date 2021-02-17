@@ -17,7 +17,7 @@
             name="bg-check"
             id="background"
             value="background"
-            @click="onRadioChange('backgroundColor')"
+            @click="onRadioChange('background-color')"
           />
         </div>
         <div class="sidebar-radio-container">
@@ -120,6 +120,7 @@ export default class ColourSelect extends Vue {
   @Emit("onColourChange")
   onColourChange(colour: string) {
     console.log('%c⧭', 'color: #eeff00', colour)
+      console.log('%c%s', 'color: #514080', this.textBackgroundorBorder)
     const style: StyleElement = {
       styleName: this.textBackgroundorBorder,
       value: colour,

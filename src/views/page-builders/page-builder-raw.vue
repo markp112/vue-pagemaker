@@ -78,6 +78,7 @@ export default class PageBuilder extends Vue {
   created() {
     this.title = this.$route.params.title;
     PageModule.updatePageId(this.title);
+    PageModule.clear();
     SidebarModule.setSidebarMenuTo("sidebar-components");
     const firebase = new FirebaseDataBuilder();
     firebase.retrievePageDataFromFirestore(this.title);
