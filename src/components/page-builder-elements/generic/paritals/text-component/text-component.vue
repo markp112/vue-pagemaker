@@ -5,7 +5,7 @@
       class="handle select-none"
       :class="getClass"
       :style="getStyles()"
-      @click.prevent="onTextClick($event)"
+      @click="onTextClick($event)"
       @mousedown="startDrag($event)"
       @mousemove="dragElement($event)"
       @mouseup="stopDrag($event)"
@@ -22,13 +22,14 @@
 </template>
 
 <script lang="ts">
-import Component, { mixins } from "vue-class-component";
-import Resize from "@/components/base/resizeable/resize.vue";
-import TextData from "./text-data.vue";
-import { PageModule } from "@/store/page/page";
-import { GenericComponentMixins } from "@/components/page-builder-elements/generic/mixins/generic-components-mixin";
-import { TextElement } from "@/classes/page-element/page-components/text-element/TextElement";
-import { PageElementBuilder } from "@/classes/page-element/page-element-builder/PageElementBuilder";
+import Component, { mixins } from 'vue-class-component';
+import Resize from '@/components/base/resizeable/resize.vue';
+import TextData from './text-data.vue';
+import { PageModule } from '@/store/page/page';
+import { GenericComponentMixins } from '@/components/page-builder-elements/generic/mixins/generic-components-mixin';
+import { TextElement } from '@/classes/page-element/page-components/text-element/TextElement';
+import { PageElementBuilder } from '@/classes/page-element/page-element-builder/PageElementBuilder';
+import { SidebarModule } from '@/store/sidebar/sidebar';
 
 @Component({
   props: {
@@ -40,11 +41,11 @@ import { PageElementBuilder } from "@/classes/page-element/page-element-builder/
   },
   components: {
     resizeable: Resize,
-    "text-data": TextData
+    'text-data': TextData
   }
 })
 export default class TextComponent extends mixins(GenericComponentMixins) {
-  name = "textComponent";
+  name = 'textComponent';
 
   created() {
     if (this.$props.thisComponent.styles.length === 0) {
@@ -67,6 +68,7 @@ export default class TextComponent extends mixins(GenericComponentMixins) {
   onTextClick(event: Event) {
     event.stopPropagation();
     PageModule.updateEditedComponentRef(this.$props.thisComponent);
+    SidebarModule.updateSidebarEditor(false);
     PageModule.updateShowEditDelete(true);
   }
 }

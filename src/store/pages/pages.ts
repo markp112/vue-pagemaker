@@ -51,7 +51,6 @@ class PagesStore extends VuexModule implements PagesStateInterface {
 
   @Action({ rawError: true })
   public saveThePage(page: Page): Promise<Notification> {
-    console.log('%c⧭', 'color: #40fff2', page);
     const notification: Notification = notificationDefault;
     return new Promise((resolve, reject) => {
       const firestore = firebase.firestore();

@@ -10,6 +10,7 @@ import {
   PageElementFactory
 } from '@/classes/page-element/factory/page-element-factory';
 import { ClientCoordinates } from '@/models/components/components';
+import { PageElement } from '@/classes/page-element/PageElement';
 
 export interface MousePosition {
   x: number;
@@ -64,7 +65,7 @@ export class GenericComponentMixins extends Vue {
     boundingRect: BoxProperties,
     changeY: number,
     changeX: number
-  ): BoxDimensionsInterface {
+    ): BoxDimensionsInterface {
     return {
       height: { value: boundingRect.height + changeY, units: 'px' },
       width: { value: boundingRect.width + changeX, units: 'px' },
@@ -80,15 +81,15 @@ export class GenericComponentMixins extends Vue {
   ): MousePosition {
     const target = this.$refs[targetElement] as HTMLDivElement;
     return {
-      x: x - target.offsetLeft,
-      y: y - target.offsetTop
+      x: x ,
+      y: y ,
     };
   }
 
   resizeStarted(event: MouseEvent) {
     this.lastMousePosition = this.getMousePosition(
-      event.pageX,
-      event.pageY,
+      event.screenX,
+      event.screenY,
       this.$props.thisComponent.ref
     );
   }
@@ -112,7 +113,8 @@ export class GenericComponentMixins extends Vue {
         boundingRect,
         changeY,
         changeX
-      );
+        );
+        boxDimensions.left.value = this.$props.thisComponent.boxDimensions.left.value;
       if (thisComponent.isContainer) {
         const parentContainer = thisComponent.parent;
         const parentDimensions = parentContainer.boxDimensions;
@@ -136,6 +138,7 @@ export class GenericComponentMixins extends Vue {
     this.$props.thisComponent.isAbsolute = true;
     const textEditor = this.$refs[this.$props.thisComponent.ref] as HTMLDivElement;
     textEditor.classList.add('cursor-move');
+    (this.$props.thisComponent as PageElement).addClass("z-50");
   }
 
   stopDrag(event: MouseEvent): void {
@@ -143,6 +146,7 @@ export class GenericComponentMixins extends Vue {
     this.isDragging = false;
     const textEditor = this.$refs[this.$props.thisComponent.ref] as HTMLDivElement;
     textEditor.classList.remove('cursor-move');
+    (this.$props.thisComponent as PageElement).removeClass("z-50");
   }
 
   dragElement(event: MouseEvent) {

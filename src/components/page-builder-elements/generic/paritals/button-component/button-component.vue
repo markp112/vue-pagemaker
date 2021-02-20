@@ -28,6 +28,7 @@ import { PageModule } from "@/store/page/page";
 import { GenericComponentMixins } from "@/components/page-builder-elements/generic/mixins/generic-components-mixin";
 import { ButtonElement } from "@/classes/page-element/page-components/button-element/ButtonElement";
 import { PageElementBuilder } from "@/classes/page-element/page-element-builder/PageElementBuilder";
+import { SidebarModule } from "@/store/sidebar/sidebar";
 
 @Component({
   props: {
@@ -64,9 +65,9 @@ export default class ButtonComponent extends mixins(GenericComponentMixins) {
   }
 
   onButtonClick(event: Event) {
-    console.log('%c%s', 'color: #cc0088', 'onButtonClick')
     event.stopPropagation();
     PageModule.updateEditedComponentRef(this.$props.thisComponent);
+    SidebarModule.updateSidebarEditor(false);
     PageModule.updateShowEditDelete(true);
   }
 }

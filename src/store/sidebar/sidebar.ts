@@ -1,26 +1,26 @@
 // Controls the sidebar
-import store from "@/store";
+import store from '@/store';
 import {
   Module,
   Mutation,
   Action,
   VuexModule,
   getModule
-} from "vuex-module-decorators";
-import { SidebarComponents } from "@/classes/sidebar-toolbar/sidebar-toolbar-builder";
+} from 'vuex-module-decorators';
+import { SidebarComponents } from '@/classes/sidebar-toolbar/sidebar-toolbar-builder';
 import {
   ComponentDefinitions,
   ComponentDefinitionInterface,
   ComponentTypesString
-} from "@/models/components/base-component";
+} from '@/models/components/base-component';
 import {
   Notification,
   notificationDefault
-} from "@/models/notifications/notifications";
-import { PageModule } from "@/store/page/page";
-import firebase from "firebase";
+} from '@/models/notifications/notifications';
+import { PageModule } from '@/store/page/page';
+import firebase from 'firebase';
 
-const SIDEBARCOLLECTION = "component-definitions";
+const SIDEBARCOLLECTION = 'component-definitions';
 
 export interface SidebarStateInterface {
   _sidebarElements: ComponentDefinitions;
@@ -30,13 +30,13 @@ export interface SidebarStateInterface {
   _settingsActivePage: string; // sets the page shown on the settings page e.g. colours, palette
 }
 
-@Module({ dynamic: true, name: "sidebar", store })
+@Module({ dynamic: true, name: 'sidebar', store })
 class SidebarStore extends VuexModule implements SidebarStateInterface {
   _sidebarElements: ComponentDefinitions = new ComponentDefinitions();
   _showSidebar = false;
-  _sidebarComponent: SidebarComponents = "sidebar-components";
+  _sidebarComponent: SidebarComponents = 'sidebar-components';
   _showTextModal = false;
-  _settingsActivePage = "";
+  _settingsActivePage = '';
 
   @Mutation
   private addComponent(editorComponent: ComponentDefinitionInterface) {
@@ -70,7 +70,7 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
 
   @Action({ rawError: true })
   public toggleSidebar(toggle: boolean) {
-    this.context.commit("setSidebarVisibility", toggle);
+    this.context.commit('setSidebarVisibility', toggle);
   }
 
   /**
@@ -81,21 +81,21 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
     const firestore = firebase.firestore();
     const notification: Notification = notificationDefault;
     return new Promise((resolve, reject) => {
-      this.context.commit("clearComponents");
+      this.context.commit('clearComponents');
       firestore
         .collection(SIDEBARCOLLECTION)
         .get()
         .then(collection => {
-          this.context.commit("clearComponents");
+          this.context.commit('clearComponents');
           collection.forEach(sidebarElements => {
             const component: ComponentDefinitionInterface = sidebarElements.data() as ComponentDefinitionInterface;
-            this.context.commit("addComponent", component);
+            this.context.commit('addComponent', component);
           });
           resolve(notification);
         })
         .catch(err => {
           notification.message = err;
-          notification.status = "Error";
+          notification.status = 'Error';
           reject(notification);
         });
     });
@@ -114,11 +114,11 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
         .doc(data.componentName)
         .set(data)
         .then(() => {
-          this.context.commit("addComponent", editorComponent);
+          this.context.commit('addComponent', editorComponent);
           resolve(notification);
         })
         .catch(err => {
-          notification.status = "Error";
+          notification.status = 'Error';
           notification.message = err;
           reject(notification);
         });
@@ -129,53 +129,52 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
   /** @description update the side bar menu with the editor linked to the component being edited
    * requires that the PageModule.editedComponetRef is set
    */
-  public updateSidebarEditor(editPenClicked?: boolean) {
-    if (!editPenClicked) editPenClicked = false;
+  public updateSidebarEditor(editPenClicked = false) {
     const componentType: ComponentTypesString = PageModule.editedComponentType;
     if (componentType) {
       switch (componentType) {
-        case "image":
+        case 'image':
           this.context.commit(
-            "setSidebarEditor",
-            "image-editor" as SidebarComponents
+            'setSidebarEditor',
+            'image-editor' as SidebarComponents
           );
           break;
-        case "text":
+        case 'text':
           if (editPenClicked) {
-            this.context.commit("setShowTextModal", true);
+            this.context.commit('setShowTextModal', true);
           } else {
             this.context.commit(
-              "setSidebarEditor",
-              "text-component-sidebar" as SidebarComponents
+              'setSidebarEditor',
+              'text-component-sidebar' as SidebarComponents
             );
           }
           break;
-        case "jumbo":
+        case 'jumbo':
           this.context.commit(
-            "setSidebarEditor",
-            "container-editor" as SidebarComponents
+            'setSidebarEditor',
+            'container-editor' as SidebarComponents
           );
           break;
-        case "pageTemplate":
+        case 'pageTemplate':
           this.context.commit(
-            "setSidebarEditor",
-            "container-editor" as SidebarComponents
+            'setSidebarEditor',
+            'container-editor' as SidebarComponents
           );
           break;
-        case "groupingContainer":
+        case 'groupingContainer':
           this.context.commit(
-            "setSidebarEditor",
-            "container-editor" as SidebarComponents
+            'setSidebarEditor',
+            'container-editor' as SidebarComponents
           );
           break;
-        case "navBar":
+        case 'navBar':
           this.context.commit(
-            "setSidebarEditor",
-            "container-editor" as SidebarComponents
+            'setSidebarEditor',
+            'container-editor' as SidebarComponents
           );
           break;
-        case "button":
-          this.context.commit("setSidebarEditor", "button-editor");
+        case 'button':
+          this.context.commit('setSidebarEditor', 'button-editor');
           break;
       }
     }
@@ -186,18 +185,18 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
    * @params sidebarMenu = name of the menu to show based on type of SidebarComponents
    */
   public setSidebarMenuTo(sidebarMenu: SidebarComponents) {
-    this.context.commit("setSidebarEditor", sidebarMenu);
+    this.context.commit('setSidebarEditor', sidebarMenu);
   }
 
   @Action
   public closeEditor() {
-    const sidebarComponent: SidebarComponents = "sidebar-components";
-    this.context.commit("setSidebarEditor", sidebarComponent);
+    const sidebarComponent: SidebarComponents = 'sidebar-components';
+    this.context.commit('setSidebarEditor', sidebarComponent);
   }
 
   @Action
   public updateShowTextModal(show: boolean) {
-    this.context.commit("setShowTextModal", show);
+    this.context.commit('setShowTextModal', show);
   }
 
   /**
@@ -207,7 +206,7 @@ class SidebarStore extends VuexModule implements SidebarStateInterface {
    */
   @Action
   public setSettingsPageActiveComponent(activePageName: string) {
-    this.context.commit("setSettingsActivePage", activePageName);
+    this.context.commit('setSettingsActivePage', activePageName);
   }
 
   get getSidebarElements(): ComponentDefinitionInterface[] {

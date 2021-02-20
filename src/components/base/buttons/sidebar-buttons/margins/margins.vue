@@ -24,13 +24,13 @@
 </template>
 
 <script lang="ts">
+import Vue from "vue";
+import Component from "vue-class-component";
+import NumericInputDropdown from "@/components/base/buttons/numeric-input-drop-down/numeric-input-dropdown.vue";
 import { ImpactedAttributeTypes } from "@/classes/sidebarButtonEventManager/sidebarButtonEventManager";
 import { StyleElement } from "@/classes/text-attributes/text-attributes";
 import { ButtonFactory } from "@/models/styles/button-factory/button-factory";
 import { ButtonIconNumeric } from "@/models/styles/button-icon/button-numeric-list/button-numeric-list";
-import Vue from "vue";
-import Component from "vue-class-component";
-import NumericInputDropdown from "@/components/base/buttons/numeric-input-drop-down/numeric-input-dropdown.vue";
 import { PageModule } from "@/store/page/page";
 import { Style, StyleTags } from "@/models/styles/styles";
 

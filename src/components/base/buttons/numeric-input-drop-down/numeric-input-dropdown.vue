@@ -8,7 +8,7 @@
       type="number"
       v-model="inputValue"
       size="2"
-      class="w-10 app-input-field text-sm text-right self-center md:w-8 md:mt-1 md:mb-1 mr-2"
+      class="w-10 bg-siteSurface text-onSurface text-sm text-right self-center md:w-8 md:mt-1 md:mb-1 mr-2"
       @change="onInputChange()"
     />
     <drop-down

@@ -96,7 +96,7 @@ export class PageElement implements Partial<PageElementInterface> {
   }
 
   get classDefinition(): string {
-    return this._classDefinition;
+    return this.classList.join(' ').trim();
   }
 
   set classDefinition(definition: string) {
@@ -229,7 +229,6 @@ export class PageElement implements Partial<PageElementInterface> {
       : classDef.substr(0, classDef.indexOf("-") + 1);
     this.removeClass(stem);
     this.classList.push(classDef);
-    this.classDefinition = this.classList.join(" ").trim();
   }
 
   getStylesToString(): string {

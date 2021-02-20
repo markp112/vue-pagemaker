@@ -14,7 +14,7 @@ import TextEditorSidebar from '@/components/core/sidebar/text-editor//text-edito
 import ButtonEditor from '@/components/core/sidebar/button-editor/button-editor.vue';
 import TextComponentSidebar from '@/components/core/sidebar/text-editor/text-component-sidebar.vue'; 
 import SitesMenu from '@/components/core/sidebar/sites-menu/sites-menu.vue';
-import SidebarPanelScreen from '@/components/base/buttons/sidebar-buttons/sidebar-panel.vue';
+import SidebarContainerEditor from '@/components/base/buttons/sidebar-buttons/sidebar-container-editor.vue';
 import {
   SidebarPanelBuilder,
   SidebarComponents
@@ -28,7 +28,7 @@ import { SidebarPanel } from '../../../models/sidebar/button-definition/sidebar-
     'sites-menu': SitesMenu,
     'image-editor': ImageEditorSidebar,
     'text-editor': TextEditorSidebar,
-    'container-editor': SidebarPanelScreen,
+    'container-editor': SidebarContainerEditor,
     'button-editor': ButtonEditor,
     'site-settings': SidebarPanelSiteSettings,
     'text-component-sidebar': TextComponentSidebar,

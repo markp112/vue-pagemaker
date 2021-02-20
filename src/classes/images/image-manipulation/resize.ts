@@ -17,9 +17,9 @@ export class ResizeImage {
   public resize(deltaChange: MousePostion) {
     this._imageContainer.width += deltaChange.x;
     this._imageContainer.height += deltaChange.y;
-    this._imageContainer.width = this.checkElementFitsWithOtherContainerElements(
-      this._imageContainer.width
-    );
+    // this._imageContainer.width = this.checkElementFitsWithOtherContainerElements(
+    //   this._imageContainer.width
+    // );
     this._imageContainer = this.containWithinParentElement();
     this._setNewSizes(deltaChange);
   }
@@ -30,13 +30,13 @@ export class ResizeImage {
     this._imageElement.containerDimensions = this._imageContainer;
   }
 
-  private checkElementFitsWithOtherContainerElements(width: number): number {
-    const newWidth = this._imageElement.parent.checkDimensionRelativeToContainerElements(
-      this._imageElement.ref,
-      width
-    );
-    return newWidth;
-  }
+  // private checkElementFitsWithOtherContainerElements(width: number): number {
+  //   const newWidth = this._imageElement.parent.checkDimensionRelativeToContainerElements(
+  //     this._imageElement.ref,
+  //     width
+  //   );
+  //   return newWidth;
+  // }
 
   private containWithinParentElement(): Dimensions {
     const checkedDimensions: Dimensions = {

@@ -119,8 +119,6 @@ export default class ColourSelect extends Vue {
 
   @Emit("onColourChange")
   onColourChange(colour: string) {
-    console.log('%c⧭', 'color: #eeff00', colour)
-      console.log('%c%s', 'color: #514080', this.textBackgroundorBorder)
     const style: StyleElement = {
       styleName: this.textBackgroundorBorder,
       value: colour,

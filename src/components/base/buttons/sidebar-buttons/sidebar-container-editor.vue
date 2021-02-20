@@ -62,8 +62,8 @@ import Margins from "@/components/base/buttons/sidebar-buttons/margins/margins.v
     "margin-buttons": Margins
   }
 })
-export default class SidebarPanelScreen extends Vue {
-  name = "SidebarPanelScreen";
+export default class SidebarContainerEditor extends Vue {
+  name = "SidebarContainerEditor";
 
   @Emit("iconClick")
   iconClick(classDef: string) {

@@ -3,20 +3,6 @@
     class="bg-gray-500 w-24 h-8 flex flex-row justify-between absolute p-1 rounded-md z-10 right-0 top-0 shadow-xl"
     v-if="isVisible"
   >
-    <div class="relative">
-      <img
-        src="@/assets/icons/pencil-24.png"
-        alt="Edit pencil"
-        @click="editClick()"
-        @mouseover="showPencilToolTip=true"
-        @mouseleave="showPencilToolTip=!showPencilToolTip"
-        class="cursor-pointer hover:bg-site-secondary-light"
-      />
-        <tooltip
-          tooltip="Edit element"
-          :showToolTip="showPencilToolTip"
-        ></tooltip>
-    </div>
     <div class="relative" v-if="showPen">
       <img
         src="@/assets/icons/fountain_pen-24.png"
@@ -68,7 +54,6 @@ import { SidebarModule } from "@/store/sidebar/sidebar";
 export default class EditDeleteOption extends Vue {
   name = 'edit menu'
   localShowMe = false;
-  showPencilToolTip = false;
   showPenToolTip = false;
   showBinToolTip = false;
   
@@ -77,13 +62,7 @@ export default class EditDeleteOption extends Vue {
   }
 
   updated() {
-    this.showPencilToolTip = this.showPenToolTip = this.showBinToolTip = false;
-  }
-
-
-  editClick(): void {
-    PageModule.updateShowEditDelete(false);
-    SidebarModule.updateSidebarEditor(false);
+    this.showPenToolTip = this.showBinToolTip = false;
   }
 
   editPenClick(): void {

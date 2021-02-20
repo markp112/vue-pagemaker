@@ -4,7 +4,8 @@ export interface SidebarIconInterface {
   toolTip: string;
 }
 
-/** @description consitutes an icon on the toolbar
+/** 
+ * @description consitutes an icon on the toolbar
  * @param icon - the image file that is displayed on the toolbar
  * @param className - tailwind class to be added to the edited element
  * @param toolTip - optional tooltip to show on hover over the icon
@@ -25,6 +26,7 @@ export interface SidebarToolbarInterface {
   toolbarIcons: SidebarIcon[];
   toolbarTitle: string;
 }
+
 /** @description contains the list of icons that make up a toolbar  */
 export class SidebarToolbar implements SidebarToolbarInterface {
   toolbarIcons: SidebarIcon[] = [];
@@ -48,7 +50,9 @@ export interface SidebarPanelInterface {
   sidebarPanels: SidebarToolbar[];
 }
 
-/** @description contains the list of toolbars to display for the given sidepanel */
+/** 
+ * @description contains the list of toolbars to display for the given sidepanel 
+ * */
 export class SidebarPanel implements SidebarPanelInterface {
   sidebarPanels: SidebarToolbar[] = [];
 
