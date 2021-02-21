@@ -6,9 +6,9 @@
     :id="$props.thisComponent.ref"
     class="handle flex flex-row justify-center items-center"
     @click.prevent="onButtonClick($event)"
-    @mousedown="startDrag($event)"
+    @mousedown="startDragButton($event)"
     @mousemove="dragElement($event)"
-    @mouseup="stopDrag($event)"
+    @mouseup="stopDragButton($event)"
   >
     {{ getData }}
     <resizeable
@@ -69,6 +69,16 @@ export default class ButtonComponent extends mixins(GenericComponentMixins) {
     PageModule.updateEditedComponentRef(this.$props.thisComponent);
     SidebarModule.updateSidebarEditor(false);
     PageModule.updateShowEditDelete(true);
+  }
+  
+  stopDragButton(event: MouseEvent) {
+    const componentToDrag = this.$refs[this.$props.thisComponent.ref] as HTMLDivElement;
+    this.stopDrag(event, componentToDrag);
+  }
+  
+  startDragButton(event: MouseEvent) {
+    const componentToDrag = this.$refs[this.$props.thisComponent.ref] as HTMLDivElement;
+    this.startDrag(event, componentToDrag);
   }
 }
 </script>

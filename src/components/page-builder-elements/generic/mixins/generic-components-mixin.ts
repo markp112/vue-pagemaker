@@ -131,21 +131,19 @@ export class GenericComponentMixins extends Vue {
     }
   }
   
-  startDrag(event: MouseEvent) {
+  startDrag(event: MouseEvent, componentToDrag: HTMLDivElement) {
     this.$props.thisComponent.addClass('absolute');
     this.isDragging = true;
     this.lastMousePosition = { x: event.pageX, y: event.pageY };
     this.$props.thisComponent.isAbsolute = true;
-    const textEditor = this.$refs[this.$props.thisComponent.ref] as HTMLDivElement;
-    textEditor.classList.add('cursor-move');
+    componentToDrag.classList.add('cursor-move');
     (this.$props.thisComponent as PageElement).addClass("z-50");
   }
 
-  stopDrag(event: MouseEvent): void {
+  stopDrag(event: MouseEvent, componentToDrag: HTMLDivElement): void {
     event.stopPropagation;
     this.isDragging = false;
-    const textEditor = this.$refs[this.$props.thisComponent.ref] as HTMLDivElement;
-    textEditor.classList.remove('cursor-move');
+    componentToDrag.classList.remove('cursor-move');
     (this.$props.thisComponent as PageElement).removeClass("z-50");
   }
 

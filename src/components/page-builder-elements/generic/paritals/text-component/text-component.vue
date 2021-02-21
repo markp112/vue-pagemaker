@@ -6,9 +6,9 @@
       :class="getClass"
       :style="getStyles()"
       @click="onTextClick($event)"
-      @mousedown="startDrag($event)"
+      @mousedown="startDragText($event)"
       @mousemove="dragElement($event)"
-      @mouseup="stopDrag($event)"
+      @mouseup="stopDragText($event)"
     >
       <text-data :content="this.$props.thisComponent.content"> </text-data>
       <resizeable
@@ -70,6 +70,16 @@ export default class TextComponent extends mixins(GenericComponentMixins) {
     PageModule.updateEditedComponentRef(this.$props.thisComponent);
     SidebarModule.updateSidebarEditor(false);
     PageModule.updateShowEditDelete(true);
+  }
+
+  stopDragText(event: MouseEvent) {
+    const componentToDrag = this.$refs[this.$props.thisComponent.ref] as HTMLDivElement;
+    this.stopDrag(event, componentToDrag);
+  }
+  
+  startDragText(event: MouseEvent) {
+    const componentToDrag = this.$refs[this.$props.thisComponent.ref] as HTMLDivElement;
+    this.startDrag(event, componentToDrag);
   }
 }
 </script>

@@ -10,7 +10,7 @@ export default {
 const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
   components: { Slider },
-  template: '<div class="bg-siteLight p-2" ><slider v-bind="$props" @onchange="onChange" />'
+  template: '<div class="bg-siteLight p-2" ><slider v-bind="$props" @onchange="onChange" /></div>'
 });
 
 export const Default = Template.bind({});

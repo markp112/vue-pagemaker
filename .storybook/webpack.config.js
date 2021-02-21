@@ -1,4 +1,5 @@
 const path = require('path');
+const tailwindcss = require("tailwindcss");
 
 module.exports = ({ config, mode }) => {
 
@@ -8,11 +9,16 @@ module.exports = ({ config, mode }) => {
       {
         loader: 'postcss-loader',
         options: {
+          esModule: false,
           sourceMap: true,
           config: {
             path: './.storybook/',
           },
         },
+        loader: 'css-loader',
+        options: {
+          esModule: false,
+        }
       },
     ],
 

@@ -18,6 +18,7 @@ export class ImageElement extends PageElement implements ImageElementInterface {
   private _ratio: number;
   private _maintainRatio: boolean;
   private _containerDimensions: Dimensions;
+  private _containerLocation: Location;
   private _location: Location = {
     top: 0,
     left: 0
@@ -28,6 +29,8 @@ export class ImageElement extends PageElement implements ImageElementInterface {
     this._maintainRatio = true;
     this._naturalSize = builder.naturalSize;
     this._containerDimensions = builder.containerDimensions;
+    this._containerLocation = builder.containerLocation;
+    console.log('%c⧭', 'color: #33cc99',  builder.containerLocation);
     this._ratio = this.calcRatio(
       this._naturalSize.width,
       this._naturalSize.height
@@ -75,6 +78,14 @@ export class ImageElement extends PageElement implements ImageElementInterface {
     this._containerDimensions = dimensions;
   }
 
+  set containerLocation(location: Location) {
+    this._containerLocation = location;
+  }
+
+  get containerLocation(): Location {
+    return this._containerLocation;
+  }
+
   get location(): Location {
     return this._location;
   }
@@ -116,6 +127,7 @@ export class ImageElement extends PageElement implements ImageElementInterface {
       ratio: this._ratio,
       maintainRatio: this._maintainRatio,
       containerDimensions: this._containerDimensions,
+      containerLocation: this._containerLocation,
       location: this._location
     });
   }

@@ -58,6 +58,7 @@ export class Zoom {
         break;
       case 'zoomToFit':
         scaledDimensions.height = this._imageContainer.height;
+        console.log('%c⧭', 'color: #ffa280', this._imageContainer);
         scaledDimensions.width = this._imageContainer.width;
         this._location.left = 0;
         this._location.top = 0;

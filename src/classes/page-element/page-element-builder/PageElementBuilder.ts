@@ -14,6 +14,7 @@ import {
 import {
   ComponentTypes,
   Dimensions,
+  Location,
   LOREMIPSUM
 } from "@/models/components/components";
 import { Style } from "@/models/styles/styles";
@@ -41,6 +42,7 @@ export class PageElementBuilder {
   private _naturalSize!: Dimensions;
   private _scaledSize!: Dimensions;
   private _containerDimensions!: Dimensions;
+  private _containerLocation!: Location;
   private _isAbsolute = false;
 
   setName(name: string) {
@@ -129,7 +131,12 @@ export class PageElementBuilder {
     this._containerDimensions = dimensions;
     return this;
   }
-
+  
+  setContainerLocation(location: Location) {
+    this._containerLocation = location;
+    return this;
+  }
+  
   setIsAbsolute(isAbsolute: boolean) {
     this._isAbsolute = isAbsolute;
     return this;
@@ -198,6 +205,10 @@ export class PageElementBuilder {
   public get containerDimensions(): Dimensions {
     return this._containerDimensions;
   }
+  
+  public get containerLocation(): Location {
+    return this._containerLocation;
+  }
 
   public get isAbsolute(): boolean {
     return this._isAbsolute;
@@ -239,6 +250,10 @@ export class PageElementBuilder {
         width: DEFAULT_WIDTH,
         height: DEFAULT_HEIGHT,
         units: Units.px
+      };
+      this._containerLocation = {
+        left: 0,
+        top: 0,
       };
       this._scaledSize = {
         width: DEFAULT_WIDTH,

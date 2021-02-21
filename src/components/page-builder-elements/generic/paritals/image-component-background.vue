@@ -12,7 +12,7 @@
         :style="getImageStyles()"
         :class="{ 'cursor-pan': draggingStarted }"
         @mousedown="onDraggingStarted($event)"
-        @mouseup="onDraggingStop($event)"
+        @mouseup="onDraggingStop()"
       />
       <resizeable
         :isActive="isActive"
@@ -25,10 +25,8 @@
         <img
           v-if="isActive"
           :src="getPath('move-32.png')"
-          class="controlIcon -bottom-3 block mr-auto ml-auto"
-          @mousedown="startDrag($event)"
-          @mousemove="dragElement($event)"
-          @mouseup="stopDrag($event)"
+          class="controlIcon -bottom-3 block mr-auto ml-auto select-none"
+          @mousedown="startDragImage($event)"
         />
       </div>
     </div>
@@ -129,7 +127,7 @@ export default class ImageComponentBackground extends mixins(
     window.addEventListener('mouseup', this.onDraggingStop);
   }
 
-  onDraggingStop(event: MouseEvent) {
+  onDraggingStop() {
     this.draggingStarted = false;
     window.removeEventListener('mousemove', this.panImage);
     window.removeEventListener('mouseup', this.onDraggingStop);
@@ -138,13 +136,37 @@ export default class ImageComponentBackground extends mixins(
   /**
    * @description move the image within the parent container
    */
-  dragImage(event: MouseEvent) {
-    //to be implemented
-    this.dragElement(event);
-  }
+  // dragImage(event: MouseEvent) {
+  //   this.dragElement(event);
+  // }
 
   startDragImage(event: MouseEvent) {
-    this.startDrag(event);
+    const componentToDrag = this.$refs[this.HTML_IMAGE_PARENT] as HTMLDivElement;
+    this.startDrag(event, componentToDrag);
+    window.addEventListener('mousemove', this.dragImage);
+    window.addEventListener('mouseup', this.stopDragImage);
+  }
+
+  stopDragImage(event: MouseEvent) {
+    const componentToDrag = this.$refs[this.HTML_IMAGE_PARENT] as HTMLDivElement;
+    this.stopDrag(event, componentToDrag);
+    window.removeEventListener('mousemove', this.dragImage);
+    window.removeEventListener('mouseup', this.stopDragImage);
+  }
+
+  dragImage(event: MouseEvent) {
+    console.log('%c%s', 'color: #7f2200', 'dragImage')
+    if (!this.isDragging) return;
+    event.stopPropagation;
+    const currentMousePosition: MousePosition = { x: event.pageX, y: event.pageY };
+    const deltaX = currentMousePosition.x - this.lastMousePosition.x;
+    const deltaY = currentMousePosition.y - this.lastMousePosition.y;
+    const containerLocation = (this.$props.thisComponent as ImageElement).containerLocation;
+    containerLocation.top += deltaY;
+    containerLocation.left += deltaX;
+    this.parentContainer.style.left = containerLocation.left + 'px';
+    this.parentContainer.style.top = containerLocation.top + 'px';
+    this.lastMousePosition = { ...currentMousePosition }
   }
 
   panImage(event: MouseEvent) {
@@ -174,10 +196,12 @@ export default class ImageComponentBackground extends mixins(
       y: coordinates.clientY,
     };
     this.imageManipulator.resize(currentMousePosition);
-    this.parentContainer.style.height =
     this.imageManipulator.imageElement.containerDimensions.height + 'px';
+    (this.$props.thiscomponent as ImageElement).containerDimensions.height
+    this.parentContainer.style.height =
+      this.imageManipulator.imageElement.containerDimensions.height + 'px';
     this.parentContainer.style.width =
-    this.imageManipulator.imageElement.containerDimensions.width + 'px';
+      this.imageManipulator.imageElement.containerDimensions.width + 'px';
   }
 
 }
