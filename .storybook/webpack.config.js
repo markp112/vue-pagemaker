@@ -9,7 +9,6 @@ module.exports = ({ config, mode }) => {
       {
         loader: 'postcss-loader',
         options: {
-          esModule: false,
           sourceMap: true,
           config: {
             path: './.storybook/',

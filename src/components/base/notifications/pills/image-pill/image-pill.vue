@@ -1,10 +1,12 @@
 <template>
-  <div class="w-16 h10 flex flex-row rounded-lg justify-start">
-    <span class="w-4"
+  <div class="pill">
+    <span class="w-1 inline-block"
         :class="$props.pillColour"
     >
     </span>
-    <span class="text-sm p2 bg-white"></span>
+    <span class="pl-1 bg-white overflow-hidden max-w-xs">
+      {{ $props.label }}
+    </span>
   </div>
 </template>
 
@@ -14,7 +16,8 @@ import Component from 'vue-class-component'
 
   @Component({
     props: {
-      pillColour: {default: 'bg-red-500'}
+      pillColour: { default: 'bg-red-500' },
+      label: { default: '' },
     }
   })
   export default class ImagePill extends Vue{
@@ -23,3 +26,23 @@ import Component from 'vue-class-component'
     
   }
 </script>
+
+<style lang="css" scoped>
+  .pill {
+    @apply overflow-hidden;
+    @apply w-32;
+    @apply h-8;
+    @apply flex;
+    @apply flex-row;
+    @apply flex-nowrap;
+    @apply rounded-full;
+    @apply justify-start;
+    @apply border;
+    @apply border-gray-200;
+    @apply text-sm;
+    @apply font-semibold;
+    @apply py-1;
+    @apply px-6;
+  }
+
+</style>
