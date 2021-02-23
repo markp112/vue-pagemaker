@@ -25,11 +25,8 @@
 
 <script lang="ts">
 import Component from "vue-class-component";
-import { Prop, Vue, Emit } from "vue-property-decorator";
-import {
-  SnackbarMessage,
-  initSnackbarMessage
-} from "../../../../models/notifications/snackbar";
+import { Vue } from "vue-property-decorator";
+import { SnackbarMessage } from "../../../../models/notifications/snackbar";
 import { SnackbarModule } from "@/store/snackbar/snackbar";
 
 @Component
