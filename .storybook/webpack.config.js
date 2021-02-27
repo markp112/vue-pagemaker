@@ -20,8 +20,12 @@ module.exports = ({ config, mode }) => {
         }
       },
     ],
-
     include: path.resolve(__dirname, '../storybook/'),
+    resolve: {
+      alias : {
+        '@': path.resolve(__dirname, '../src'),
+      }
+    }
   });
 
   return config;

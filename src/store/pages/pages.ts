@@ -12,11 +12,9 @@ import {
   notificationDefault
 } from "@/models/notifications/notifications";
 import firebase from "firebase";
-// import { authStore, siteStore } from '../store-accessors';
 import { AuthModule } from "../auth/auth";
 import { SitesModule } from "../sites/sites";
 import { convertTimeStampDate } from "@/models/Types/generic-types";
-import { PageStateInterface } from "../page/page";
 
 export interface PagesStateInterface {
   pages: Page[];
