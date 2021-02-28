@@ -7,6 +7,7 @@ export default {
   component: ImageCard,
   argTypes: { 
     removeTag: { action: 'removeTag' },
+    addTag: { action: 'addTag' },
     deleteImage: { action: 'deleteImage' },
     imageSelected: { action: 'imageSelected' },
   }
@@ -33,6 +34,7 @@ const Template = (args, { argTypes }) => ({
       @removeTag="removeTag($event)"
       @deleteImage="deleteImage($event)" 
       @imageSelected="imageSelected($event)"
+      @addTag="addTag"
     />
     </div>`
 });

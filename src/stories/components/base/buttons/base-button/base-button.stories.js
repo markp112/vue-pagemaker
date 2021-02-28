@@ -1,5 +1,4 @@
 import BaseButton from '/src/components/base/buttons/base-button/base-button.vue';
-import '/src/stories/utils.css';
 import '/src/assets/styles/index.css';
 
 export default { 
@@ -43,5 +42,12 @@ export const Blue = Template.bind({});
 Blue.args = {
   label: 'blue',
   size: 'medium',
-  bgColour: 'bg-red-500'
+  bgColour: 'bg-blue-500'
+};
+
+export const Disabled = Template.bind({});
+Disabled.args = {
+  label: 'disabled',
+  size: 'medium',
+  disabled: true
 };

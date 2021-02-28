@@ -1,5 +1,5 @@
 <template>
-  <div class="w-64 h-72 flex flex-col justify-start border border-siteSecondary rounded-sm shadow-md">
+  <div class="w-64 h-72 flex flex-col justify-start border border-siteSecondary rounded-sm shadow-md relative">
     <div
       ref="card-header" 
       class="flex flex-row justify-between text-sm p-1 bg-sitePrimary text-siteSurface">
@@ -18,10 +18,20 @@
     >
       <img class="block h-44 w-full"
         style="background-size:contain; background-repeat:no-repeat; background-position: center"
-        :style="getBackgroundImage()"
+        :src="$props.image.url"
+        ref="imageInCard"
       >
     </div>
-    <div class="py-2 px-2 flex flex-row flex-wrap">
+    <div class="py-2 px-2 flex flex-row flex-wrap overflow-y-scroll">
+      <p class="w-full sticky top-0">
+        <base-button
+          class="self-start"
+          size="x-small"
+          label="New"
+          @onClick="showAddTag=true"
+        >
+        </base-button>
+      </p>
       <image-pill 
         v-for="tag in $props.image.tags"
         :key="tag"
@@ -30,8 +40,15 @@
         pillColour="bg-siteSecondary"
         class="ml-1 mt-1"
         @removeClick="removeTag($event)"
-      ></image-pill>
+      >
+      </image-pill>
     </div>
+    <add-tag
+      v-if="showAddTag"
+      class="absolute top-44 left-8 z-50 h-20 w-full"
+      @onCloseClick="showAddTag=false"
+      @onOkClick="addTag($event)"
+    ></add-tag>
   </div>
 </template>
 
@@ -39,7 +56,10 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Emit } from 'vue-property-decorator';
-import ImagePill from '../../notifications/pills/image-pill/image-pill.vue';
+import ImagePill from '@/components/base/notifications/pills/image-pill/image-pill.vue';
+import Tag from '@/components/base/popups/tag/tag.vue'
+import BaseButton from '@/components/base/buttons/base-button/base-button.vue';
+import firebase from 'firebase';
 
 export interface ImageCardProps {
   title: string;
@@ -61,10 +81,13 @@ export interface ImageCardProps {
   },
   components: {
     'image-pill': ImagePill,
+    'add-tag': Tag,
+    'base-button': BaseButton,
   }
 })
 export default class ImageCard extends Vue {
   name = 'image-card';
+  showAddTag = false;
 
   @Emit('removeTag')
   removeTag(tag: string) {
@@ -81,9 +104,29 @@ export default class ImageCard extends Vue {
     return url;
   }
 
-  getBackgroundImage(): string {
-    const style = `background-image: url(${this.$props.image.url})`;
-    return style;
+  @Emit("addTag")
+  addTag(tag: string): string {
+    if (!this.$props.image.tags.includes(tag)) {
+      this.$props.image.tags.push(tag);
+    };
+    return tag;
+  }
+
+  getBackgroundImage() {
+    const storageRef = firebase.storage().ref();
+
+  const imageRef = storageRef.child('hDkHXv0i06dVCPmIfRKefti9t4p1/images/' + this.$props.image.title);
+    const img = this.$refs['imageInCard'] as HTMLImageElement;
+    console.log('%c⧭', 'color: #ff0000', this.$props.image.url)
+    img.src = this.$props.image.fullPath;
+  // return new Promise(() => {
+  //   imageRef.getDownloadURL()
+  //   .then (url => {
+  //     const img = this.$refs['imageInCard'] as HTMLImageElement;
+  //     img.src = url;
+  //   })
+  // })
+
   }
 
   getPath(image: string): string {

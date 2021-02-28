@@ -6,7 +6,8 @@ export default {
   title: "components/popups/tag",
   component: Tag,
   argTypes: { 
-  
+    onOkClick: { action: 'onOkClick' },
+    onCloseClick: { action: 'onCloseClick' },
   }
 };
 
@@ -15,8 +16,10 @@ const Template = (args, { argTypes }) => ({
   components: { Tag },
   template: `<div class="p-2">
     <tag
-      class="w-54 h-16"
+      class="w-54 h-20"
       v-bind="$props"
+      @onOkClick="onOkClick"
+      @onCloseClick="onCloseClick"
     />
     </div>`
 });

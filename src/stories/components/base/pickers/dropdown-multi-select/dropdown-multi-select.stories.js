@@ -6,7 +6,9 @@ export default {
   title: "components/Multi Select",
   component: DropdownMultiSelect,
   argTypes: {
-    listItems: { control: { type: 'array' }}
+    listItems: { control: { type: 'array' }},
+    removeItem: { action: 'removeItem'},
+    itemClick: { action: 'itemClickItem'},
   }
 };
 
@@ -24,7 +26,7 @@ const listItems = [
 const Template = (args, { argTypes }) => ({
   props: Object.keys(argTypes),
   components: { DropdownMultiSelect },
-  template: '<div class="p-2 w-6/12"><dropdownMultiSelect @itemClick="itemClick" v-bind="$props" /></div>'
+  template: '<div class="p-2 w-8/12"><dropdownMultiSelect @itemClick="itemClick($event)" @removeItem="removeItem($event)" v-bind="$props" /></div>'
 });
 
 export const Default = Template.bind({});

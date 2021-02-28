@@ -8,16 +8,14 @@
                 <div
                   v-for="selectedItem in selectedItems"
                   :key="selectedItem"
-                  class="flex justify-center items-center m-1 font-medium py-1 px-2 rounded-full text-siteSurface bg-site-secondary-light border border-siteLight">
-                    <div class="text-xs font-normal leading-none max-w-full flex-initial">{{ selectedItem }}</div>
-                    <div class="flex flex-auto flex-row-reverse">
-                      <div @click="removeItem(selectedItem)">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x cursor-pointer hover:text-teal-400 rounded-full w-4 h-4 ml-2">
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                      </div>
-                    </div>
+                  class="flex justify-center items-center"
+                >
+                    <image-pill
+                      :label="selectedItem"
+                      size="small"
+                      pillColour="bg-sitePrimary"
+                      @removeClick="removeItem(selectedItem)"
+                      ></image-pill>
                 </div>
                   
                 <div class="flex-1">
@@ -65,6 +63,7 @@
 <script lang="ts">
   import Vue from 'vue';
   import Component from 'vue-class-component';
+  import ImagePill from '@/components/base/notifications/pills/image-pill/image-pill.vue'
   import { Emit } from 'vue-property-decorator';
 
   @Component({
@@ -72,8 +71,11 @@
       listItems: {
         default: (): string[] => {
           return [];
-        }
-      }
+        },
+      },
+    },
+    components: {
+      'image-pill': ImagePill,
     }
   })
   export default class DropdownMultiSelect extends Vue{
@@ -89,7 +91,7 @@
       return this.selectedItems;
     }
 
-    @Emit("itemClick")
+    @Emit("removeItem")
     removeItem(selectedItem: string) {
       this.selectedItems = this.selectedItems.filter(item => item !== selectedItem);
       return this.selectedItems;

@@ -2,7 +2,7 @@
   <img
     src="@/assets/icons/close-24.png"
     alt="close button"
-    class="cursor-pointer hover:translate-y-1"
+    class="cursor-pointer hover:bg-siteBackground rounded-full h-6 w-6"
     @click="onClick()"
   />
 </template>

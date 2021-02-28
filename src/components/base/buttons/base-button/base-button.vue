@@ -17,9 +17,10 @@ import { Emit } from 'vue-property-decorator';
     label: {
       default: '',
     },
-    bgColour: { default: 'bg-gray-600' },
-    textColour: { default: 'text-white' },
-    size: { default: 'medium' }   
+    bgColour: { default: 'bg-siteLight' },
+    textColour: { default: 'text-accent2' },
+    size: { default: 'medium' },
+    disabled: { default: false },  
   }
 })
 export default class BaseButton extends Vue {
@@ -31,7 +32,16 @@ export default class BaseButton extends Vue {
   }
 
   get getClasses(): string {
-    return `${this.$props.bgColour} ${this.$props.textColour} button-${this.$props.size}`
+    const size = `button-${this.$props.size}`;
+    if (this.$props.disabled) {
+      return `bg-gray-500 text-bg-gray-200 ${size}`;
+    }
+    const classes = `cursor-pointer 
+      ${this.$props.bgColour} 
+      ${this.$props.textColour} 
+      ${size}
+      hover:bg-siteSecondary hover:text-siteSurface`
+    return classes 
   }
 }
 </script>
@@ -42,15 +52,7 @@ export default class BaseButton extends Vue {
     @apply rounded-lg;
     @apply p-2;
     @apply inline-block;
-    @apply cursor-pointer;
-    @apply bg-siteLight;
-    @apply text-accent2;
     @apply text-center;
-  }
-
-  .button:hover {
-    @apply bg-siteSecondary;
-    @apply text-siteSurface;
   }
 
   .button-medium {
