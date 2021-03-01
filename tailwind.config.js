@@ -395,7 +395,7 @@ module.exports = {
       "4/6": "66.666667%",
       "5/6": "83.333333%",
       full: "100%",
-      screen: "100vh"
+      screen: "98vh"
     }),
     inset: (theme, { negative }) => ({
       auto: "auto",
@@ -481,7 +481,7 @@ module.exports = {
     maxHeight: theme => ({
       ...theme("spacing"),
       full: "100%",
-      screen: "100vh"
+      screen: "99vh"
     }),
     maxWidth: (theme, { breakpoints }) => ({
       none: "none",
@@ -735,7 +735,7 @@ module.exports = {
       "10/12": "83.333333%",
       "11/12": "91.666667%",
       full: "100%",
-      screen: "100vw",
+      screen: "98vw",
       min: "min-content",
       max: "max-content"
     }),

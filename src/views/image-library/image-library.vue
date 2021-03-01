@@ -1,16 +1,16 @@
 <template>
-  <div>
-    <div class="flex flex-row justify-between w-full h-16">
+  <div class="h-3/5 w-full">
+    <div class="flex flex-row justify-between w-full h-16 border-b-2 border-gray-500">
       <p>Image Library</p>
       <dropdown-select></dropdown-select>
       <close-button></close-button>
     </div>
-    <div class="flex flex-row flex-wrap w-full p-2">
+    <div class="flex flex-row flex-wrap w-full p-2 justify-evenly overflow-y-scroll h-full">
       <image-card
         v-for="(image, index) in getImages"
         :image="image"
         :key="index"
-        class="ml-2 mt-2"
+        class="mt-4"
       ></image-card>
       
     </div>
@@ -42,16 +42,12 @@ export default class ImageLibrary extends Vue {
   gs = 'https://firebasestorage.googleapis.com/v0/b';
   
   created() {
+    this.images = [];
     CloudStorageModule.updateBucketName('images');
     this.getImageDetailsFromStorage()
     .then(files => {
       const fileList = files;
-      console.log('%c⧭', 'color: #0088cc', fileList)
-      this.getFileUrls(fileList).then(
-        urlList => {
-          this.images = urlList;
-          console.log('%c⧭', 'color: #00bf00', this.images)
-        });
+      this.getFileUrls(fileList);
     });
   }
 
@@ -62,32 +58,22 @@ export default class ImageLibrary extends Vue {
       CloudStorageModule.getImagesFromBucket()
       .then(files => {
         fileList = (files as BucketImage[]);
-        console.log('%c⧭', 'color: #917399', fileList)
         resolve(fileList);
       });
     });
   }
 
-  private getFileUrls(fileList: BucketImage[]): Promise<ImageCardProps[]> {
-    const images: ImageCardProps[] = [];
-    return new Promise((resolve, reject) => {
-      CloudStorageModule.getFileUrl(fileList)
-        .then(result => {
-          console.log('%c⧭', 'color: #f200e2', result)
-          const theFiles = result as BucketImage[];
-          console.log('%c⧭', 'color: #ffa640', theFiles.length)
-          theFiles.forEach(bucketImage => {
-            console.log('%c⧭', 'color: #00b300', bucketImage)
-            const image: ImageCardProps = {
-              url: bucketImage.fullPath,
-              title: bucketImage.name,
-              tags: ['xxx', 'yyy']
-            };
-            images.push(image);
-          })
-          console.log('%c⧭', 'color: #1d5673', images)
-          resolve(images);
-        })
+  private getFileUrls(fileList: BucketImage[]) {
+    fileList.forEach(bucketImage => {
+      CloudStorageModule.getFileUrl(bucketImage.name)
+      .then (url => {
+        const image: ImageCardProps = {
+            url: url,
+            title: bucketImage.name,
+            tags: ['xxx', 'yyy'],
+          };
+        this.images.push(image);
+      })
     })
   }
 

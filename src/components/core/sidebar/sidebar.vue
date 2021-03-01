@@ -1,7 +1,7 @@
 <template>
-  <div class="p-0 h-screen">
+ 
     <component :is="sidebarContent" :toolbarPanel="sidebarPanel"></component>
-  </div>
+
 </template>
 
 <script lang="ts">

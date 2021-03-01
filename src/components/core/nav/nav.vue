@@ -1,5 +1,5 @@
 <template>
-  <div class="w-screen py-2 bg-sitePrimary shadow-lg h-16 rounded-t-lg">
+  <div class="py-2 bg-sitePrimary shadow-lg h-16">
     <nav class=" text-onPrimary flex items-center justify-between">
       <div class="ml-8">
         <img

@@ -1,5 +1,5 @@
 <template>
-  <div class=" ml-4 w-full flex-initial">
+  <div class=" w-full flex-initial">
     <ul class="flex flex-row justify-start font-smaller text-accent-600">
       <li
         v-for="(breadcrumb, idx) in getbreadCrumbList"

@@ -14,7 +14,6 @@ import {
 } from "@/models/notifications/notifications";
 import firebase from "firebase";
 import { AuthModule } from "../auth/auth";
-import { secrets } from "@/firebase/secrets";
 
 export interface CloudStorageInterface {
   _bucketName: string;
@@ -60,30 +59,22 @@ class CloudStorageStore extends VuexModule implements CloudStorageInterface {
   }
 
   @Action
-  getFileUrl(files: BucketImage[]): Promise<BucketImage[]> {
+  getFileUrl(fileName: string): Promise<string> {
     const userId = AuthModule.currentUser.id;
     const path = `${userId}/${this._bucketName}/`;
     const fileStore = firebase.storage().ref(path);
     return new Promise((resolve, reject) => {
-      const theFiles: BucketImage[] = [];
-      files.forEach(file => {
-        const imageRef = fileStore.child(file.name)
-        imageRef.getDownloadURL()
-        .then(url => {
-          const theFile: BucketImage = {
-            name: file.name,
-            fullPath: url,
-            bucket: file.bucket,
-          }
-          theFiles.push(theFile);
-        })
-      });
-      resolve(theFiles);  
-    })
+      fileStore.child(fileName).getDownloadURL()
+      .then(url => {
+        resolve(url);  
+      })
+    });
   }
+
 
   get bucketName(): string {
     return this._bucketName;
   }
 }
+
 export const CloudStorageModule = getModule(CloudStorageStore);

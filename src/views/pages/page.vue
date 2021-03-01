@@ -1,5 +1,5 @@
 <template>
-  <div class="form-page-wrapper mt-24 w-full flex-wrap">
+  <div class="form-page-wrapper mt-24 w-full flex-wrap h-full">
     <div class="w-7/12 bg-secondary-100 text-accent1 text-3xl flex flex-row">
       <img src="@/assets/images/page-icon.png" alt="picture of lined paper" />
       <p class="mt-4">{{ pageTitle }}</p>
