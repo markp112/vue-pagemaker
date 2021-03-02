@@ -1,7 +1,5 @@
 <template>
- 
     <component :is="sidebarContent" :toolbarPanel="sidebarPanel"></component>
-
 </template>
 
 <script lang="ts">

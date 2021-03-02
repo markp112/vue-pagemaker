@@ -1,12 +1,12 @@
 <template>
-  <div class="min-w-screen max-w-screen min-h-screen max-h-screen border-box font-body">
+  <div class="min-w-screen max-w-screen border-box font-body flex flex-col h-screen overflow-hidden">
     <nav-bar></nav-bar>
     <bread-crumb></bread-crumb>
-    <div class="flex flex-row justify-between w-full h-full">
-      <div class="w-2/12 max-h-full min-h-full">
+    <div class="flex flex-row justify-between w-full h-full min-h-full">
+      <div class="w-2/12 ">
         <side-bar></side-bar>
       </div>
-      <div class="mt-0 px-6 w-10/12 flex-row justify-around h-full">
+      <div class="mt-0 px-6 w-10/12 flex-row justify-around min-h-full">
         <router-view />
       </div>
     </div>

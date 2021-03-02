@@ -1,5 +1,5 @@
 <template>
-  <div class="h-3/5 w-full">
+  <div class="h-4/5 w-full">
     <div class="flex flex-row justify-between w-full h-16 border-b-2 border-gray-500">
       <p>Image Library</p>
       <dropdown-select></dropdown-select>
@@ -11,8 +11,9 @@
         :image="image"
         :key="index"
         class="mt-4"
-      ></image-card>
-      
+        @addTag="addTag($event)"
+      >
+      </image-card>
     </div>
   </div>
 </template>
@@ -39,7 +40,7 @@ import { BucketImage } from '@/store/services/models/bucket-image';
 export default class ImageLibrary extends Vue {
   name = 'image-library';
   images: ImageCardProps[] = [];
-  gs = 'https://firebasestorage.googleapis.com/v0/b';
+  tags: string[] = [];
   
   created() {
     this.images = [];
@@ -48,12 +49,12 @@ export default class ImageLibrary extends Vue {
     .then(files => {
       const fileList = files;
       this.getFileUrls(fileList);
+      this.getTags(fileList);
     });
   }
 
   private getImageDetailsFromStorage(): Promise<BucketImage[]> {
     let fileList: BucketImage[] = [];
-    CloudStorageModule.updateBucketName('images');
     return new Promise((resolve, reject) => {
       CloudStorageModule.getImagesFromBucket()
       .then(files => {
@@ -70,11 +71,25 @@ export default class ImageLibrary extends Vue {
         const image: ImageCardProps = {
             url: url,
             title: bucketImage.name,
-            tags: ['xxx', 'yyy'],
+            tags: [],
           };
         this.images.push(image);
       })
-    })
+    });
+  }
+
+  private getTags(fileList: BucketImage[]) {
+    fileList.forEach(bucketImage => {
+      CloudStorageModule.getImageMetaData(bucketImage.name)
+      .then (tags => {
+        console.log('%c⧭', 'color: #00ff88', tags)
+      })
+    });
+  }
+
+  private addTag(tagAndImage: { imageName: string, tag: string }) {
+      CloudStorageModule.addMetaData(tagAndImage);
+      this.tags.push(tagAndImage.tag);
   }
 
   get getImages() {

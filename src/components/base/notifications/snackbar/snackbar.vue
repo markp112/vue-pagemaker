@@ -1,6 +1,6 @@
 <template>
   <div
-    class="snackbar-wrapper z-50 w-full"
+    class="snackbar-wrapper z-50 w-full snackbar-show "
     :class="{
       'snackbar-show': snackbarContent.show,
       'snackbar-hide': !snackbarContent.show

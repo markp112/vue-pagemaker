@@ -1,9 +1,9 @@
 <template>
-  <section>
+  <section class="h-full min-h-full">
     <h2 class="page-heading">Editing: {{ title }} Page</h2>
     <div
       :id="id"
-      class="w-full h-auto relative p-4 border border-gray-400"
+      class="relative p-4 border border-gray-400"
       :class="getClass()"
       ref="ROOT"
       @dragover.prevent="bgColour = 'bg-gray-600'"

@@ -27,7 +27,7 @@
         <base-button
           class="self-start"
           size="x-small"
-          label="New"
+          label="Add tag"
           @onClick="showAddTag=true"
         >
         </base-button>
@@ -105,28 +105,11 @@ export default class ImageCard extends Vue {
   }
 
   @Emit("addTag")
-  addTag(tag: string): string {
+  addTag(tag: string): { imageName: string, tag: string } {
     if (!this.$props.image.tags.includes(tag)) {
       this.$props.image.tags.push(tag);
     };
-    return tag;
-  }
-
-  getBackgroundImage() {
-    const storageRef = firebase.storage().ref();
-
-  const imageRef = storageRef.child('hDkHXv0i06dVCPmIfRKefti9t4p1/images/' + this.$props.image.title);
-    const img = this.$refs['imageInCard'] as HTMLImageElement;
-    console.log('%c⧭', 'color: #ff0000', this.$props.image.url)
-    img.src = this.$props.image.fullPath;
-  // return new Promise(() => {
-  //   imageRef.getDownloadURL()
-  //   .then (url => {
-  //     const img = this.$refs['imageInCard'] as HTMLImageElement;
-  //     img.src = url;
-  //   })
-  // })
-
+    return {imageName: this.$props.image.title, tag:tag };
   }
 
   getPath(image: string): string {

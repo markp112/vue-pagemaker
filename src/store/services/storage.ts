@@ -71,6 +71,49 @@ class CloudStorageStore extends VuexModule implements CloudStorageInterface {
     });
   }
 
+  @Action
+  public getImageMetaData(fileName: string): Promise<string[]> {
+    const userId = AuthModule.currentUser.id;
+    const path = `${userId}/`;
+    const fileStore = firebase.storage().ref(path);
+    const imageRef = fileStore.child(`${this._bucketName}/${fileName}`);
+    return new Promise((resolve, reject) => {
+      imageRef.getMetadata()
+      .then(metadata => {
+        console.log('%c⧭', 'color: #7f7700', metadata);
+        
+        const tags: string[] = metadata.customMetadata === undefined ? [] : metadata.customMetadata;
+        resolve(tags);
+      })
+    })
+  }
+
+  @Action({ rawError: true })
+  addMetaData(metaData: { imageName: string, tag: string }) {
+    const userId = AuthModule.currentUser.id;
+    const path = `${userId}/`;
+    const fileStore = firebase.storage().ref(path);
+    const imageRef = fileStore.child(`${this._bucketName}/${metaData.imageName}`);
+    const storageMetaData = {
+      cacheControl: 'public,max-age=300',
+      customMetadata: {
+        'tags': metaData.tag,
+      },
+    };
+    return new Promise((resolve, reject) => {
+      imageRef.updateMetadata(storageMetaData)
+      .then(result => {
+        console.log('%c⧭', 'color: #1d3f73', result);
+        resolve(result);
+      })
+      .catch(err => {
+      console.log('%c⧭', 'color: #cc0088', err);
+        reject(err);
+      });
+    });
+  }
+
+
 
   get bucketName(): string {
     return this._bucketName;
