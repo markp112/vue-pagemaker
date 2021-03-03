@@ -17,6 +17,11 @@ import { AuthModule } from "../auth/auth";
 
 export interface CloudStorageInterface {
   _bucketName: string;
+};
+
+export interface ImageTags {
+  imageName: string;
+  tags: string[];
 }
 
 @Module({ name: "CloudStorage-module", dynamic: true, store })
@@ -80,26 +85,26 @@ class CloudStorageStore extends VuexModule implements CloudStorageInterface {
     return new Promise((resolve, reject) => {
       imageRef.getMetadata()
       .then(metadata => {
-        console.log('%c⧭', 'color: #7f7700', metadata);
-        
-        const tags: string[] = metadata.customMetadata === undefined ? [] : metadata.customMetadata;
+        const tagList: string = metadata.customMetadata === undefined ? '' : metadata.customMetadata.tags;
+        const tags: string[] = tagList === '' ? [] : tagList.split(',');
         resolve(tags);
       })
     })
   }
 
   @Action({ rawError: true })
-  addMetaData(metaData: { imageName: string, tag: string }) {
+  addMetaData(metaData: ImageTags) {
+    console.log('%c⧭', 'color: #33cc99', metaData);
     const userId = AuthModule.currentUser.id;
     const path = `${userId}/`;
     const fileStore = firebase.storage().ref(path);
     const imageRef = fileStore.child(`${this._bucketName}/${metaData.imageName}`);
     const storageMetaData = {
-      cacheControl: 'public,max-age=300',
       customMetadata: {
-        'tags': metaData.tag,
+        'tags': metaData.tags.toString(),
       },
     };
+    console.log('%c⧭', 'color: #e5de73', storageMetaData);
     return new Promise((resolve, reject) => {
       imageRef.updateMetadata(storageMetaData)
       .then(result => {

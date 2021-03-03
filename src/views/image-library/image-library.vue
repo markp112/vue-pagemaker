@@ -2,7 +2,7 @@
   <div class="h-4/5 w-full">
     <div class="flex flex-row justify-between w-full h-16 border-b-2 border-gray-500">
       <p>Image Library</p>
-      <dropdown-select></dropdown-select>
+      <dropdown-select :listItems="tags"></dropdown-select>
       <close-button></close-button>
     </div>
     <div class="flex flex-row flex-wrap w-full p-2 justify-evenly overflow-y-scroll h-full">
@@ -24,7 +24,7 @@ import ImageCard, { ImageCardProps } from '@/components/base/cards/image-card/im
 import DropdownMultiSelect from '@/components/base/pickers/dropdown-multi-select/dropdown-multi-select.vue';
 import CloseButton from '@/components/base/buttons/close-button/close-button.vue';
 import Component from 'vue-class-component';
-import { CloudStorageModule } from '@/store/services/storage';
+import { CloudStorageModule, ImageTags } from '@/store/services/storage';
 import { BucketImage } from '@/store/services/models/bucket-image';
 
 @Component({
@@ -49,7 +49,6 @@ export default class ImageLibrary extends Vue {
     .then(files => {
       const fileList = files;
       this.getFileUrls(fileList);
-      this.getTags(fileList);
     });
   }
 
@@ -69,27 +68,40 @@ export default class ImageLibrary extends Vue {
       CloudStorageModule.getFileUrl(bucketImage.name)
       .then (url => {
         const image: ImageCardProps = {
-            url: url,
-            title: bucketImage.name,
-            tags: [],
-          };
-        this.images.push(image);
-      })
+          url: url,
+          title: bucketImage.name,
+          tags: [],
+        };
+        CloudStorageModule.getImageMetaData(bucketImage.name)
+        .then (tags => {
+          if (tags.length > 0) {
+            image.tags = tags;
+            this.addTagsToTags(tags)
+          }
+          this.images.push(image);
+        })  
+      });
     });
   }
 
-  private getTags(fileList: BucketImage[]) {
-    fileList.forEach(bucketImage => {
-      CloudStorageModule.getImageMetaData(bucketImage.name)
-      .then (tags => {
-        console.log('%c⧭', 'color: #00ff88', tags)
-      })
-    });
+  addTagsToTags(tags: string[]) {
+    const tempTags = new Set([...this.tags, ...tags]);
+    this.tags = [...tempTags];
   }
 
   private addTag(tagAndImage: { imageName: string, tag: string }) {
-      CloudStorageModule.addMetaData(tagAndImage);
-      this.tags.push(tagAndImage.tag);
+    const image: ImageCardProps = this.images.filter(image => image.title === tagAndImage.imageName)[0];
+    const tags = image.tags;
+    if (tags.includes(tagAndImage.tag)) {
+      return;
+    }
+    tags.push(tagAndImage.tag.toLowerCase());
+    const imageTags: ImageTags = {
+      imageName: tagAndImage.imageName,
+      tags: tags,
+    };
+    CloudStorageModule.addMetaData(imageTags);
+    this.tags.push(tagAndImage.tag);
   }
 
   get getImages() {
