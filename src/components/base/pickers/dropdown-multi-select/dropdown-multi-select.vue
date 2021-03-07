@@ -2,27 +2,23 @@
 <div class="w-full md:w-1/2 flex flex-col items-center h-64 mx-auto">
   <div class="w-full px-4">
     <div class="flex flex-col items-center relative">
-      <div class="w-full">
-          <div class="my-2 p-1 flex border border-gray-200 bg-white rounded">
-              <div class="flex flex-auto flex-wrap">
-                <div
-                  v-for="selectedItem in selectedItems"
-                  :key="selectedItem"
-                  class="flex justify-center items-center"
-                >
-                    <image-pill
+      <div class="w-full flex flex-row justify-start items-center">
+          <span class="inline-block mr-2 w-3/12 overflow-hidden">
+            {{ label }}
+          </span>
+          <div class="my-1 p-1 flex border border-gray-200 bg-white rounded w-9/12">
+              <div class="flex flex-auto flex-wrap overflow-hidden">
+                <div class="flex justify-center items-center  w-full">
+                    <image-pill v-for="selectedItem in selectedItems"
+                      :key="selectedItem"
                       :label="selectedItem"
                       size="small"
                       pillColour="bg-sitePrimary"
                       @removeClick="removeItem(selectedItem)"
                       ></image-pill>
                 </div>
-                  
-                <div class="flex-1">
-                  <input placeholder="" class="bg-transparent p-1 px-2 appearance-none outline-none h-full w-full text-gray-800">
-                </div>
               </div>
-              <div class="text-gray-300 w-8 py-1 pl-2 pr-1 border-l flex items-center border-gray-200 svelte-1l8159u">
+              <div class="text-gray-300 w-8 py-1 pl-2 pr-1 border-l flex items-center border-gray-200">
                 <button
                   @click="showDropdown=!showDropdown" 
                   class="cursor-pointer w-6 h-6 text-gray-600 outline-none focus:outline-none">
@@ -39,6 +35,7 @@
       <div
         v-if="showDropdown"
         class="absolute shadow-md top-100 bg-white z-40 w-full left-0 rounded max-h-select overflow-y-auto"
+        @mouseleave="showDropdown=false"
       >
         <div class="flex flex-col w-full">
             <div
@@ -68,6 +65,7 @@
 
   @Component({
     props: {
+      label: { default: '' },
       listItems: {
         default: (): string[] => {
           return [];
@@ -96,7 +94,6 @@
       this.selectedItems = this.selectedItems.filter(item => item !== selectedItem);
       return this.selectedItems;
     }
-
   }
 </script>
 

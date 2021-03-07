@@ -94,7 +94,6 @@ class CloudStorageStore extends VuexModule implements CloudStorageInterface {
 
   @Action({ rawError: true })
   addMetaData(metaData: ImageTags) {
-    console.log('%c⧭', 'color: #33cc99', metaData);
     const userId = AuthModule.currentUser.id;
     const path = `${userId}/`;
     const fileStore = firebase.storage().ref(path);
@@ -104,18 +103,34 @@ class CloudStorageStore extends VuexModule implements CloudStorageInterface {
         'tags': metaData.tags.toString(),
       },
     };
-    console.log('%c⧭', 'color: #e5de73', storageMetaData);
     return new Promise((resolve, reject) => {
       imageRef.updateMetadata(storageMetaData)
       .then(result => {
-        console.log('%c⧭', 'color: #1d3f73', result);
         resolve(result);
       })
       .catch(err => {
-      console.log('%c⧭', 'color: #cc0088', err);
         reject(err);
       });
     });
+  }
+
+  @Action({ rawError: true })
+  deleteFile(fileName: string): Promise<boolean> {
+    const userId = AuthModule.currentUser.id;
+    const path = `${userId}/`;
+    const fileStore = firebase.storage().ref(path);
+    const imageRef = fileStore.child(`${this._bucketName}/${fileName}`);
+    return new Promise((resolve, reject) => {
+      imageRef.delete()
+        .then(()=> {
+          resolve(true);
+        })
+        .catch(err => {
+          console.log(err);
+          reject(false);
+        })
+
+    })
   }
 
 

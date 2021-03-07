@@ -70,6 +70,7 @@ export default class BaseButton extends Vue {
 
   .button-x-small {
     @apply w-auto;
+    @apply min-w-12;
     @apply h-6;
     @apply text-xs;
     @apply p-1;
