@@ -40,11 +40,9 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
 import DraggableIcon from "@/components/base/draggable/draggable-icon/draggable-icon.vue";
 import {
   ComponentDefinitionInterface,
-  initComponentDefinition
 } from "@/models/components/base-component";
 import Component from "vue-class-component";
 import { SidebarModule } from "@/store//sidebar/sidebar";

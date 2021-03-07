@@ -31,7 +31,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import Component, { mixins } from "vue-class-component";
+import Component from "vue-class-component";
 import CloseButton from "@/components/base/buttons/close-button/close-button.vue";
 import ColourSelect from "@/components/base/pickers/colour-picker/colour-select.vue";
 import BorderButtons from "@/components/base/buttons/borders/borders.vue";

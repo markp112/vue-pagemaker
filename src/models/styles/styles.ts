@@ -26,6 +26,7 @@ export type StyleTags =
   | "background-position-y"
   | "background-size"
   | "background-repeat"
+  | "padding"
   | "";
 
 export const StylesMap = new Map([

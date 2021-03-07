@@ -96,7 +96,7 @@ export class PageElement implements Partial<PageElementInterface> {
   }
 
   get classDefinition(): string {
-    return this._classDefinition;
+    return this.classList.join(' ').trim();
   }
 
   set classDefinition(definition: string) {
@@ -196,6 +196,15 @@ export class PageElement implements Partial<PageElementInterface> {
   }
 
   addStyle(newStyle: Style) {
+    if (newStyle.style === 'transparency') {
+      const backgroundColour = this._styles.filter(el => el.style === 'background-color');
+      if (backgroundColour.length > 0) {
+        const currentStyle = backgroundColour[0];
+        const hexValue = parseInt(newStyle.value).toString(16);
+        currentStyle.value = `${currentStyle.value.substring(0,7)}${hexValue}`;
+        currentStyle.style = 'background-color'
+      }
+    }
     this._styles = this._styles.filter(el => el.style !== newStyle.style);
     this._styles.push(newStyle);
   }
@@ -220,7 +229,6 @@ export class PageElement implements Partial<PageElementInterface> {
       : classDef.substr(0, classDef.indexOf("-") + 1);
     this.removeClass(stem);
     this.classList.push(classDef);
-    this.classDefinition = this.classList.join(" ").trim();
   }
 
   getStylesToString(): string {

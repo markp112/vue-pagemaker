@@ -1,5 +1,5 @@
 <template>
-  <div class=" ml-4 w-full flex-initial">
+  <div class="w-full h-6 mt-2">
     <ul class="flex flex-row justify-start font-smaller text-accent-600">
       <li
         v-for="(breadcrumb, idx) in getbreadCrumbList"
@@ -8,7 +8,8 @@
         class="ml-2 w-100"
         :class="{ linked: !!breadcrumb.link }"
       >
-        {{ breadcrumb.name }} <span v-if="!!breadcrumb.link">/</span>
+        {{ breadcrumb.name }} 
+        <span v-if="!!breadcrumb.link">/</span>
       </li>
     </ul>
   </div>
@@ -59,5 +60,9 @@ export default class Breadcrumb extends Vue {
 .linked {
   cursor: pointer;
   color: $accent;
+  text-decoration: underline;
+}
+.linked:hover {
+  color: orange;
 }
 </style>

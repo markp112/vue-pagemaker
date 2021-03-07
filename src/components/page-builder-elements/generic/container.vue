@@ -7,7 +7,7 @@
     :ref="$props.thisComponent.ref"
     @dragover.prevent
     @drop.prevent="onDrop"
-    @click.prevent="onClick"
+    @click.prevent="onClick($event)"
   >
     <component
       :is="layout.componentHTMLTag"
@@ -86,6 +86,7 @@ export default class Container extends mixins(GenericComponentMixins) {
   onClick(ev: Event) {
     ev.stopPropagation();
     PageModule.updateEditedComponentRef(this.$props.thisComponent);
+    SidebarModule.updateSidebarEditor(false);
     PageModule.updateShowEditDelete(true);
     this.showBorder = !this.showBorder;
   }

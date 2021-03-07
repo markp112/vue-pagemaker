@@ -175,6 +175,7 @@ class ServicesStore extends VuexModule implements ServicesStateInterface {
           resolve(notification);
         })
         .catch(err => {
+          console.log('%c⧭', 'color: #5200cc', err);
           notification.status = "Error";
           notification.message = err;
           reject(notification);

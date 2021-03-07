@@ -1,25 +1,24 @@
-import { PageElementBuilder } from "@/classes/page-element/page-element-builder/PageElementBuilder";
-import { PageElement } from "../../PageElement";
+import { PageElementBuilder } from '@/classes/page-element/page-element-builder/PageElementBuilder';
+import { PageElement } from '../../PageElement';
 import {
   Dimensions,
   Location
-} from "@/models/components/components";
-import { Image } from "@/models/components/components";
+} from '@/models/components/components';
+import { Image } from '@/models/components/components';
 import {
   ImageElementFirebaseData,
   ImageElementInterface
-} from "../../models/pageElements/ImageElementModel";
-import { Style } from "@/models/styles/styles";
-import { SiteDefaults } from "@/classes/settings/site-defaults/site-defaults";
+} from '../../models/pageElements/ImageElementModel';
+import { Style } from '@/models/styles/styles';
+import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
 
 export class ImageElement extends PageElement implements ImageElementInterface {
   private _naturalSize: Dimensions;
   private _scaledSize: Dimensions;
-  // private _imageTagDimensions: Dimensions;
   private _ratio: number;
   private _maintainRatio: boolean;
-  // private _parentDimensions: Dimensions;
   private _containerDimensions: Dimensions;
+  private _containerLocation: Location;
   private _location: Location = {
     top: 0,
     left: 0
@@ -29,14 +28,14 @@ export class ImageElement extends PageElement implements ImageElementInterface {
     super(builder);
     this._maintainRatio = true;
     this._naturalSize = builder.naturalSize;
-    // this._parentDimensions = initDimensions;
     this._containerDimensions = builder.containerDimensions;
+    this._containerLocation = builder.containerLocation;
+    console.log('%c⧭', 'color: #33cc99',  builder.containerLocation);
     this._ratio = this.calcRatio(
       this._naturalSize.width,
       this._naturalSize.height
     );
     this._scaledSize = builder.scaledSize;
-    // this._imageTagDimensions = builder.imageTagDimensions;
   }
 
   get naturalSize(): Dimensions {
@@ -45,7 +44,6 @@ export class ImageElement extends PageElement implements ImageElementInterface {
 
   set naturalSize(size: Dimensions) {
     this._naturalSize = size;
-    // this._scaledSize = size; /** @description when image size changes the scaled size should be reset */
     this._ratio = this.calcRatio(
       this._naturalSize.width,
       this._naturalSize.height
@@ -60,14 +58,6 @@ export class ImageElement extends PageElement implements ImageElementInterface {
     this._scaledSize = dimensions;
   }
 
-  // get imageTagDimensions(): Dimensions {
-  //   return this._imageTagDimensions;
-  // }
-
-  // set imageTagDimensions(dimension: Dimensions) {
-  //   this._imageTagDimensions = dimension;
-  // }
-
   get ratio(): number {
     return this._ratio;
   }
@@ -80,20 +70,20 @@ export class ImageElement extends PageElement implements ImageElementInterface {
     this._maintainRatio = maintainRatio;
   }
 
-  // get parentDimensions(): Dimensions {
-  //   return this._parentDimensions;
-  // }
-
-  // set parentDimensions(dimensions: Dimensions) {
-  //   this._parentDimensions = dimensions;
-  // }
-
   get containerDimensions(): Dimensions {
     return this._containerDimensions;
   }
 
   set containerDimensions(dimensions: Dimensions) {
     this._containerDimensions = dimensions;
+  }
+
+  set containerLocation(location: Location) {
+    this._containerLocation = location;
+  }
+
+  get containerLocation(): Location {
+    return this._containerLocation;
   }
 
   get location(): Location {
@@ -105,7 +95,7 @@ export class ImageElement extends PageElement implements ImageElementInterface {
   }
 
   public getStyles(): string {
-    let style = "";
+    let style = '';
     const styles: Style[] = this.styles;
     if (styles.length > 0) {
       styles.forEach(element => {
@@ -117,11 +107,11 @@ export class ImageElement extends PageElement implements ImageElementInterface {
   }
 
   public getContainerStyles(): string {
-    let style = "";
+    let style = '';
     const styles: Style[] = this.styles;
     if (styles.length > 0) {
       styles.forEach(element => {
-        if (element.style === "background-size") {
+        if (element.style === 'background-size') {
           style += `${element.style}:${this.containerDimensions.width}px ${this.containerDimensions.height}px;`;
           style += `width:${this.containerDimensions.width}px;height:${this.containerDimensions.height}px;`;
         }
@@ -137,6 +127,7 @@ export class ImageElement extends PageElement implements ImageElementInterface {
       ratio: this._ratio,
       maintainRatio: this._maintainRatio,
       containerDimensions: this._containerDimensions,
+      containerLocation: this._containerLocation,
       location: this._location
     });
   }
@@ -146,18 +137,18 @@ export class ImageElement extends PageElement implements ImageElementInterface {
       const siteDefaults = SiteDefaults.getInstance();
       const siteColours = siteDefaults.colours;
       this.addStyle(
-        this.constructStyle("background-color", siteColours.surface)
+        this.constructStyle('background-color', siteColours.surface)
       );
-      this.addStyle(this.constructStyle("color", siteColours.textOnSurface));
-      this.addStyle(this.constructStyle("background-size", "100px 200px"));
-      this.addStyle(this.constructStyle("background-repeat", "no-repeat"));
+      this.addStyle(this.constructStyle('color', siteColours.textOnSurface));
+      this.addStyle(this.constructStyle('background-size', '100px 200px'));
+      this.addStyle(this.constructStyle('background-repeat', 'no-repeat'));
       this.addStyle(
-        this.constructStyle("background-image", `url(${this.content})`)
+        this.constructStyle('background-image', `url(${this.content})`)
       );
-      this.addStyle(this.constructStyle("background-position-x", "0px"));
-      this.addStyle(this.constructStyle("background-position-y", "0px"));
-      this.addStyle(this.constructStyle("width", "100px"));
-      this.addStyle(this.constructStyle("height", "200px"));
+      this.addStyle(this.constructStyle('background-position-x', '0px'));
+      this.addStyle(this.constructStyle('background-position-y', '0px'));
+      this.addStyle(this.constructStyle('width', '100px'));
+      this.addStyle(this.constructStyle('height', '200px'));
     }
   }
 
@@ -174,7 +165,7 @@ export class ImageElement extends PageElement implements ImageElementInterface {
     this._scaledSize = image.scaledSize;
     this._maintainRatio = image.maintainRatio;
     this.addStyle(
-      this.constructStyle("background-image", `url(${this.content})`)
+      this.constructStyle('background-image', `url(${this.content})`)
     );
   }
 

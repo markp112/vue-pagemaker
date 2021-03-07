@@ -1,5 +1,5 @@
 <template>
-  <section class="h-screen overflow-hidden">
+  <section class="h-full overflow-hidden">
     <p class="mt-2 text-center">Side Bar Icon Editor</p>
     <div class="flex flex-row justify-start h-full overflow-hidden">
       <div class=" w-2/12 border-r-2 border-gray-500  flex-wrap mt-8 ml-2">

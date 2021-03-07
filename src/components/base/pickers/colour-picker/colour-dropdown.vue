@@ -19,7 +19,7 @@
     </div>
     <colour-palette-sidebar
       v-if="isShow"
-      class="absolute v-10"
+      class="absolute "
       @onColourChange="emitColour($event)"
       @onMouseLeave="isShow = !isShow"
     >
@@ -55,7 +55,6 @@ export default class ColourDropdown extends Vue {
 
   @Emit("onColourChange")
   emitColour(colour: string): string {
-    console.log("%c%s", "color: #0088cc", colour);
     this.isShow = false;
     this.colourStore.rgbColour = colour;
     return colour;

@@ -13,12 +13,12 @@ import { Vue } from "vue-property-decorator";
 @Component({
   props: {
     content: {
-      default: ""
+      default: ''
     }
   }
 })
 export default class TextData extends Vue {
-  name = "text-data";
+  name = 'text-data';
 
   get getContent() {
     return this.$props.content;

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="absolute triangleTopRight z-50"
+    class="absolute triangle-bottom-left z-50"
     :class="{ active: $props.isActive, 'in-active': !$props.isActive }"
     @mousedown.stop.prevent="handleDown($event)"
     @mouseup="handleMouseUp($event)"
@@ -53,8 +53,8 @@ export default class Resize extends Vue {
     ev.stopPropagation;
     if (this.isSizing) {
       const clientCoordinates: ClientCoordinates = {
-        clientY: ev.pageY,
-        clientX: ev.pageX,
+        clientX: ev.screenX,
+        clientY: ev.screenY,
         offsetWidth: (this.$el as HTMLDivElement).offsetWidth,
         offsetHeight: (this.$el as HTMLDivElement).offsetHeight
       };
@@ -66,10 +66,9 @@ export default class Resize extends Vue {
 
 <style lang="postcss" scoped>
 .triangleTopRight,
-.TriangleBottomLeft {
+.triangle-bottom-left {
   content: "";
   position: absolute;
-  top: -6px;
   right: -1px;
   box-sizing: border-box;
   cursor: nwse-resize;
@@ -80,16 +79,19 @@ export default class Resize extends Vue {
   border-bottom: 10px solid transparent;
   border-left: 10px solid rgb(56, 55, 56);
   color: rgb(228, 210, 228);
-  filter: invert(1);
+  filter: invert(50%);
   mix-blend-mode: difference;
+  z-index: 100;
 }
 
 .triangleTopRight {
   transform: rotate(315deg);
+  top: -6px;
 }
 
-.TriangleBottomLeft {
+.triangle-bottom-left {
   transform: rotate(45deg);
+  bottom: -6px;
 }
 
 .active {

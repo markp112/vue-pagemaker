@@ -5,10 +5,10 @@
       class="handle select-none"
       :class="getClass"
       :style="getStyles()"
-      @click.prevent="onTextClick($event)"
-      @mousedown="startDrag($event)"
+      @click="onTextClick($event)"
+      @mousedown="startDragText($event)"
       @mousemove="dragElement($event)"
-      @mouseup="stopDrag($event)"
+      @mouseup="stopDragText($event)"
     >
       <text-data :content="this.$props.thisComponent.content"> </text-data>
       <resizeable
@@ -22,13 +22,14 @@
 </template>
 
 <script lang="ts">
-import Component, { mixins } from "vue-class-component";
-import Resize from "@/components/base/resizeable/resize.vue";
-import TextData from "./text-data.vue";
-import { PageModule } from "@/store/page/page";
-import { GenericComponentMixins } from "@/components/page-builder-elements/generic/mixins/generic-components-mixin";
-import { TextElement } from "@/classes/page-element/page-components/text-element/TextElement";
-import { PageElementBuilder } from "@/classes/page-element/page-element-builder/PageElementBuilder";
+import Component, { mixins } from 'vue-class-component';
+import Resize from '@/components/base/resizeable/resize.vue';
+import TextData from './text-data.vue';
+import { PageModule } from '@/store/page/page';
+import { GenericComponentMixins } from '@/components/page-builder-elements/generic/mixins/generic-components-mixin';
+import { TextElement } from '@/classes/page-element/page-components/text-element/TextElement';
+import { PageElementBuilder } from '@/classes/page-element/page-element-builder/PageElementBuilder';
+import { SidebarModule } from '@/store/sidebar/sidebar';
 
 @Component({
   props: {
@@ -40,16 +41,16 @@ import { PageElementBuilder } from "@/classes/page-element/page-element-builder/
   },
   components: {
     resizeable: Resize,
-    "text-data": TextData
+    'text-data': TextData
   }
 })
 export default class TextComponent extends mixins(GenericComponentMixins) {
-  name = "textComponent";
-  top = 0;
-  left = 0;
+  name = 'textComponent';
 
   created() {
-    this.$props.thisComponent.setDefaultStyle();
+    if (this.$props.thisComponent.styles.length === 0) {
+      this.$props.thisComponent.setDefaultStyle();
+    }
   }
 
   get getData(): string {
@@ -67,7 +68,18 @@ export default class TextComponent extends mixins(GenericComponentMixins) {
   onTextClick(event: Event) {
     event.stopPropagation();
     PageModule.updateEditedComponentRef(this.$props.thisComponent);
+    SidebarModule.updateSidebarEditor(false);
     PageModule.updateShowEditDelete(true);
+  }
+
+  stopDragText(event: MouseEvent) {
+    const componentToDrag = this.$refs[this.$props.thisComponent.ref] as HTMLDivElement;
+    this.stopDrag(event, componentToDrag);
+  }
+  
+  startDragText(event: MouseEvent) {
+    const componentToDrag = this.$refs[this.$props.thisComponent.ref] as HTMLDivElement;
+    this.startDrag(event, componentToDrag);
   }
 }
 </script>

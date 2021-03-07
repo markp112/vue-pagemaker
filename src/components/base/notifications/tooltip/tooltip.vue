@@ -32,7 +32,7 @@ export default class ToolTip extends Vue {
 }
 </script>
 
-<style lang="postcss">
+<style lang="css">
 .fade-enter-active {
   transition: opacity 0.5s;
 }

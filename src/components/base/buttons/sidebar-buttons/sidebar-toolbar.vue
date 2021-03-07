@@ -23,12 +23,12 @@
   </section>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-import Component from "vue-class-component";
-import { Emit } from "vue-property-decorator";
-import { SidebarToolbar } from "@/models/sidebar/button-definition/sidebar-buttons";
-import ToolTip from "@/components/base/notifications/tooltip/tooltip.vue";
+<script lang='ts'>
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import ToolTip from '@/components/base/notifications/tooltip/tooltip.vue';
+import { Emit } from 'vue-property-decorator';
+import { SidebarToolbar } from '@/models/sidebar/button-definition/sidebar-buttons';
 
 @Component({
   props: {
@@ -37,23 +37,23 @@ import ToolTip from "@/components/base/notifications/tooltip/tooltip.vue";
         return new SidebarToolbar();
       }
     },
-    toolbarTitle: { default: "" }
+    toolbarTitle: { default: '' }
   },
   components: {
     tooltip: ToolTip
   }
 })
 export default class SidebarToolbarScreen extends Vue {
-  name = "SidebarToolbarScreen";
-  showToolTip = "";
+  name = 'SidebarToolbarScreen';
+  showToolTip = '';
 
-  @Emit("iconClick")
+  @Emit('iconClick')
   iconClick($event: string) {
     return $event;
   }
 
   getPath(image: string): string {
-    const path = require.context("@/assets/icons", false, /\.png$/);
+    const path = require.context('@/assets/icons', false, /\.png$/);
     return path(`./${image}`);
   }
 

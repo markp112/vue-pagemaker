@@ -1,16 +1,17 @@
-import { ImageElement } from "@/classes/page-element/page-components/image-element/ImageElement";
-import { MousePosition } from "@/components/page-builder-elements/generic/mixins/generic-components-mixin";
-import { Style, StyleTags } from "@/models/styles/styles";
-import { Pan } from "./pan";
-import { ResizeImage } from "./resize";
-import { Zoom } from "./zoom";
+import { ImageElement } from '@/classes/page-element/page-components/image-element/ImageElement';
+import { MousePosition } from '@/components/page-builder-elements/generic/mixins/generic-components-mixin';
+import { Style, StyleTags } from '@/models/styles/styles';
+import { Pan } from './pan';
+import { ResizeImage } from './resize';
+import { Zoom } from './zoom';
 
 export interface MousePostion {
   x: number;
   y: number;
 }
 
-export type ZoomDirection = "in" | "out" | "100" | "50" | "zoomToFit";
+export type ZoomDirection = 'in' | 'out' | '100' | '50' | 'zoomToFit';
+export type StretchDirection = 'horizontal' | 'vertical';
 
 export class ImageManipulator {
   private _lastMousePosition: MousePostion = {
@@ -24,12 +25,19 @@ export class ImageManipulator {
   }
 
   set lastMousePosition(mousePosition: MousePostion) {
-    this._lastMousePosition.x = mousePosition.x;
-    this._lastMousePosition.y = mousePosition.y;
+    this._lastMousePosition = { ...mousePosition };
   }
 
   get imageElement(): ImageElement {
     return this._imageElement;
+  }
+
+  public applyAction(action: ZoomDirection | StretchDirection): Style[] {
+    if (action === 'vertical' || action === 'horizontal') {
+      return this.stretch(action);
+    } else {
+      return this.zoom(action);
+    }
   }
 
   public resize(currentMousePosition: MousePostion) {
@@ -45,17 +53,17 @@ export class ImageManipulator {
     const styles: Style[] = [];
     const backgroundSize = `${this._imageElement.scaledSize.width}px ${this._imageElement.scaledSize.height}px`;
     styles.push(
-      this._imageElement.constructStyle("background-size", backgroundSize)
+      this._imageElement.constructStyle('background-size', backgroundSize)
     );
     styles.push(
       this._imageElement.constructStyle(
-        "height",
+        'height',
         `${this.imageElement.containerDimensions.height}px`
       )
     );
     styles.push(
       this._imageElement.constructStyle(
-        "width",
+        'width',
         `${this.imageElement.containerDimensions.width}px`
       )
     );
@@ -70,14 +78,23 @@ export class ImageManipulator {
       this._imageElement.naturalSize,
       this._imageElement.location,
       this._imageElement.containerDimensions
-    );
+      );
     const dimensionLocation = zoom.zoom(direction);
     this._imageElement.scaledSize.height = dimensionLocation.dimensions.height;
     this._imageElement.scaledSize.width = dimensionLocation.dimensions.width;
     this._imageElement.location = dimensionLocation.location;
-    const styles = this.getStyles();
+    return this.getStyles();
+  }
 
-    return styles;
+  public stretch(direction: 'horizontal' | 'vertical'): Style[] {
+    if (direction === 'horizontal') {
+      this._imageElement.location.left = 0;
+      this._imageElement.scaledSize.width = this.imageElement.containerDimensions.width;
+    } else {
+      this._imageElement.location.top = 0;
+      this._imageElement.scaledSize.height = this.imageElement.containerDimensions.height;
+    }
+    return this.getStyles();
   }
 
   public pan(currentMousePosition: MousePosition): Style {
@@ -89,7 +106,7 @@ export class ImageManipulator {
       this._imageElement.location
     );
     return this.construsctStyle(
-      "background-position",
+      'background-position',
       `${this._imageElement.location.left}px ${this._imageElement.location.top}px`
     );
   }
@@ -98,13 +115,13 @@ export class ImageManipulator {
     const styles: Style[] = [];
     styles.push(
       this.construsctStyle(
-        "background-size",
+        'background-size',
         `${this._imageElement.scaledSize.width}px ${this._imageElement.scaledSize.height}px`
       )
     );
     styles.push(
       this.construsctStyle(
-        "background-position",
+        'background-position',
         `${this._imageElement.location.left}px ${this._imageElement.location.top}px`
       )
     );

@@ -94,8 +94,9 @@ export default class ColourPaletteSidebar extends Vue {
 
   @Emit("onColourChange")
   colourClicked(colour: string) {
-    this.colour.rgbColour = colour;
-    return this.colour.rgbColour;
+    // this.colour.rgbColour = colour;
+    // return this.colour.rgbColour;
+    return colour;
   }
 
   onColourPickerMouseLeave() {
