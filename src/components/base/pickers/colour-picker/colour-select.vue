@@ -161,7 +161,7 @@ export default class ColourSelect extends Vue {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="css" scoped>
 .colour-select {
 }
 
@@ -186,6 +186,7 @@ export default class ColourSelect extends Vue {
     @apply w-full;
   }
 }
+
 @screen lg {
   .colour-select {
     @apply flex-row;

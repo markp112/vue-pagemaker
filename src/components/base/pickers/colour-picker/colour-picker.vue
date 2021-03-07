@@ -43,11 +43,11 @@ export default class ColourPicker extends Vue {
 }
 </script>
 
-<style lang="postcss">
+<style lang="css">
 :host {
-  display: block;
-  width: auto;
-  padding: 16px;
+  @apply block;
+  @apply w-auto;
+  @apply p-4;
 }
 
 .input-wrapper {
@@ -92,8 +92,9 @@ export default class ColourPicker extends Vue {
   -moz-box-shadow: inset 10px 15px 39px -6px rgba(59, 14, 143, 0.58);
   box-shadow: inset 10px 15px 39px -6px rgba(25, 11, 151, 0.58);
   cursor: pointer;
-  &:hover {
+}
+
+.text-style:hover {
     background-color: rgb(189, 173, 173);
-  }
 }
 </style>

@@ -27,12 +27,13 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import ImageCard, { ImageCardProps } from '@/components/base/cards/image-card/image-card.vue';
+import ImageCard from '@/components/base/cards/image-card/image-card.vue';
 import DropdownMultiSelect from '@/components/base/pickers/dropdown-multi-select/dropdown-multi-select.vue';
 import CloseButton from '@/components/base/buttons/close-button/close-button.vue';
 import Component from 'vue-class-component';
 import { CloudStorageModule } from '@/store/services/storage';
 import { BucketImage } from '@/store/services/models/bucket-image';
+import { ImageCardProps } from '@/components/base/cards/image-card/models/image-card-models';
 
 @Component({
   props: {

@@ -14,7 +14,6 @@
 <script lang="ts">
 import Vue from "vue";
 import Component from "vue-class-component";
-
 import { Emit, Watch } from "vue-property-decorator";
 
 @Component({
@@ -119,7 +118,7 @@ export default class ColourPalette extends Vue {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="css" scoped>
 .color-palette:hover {
   cursor: pointer;
 }

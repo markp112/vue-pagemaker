@@ -19,7 +19,7 @@
     </div>
     <colour-palette-sidebar
       v-if="isShow"
-      class="absolute v-10"
+      class="absolute "
       @onColourChange="emitColour($event)"
       @onMouseLeave="isShow = !isShow"
     >

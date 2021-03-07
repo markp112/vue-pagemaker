@@ -1,5 +1,5 @@
 <template>
-  <div class="w-64 flex flex-col justify-start border shadow-lg relative h-80">
+  <div class="w-64 flex flex-col justify-start border shadow-lg relative h-80 ">
     <div
       ref="card-header" 
       class="flex flex-row flex-nowrap justify-between text-sm p-1 bg-sitePrimary text-siteSurface overflow-hidden w-64" 
@@ -70,17 +70,7 @@ import Tag from '@/components/base/popups/tag/tag.vue'
 import BaseButton from '@/components/base/buttons/base-button/base-button.vue';
 import Confirm from '@/components/base/popups/confirm/confirm.vue'
 import { CloudStorageModule, ImageTags } from '@/store/services/storage';
-
-export interface ImageCardProps {
-  title: string;
-  tags: string[];
-  url: string;
-};
-
-export interface ImageTag {
-  imageName: string,
-  tag: string
-};
+import { ImageCardProps } from './models/image-card-models'
 
 @Component({
   props: {

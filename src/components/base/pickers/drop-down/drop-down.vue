@@ -91,12 +91,19 @@ export default class DropDown extends Vue {
 }
 </script>
 
-<style lang="postcss">
+<style lang="css">
 .drop-down-li {
-  @apply cursor-pointer mb-2 relative z-auto text-sm w-full text-center;
+  @apply cursor-pointer;
+  @apply mb-2;
+  @apply relative;
+  @apply z-auto;
+  @apply text-sm;
+  @apply w-full;
+  @apply text-center;
 }
 
 .drop-down-li:hover {
-  @apply bg-gray-600 text-gray-400;
+  @apply bg-gray-600;
+  @apply text-gray-400;
 }
 </style>

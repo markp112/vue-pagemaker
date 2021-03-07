@@ -73,7 +73,7 @@ export default class PlusMinusIcon extends Vue {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="css" scoped>
 .icon-img {
   background-size: 16px 16px;
   background-position: center;
