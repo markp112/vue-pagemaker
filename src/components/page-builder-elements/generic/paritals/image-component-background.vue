@@ -84,10 +84,10 @@ export default class ImageComponentBackground extends mixins(
     this.parentContainer = this.$refs[this.HTML_IMAGE_PARENT] as HTMLDivElement;
     this.image = this.$refs[this.HTML_IMAGE_ELEMENT] as HTMLImageElement;
     const imageElement = this.component;
-    let styles: string = this.component.getContainerStyles();
-    this.parentContainer.setAttribute('style', styles);
+    // let styles: string = this.component.getContainerStyles();
+    // this.parentContainer.setAttribute('style', styles);
     this.imageManipulator = new ImageManipulator(imageElement);
-    styles = this.getImageStyles();
+    const styles = this.getImageStyles();
     this.image.setAttribute('style', styles);
   }
 

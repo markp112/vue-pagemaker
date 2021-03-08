@@ -46,7 +46,7 @@ export class ImageElement extends PageElement implements ImageElementInterface {
     this._naturalSize = size;
     this._ratio = this.calcRatio(
       this._naturalSize.width,
-      this._naturalSize.height
+      this._naturalSize.height,
     );
   }
 
@@ -106,19 +106,19 @@ export class ImageElement extends PageElement implements ImageElementInterface {
     return style;
   }
 
-  public getContainerStyles(): string {
-    let style = '';
-    const styles: Style[] = this.styles;
-    if (styles.length > 0) {
-      styles.forEach(element => {
-        if (element.style === 'background-size') {
-          style += `${element.style}:${this.containerDimensions.width}px ${this.containerDimensions.height}px;`;
-          style += `width:${this.containerDimensions.width}px;height:${this.containerDimensions.height}px;`;
-        }
-      });
-    }
-    return style;
-  }
+  // public getContainerStyles(): string {
+  //   const style = '';
+  //   const styles: Style[] = this.styles;
+  //   if (styles.length > 0) {
+  //     styles.forEach(element => {
+  //       // if (element.style === 'background-size') {
+  //       //   style += `${element.style}:${this.containerDimensions.width}px ${this.containerDimensions.height}px;`;
+  //       //   style += `width:${this.containerDimensions.width}px;height:${this.containerDimensions.height}px;`;
+  //       // }
+  //     });
+  //   }
+  //   return style;
+  // }
 
   public getElementContent(): ImageElementFirebaseData {
     return Object.assign(this.getBaseElementContent(), {
@@ -140,13 +140,6 @@ export class ImageElement extends PageElement implements ImageElementInterface {
         this.constructStyle('background-color', siteColours.surface)
       );
       this.addStyle(this.constructStyle('color', siteColours.textOnSurface));
-      this.addStyle(this.constructStyle('background-size', '100px 200px'));
-      this.addStyle(this.constructStyle('background-repeat', 'no-repeat'));
-      this.addStyle(
-        this.constructStyle('background-image', `url(${this.content})`)
-      );
-      this.addStyle(this.constructStyle('background-position-x', '0px'));
-      this.addStyle(this.constructStyle('background-position-y', '0px'));
       this.addStyle(this.constructStyle('width', '100px'));
       this.addStyle(this.constructStyle('height', '200px'));
     }
@@ -160,13 +153,10 @@ export class ImageElement extends PageElement implements ImageElementInterface {
     if (image.naturalSize.height === 0) {
       image.naturalSize.height = 250;
     }
-    this._naturalSize = image.naturalSize;
+    this._naturalSize = { ...image.naturalSize } ;
     this._ratio = image.ratio;
-    this._scaledSize = image.scaledSize;
+    this._scaledSize = { ...image.scaledSize };
     this._maintainRatio = image.maintainRatio;
-    this.addStyle(
-      this.constructStyle('background-image', `url(${this.content})`)
-    );
   }
 
   private calcRatio(width: number, height: number): number {

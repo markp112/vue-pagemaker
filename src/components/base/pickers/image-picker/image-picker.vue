@@ -14,9 +14,9 @@
       <span
         v-for="image in getImages"
         :key="image.url"
-        class="w-44 h-auto border border-gray-200 inline-block ml-1 mr-1"
+        class="w-44 h-auto max-h-60 border border-gray-200 inline-block ml-1 mr-1"
       >
-        <img :src="image.url" alt="" @click="imageClicked(image.url)" class="cursor-pointer">
+        <img :src="image.url" alt="" @click="imageClicked(image.url)" class="cursor-pointer w-44 max-h-52">
       </span>
       <img 
         src="@/assets/icons/right-grey-32.png" 

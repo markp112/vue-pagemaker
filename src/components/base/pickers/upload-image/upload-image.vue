@@ -24,7 +24,7 @@
     >
       <h3
         v-if="url ===''"
-        class="z-10 fixed font-bold text-siteDark flex-row flex-wrap justify-start p-1 mb-1 block"
+        class="z-10 fixed font-bold text-siteDark text-xs flex-row flex-wrap justify-start p-1 mb-1 block"
       >
         Upload a file by dropping it here
       </h3>
@@ -32,7 +32,6 @@
         :src="getImage"
         class="border object-contain h-32 mt-2"
         ref="imagePlaceholder"
-        @load="onImageLoad()"
       />
     </div>
     <div class="flex flex-row justify-start w-full items-center h-8">

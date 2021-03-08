@@ -158,6 +158,7 @@ class PageStore extends VuexModule implements PageStateInterface {
 
   @Mutation
   private setEditedComponentContent(content: string): void {
+    console.log('%c%s', 'color: #e50000', 'setEditedComponentContent');
     if (this._editedComponentRef) {
       this._editedComponentRef.content = content;
       this._editComponentContent = content;

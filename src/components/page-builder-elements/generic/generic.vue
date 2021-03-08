@@ -24,7 +24,8 @@
 <script lang="ts">
 import Component, { mixins } from 'vue-class-component';
 import Resize from '@/components/base/resizeable/resize.vue';
-import ImageComponentBackground from './paritals/image-component-background.vue';
+// import ImageComponentBackground from './paritals/image-component-background.vue';
+import ImageComponent from './paritals/image-component/image-component.vue';
 import TextComponent from './paritals/text-component/text-component.vue';
 import ButtonComponent from './paritals/button-component/button-component.vue';
 import { PageModule } from '@/store/page/page';
@@ -35,7 +36,7 @@ import { PageElementClasses } from '@/classes/page-element/factory/page-element-
 @Component({
   components: {
     resizeable: Resize,
-    'image-component': ImageComponentBackground,
+    'image-component': ImageComponent,
     'text-component': TextComponent,
     'button-component': ButtonComponent,
   }

@@ -13,6 +13,7 @@ import {
   BoxDimensionsInterface
 } from "@/models/components/box-dimension";
 import { Units } from "@/models/enums/units/units";
+import { Dimensions } from '@/models/components/components';
 
 export type PageElementClasses =
   | ButtonElement
@@ -151,6 +152,7 @@ export class PageElementFactory {
     ref: string,
     parent: PageContainer
   ): ImageElement {
+    const baseDimensions: Dimensions = { width: 300, height: 200, units: Units.px };
     const imageElement: ImageElement = new PageElementBuilder()
       .setName(component.componentName)
       .setParent(parent)
@@ -160,7 +162,8 @@ export class PageElementFactory {
       .setClassDefintion(component.class)
       .setRef(ref)
       .setType(component.type)
-      .setNaturalSize({ width: 300, height: 200, units: Units.px })
+      .setNaturalSize(baseDimensions)
+      .setScaledSize(baseDimensions)
       .buildAnImage();
     imageElement.parentRef = imageElement.parent.ref;
     return imageElement;
