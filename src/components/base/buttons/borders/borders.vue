@@ -95,9 +95,3 @@ export default class BorderButtons extends Vue {
   }
 }
 </script>
-
-<style lang="postcss" scoped>
-.bg-secondary-hidden {
-  background-image: url("../../../../assets/icons/hidden-32.png");
-}
-</style>

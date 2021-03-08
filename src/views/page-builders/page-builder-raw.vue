@@ -1,9 +1,9 @@
 <template>
-  <section>
+  <section class="h-full min-h-full">
     <h2 class="page-heading">Editing: {{ title }} Page</h2>
     <div
       :id="id"
-      class="w-full h-auto relative p-4 border border-gray-400"
+      class="relative p-4 border border-gray-400"
       :class="getClass()"
       ref="ROOT"
       @dragover.prevent="bgColour = 'bg-gray-600'"
@@ -78,6 +78,7 @@ export default class PageBuilder extends Vue {
   created() {
     this.title = this.$route.params.title;
     PageModule.updatePageId(this.title);
+    PageModule.clear();
     SidebarModule.setSidebarMenuTo("sidebar-components");
     const firebase = new FirebaseDataBuilder();
     firebase.retrievePageDataFromFirestore(this.title);
@@ -102,6 +103,14 @@ export default class PageBuilder extends Vue {
     return PageModule.pageElements;
   }
 
+  get showTextModal(): boolean {
+    return this.$store.getters.showTextModal;
+  }
+
+  get editedComponentText(): string {
+    return PageModule.editedComponentData;
+  }
+  
   onDrop(event: DragEvent): void {
     if (ServicesModule.dragDropEventHandled) {
       return;
@@ -136,12 +145,5 @@ export default class PageBuilder extends Vue {
     return this.bgColour;
   }
 
-  get showTextModal(): boolean {
-    return this.$store.getters.showTextModal;
-  }
-
-  get editedComponentText(): string {
-    return PageModule.editedComponentData;
-  }
 }
 </script>

@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve -o",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "build-storybook": "build-storybook",
     "storybook": "start-storybook -p 6006",
+    "storybook:serve": "start-storybook -p 6006 ",
     "test": "jest"
   },
   "dependencies": {
@@ -34,10 +35,10 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
-    "@storybook/addon-actions": "^6.1.15",
-    "@storybook/addon-essentials": "^6.1.15",
-    "@storybook/addon-links": "^6.1.15",
-    "@storybook/vue": "^6.1.15",
+    "@storybook/addon-actions": "^6.1.18",
+    "@storybook/addon-essentials": "^6.1.18",
+    "@storybook/addon-links": "^6.1.18",
+    "@storybook/vue": "^6.1.18",
     "@types/jest": "^24.0.19",
     "@types/webfontloader": "^1.6.32",
     "@typescript-eslint/eslint-plugin": "^2.33.0",

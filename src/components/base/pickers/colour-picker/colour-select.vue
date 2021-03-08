@@ -17,7 +17,7 @@
             name="bg-check"
             id="background"
             value="background"
-            @click="onRadioChange('backgroundColor')"
+            @click="onRadioChange('background-color')"
           />
         </div>
         <div class="sidebar-radio-container">
@@ -57,6 +57,13 @@
             @click="onRadioChange('border-color')"
           />
         </div>
+        <div class="w-100 h-16">
+          <slider-control 
+            sliderValue="255"
+            caption="transparency"
+            @onSliderChange="onSliderChange($event)"
+            ></slider-control>
+        </div>
       </div>
       <colour-dropdown
         tooltip="From Palette"
@@ -75,6 +82,7 @@ import {
   BackgroundBorderForeground,
   Colour
 } from "@/classes/colour/singleton-colour";
+import Slider from '@/components/base/sliders/slider/slider.vue'; 
 import { Emit } from "vue-property-decorator";
 import { StyleElement } from "../../../../classes/text-attributes/text-attributes";
 import { SidebarButtonEventManager } from "@/classes/sidebarButtonEventManager/sidebarButtonEventManager";
@@ -84,7 +92,8 @@ export type FlexAlignment = "vertical" | "horizontal";
 @Component({
   components: {
     "colour-dropdown": ColourDropdown,
-    "colour-palette-sidebar": ColourPaletteSidebar
+    "colour-palette-sidebar": ColourPaletteSidebar,
+    "slider-control": Slider,
   },
   props: {
     showLabels: {
@@ -110,16 +119,28 @@ export default class ColourSelect extends Vue {
 
   @Emit("onColourChange")
   onColourChange(colour: string) {
-    console.log("%c⧭", "color: #00bf00", colour);
     const style: StyleElement = {
       styleName: this.textBackgroundorBorder,
       value: colour,
-      units: "px"
+      units: 'px'
     };
     const eventManager = SidebarButtonEventManager.getInstance();
     eventManager.applyValue("colour", style);
     eventManager.updateEditedComponent();
     return colour;
+  }
+
+  @Emit("onSliderChange")
+  onSliderChange(value: number) {
+    const style: StyleElement = {
+      styleName: 'transparency',
+      value: value.toString(),
+      units: ''
+    };
+    const eventManager = SidebarButtonEventManager.getInstance();
+    eventManager.applyValue("colour", style);
+    eventManager.updateEditedComponent();
+    return value;
   }
 
   getContainerClass() {
@@ -140,7 +161,7 @@ export default class ColourSelect extends Vue {
 }
 </script>
 
-<style lang="postcss" scoped>
+<style lang="css" scoped>
 .colour-select {
 }
 
@@ -165,6 +186,7 @@ export default class ColourSelect extends Vue {
     @apply w-full;
   }
 }
+
 @screen lg {
   .colour-select {
     @apply flex-row;

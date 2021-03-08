@@ -192,7 +192,6 @@ export default class TextEditor extends Vue {
     }
     for (let i = 0; i < selection.rangeCount; i++) {
       const range = selection.getRangeAt(0);
-      console.log("%c⧭", "color: #cc0088", range);
       let start: Node | null = range.startContainer;
       let end: Node | null = range.endContainer;
       // for IE11 : node.contains(textNode) always return false

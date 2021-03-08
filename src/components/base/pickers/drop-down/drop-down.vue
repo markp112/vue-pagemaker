@@ -3,7 +3,7 @@
     <div class="flex flex-row justify-between relative w-12 text-sm">
       <input
         v-model="selectedItem"
-        class="min-w-6 text-center relative app-input-field"
+        class="min-w-6 text-center relative bg-siteSurface text-onSurface"
         @change="onInputChange"
       />
       <img
@@ -38,7 +38,6 @@ import { Emit } from "vue-property-decorator";
 import { ButtonIconNumeric } from "@/models/styles/button-icon/button-numeric-list/button-numeric-list";
 import { ButtonIconNumericBuilder } from "@/models//styles/builders/button-icon-numeric";
 import { StyleElement } from "@/classes/text-attributes/text-attributes";
-import { BoxUnits } from "../../../../models/components/box-dimension";
 
 @Component({
   props: {
@@ -92,12 +91,19 @@ export default class DropDown extends Vue {
 }
 </script>
 
-<style lang="postcss">
+<style lang="css">
 .drop-down-li {
-  @apply cursor-pointer mb-2 relative z-auto text-sm w-full text-center;
+  @apply cursor-pointer;
+  @apply mb-2;
+  @apply relative;
+  @apply z-auto;
+  @apply text-sm;
+  @apply w-full;
+  @apply text-center;
 }
 
 .drop-down-li:hover {
-  @apply bg-gray-600 text-gray-400;
+  @apply bg-gray-600;
+  @apply text-gray-400;
 }
 </style>

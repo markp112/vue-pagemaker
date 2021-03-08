@@ -1,6 +1,6 @@
 <template>
   <div
-    class="snackbar-wrapper z-50 w-full"
+    class="snackbar-wrapper z-50 w-full snackbar-show "
     :class="{
       'snackbar-show': snackbarContent.show,
       'snackbar-hide': !snackbarContent.show
@@ -25,11 +25,8 @@
 
 <script lang="ts">
 import Component from "vue-class-component";
-import { Prop, Vue, Emit } from "vue-property-decorator";
-import {
-  SnackbarMessage,
-  initSnackbarMessage
-} from "../../../../models/notifications/snackbar";
+import { Vue } from "vue-property-decorator";
+import { SnackbarMessage } from "../../../../models/notifications/snackbar";
 import { SnackbarModule } from "@/store/snackbar/snackbar";
 
 @Component

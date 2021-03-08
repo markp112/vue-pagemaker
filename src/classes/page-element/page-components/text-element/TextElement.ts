@@ -10,6 +10,7 @@ export class TextElement extends PageElement {
 
   setDefaultStyle() {
     const siteDefaults = SiteDefaults.getInstance();
+    
     this.addStyle(
       this.constructStyle("font-family", siteDefaults.typography.fontName)
     );

@@ -34,9 +34,9 @@ export class MultiRowUnderline extends MultiRowBase {
     if (!this.hasTextNode) {
       this.hasSpanNodeNoUnderline = this.checkForSpanNodeWithoutUnderline(node);
     }
-    this.isUnderlined && !this.hasSpanNodeNoUnderline && !this.hasTextNode
-      ? this.removeUnderline(node)
-      : this.addUnderline(node, htmlTag);
+    // this.isUnderlined && !this.hasSpanNodeNoUnderline && !this.hasTextNode
+    //   ? this.removeUnderline(node)
+    //   : this.addUnderline(node, htmlTag);
   }
 
   /**
@@ -105,29 +105,11 @@ export class MultiRowUnderline extends MultiRowBase {
     return false;
   }
 
-  private addUnderline(parentNode: ParentNode, htmlTag: HTMLTags) {
-    if (this.isUnderlined) {
-      this.addUnderlineToSegment(parentNode, htmlTag);
-    } else {
-      this.addUnderlineToSelection(parentNode, htmlTag);
-    }
-  }
+  
 
   addUnderlineToSelection(parentNode: ParentNode, htmlTag: HTMLTags) {
     this.applyStyle(htmlTag, this.underline, "class");
     this.reInsertNodes();
   }
 
-  private addUnderlineToSegment(parentNode: ParentNode, htmlTag: HTMLTags) {
-    // find the text or span nodes at the first level under the paragraph tags
-    // and apply underline style to them
-    // - if the node is a text node append the text to the span node
-    // - if the node is a span node append it to the span node as a child
-    //
-    console.log("segment");
-  }
-
-  private removeUnderline(parentNode: ParentNode) {
-    console.log("remove underline called");
-  }
 }

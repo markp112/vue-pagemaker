@@ -1,9 +1,10 @@
-import { StyleElement } from "../text-attributes/text-attributes";
+import { StyleElement } from '../text-attributes/text-attributes';
 
 export type BackgroundBorderForeground =
-  | "background-color"
-  | "color"
-  | "border-color";
+  | 'background-color'
+  | 'color'
+  | 'border-color'
+  | 'transparency';
 
 export interface ColourInterface {
   _rgbColour: string;
@@ -11,21 +12,22 @@ export interface ColourInterface {
 }
 
 export class Colour implements ColourInterface {
-  _rgbColour = "#ffeedd";
-  _backgroundBorderForeground: BackgroundBorderForeground = "color";
+  _rgbColour = '#ffeedd';
+  _backgroundBorderForeground: BackgroundBorderForeground = 'color';
 
   private static instance: Colour;
 
   public static getInstance(): Colour {
     if (!Colour.instance) {
       Colour.instance = new Colour();
-      Colour.instance.rgbColour = "#ffeedd";
-      Colour.instance._backgroundBorderForeground = "color";
+      Colour.instance.rgbColour = '#ffeedd';
+      Colour.instance._backgroundBorderForeground = 'color';
     }
     return Colour.instance;
   }
 
   applyStyle(style: StyleElement) {
+    console.log('%c⧭', 'color: #e48461', style);
     this._rgbColour = style.value;
     this._backgroundBorderForeground = style.styleName as BackgroundBorderForeground;
   }

@@ -17,6 +17,7 @@ export type StyleTypes =
   | "shadow"
   | "underline"
   | "no-underline"
+  | "transparency"
   | "undefined";
 
 export interface StyleElement {
@@ -48,6 +49,9 @@ export class TextAttributes {
     this.classOrStyle = "style";
     switch (styleElement.styleName) {
       case "font-size":
+        this.units = styleElement.units;
+        break;
+      case "padding":
         this.units = styleElement.units;
         break;
       case "fontWeight":

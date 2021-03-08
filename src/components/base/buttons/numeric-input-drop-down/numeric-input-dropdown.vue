@@ -8,7 +8,7 @@
       type="number"
       v-model="inputValue"
       size="2"
-      class="w-10 app-input-field text-sm text-right self-center md:w-8 md:mt-1 md:mb-1 mr-2"
+      class="w-10 bg-siteSurface text-onSurface text-sm text-right self-center md:w-8 md:mt-1 md:mb-1 mr-2"
       @change="onInputChange()"
     />
     <drop-down
@@ -27,7 +27,6 @@ import DropDown from "@/components/base/pickers/drop-down/drop-down.vue";
 import { Emit } from "vue-property-decorator";
 import { ButtonIconNumeric } from "@/models/styles/button-icon/button-numeric-list/button-numeric-list";
 import { ButtonIconNumericBuilder } from "@/models//styles/builders/button-icon-numeric";
-import { Style } from "@/models/styles/styles";
 import { StyleElement } from "../../../../classes/text-attributes/text-attributes";
 
 @Component({

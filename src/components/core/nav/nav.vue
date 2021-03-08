@@ -1,9 +1,9 @@
 <template>
-  <div class="w-screen py-2 bg-sitePrimary shadow-lg h-16 rounded-t-lg">
+  <div class="py-2 bg-sitePrimary shadow-lg h-16 z-20">
     <nav class=" text-onPrimary flex items-center justify-between">
       <div class="ml-8">
         <img
-          :src="getPath('speech_ballon-48.png')"
+          :src="getPath('layout-48.png')"
           class="ml-2 text-primary-200 cursor-pointer hover:text-primary-100 self-start"
         />
       </div>
@@ -15,7 +15,7 @@
         />
 
         <div
-          class="flex justify-end toggleable z-10 absolute top-0 right-0 "
+          class="flex justify-end toggleable z-20 absolute top-0 right-0 "
           v-if="toggleMenu"
         >
           <ul

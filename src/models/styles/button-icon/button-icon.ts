@@ -2,9 +2,6 @@ import { Style } from "../styles";
 import { Dimension } from "@/models/components/box-dimension";
 import { StyleTypes } from "@/classes/text-attributes/text-attributes";
 import { ImpactedAttributeTypes } from "@/classes/sidebarButtonEventManager/sidebarButtonEventManager";
-// import { ButtonIconDimension, ButtonIconDimensionBuilder } from '@/models/styles/builders/buttonIconDimension';
-// import { ButtonIconClassList, ButtonIconClassListBuilder } from '@/models/styles/builders/button-icon-class-list';
-// import { shadowIconList, IconPickerInterface, borderEdgeIconList, lineStyleIconList, fontWeightIconList } from '@/models/components/icon-picker-models';
 
 export type IconType =
   | "class"
