@@ -10,7 +10,7 @@
       @mousemove="dragElement($event)"
       @mouseup="stopDragText($event)"
     >
-      <text-data :content="this.$props.thisComponent.content"> </text-data>
+      <text-data :content="this.$props.thisComponent.content"></text-data>
       <resizeable
         :isActive="isTextActive"
         :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"
@@ -68,18 +68,16 @@ export default class TextComponent extends mixins(GenericComponentMixins) {
   onTextClick(event: Event) {
     event.stopPropagation();
     PageModule.updateEditedComponentRef(this.$props.thisComponent);
-    SidebarModule.updateSidebarEditor(false);
+    SidebarModule.updateSidebarEditor();
     PageModule.updateShowEditDelete(true);
   }
 
   stopDragText(event: MouseEvent) {
-    const componentToDrag = this.$refs[this.$props.thisComponent.ref] as HTMLDivElement;
-    this.stopDrag(event, componentToDrag);
+    this.stopDrag(event);
   }
   
   startDragText(event: MouseEvent) {
-    const componentToDrag = this.$refs[this.$props.thisComponent.ref] as HTMLDivElement;
-    this.startDrag(event, componentToDrag);
+    this.startDrag(event);
   }
 }
 </script>

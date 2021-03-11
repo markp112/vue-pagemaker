@@ -2,23 +2,7 @@
   <text-component v-if="isText" :thisComponent="$props.thisComponent"></text-component>
   <image-component v-else-if="isImage" :thisComponent="$props.thisComponent"></image-component>
   <button-component v-else-if="isButton" :thisComponent="$props.thisComponent"></button-component>
-  <div
-    :ref="$props.thisComponent.ref"
-    v-else
-    :style="getStyles()"
-    :class="getClasses()"
-    :id="$props.thisComponent.ref"
-    class="handle flex flex-row justify-center items-center"
-    @click.prevent="onClick($event)"
-  >
-    {{ getData }}
-    <resizeable
-      :isActive="isActive"
-      :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"
-      @resizeStarted="resizeStarted($event)"
-      @onResize="onResize($event)"
-    ></resizeable>
-  </div>
+  
 </template>
 
 <script lang="ts">
@@ -88,12 +72,6 @@ export default class GenericComponent extends mixins(GenericComponentMixins) {
       PageModule.selectedComponent ===
       (this.$props.thisComponent as PageElement).ref
     );
-  }
-
-  onClick(event: Event) {
-    event.stopPropagation();
-    PageModule.updateEditedComponentRef(this.$props.thisComponent);
-    PageModule.updateShowEditDelete(true);
   }
 }
 </script>

@@ -141,15 +141,13 @@ export default class ImageComponentBackground extends mixins(
   // }
 
   startDragImage(event: MouseEvent) {
-    const componentToDrag = this.$refs[this.HTML_IMAGE_PARENT] as HTMLDivElement;
-    this.startDrag(event, componentToDrag);
+    this.startDrag(event);
     window.addEventListener('mousemove', this.dragImage);
     window.addEventListener('mouseup', this.stopDragImage);
   }
 
   stopDragImage(event: MouseEvent) {
-    const componentToDrag = this.$refs[this.HTML_IMAGE_PARENT] as HTMLDivElement;
-    this.stopDrag(event, componentToDrag);
+    this.stopDrag(event);
     window.removeEventListener('mousemove', this.dragImage);
     window.removeEventListener('mouseup', this.stopDragImage);
   }

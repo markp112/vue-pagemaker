@@ -103,22 +103,9 @@ export class ImageElement extends PageElement implements ImageElementInterface {
       });
       style += `width:${this.containerDimensions.width}px;height:${this.containerDimensions.height}px;`;
     }
+    console.log('%c%s', 'color: #00bf00', style);
     return style;
   }
-
-  // public getContainerStyles(): string {
-  //   const style = '';
-  //   const styles: Style[] = this.styles;
-  //   if (styles.length > 0) {
-  //     styles.forEach(element => {
-  //       // if (element.style === 'background-size') {
-  //       //   style += `${element.style}:${this.containerDimensions.width}px ${this.containerDimensions.height}px;`;
-  //       //   style += `width:${this.containerDimensions.width}px;height:${this.containerDimensions.height}px;`;
-  //       // }
-  //     });
-  //   }
-  //   return style;
-  // }
 
   public getElementContent(): ImageElementFirebaseData {
     return Object.assign(this.getBaseElementContent(), {

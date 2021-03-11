@@ -176,6 +176,7 @@ export class FirebaseDataBuilder {
           return this.buildText(parentComponent, item);
       }
     }
+    throw new Error('Invalid page element type Firebase');
   }
 
   private buildAContainer(

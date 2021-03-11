@@ -141,7 +141,6 @@ export class PageElement implements Partial<PageElementInterface> {
   }
 
   set content(content: string) {
-    console.trace('%c%s', 'color: #733d00','content=', content);
     this._content = content;
   }
 

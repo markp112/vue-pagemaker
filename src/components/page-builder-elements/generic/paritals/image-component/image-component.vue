@@ -1,11 +1,12 @@
 <template>
-  <section
+<section>
+  <div
     :ref="$props.thisComponent.ref"
     :id="$props.thisComponent.ref"
-    class="handle select-none"
+    class="handle"
     :class="getClass"
     :style="getStyles()"
-    @click="onThisImageClick($event)"  
+    @click="onImageClicked($event)"  
     @mousedown="startDragImage($event)"
     @mousemove="dragElement($event)"
     @mouseup="stopDragImage($event)"
@@ -13,10 +14,7 @@
     <img
       :src="getData"
       :style="getStyles()"
-      alt=""
-      :ref="$props.thisComponent.ref"
-      :id="$props.thisComponent.ref"
-    >
+    />
     <resizeable
         :isActive="isImageActive"
         :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"
@@ -24,6 +22,7 @@
         @onResize="onResize($event)"
       >
     </resizeable>
+  </div>
   </section>
 </template>
 
@@ -46,10 +45,10 @@ import { SidebarModule } from '@/store/sidebar/sidebar';
   },
   components: {
     resizeable: Resize,
-  }
+  },
 })
 export default class ImageComponent extends mixins(GenericComponentMixins) {
-  name="image-component";
+  name = "image-component";
 
   created() {
     if (this.$props.thisComponent.styles.length === 0) {
@@ -57,21 +56,22 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
     }
   }
 
-  onThisImageClick(event: Event) {
+  onImageClicked(event: Event) {
     event.stopPropagation();
+    console.log('%c⧭', 'color: #f200e2', this.$props.thisComponent)
     PageModule.updateEditedComponentRef(this.$props.thisComponent);
-    SidebarModule.updateSidebarEditor();
     PageModule.updateShowEditDelete(true);
+    SidebarModule.updateSidebarEditor();
   }
 
   stopDragImage(event: MouseEvent) {
-    const componentToDrag = this.$refs[this.$props.thisComponent.ref] as HTMLDivElement;
-    this.stopDrag(event, componentToDrag);
+    event.stopPropagation;
+    this.stopDrag(event);
   }
   
   startDragImage(event: MouseEvent) {
-    const componentToDrag = this.$refs[this.$props.thisComponent.ref] as HTMLDivElement;
-    this.startDrag(event, componentToDrag);
+    event.stopPropagation;
+    this.startDrag(event);
   }
 
   get getData(): string {

@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import Vuex, { Store } from 'vuex';
+import Vuex from 'vuex';
 import { UserStateInterface } from './auth/auth';
 import { ComponentPropsStateInterface } from './component-props/component-props';
 import { NavMenuStateInterface } from './menus/nav-menu/nav-menu-module';

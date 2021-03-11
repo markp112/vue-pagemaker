@@ -61,8 +61,16 @@ import { ImageManipulator, ZoomDirection, StretchDirection } from '@/classes/ima
 import { PageModule } from '@/store/page/page';
 import { ImageElement } from '@/classes/page-element/page-components/image-element/ImageElement';
 import { Style } from '@/models/styles/styles';
+import { PageElementBuilder } from '@/classes/page-element/page-element-builder/PageElementBuilder';
 
 @Component({
+  props: {
+    theEditedImage:{
+      default: ():ImageElement => {
+        return new PageElementBuilder().buildAnImage();
+      } 
+    },
+  },
   components: {
     'icon-image': IconImage,
   }
@@ -107,9 +115,8 @@ export default class ImageSizingToolbar extends Vue{
     prefix: '',
   };
   
-  created() {
-    const imageElement: ImageElement = PageModule.editedComponentRef as ImageElement;
-    this.imageManipulator = new ImageManipulator(imageElement);
+  mounted() {
+    this.imageManipulator = new ImageManipulator(this.$props.theEditedImage);
   }
 
   iconClicked(icon: string) {

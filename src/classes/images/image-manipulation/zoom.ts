@@ -46,8 +46,11 @@ export class Zoom {
         break;
       case '100':
         scaledDimensions.height = this._naturalSize.height;
+        console.log('%c⧭', 'color: #00ff88', this._naturalSize);
+        console.log('%c⧭', 'color: #f279ca', scaledDimensions);
         scaledDimensions.width = this._naturalSize.width;
         this._location.left = -scaledDimensions.width / 2;
+        console.log('%c⧭', 'color: #7f7700',this._location);
         this._location.top = -scaledDimensions.height / 2;
         break;
       case '50':

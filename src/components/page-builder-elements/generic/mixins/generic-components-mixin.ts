@@ -131,30 +131,35 @@ export class GenericComponentMixins extends Vue {
     }
   }
   
-  startDrag(event: MouseEvent, componentToDrag: HTMLDivElement) {
-    this.$props.thisComponent.addClass('absolute');
+  startDrag(event: MouseEvent) {
+    event.stopPropagation;
+    const thisComponent = this.$props.thisComponent;
+    thisComponent.addClass('absolute');
+    thisComponent.addClass('cursor-move');
+    thisComponent.addClass("z-50");
+    thisComponent.isAbsolute = true;
     this.isDragging = true;
     this.lastMousePosition = { x: event.pageX, y: event.pageY };
-    this.$props.thisComponent.isAbsolute = true;
-    componentToDrag.classList.add('cursor-move');
-    (this.$props.thisComponent as PageElement).addClass("z-50");
   }
 
-  stopDrag(event: MouseEvent, componentToDrag: HTMLDivElement): void {
+  stopDrag(event: MouseEvent): void {
     event.stopPropagation;
+    const thisComponent = this.$props.thisComponent;
+    thisComponent.removeClass('cursor-move');
+    thisComponent.removeClass("z-50");
     this.isDragging = false;
-    componentToDrag.classList.remove('cursor-move');
-    (this.$props.thisComponent as PageElement).removeClass("z-50");
   }
 
   dragElement(event: MouseEvent) {
-    if (!this.isDragging) return;
     event.stopPropagation;
+    if (!this.isDragging) return;
+    console.log('%c%s', 'color: #0088cc', 'dragElement');
     const currentMousePosition: MousePosition = { x: event.pageX, y: event.pageY };
     const deltaX = currentMousePosition.x - this.lastMousePosition.x;
     const deltaY = currentMousePosition.y - this.lastMousePosition.y;
-    this.$props.thisComponent.boxDimensions.top.value += deltaY;
-    this.$props.thisComponent.boxDimensions.left.value += deltaX;
+    const thisComponent = this.$props.thisComponent;
+    thisComponent.boxDimensions.top.value += deltaY;
+    thisComponent.boxDimensions.left.value += deltaX;
     this.lastMousePosition.x = event.pageX;
     this.lastMousePosition.y = event.pageY;
   }

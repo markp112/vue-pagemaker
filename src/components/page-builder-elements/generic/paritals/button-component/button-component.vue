@@ -72,13 +72,11 @@ export default class ButtonComponent extends mixins(GenericComponentMixins) {
   }
   
   stopDragButton(event: MouseEvent) {
-    const componentToDrag = this.$refs[this.$props.thisComponent.ref] as HTMLDivElement;
-    this.stopDrag(event, componentToDrag);
+    this.stopDrag(event);
   }
   
   startDragButton(event: MouseEvent) {
-    const componentToDrag = this.$refs[this.$props.thisComponent.ref] as HTMLDivElement;
-    this.startDrag(event, componentToDrag);
+    this.startDrag(event);
   }
 }
 </script>

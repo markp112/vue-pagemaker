@@ -278,7 +278,7 @@ export default class TextEditor extends Vue {
   }
 
   get getClasses(): string {
-    const componentClassSpec = PageModule.editedComponentRef as TextElement;
+    const componentClassSpec = PageModule.getComponentRef as TextElement;
     return componentClassSpec.classDefinition;
   }
 

@@ -17,9 +17,12 @@
       <sidebar-accordian accordianTitle="Borders" class="mb-4">
         <border-buttons class="mt-2"> </border-buttons>
       </sidebar-accordian> <sidebar-accordian accordianTitle="Sizing" class="mb-4">
-        <image-sizing-toolbar class="mt-2"> </image-sizing-toolbar>
+        <image-sizing-toolbar
+          class="mt-2"
+          :theEditedImage="theEditedImage"
+        >
+        </image-sizing-toolbar>
       </sidebar-accordian>
-
     </div>
   </div>
 </template>
@@ -37,6 +40,7 @@ import { PageModule } from '@/store/page/page';
 import { SidebarModule } from '@/store//sidebar/sidebar';
 import { Image } from '@/models/components/components';
 import { ImageElement } from '@/classes/page-element/page-components/image-element/ImageElement';
+import { PageElementBuilder } from '@/classes/page-element/page-element-builder/PageElementBuilder';
 
 
 @Component({
@@ -52,11 +56,12 @@ import { ImageElement } from '@/classes/page-element/page-components/image-eleme
 export default class ImageEditorSidebar extends Vue {
   name = 'ImageEditorSidebar';
   currentImageUrl = '';
+  theEditedImage: ImageElement = new PageElementBuilder().buildAnImage();
 
   mounted() {
-    const editedComponentData: ImageElement = PageModule.editedComponentRef as ImageElement;
-    if (editedComponentData) {
-      this.currentImageUrl = editedComponentData.content;
+    this.theEditedImage = PageModule.getComponentRef as ImageElement;
+    if (this.theEditedImage) {
+      this.currentImageUrl = this.theEditedImage.content;
     }
   }
 

@@ -21,6 +21,7 @@ export class ImageManipulator {
   private _imageElement: ImageElement;
 
   constructor(imageElement: ImageElement) {
+    console.log('%c⧭', 'color: #408059', imageElement);
     this._imageElement = imageElement;
   }
 
@@ -83,6 +84,7 @@ export class ImageManipulator {
     this._imageElement.scaledSize.height = dimensionLocation.dimensions.height;
     this._imageElement.scaledSize.width = dimensionLocation.dimensions.width;
     this._imageElement.location = dimensionLocation.location;
+    console.log('%c⧭', 'color: #99adcc', this.getStyles());
     return this.getStyles();
   }
 
