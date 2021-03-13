@@ -1,6 +1,7 @@
 import { ImageElement } from '@/classes/page-element/page-components/image-element/ImageElement';
 import { MousePosition } from '@/components/page-builder-elements/generic/mixins/generic-components-mixin';
 import { Style, StyleTags } from '@/models/styles/styles';
+import { PageModule } from '@/store/page/page';
 import { Pan } from './pan';
 import { ResizeImage } from './resize';
 import { Zoom } from './zoom';
@@ -74,6 +75,7 @@ export class ImageManipulator {
   }
 
   public zoom(direction: ZoomDirection): Style[] {
+    console.log('%c⧭', 'color: #7f2200', this._imageElement);
     const zoom: Zoom = new Zoom(
       this._imageElement.scaledSize,
       this._imageElement.naturalSize,

@@ -19,7 +19,7 @@
       </sidebar-accordian> <sidebar-accordian accordianTitle="Sizing" class="mb-4">
         <image-sizing-toolbar
           class="mt-2"
-          :theEditedImage="theEditedImage"
+          :theEditedImage="getImageComponent"
         >
         </image-sizing-toolbar>
       </sidebar-accordian>
@@ -60,6 +60,7 @@ export default class ImageEditorSidebar extends Vue {
 
   mounted() {
     this.theEditedImage = PageModule.getComponentRef as ImageElement;
+    console.log('%c⧭', 'color: #e5de73', this.theEditedImage)
     if (this.theEditedImage) {
       this.currentImageUrl = this.theEditedImage.content;
     }
@@ -71,6 +72,10 @@ export default class ImageEditorSidebar extends Vue {
 
   closeButtonClick(): void {
     SidebarModule.closeEditor();
+  }
+
+  get getImageComponent(): ImageElement {
+    return PageModule.getComponentRef as ImageElement;
   }
 }
 </script>

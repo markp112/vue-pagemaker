@@ -120,6 +120,7 @@ export default class ImageSizingToolbar extends Vue{
   }
 
   iconClicked(icon: string) {
+    this.imageManipulator = new ImageManipulator(this.$props.theEditedImage);
     const styles: Style[] = this.imageManipulator.applyAction(icon as ZoomDirection | StretchDirection);
     styles.forEach((style: Style) => {
       PageModule.updateEditedComponentStyles(style);

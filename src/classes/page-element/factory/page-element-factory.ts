@@ -166,7 +166,7 @@ export class PageElementFactory {
       .setNaturalSize(baseDimensions)
       .setScaledSize(baseDimensions)
       .buildAnImage();
-    imageElement.parentRef = imageElement.parent.ref;
+      imageElement.parentRef = imageElement.parent.ref;
     return imageElement;
   }
 

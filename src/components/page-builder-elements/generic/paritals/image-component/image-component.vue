@@ -13,7 +13,7 @@
   >
     <img
       :src="getData"
-      :style="getStyles()"
+      :style="imageStyles"
     />
     <resizeable
         :isActive="isImageActive"
@@ -72,6 +72,10 @@ export default class ImageComponent extends mixins(GenericComponentMixins) {
   startDragImage(event: MouseEvent) {
     event.stopPropagation;
     this.startDrag(event);
+  }
+
+  get imageStyles(): string {
+    return (this.$props.thisComponent as ImageElement).theImageStyles;
   }
 
   get getData(): string {

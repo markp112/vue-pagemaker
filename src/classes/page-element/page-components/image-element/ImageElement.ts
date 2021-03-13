@@ -30,7 +30,6 @@ export class ImageElement extends PageElement implements ImageElementInterface {
     this._naturalSize = builder.naturalSize;
     this._containerDimensions = builder.containerDimensions;
     this._containerLocation = builder.containerLocation;
-    console.log('%c⧭', 'color: #33cc99',  builder.containerLocation);
     this._ratio = this.calcRatio(
       this._naturalSize.width,
       this._naturalSize.height
@@ -99,7 +98,27 @@ export class ImageElement extends PageElement implements ImageElementInterface {
     const styles: Style[] = this.styles;
     if (styles.length > 0) {
       styles.forEach(element => {
-        style += `${element.style}:${element.value};`;
+        if ((this.isAbsolute) && (element.style === 'top' || element.style === 'left')) {
+          style += `${element.style}:${element.value};`;
+          
+        } else {
+          style += `${element.style}:${element.value};`;
+        }
+      });
+      style += `width:${this.containerDimensions.width}px;height:${this.containerDimensions.height}px;`;
+    }
+    console.log('%c%s', 'color: #00bf00', style);
+    return style;
+  }
+
+  public get theImageStyles(): string {
+    let style = '';
+    const styles: Style[] = this.styles;
+    if (styles.length > 0) {
+      styles.forEach(element => {
+        if(element.style !== 'top' && element.style !== 'left') {
+          style += `${element.style}:${element.value};`;
+        } 
       });
       style += `width:${this.containerDimensions.width}px;height:${this.containerDimensions.height}px;`;
     }
@@ -135,14 +154,18 @@ export class ImageElement extends PageElement implements ImageElementInterface {
   public setImage(image: Image) {
     this.content = image.content;
     if (image.naturalSize.width === 0) {
-      image.naturalSize.width = 300;
+      image.naturalSize.width = 100;
     }
     if (image.naturalSize.height === 0) {
-      image.naturalSize.height = 250;
+      image.naturalSize.height = 200;
     }
-    this._naturalSize = { ...image.naturalSize } ;
+    this._naturalSize = { ...image.naturalSize };
     this._ratio = image.ratio;
-    this._scaledSize = { ...image.scaledSize };
+    if (image.scaledSize.width === 0 && image.scaledSize.height === 0) {
+      this._scaledSize =  { ...image.naturalSize };
+    } else {
+      this._scaledSize = { ...image.scaledSize };
+    }
     this._maintainRatio = image.maintainRatio;
   }
 

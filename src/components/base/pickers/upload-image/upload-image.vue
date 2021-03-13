@@ -32,6 +32,7 @@
         :src="getImage"
         class="border object-contain h-32 mt-2"
         ref="imagePlaceholder"
+        @load="onImageLoad()"
       />
     </div>
     <div class="flex flex-row justify-start w-full items-center h-8">
@@ -109,6 +110,7 @@ export default class UploadImage extends Vue {
   @Emit('image-url')
   updateImage(): Image {
     const img = this.$refs.imagePlaceholder as HTMLImageElement;
+    console.log('%c⧭', 'color: #364cd9', img)
     const image = new Image();
     image.maintainRatio = this.maintainRatio;
     image.content = this.url;
@@ -155,7 +157,7 @@ export default class UploadImage extends Vue {
 
   imageClicked(url: string) {
     this.url = url;
-    this.updateImage();
+    // this.updateImage();
   }
 
   setImage(targetName: string, file: File[]) {

@@ -15,9 +15,12 @@ export class Zoom {
     imageContainer: Dimensions
   ) {
     this._currentSize = currentSize;
+    console.log('%c⧭', 'color: #eeff00', currentSize);
     this._naturalSize = naturalSize;
+    console.log('%c⧭', 'color: #ffa280', naturalSize);
     this._location = location;
     this._imageContainer = imageContainer;
+
   }
 
   get location(): Location {
