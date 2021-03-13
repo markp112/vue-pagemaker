@@ -18,8 +18,7 @@ export type PageElementClasses =
   | ButtonElement
   | TextElement
   | ImageElement
-  | PageContainer
-  | undefined;
+  | PageContainer;
 
 /**
  * @description factory to build page elements as required e.g. button, text area etc
@@ -46,9 +45,6 @@ export class PageElementFactory {
     component?: ComponentDefinitionInterface,
     parent?: PageContainer | null
   ): PageElementClasses {
-    if (type === undefined) {
-      return undefined;
-    }
     if (type === "rootContainer" && ref) {
       return this.buildRootContainer(ref);
     }
@@ -63,6 +59,7 @@ export class PageElementFactory {
         }
       }
     }
+    throw new Error("page-element-factory: PageElement type not recognised");
   }
 
   private createContainer(
@@ -99,6 +96,7 @@ export class PageElementFactory {
     if (type === "image") {
       return this.buildAnImageElement(component, ref, parent);
     }
+    throw new Error("page-element-factory: PageElement type not recognised");
   }
 
   private getBoxDimensions(

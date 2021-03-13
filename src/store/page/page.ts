@@ -41,7 +41,7 @@ class PageStore extends VuexModule implements PageStateInterface {
   // public _pageElements: PageData[] = [];
   public _pageElements: PageElementClasses[] = [];
   // reference to the component currently being edited
-  public _editedComponentRef: PageElementClasses;
+  public _editedComponentRef!: PageElementClasses;
   // show the toolbar for selecting edit // delete
   public _showEditDelete = false;
   // used to ensure only one component can be selected in the UI
@@ -145,7 +145,6 @@ class PageStore extends VuexModule implements PageStateInterface {
 
   @Mutation
   private setEditedComponentRef(component: PageElementClasses): void {
-    this._editedComponentRef = undefined;
     this._editedComponentRef = component;
     this._selectedComponent = component ? component.ref : '';
     this._selectedComponentType = this._editedComponentRef
