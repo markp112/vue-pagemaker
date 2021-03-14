@@ -77,9 +77,7 @@ export class GenericComponentMixins extends Vue {
   public getMousePosition(
     x: number,
     y: number,
-    targetElement: string
   ): MousePosition {
-    const target = this.$refs[targetElement] as HTMLDivElement;
     return {
       x: x ,
       y: y ,
@@ -90,7 +88,6 @@ export class GenericComponentMixins extends Vue {
     this.lastMousePosition = this.getMousePosition(
       event.screenX,
       event.screenY,
-      this.$props.thisComponent.ref
     );
   }
 
@@ -104,27 +101,28 @@ export class GenericComponentMixins extends Vue {
       const currentMousePosition = this.getMousePosition(
         boxProperties.clientX,
         boxProperties.clientY,
-        thisComponent.ref
-      );
+        );
       const changeX = currentMousePosition.x - this.lastMousePosition.x;
       const changeY = currentMousePosition.y - this.lastMousePosition.y;
-      this.lastMousePosition = currentMousePosition;
+      this.lastMousePosition = { ...currentMousePosition };
       const boxDimensions: BoxDimensionsInterface = this.calculateNewDimensions(
         boundingRect,
         changeY,
         changeX
         );
-        boxDimensions.left.value = this.$props.thisComponent.boxDimensions.left.value;
+        // boxDimensions.left.value = this.$props.thisComponent.boxDimensions.left.value;
       if (thisComponent.isContainer) {
         const parentContainer = thisComponent.parent;
         const parentDimensions = parentContainer.boxDimensions;
+        console.log('%c⧭', 'color: #d0bfff', parentDimensions);
         const offSetWidth = boxProperties.offsetWidth;
+        console.log('%c⧭', 'color: #00736b', offSetWidth);
         if (
-          boxDimensions.width.value + offSetWidth >
+          boxDimensions.width.value + (offSetWidth * 2) >
             parentDimensions.width.value
         ) {
           boxDimensions.width.value =
-            parentDimensions.width.value - offSetWidth;
+            parentDimensions.width.value - ((offSetWidth * 2) + offSetWidth);
         }
       }
       PageModule.updateBoxDimensionHeightandWidth(boxDimensions);

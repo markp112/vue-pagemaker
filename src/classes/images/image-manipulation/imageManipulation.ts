@@ -29,6 +29,7 @@ export class ImageManipulator {
   }
 
   get imageElement(): ImageElement {
+    console.log('%c⧭', 'color: #5200cc', this._imageElement);
     return this._imageElement;
   }
 
@@ -44,6 +45,7 @@ export class ImageManipulator {
     const deltaChange = this.getDeltaChange(currentMousePosition);
     this._lastMousePosition.x = currentMousePosition.x;
     this._lastMousePosition.y = currentMousePosition.y;
+    console.log('%c⧭', 'color: #9c66cc', this._imageElement);
     const resizeImage = new ResizeImage(this._imageElement);
     resizeImage.resize(deltaChange);
     this.applySizeStyles();

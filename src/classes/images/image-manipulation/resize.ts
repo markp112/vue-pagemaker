@@ -14,15 +14,17 @@ export class ResizeImage {
 
   public resize(deltaChange: MousePostion) {
     this._imageContainer.width += deltaChange.x;
+    console.log('%c⧭', 'color: #86bf60', this._imageContainer);
     this._imageContainer.height += deltaChange.y;
     this._imageContainer = this.containWithinParentElement();
-    this._setNewSizes(deltaChange);
+    this.setNewSizes(deltaChange);
   }
 
-  private _setNewSizes(deltaChange: MousePostion) {
+  private setNewSizes(deltaChange: MousePostion) {
     this._imageElement.scaledSize.width += deltaChange.x;
+    console.log('%c⧭', 'color: #ace2e6', this._imageElement.scaledSize);
     this._imageElement.scaledSize.height += deltaChange.y;
-    this._imageElement.containerDimensions = { ...this._imageContainer};
+    this._imageElement.containerDimensions = { ...this._imageContainer };
   }
 
   private containWithinParentElement(): Dimensions {

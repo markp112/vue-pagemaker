@@ -50,11 +50,8 @@ export default class GenericComponent extends mixins(GenericComponentMixins) {
   HTML_TARGET_ELEMENT = '';
 
   created() {
-    const pageElement: PageElementClasses = this.$props.thisComponent;
-    if (pageElement) {
-      if (pageElement.styles.length === 0) {
-        pageElement.setDefaultStyle();
-      }
+    if (this.$props.thisComponent.styles.length === 0) {
+      this.$props.thisComponent.setDefaultStyle();
     }
     if (this.$props.thisComponent.type === 'image') {
       this.isImage = true;
@@ -75,11 +72,7 @@ export default class GenericComponent extends mixins(GenericComponentMixins) {
   }
 
   get getData(): string | undefined {
-    const component: PageElementClasses = this.$props.thisComponent;
-    if (component) {
-      return this.$props.thisComponent.content;
-    }
-    return '';
+    return this.$props.thisComponent;
   }
 
   get isActive(): boolean {

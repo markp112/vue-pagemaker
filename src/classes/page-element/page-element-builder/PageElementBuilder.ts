@@ -256,8 +256,8 @@ export class PageElementBuilder {
         top: 0,
       };
       this._scaledSize = {
-        width: DEFAULT_WIDTH,
-        height: DEFAULT_HEIGHT,
+        width: NATURAL_WIDTH,
+        height: NATURAL_HEIGHT,
         units: Units.px
       };
     }

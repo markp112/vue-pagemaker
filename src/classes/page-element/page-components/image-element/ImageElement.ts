@@ -29,6 +29,7 @@ export class ImageElement extends PageElement implements ImageElementInterface {
     this._maintainRatio = true;
     this._naturalSize = builder.naturalSize;
     this._containerDimensions = builder.containerDimensions;
+    console.log('%c⧭', 'color: #607339', builder.containerDimensions);
     this._containerLocation = builder.containerLocation;
     console.log('%c⧭', 'color: #33cc99',  builder.containerLocation);
     this._ratio = this.calcRatio(

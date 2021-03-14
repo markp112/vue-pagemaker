@@ -23,6 +23,7 @@ import { PageElementClasses } from '@/classes/page-element/factory/page-element-
 import { ImageElement } from '@/classes/page-element/page-components/image-element/ImageElement';
 import { Notification } from '@/models/notifications/notifications';
 import { FirebaseDataBuilder } from '@/classes/page-element/firebase-data/FirebaseDataBuilder';
+import { deleteAPageElement } from '@/utils/helpers/deleteFromNestedArray';
 
 export interface PageStateInterface {
   _pageId: string;
@@ -78,20 +79,7 @@ class PageStore extends VuexModule implements PageStateInterface {
   @Mutation
   private deleteAPageElement(): void {
     if (this._editedComponentRef) {
-      if (this._editedComponentRef.parentRef === this.ROOT) {
-        this._pageElements = this._pageElements.filter(element => {
-          if (this._editedComponentRef) {
-            if (element) {
-              return element.ref !== this._editedComponentRef.ref;
-            }
-          }
-        });
-      } else {
-        const parentComponent = this._editedComponentRef.parent;
-        (parentComponent as PageContainer).deleteElement(
-          this._editedComponentRef.ref
-        );
-      }
+      this._pageElements = deleteAPageElement(this._pageElements, this._editedComponentRef.ref);
     }
   }
 

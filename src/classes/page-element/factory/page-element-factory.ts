@@ -169,6 +169,11 @@ export class PageElementFactory {
       .setRef(ref)
       .setIsContainer(true)
       .setName(ROOT)
+      .setContainerDimensions({
+        height: 1080,
+        width: 1920,
+        units: Units.px,
+      })
       .buildAContainer();
     container.parentRef = container.ref;
     return container;

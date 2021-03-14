@@ -155,7 +155,6 @@ export default class ImageComponentBackground extends mixins(
   }
 
   dragImage(event: MouseEvent) {
-    console.log('%c%s', 'color: #7f2200', 'dragImage')
     if (!this.isDragging) return;
     event.stopPropagation;
     const currentMousePosition: MousePosition = { x: event.pageX, y: event.pageY };
@@ -176,7 +175,6 @@ export default class ImageComponentBackground extends mixins(
     const currentMousePosition: MousePosition = this.getMousePosition(
       event.pageX,
       event.pageY,
-      this.HTML_IMAGE_PARENT
     );
     const style = this.imageManipulator.pan(currentMousePosition);
     PageModule.updateEditedComponentStyles(style);
@@ -196,8 +194,6 @@ export default class ImageComponentBackground extends mixins(
       y: coordinates.clientY,
     };
     this.imageManipulator.resize(currentMousePosition);
-    this.imageManipulator.imageElement.containerDimensions.height + 'px';
-    (this.$props.thiscomponent as ImageElement).containerDimensions.height
     this.parentContainer.style.height =
       this.imageManipulator.imageElement.containerDimensions.height + 'px';
     this.parentContainer.style.width =

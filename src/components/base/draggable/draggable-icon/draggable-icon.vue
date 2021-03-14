@@ -42,7 +42,6 @@ export default class DraggableIcon extends Vue {
   }
 
   onDragLeave(e: DragEvent): void {
-    const target = e.target;
     if (e.currentTarget)
       (e.currentTarget as HTMLDivElement).style.border = "none";
   }

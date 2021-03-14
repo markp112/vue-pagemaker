@@ -6,15 +6,15 @@
     :style="getStyles()"
     :ref="$props.thisComponent.ref"
     @dragover.prevent
-    @drop.prevent="onDrop"
+    @drop.prevent="onDrop($event)"
     @click.prevent="onClick($event)"
   >
     <component
-      :is="layout.componentHTMLTag"
-      v-for="(layout, i) in $props.thisComponent.elements"
+      :is="pageElement.componentHTMLTag"
+      v-for="(pageElement, i) in getPageElements"
       :key="i"
       :index="i"
-      :thisComponent="layout"
+      :thisComponent="pageElement"
       @onClick.prevent="componentClick($event)"
       z-index="1"
       @dragover.prevent
@@ -63,9 +63,8 @@ export default class Container extends mixins(GenericComponentMixins) {
   private componentCounter: ComponentCounter = ComponentCounter.getInstance();
 
   created() {
-    const pageElement: PageElementClasses = this.$props.thisComponent;
-    if (pageElement) {
-      pageElement.setDefaultStyle();
+    if (this.$props.thisComponent) {
+      this.$props.thisComponent.setDefaultStyle();
     }
   }
 
@@ -80,6 +79,22 @@ export default class Container extends mixins(GenericComponentMixins) {
       value: this.$el.getBoundingClientRect().height,
       units: "px"
     };
+  }
+
+  get getPageElements(): PageElementClasses[] {
+    console.log('%c⧭', 'color: #e50000', this.$props.thisComponent.elements)
+    return this.$props.thisComponent.elements;
+  }
+
+  get getStyle(): string {
+    return this.componentStyle;
+  }
+
+  get isActive(): boolean {
+    return (
+      PageModule.selectedComponent ===
+        (this.$props.thisComponent as PageContainer).ref
+    );
   }
 
   @Emit("componentClicked")
@@ -123,18 +138,7 @@ export default class Container extends mixins(GenericComponentMixins) {
     const dataTransfer = event.dataTransfer;
     return dataTransfer ? dataTransfer.getData("text") : "";
   }
-
-  get getStyle(): string {
-    return this.componentStyle;
-  }
-
-  get isActive(): boolean {
-    return (
-      PageModule.selectedComponent ===
-      (this.$props.thisComponent as PageContainer).ref
-    );
-  }
-
+  
   getBoundingRect(): BoxDimensions | null {
     if (!this.$el) return null;
     if (!this.$el.parentElement) return null;

@@ -3,12 +3,10 @@
     <h2 class="page-heading">Editing: {{ title }} Page</h2>
     <div
       :id="id"
-      class="relative p-4 border border-gray-400"
-      :class="getClass()"
+      class="relative p-4 w-full h-full border page-background"
       ref="ROOT"
-      @dragover.prevent="bgColour = 'bg-gray-600'"
-      @dragleave.prevent="bgColour = 'bg-gray-200'"
-      @drop.prevent="onDrop"
+      @dragover.prevent
+      @drop.prevent="onDrop($event)"
     >
       <component
         v-for="(component, i) in layoutElements"
@@ -147,3 +145,10 @@ export default class PageBuilder extends Vue {
 
 }
 </script>
+
+<style>
+.page-background {
+  background-image: url('../../assets/images/backgrounds/white-tissue-paper.jpg');
+  background-position: top left;
+}
+</style>
