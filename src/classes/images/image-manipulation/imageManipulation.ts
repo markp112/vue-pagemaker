@@ -42,9 +42,8 @@ export class ImageManipulator {
   }
 
   public resize(currentMousePosition: MousePostion) {
-    const deltaChange = this.getDeltaChange(currentMousePosition);
-    this._lastMousePosition.x = currentMousePosition.x;
-    this._lastMousePosition.y = currentMousePosition.y;
+    const deltaChange: MousePosition = this.getDeltaChange(currentMousePosition);
+    this.lastMousePosition = { ...currentMousePosition };
     console.log('%c⧭', 'color: #9c66cc', this._imageElement);
     const resizeImage = new ResizeImage(this._imageElement);
     resizeImage.resize(deltaChange);
@@ -54,6 +53,7 @@ export class ImageManipulator {
   private applySizeStyles() {
     const styles: Style[] = [];
     const backgroundSize = `${this._imageElement.scaledSize.width}px ${this._imageElement.scaledSize.height}px`;
+    console.log('%c⧭', 'color: #917399', backgroundSize);
     styles.push(
       this._imageElement.constructStyle('background-size', backgroundSize)
     );
@@ -63,12 +63,14 @@ export class ImageManipulator {
         `${this.imageElement.containerDimensions.height}px`
       )
     );
+        console.log('%c⧭', 'color: #d90000', this.imageElement.containerDimensions.height);
     styles.push(
       this._imageElement.constructStyle(
         'width',
         `${this.imageElement.containerDimensions.width}px`
-      )
-    );
+        )
+        );
+        console.log('%c⧭', 'color: #ffa640', this.imageElement.containerDimensions.width);
     styles.forEach(style => {
       this._imageElement.addStyle(style);
     });

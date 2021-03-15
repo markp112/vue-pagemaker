@@ -1,13 +1,13 @@
 <template>
   <section>
     <div
-      ref="imageContainer"
+      ref="image-container"
       class="handle object-contain"
       :id="$props.thisComponent.ref"
       @click.prevent="onClick($event)"
     >
       <img
-        ref="imageElement"
+        ref="image-element"
         class="absolute bg-no-repeat "
         :style="getImageStyles()"
         :class="{ 'cursor-pan': draggingStarted }"
@@ -63,10 +63,11 @@ import { SidebarModule } from '@/store/sidebar/sidebar';
 })
 export default class ImageComponentBackground extends mixins(
   GenericComponentMixins
-) {
+) 
+{
   name = 'ImageComponentBackground';
-  HTML_IMAGE_ELEMENT = 'imageElement';
-  HTML_IMAGE_PARENT = 'imageContainer';
+  HTML_IMAGE_ELEMENT = 'image-element';
+  HTML_IMAGE_PARENT = 'image-container';
   draggingStarted = false;
   isResizing = true;
   parentContainer: HTMLDivElement = this.$refs[
@@ -78,6 +79,9 @@ export default class ImageComponentBackground extends mixins(
 
   created() {
     this.component = this.$props.thisComponent;
+    if (this.$props.thisComponent.styles.length === 0) {
+      this.$props.thisComponent.setDefaultStyle();
+    }
   }
 
   mounted() {
@@ -109,13 +113,15 @@ export default class ImageComponentBackground extends mixins(
 
   onClick(event: Event) {
     event.stopPropagation();
-    SidebarModule.updateSidebarEditor(false);
+    /**
+     * @important - dont change order of execution
+     */
     PageModule.updateEditedComponentRef(this.$props.thisComponent);
+    SidebarModule.updateSidebarEditor();
     PageModule.updateShowEditDelete(true);
   }
 
   onDraggingStarted(event: MouseEvent) {
-    this.onClick(event);
     const parent = this.$refs[this.HTML_IMAGE_PARENT] as HTMLDivElement;
     this.draggingStarted = true;
     const lastMousePosition = {

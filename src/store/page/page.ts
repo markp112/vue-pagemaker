@@ -135,11 +135,11 @@ class PageStore extends VuexModule implements PageStateInterface {
   private setEditedComponentRef(component: PageElementClasses): void {
     this._editedComponentRef = component;
     this._selectedComponent = component ? component.ref : '';
-    this._selectedComponentType = this._editedComponentRef
-      ? this._editedComponentRef.type
+    this._selectedComponentType = component
+      ? component.type
       : undefined;
-    this._editComponentContent = this._editedComponentRef
-      ? this._editedComponentRef.content
+    this._editComponentContent = component
+      ? component.content
       : '';
   }
 

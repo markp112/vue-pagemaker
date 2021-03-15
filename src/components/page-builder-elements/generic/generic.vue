@@ -1,40 +1,19 @@
 <template>
-  <text-component v-if="isText" :thisComponent="$props.thisComponent"></text-component>
-  <image-component v-else-if="isImage" :thisComponent="$props.thisComponent"></image-component>
-  <button-component v-else-if="isButton" :thisComponent="$props.thisComponent"></button-component>
-  <div
-    :ref="$props.thisComponent.ref"
-    v-else
-    :style="getStyles()"
-    :class="getClasses()"
-    :id="$props.thisComponent.ref"
-    class="handle flex flex-row justify-center items-center"
-    @click.prevent="onClick($event)"
-  >
-    {{ getData }}
-    <resizeable
-      :isActive="isActive"
-      :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"
-      @resizeStarted="resizeStarted($event)"
-      @onResize="onResize($event)"
-    ></resizeable>
-  </div>
+  <component
+    :is="getComponent"
+    :thisComponent="$props.thisComponent"
+  ></component>
 </template>
 
 <script lang="ts">
 import Component, { mixins } from 'vue-class-component';
-import Resize from '@/components/base/resizeable/resize.vue';
 import ImageComponentBackground from './paritals/image-component-background.vue';
 import TextComponent from './paritals/text-component/text-component.vue';
 import ButtonComponent from './paritals/button-component/button-component.vue';
-import { PageModule } from '@/store/page/page';
 import { GenericComponentMixins } from '@/components/page-builder-elements/generic/mixins/generic-components-mixin';
-import { PageElement } from '@/classes/page-element/PageElement';
-import { PageElementClasses } from '@/classes/page-element/factory/page-element-factory';
 
 @Component({
   components: {
-    resizeable: Resize,
     'image-component': ImageComponentBackground,
     'text-component': TextComponent,
     'button-component': ButtonComponent,
@@ -53,39 +32,19 @@ export default class GenericComponent extends mixins(GenericComponentMixins) {
     if (this.$props.thisComponent.styles.length === 0) {
       this.$props.thisComponent.setDefaultStyle();
     }
-    if (this.$props.thisComponent.type === 'image') {
-      this.isImage = true;
-      this.isText = false;
-      this.isButton = false;
-    }
-    if (this.$props.thisComponent.type === 'text') {
-      this.isImage = false;
-      this.isText = true;
-      this.isButton = false;
-    }
-    if (this.$props.thisComponent.type === 'button') {
-      this.isImage = false;
-      this.isText = false;
-      this.isButton = true;
-    }
-    this.HTML_TARGET_ELEMENT = this.$props.thisComponent.ref;
   }
 
-  get getData(): string | undefined {
-    return this.$props.thisComponent;
-  }
-
-  get isActive(): boolean {
-    return (
-      PageModule.selectedComponent ===
-      (this.$props.thisComponent as PageElement).ref
-    );
-  }
-
-  onClick(event: Event) {
-    event.stopPropagation();
-    PageModule.updateEditedComponentRef(this.$props.thisComponent);
-    PageModule.updateShowEditDelete(true);
+  get getComponent(): string {
+    switch(this.$props.thisComponent.type) {
+      case 'image':
+        return 'image-component';
+      case 'text':
+        return 'text-component';
+      case 'button':
+        return 'button-component';
+      default:
+        return '';
+    }
   }
 }
 </script>
@@ -96,7 +55,7 @@ export default class GenericComponent extends mixins(GenericComponentMixins) {
   box-sizing: border-box;
 }
 
-.image :active {
+.image:active {
   @apply cursor-move;
 }
 

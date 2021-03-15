@@ -55,6 +55,8 @@ export default class ImageEditorSidebar extends Vue {
 
   mounted() {
     const editedComponentData: ImageElement = PageModule.editedComponentRef as ImageElement;
+    console.log('%c⧭', 'color: #00b300', editedComponentData)
+    console.trace('image Editor trace')
     if (editedComponentData) {
       this.currentImageUrl = editedComponentData.content;
     }

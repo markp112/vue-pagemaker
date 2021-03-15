@@ -234,10 +234,8 @@ export class PageElementBuilder {
   }
 
   public buildAnImage(): ImageElement {
-    const DEFAULT_HEIGHT = 200;
-    const DEFAULT_WIDTH = 100;
-    const NATURAL_HEIGHT = 300;
-    const NATURAL_WIDTH = 200;
+    const NATURAL_HEIGHT = 200;
+    const NATURAL_WIDTH = 300;
     if (this._content === "") {
       this._content =
         "https://firebasestorage.googleapis.com/v0/b/page-maker-69fb1.appspot.com/o/assets%2Fimages%2Fimageplaceholder.png?alt=media&token=149d3e60-0fc4-49de-9e23-5fea91458240";
@@ -247,8 +245,8 @@ export class PageElementBuilder {
         units: Units.px
       };
       this._containerDimensions = {
-        width: DEFAULT_WIDTH,
-        height: DEFAULT_HEIGHT,
+        width: NATURAL_WIDTH,
+        height: NATURAL_HEIGHT,
         units: Units.px
       };
       this._containerLocation = {
