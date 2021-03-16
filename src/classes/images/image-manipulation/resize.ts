@@ -14,15 +14,14 @@ export class ResizeImage {
 
   public resize(deltaChange: MousePostion) {
     this._imageContainer.width += deltaChange.x;
-    console.log('%c⧭', 'color: #86bf60', this._imageContainer);
     this._imageContainer.height += deltaChange.y;
     this._imageContainer = this.containWithinParentElement();
     this.setNewSizes(deltaChange);
   }
 
   private setNewSizes(deltaChange: MousePostion) {
+    this._imageElement.scaledSize.width
     this._imageElement.scaledSize.width += deltaChange.x;
-    console.log('%c⧭', 'color: #ace2e6', this._imageElement.scaledSize);
     this._imageElement.scaledSize.height += deltaChange.y;
     this._imageElement.containerDimensions = { ...this._imageContainer };
   }
@@ -39,18 +38,18 @@ export class ResizeImage {
     if (
       checkedDimensions.height >
       this._imageElement.parent.boxDimensions.height.value
-    ) {
-      checkedDimensions.height = this._imageElement.parent.boxDimensions.height.value;
-    }
-    if (checkedDimensions.width < 0) {
-      checkedDimensions.width = 0;
-    }
-    if (
-      checkedDimensions.width >
-      this._imageElement.parent.boxDimensions.width.value
-    ) {
-      checkedDimensions.width = this._imageElement.parent.boxDimensions.width.value;
-    }
+      ) {
+        checkedDimensions.height = this._imageElement.parent.boxDimensions.height.value;
+      }
+      if (checkedDimensions.width < 0) {
+        checkedDimensions.width = 0;
+      }
+      if (
+        checkedDimensions.width >
+        this._imageElement.parent.boxDimensions.width.value
+        ) {
+          checkedDimensions.width = this._imageElement.parent.boxDimensions.width.value;
+        }
     return checkedDimensions;
   }
 }

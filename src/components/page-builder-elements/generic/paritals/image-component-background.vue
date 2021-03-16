@@ -87,10 +87,9 @@ export default class ImageComponentBackground extends mixins(
   mounted() {
     this.parentContainer = this.$refs[this.HTML_IMAGE_PARENT] as HTMLDivElement;
     this.image = this.$refs[this.HTML_IMAGE_ELEMENT] as HTMLImageElement;
-    const imageElement = this.component;
     let styles: string = this.component.getContainerStyles();
     this.parentContainer.setAttribute('style', styles);
-    this.imageManipulator = new ImageManipulator(imageElement);
+    this.imageManipulator = new ImageManipulator(this.component);
     styles = this.getImageStyles();
     this.image.setAttribute('style', styles);
   }
@@ -104,7 +103,7 @@ export default class ImageComponentBackground extends mixins(
   }
 
   get isActive(): boolean {
-    return PageModule.selectedComponent === this.$props.thisComponent.ref;
+    return PageModule.selectedComponent === this.component.ref;
   }
 
   getImageStyles(): string {

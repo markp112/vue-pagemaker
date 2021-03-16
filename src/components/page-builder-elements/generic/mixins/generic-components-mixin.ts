@@ -114,9 +114,7 @@ export class GenericComponentMixins extends Vue {
       if (thisComponent.isContainer) {
         const parentContainer = thisComponent.parent;
         const parentDimensions = parentContainer.boxDimensions;
-        console.log('%c⧭', 'color: #d0bfff', parentDimensions);
         const offSetWidth = boxProperties.offsetWidth;
-        console.log('%c⧭', 'color: #00736b', offSetWidth);
         if (
           boxDimensions.width.value + (offSetWidth * 2) >
             parentDimensions.width.value

@@ -36,7 +36,6 @@ import ImageComponentBackground from './paritals/image-component-background.vue'
 import TextComponent from './paritals/text-component/text-component.vue';
 import ButtonComponent from './paritals/button-component/button-component.vue';
 import { Emit } from "vue-property-decorator";
-import GenericComponent from "@/components/page-builder-elements/generic/generic.vue";
 import { PageModule } from "@/store/page/page";
 import { ServicesModule } from "@/store/services/services";
 import { SidebarModule } from "@/store/sidebar/sidebar";
@@ -56,7 +55,6 @@ import {
 
 @Component({
   components: {
-    "generic-component": GenericComponent,
     'image-component': ImageComponentBackground,
     'text-component': TextComponent,
     'button-component': ButtonComponent,
@@ -100,7 +98,6 @@ export default class Container extends mixins(GenericComponentMixins) {
     }
   }
   get getPageElements(): PageElementClasses[] {
-    console.log('%c⧭', 'color: #e50000', this.$props.thisComponent.elements)
     return this.$props.thisComponent.elements;
   }
 

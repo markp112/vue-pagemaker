@@ -119,21 +119,17 @@ export class PageElementBuilder {
   }
 
   setScaledSize(scaledSize: Dimensions) {
-    this._scaledSize = {
-      height: scaledSize.height,
-      width: scaledSize.width,
-      units: scaledSize.units
-    };
+    this._scaledSize = { ...scaledSize }
     return this;
   }
 
   setContainerDimensions(dimensions: Dimensions) {
-    this._containerDimensions = dimensions;
+    this._containerDimensions = { ...dimensions };
     return this;
   }
   
   setContainerLocation(location: Location) {
-    this._containerLocation = location;
+    this._containerLocation = { ...location };
     return this;
   }
   

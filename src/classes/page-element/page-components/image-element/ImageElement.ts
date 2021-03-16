@@ -161,7 +161,6 @@ export class ImageElement extends PageElement implements ImageElementInterface {
     }
     this._naturalSize = image.naturalSize;
     this._ratio = image.ratio;
-    this._scaledSize = image.scaledSize;
     this._maintainRatio = image.maintainRatio;
     this.addStyle(
       this.constructStyle('background-image', `url(${this.content})`)
