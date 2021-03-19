@@ -1,11 +1,42 @@
 <template>
-  <div
-    class="absolute triangle-bottom-left z-50"
-    :class="{ active: $props.isActive, 'in-active': !$props.isActive }"
-    @mousedown.stop.prevent="handleDown($event)"
-    @mouseup="handleMouseUp($event)"
-    @mousemove="handleMouseMove($event)"
-  ></div>
+  <section>
+    <span
+      ref='resize-div'
+      class="triangle top-right z-50"
+      :class="getClass"
+      @mousedown.stop.prevent="handleDown($event)"
+      @mouseup="handleMouseUp($event)"
+      @mousemove="handleMouseMove($event)"
+    >
+    </span>
+    <span
+      ref='resize-div'
+      class="triangle bottom-right"
+      :class="getClass"
+      @mousedown.stop.prevent="handleDown($event)"
+      @mouseup="handleMouseUp($event)"
+      @mousemove="handleMouseMove($event)"
+    >
+    </span>
+    <span
+      ref='resize-div'
+      class="triangle top-left"
+      :class="getClass"
+      @mousedown.stop.prevent="handleDown($event)"
+      @mouseup="handleMouseUp($event)"
+      @mousemove="handleMouseMove($event)"
+    >
+    </span>
+    <span
+      ref='resize-div'
+      class="triangle bottom-left"
+      :class="getClass"
+      @mousedown.stop.prevent="handleDown($event)"
+      @mouseup="handleMouseUp($event)"
+      @mousemove="handleMouseMove($event)"
+    >
+    </span>
+  </section>
 </template>
 
 <script lang="ts">
@@ -16,15 +47,19 @@ import { ClientCoordinates } from "@/models/components/components";
 @Component({
   props: {
     isActive: { default: false },
-    location: {}
-  }
+    }
 })
 export default class Resize extends Vue {
   name = "resize";
   isSizing = false;
   parentPadding = 0;
+  
+  get getClass(): string {
+    return this.$props.isActive ? 'active ' : 'in-active ';
+  }
 
   handleMouseUp(event: MouseEvent) {
+    event.stopPropagation;
     this.isSizing = false;
     window.removeEventListener("mousemove", this.handleMouseMove);
     window.removeEventListener("mouseup", this.handleMouseUp);
@@ -65,33 +100,36 @@ export default class Resize extends Vue {
 </script>
 
 <style lang="postcss" scoped>
-.triangleTopRight,
-.triangle-bottom-left {
-  content: "";
-  position: absolute;
-  right: -1px;
+.triangle {
   box-sizing: border-box;
-  cursor: nwse-resize;
-  width: 0;
-  height: 0;
-  text-indent: -9999px;
-  border-top: 10px solid transparent;
-  border-bottom: 10px solid transparent;
-  border-left: 10px solid rgb(56, 55, 56);
-  color: rgb(228, 210, 228);
-  filter: invert(50%);
-  mix-blend-mode: difference;
-  z-index: 100;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  z-index: 1;
 }
 
-.triangleTopRight {
-  transform: rotate(315deg);
-  top: -6px;
-}
-
-.triangle-bottom-left {
-  transform: rotate(45deg);
+.bottom-right {
+  right: -1px;
   bottom: -6px;
+  cursor: nwse-resize;
+}
+
+.top-right {
+  right: -1px;
+  top: -6px;
+  cursor: nesw-resize;
+}
+
+.bottom-left {
+  left: -1px;
+  bottom: -6px;
+  cursor: nesw-resize;
+}
+
+.top-left {
+  left: -1px;
+  top: -6px;
+  cursor: nwse-resize;
 }
 
 .active {

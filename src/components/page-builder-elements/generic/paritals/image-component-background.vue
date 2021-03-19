@@ -1,5 +1,4 @@
 <template>
-  <section>
     <div
       ref="image-container"
       class="handle object-contain"
@@ -10,13 +9,13 @@
         ref="image-element"
         class="absolute bg-no-repeat "
         :style="getImageStyles()"
+        style="resize: both"
         :class="{ 'cursor-pan': draggingStarted }"
         @mousedown="onDraggingStarted($event)"
         @mouseup="onDraggingStop()"
       />
       <resizeable
         :isActive="isActive"
-        :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"
         @resizeStarted="resizeStarted($event)"
         @onResize="resizeImage($event)"
       >
@@ -27,10 +26,10 @@
           :src="getPath('move-32.png')"
           class="controlIcon -bottom-3 block mr-auto ml-auto select-none"
           @mousedown="startDragImage($event)"
+          @mousemove="dragImage($event)"
         />
       </div>
     </div>
-  </section>
 </template>
 
 <script lang="ts">
@@ -111,6 +110,7 @@ export default class ImageComponentBackground extends mixins(
   }
 
   onClick(event: Event) {
+    console.log('%c%s', 'color: #e57373', 'onClick')
     event.stopPropagation();
     /**
      * @important - dont change order of execution

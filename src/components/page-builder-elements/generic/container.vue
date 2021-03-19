@@ -16,7 +16,6 @@
       :index="i"
       :thisComponent="pageElement"
       @onClick.prevent="componentClick($event)"
-      z-index="1"
       @dragover.prevent
       @drop.prevent="onDrop"
     >
