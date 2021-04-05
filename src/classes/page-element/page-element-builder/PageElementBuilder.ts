@@ -42,7 +42,7 @@ export class PageElementBuilder {
   private _naturalSize!: Dimensions;
   private _scaledSize!: Dimensions;
   private _containerDimensions!: Dimensions;
-  private _containerLocation!: Location;
+  private _containerLocation: Location = { top: 0, left: 0 };
   private _isAbsolute = false;
 
   setName(name: string) {
@@ -119,21 +119,17 @@ export class PageElementBuilder {
   }
 
   setScaledSize(scaledSize: Dimensions) {
-    this._scaledSize = {
-      height: scaledSize.height,
-      width: scaledSize.width,
-      units: scaledSize.units
-    };
+    this._scaledSize = { ...scaledSize }
     return this;
   }
 
   setContainerDimensions(dimensions: Dimensions) {
-    this._containerDimensions = dimensions;
+    this._containerDimensions = { ...dimensions };
     return this;
   }
   
   setContainerLocation(location: Location) {
-    this._containerLocation = location;
+    this._containerLocation = { ...location };
     return this;
   }
   
@@ -234,10 +230,8 @@ export class PageElementBuilder {
   }
 
   public buildAnImage(): ImageElement {
-    const DEFAULT_HEIGHT = 200;
-    const DEFAULT_WIDTH = 100;
-    const NATURAL_HEIGHT = 300;
-    const NATURAL_WIDTH = 200;
+    const NATURAL_HEIGHT = 200;
+    const NATURAL_WIDTH = 300;
     if (this._content === "") {
       this._content =
         "https://firebasestorage.googleapis.com/v0/b/page-maker-69fb1.appspot.com/o/assets%2Fimages%2Fimageplaceholder.png?alt=media&token=149d3e60-0fc4-49de-9e23-5fea91458240";
@@ -247,8 +241,8 @@ export class PageElementBuilder {
         units: Units.px
       };
       this._containerDimensions = {
-        width: DEFAULT_WIDTH,
-        height: DEFAULT_HEIGHT,
+        width: NATURAL_WIDTH,
+        height: NATURAL_HEIGHT,
         units: Units.px
       };
       this._containerLocation = {

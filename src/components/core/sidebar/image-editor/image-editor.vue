@@ -36,7 +36,6 @@ import Accordian from '@/components/base/accordian/sidebar-accordian/sidebar-acc
 import { PageModule } from '@/store/page/page';
 import { SidebarModule } from '@/store//sidebar/sidebar';
 import { Image } from '@/models/components/components';
-import { ImageElement } from '@/classes/page-element/page-components/image-element/ImageElement';
 
 
 @Component({
@@ -54,10 +53,7 @@ export default class ImageEditorSidebar extends Vue {
   currentImageUrl = '';
 
   mounted() {
-    const editedComponentData: ImageElement = PageModule.editedComponentRef as ImageElement;
-    if (editedComponentData) {
-      this.currentImageUrl = editedComponentData.content;
-    }
+    this.currentImageUrl = PageModule.editedComponentData;
   }
 
   urlChanged(image: Image) {

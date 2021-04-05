@@ -1,22 +1,21 @@
 <template>
-  <section>
     <div
-      ref="imageContainer"
+      ref="image-container"
       class="handle object-contain"
       :id="$props.thisComponent.ref"
       @click.prevent="onClick($event)"
     >
       <img
-        ref="imageElement"
+        ref="image-element"
         class="absolute bg-no-repeat "
         :style="getImageStyles()"
+        style="resize: both"
         :class="{ 'cursor-pan': draggingStarted }"
         @mousedown="onDraggingStarted($event)"
         @mouseup="onDraggingStop()"
       />
       <resizeable
         :isActive="isActive"
-        :parentContainerDimensions="$props.thisComponent.parent.boxDimensions"
         @resizeStarted="resizeStarted($event)"
         @onResize="resizeImage($event)"
       >
@@ -27,10 +26,10 @@
           :src="getPath('move-32.png')"
           class="controlIcon -bottom-3 block mr-auto ml-auto select-none"
           @mousedown="startDragImage($event)"
+          @mousemove="dragImage($event)"
         />
       </div>
     </div>
-  </section>
 </template>
 
 <script lang="ts">
@@ -42,7 +41,7 @@ import {
   MousePosition
 } from '../mixins/generic-components-mixin';
 import { PageModule } from '@/store/page/page';
-import { ClientCoordinates } from '@/models/components/components';
+import { ClientCoordinates, Location } from '@/models/components/components';
 import {
   ImageManipulator,
 } from '@/classes/images/image-manipulation/imageManipulation';
@@ -63,10 +62,11 @@ import { SidebarModule } from '@/store/sidebar/sidebar';
 })
 export default class ImageComponentBackground extends mixins(
   GenericComponentMixins
-) {
+) 
+{
   name = 'ImageComponentBackground';
-  HTML_IMAGE_ELEMENT = 'imageElement';
-  HTML_IMAGE_PARENT = 'imageContainer';
+  HTML_IMAGE_ELEMENT = 'image-element';
+  HTML_IMAGE_PARENT = 'image-container';
   draggingStarted = false;
   isResizing = true;
   parentContainer: HTMLDivElement = this.$refs[
@@ -78,15 +78,17 @@ export default class ImageComponentBackground extends mixins(
 
   created() {
     this.component = this.$props.thisComponent;
+    if (this.$props.thisComponent.styles.length === 0) {
+      this.$props.thisComponent.setDefaultStyle();
+    }
   }
 
   mounted() {
     this.parentContainer = this.$refs[this.HTML_IMAGE_PARENT] as HTMLDivElement;
     this.image = this.$refs[this.HTML_IMAGE_ELEMENT] as HTMLImageElement;
-    const imageElement = this.component;
     let styles: string = this.component.getContainerStyles();
     this.parentContainer.setAttribute('style', styles);
-    this.imageManipulator = new ImageManipulator(imageElement);
+    this.imageManipulator = new ImageManipulator(this.component);
     styles = this.getImageStyles();
     this.image.setAttribute('style', styles);
   }
@@ -100,7 +102,7 @@ export default class ImageComponentBackground extends mixins(
   }
 
   get isActive(): boolean {
-    return PageModule.selectedComponent === this.$props.thisComponent.ref;
+    return PageModule.selectedComponent === this.component.ref;
   }
 
   getImageStyles(): string {
@@ -108,14 +110,17 @@ export default class ImageComponentBackground extends mixins(
   }
 
   onClick(event: Event) {
+    console.log('%c%s', 'color: #e57373', 'onClick')
     event.stopPropagation();
-    SidebarModule.updateSidebarEditor(false);
+    /**
+     * @important - dont change order of execution
+     */
     PageModule.updateEditedComponentRef(this.$props.thisComponent);
+    SidebarModule.updateSidebarEditor();
     PageModule.updateShowEditDelete(true);
   }
 
   onDraggingStarted(event: MouseEvent) {
-    this.onClick(event);
     const parent = this.$refs[this.HTML_IMAGE_PARENT] as HTMLDivElement;
     this.draggingStarted = true;
     const lastMousePosition = {
@@ -160,7 +165,7 @@ export default class ImageComponentBackground extends mixins(
     const currentMousePosition: MousePosition = { x: event.pageX, y: event.pageY };
     const deltaX = currentMousePosition.x - this.lastMousePosition.x;
     const deltaY = currentMousePosition.y - this.lastMousePosition.y;
-    const containerLocation = (this.$props.thisComponent as ImageElement).containerLocation;
+    const containerLocation: Location = (this.$props.thisComponent as ImageElement).containerLocation;
     containerLocation.top += deltaY;
     containerLocation.left += deltaX;
     this.parentContainer.style.left = containerLocation.left + 'px';
@@ -176,6 +181,7 @@ export default class ImageComponentBackground extends mixins(
       event.pageX,
       event.pageY,
     );
+      console.log('%c⧭', 'color: #408059', currentMousePosition)
     const style = this.imageManipulator.pan(currentMousePosition);
     PageModule.updateEditedComponentStyles(style);
   }

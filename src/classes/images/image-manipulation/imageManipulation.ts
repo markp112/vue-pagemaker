@@ -29,7 +29,6 @@ export class ImageManipulator {
   }
 
   get imageElement(): ImageElement {
-    console.log('%c⧭', 'color: #5200cc', this._imageElement);
     return this._imageElement;
   }
 
@@ -42,10 +41,8 @@ export class ImageManipulator {
   }
 
   public resize(currentMousePosition: MousePostion) {
-    const deltaChange = this.getDeltaChange(currentMousePosition);
-    this._lastMousePosition.x = currentMousePosition.x;
-    this._lastMousePosition.y = currentMousePosition.y;
-    console.log('%c⧭', 'color: #9c66cc', this._imageElement);
+    const deltaChange: MousePosition = this.getDeltaChange(currentMousePosition);
+    this.lastMousePosition = { ...currentMousePosition };
     const resizeImage = new ResizeImage(this._imageElement);
     resizeImage.resize(deltaChange);
     this.applySizeStyles();
@@ -67,8 +64,8 @@ export class ImageManipulator {
       this._imageElement.constructStyle(
         'width',
         `${this.imageElement.containerDimensions.width}px`
-      )
-    );
+        )
+        );
     styles.forEach(style => {
       this._imageElement.addStyle(style);
     });
@@ -84,7 +81,7 @@ export class ImageManipulator {
     const dimensionLocation = zoom.zoom(direction);
     this._imageElement.scaledSize.height = dimensionLocation.dimensions.height;
     this._imageElement.scaledSize.width = dimensionLocation.dimensions.width;
-    this._imageElement.location = dimensionLocation.location;
+    this._imageElement.location = {...dimensionLocation.location };
     return this.getStyles();
   }
 
@@ -101,13 +98,14 @@ export class ImageManipulator {
 
   public pan(currentMousePosition: MousePosition): Style {
     const deltaMouse: MousePosition = this.getDeltaChange(currentMousePosition);
+    console.log('%c⧭', 'color: #99adcc', deltaMouse);
     this._lastMousePosition = currentMousePosition;
     const pan = new Pan();
     this._imageElement.location = pan.pan(
       deltaMouse,
       this._imageElement.location
     );
-    return this.construsctStyle(
+    return this.constructStyle(
       'background-position',
       `${this._imageElement.location.left}px ${this._imageElement.location.top}px`
     );
@@ -116,13 +114,13 @@ export class ImageManipulator {
   public getStyles(): Style[] {
     const styles: Style[] = [];
     styles.push(
-      this.construsctStyle(
+      this.constructStyle(
         'background-size',
         `${this._imageElement.scaledSize.width}px ${this._imageElement.scaledSize.height}px`
       )
     );
     styles.push(
-      this.construsctStyle(
+      this.constructStyle(
         'background-position',
         `${this._imageElement.location.left}px ${this._imageElement.location.top}px`
       )
@@ -130,7 +128,7 @@ export class ImageManipulator {
     return styles;
   }
 
-  private construsctStyle(styleName: StyleTags, value: string): Style {
+  private constructStyle(styleName: StyleTags, value: string): Style {
     const style: Style = {
       style: styleName,
       value: value

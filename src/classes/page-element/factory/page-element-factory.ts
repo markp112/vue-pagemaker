@@ -159,6 +159,7 @@ export class PageElementFactory {
       .setRef(ref)
       .setType(component.type)
       .setNaturalSize({ width: 300, height: 200, units: Units.px })
+      .setScaledSize({ width: 300, height: 200, units: Units.px })
       .buildAnImage();
     imageElement.parentRef = imageElement.parent.ref;
     return imageElement;

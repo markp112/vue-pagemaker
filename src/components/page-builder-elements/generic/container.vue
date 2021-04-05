@@ -10,13 +10,12 @@
     @click.prevent="onClick($event)"
   >
     <component
-      :is="pageElement.componentHTMLTag"
+      :is="getComponent(pageElement.type)"
       v-for="(pageElement, i) in getPageElements"
       :key="i"
       :index="i"
       :thisComponent="pageElement"
       @onClick.prevent="componentClick($event)"
-      z-index="1"
       @dragover.prevent
       @drop.prevent="onDrop"
     >
@@ -32,8 +31,10 @@
 
 <script lang="ts">
 import Component, { mixins } from "vue-class-component";
+import ImageComponentBackground from './paritals/image-component-background.vue';
+import TextComponent from './paritals/text-component/text-component.vue';
+import ButtonComponent from './paritals/button-component/button-component.vue';
 import { Emit } from "vue-property-decorator";
-import GenericComponent from "@/components/page-builder-elements/generic/generic.vue";
 import { PageModule } from "@/store/page/page";
 import { ServicesModule } from "@/store/services/services";
 import { SidebarModule } from "@/store/sidebar/sidebar";
@@ -53,7 +54,9 @@ import {
 
 @Component({
   components: {
-    "generic-component": GenericComponent,
+    'image-component': ImageComponentBackground,
+    'text-component': TextComponent,
+    'button-component': ButtonComponent,
     resizeable: Resize
   }
 })
@@ -81,8 +84,19 @@ export default class Container extends mixins(GenericComponentMixins) {
     };
   }
 
+  getComponent(type: string): string {
+    switch(type) {
+      case 'image':
+        return 'image-component';
+      case 'text':
+        return 'text-component';
+      case 'button':
+        return 'button-component';
+      default:
+        return '';
+    }
+  }
   get getPageElements(): PageElementClasses[] {
-    console.log('%c⧭', 'color: #e50000', this.$props.thisComponent.elements)
     return this.$props.thisComponent.elements;
   }
 

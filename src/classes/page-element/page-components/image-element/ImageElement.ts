@@ -18,7 +18,10 @@ export class ImageElement extends PageElement implements ImageElementInterface {
   private _ratio: number;
   private _maintainRatio: boolean;
   private _containerDimensions: Dimensions;
-  private _containerLocation: Location;
+  private _containerLocation: Location = {
+    top: 0,
+    left: 0
+  };
   private _location: Location = {
     top: 0,
     left: 0
@@ -29,14 +32,12 @@ export class ImageElement extends PageElement implements ImageElementInterface {
     this._maintainRatio = true;
     this._naturalSize = builder.naturalSize;
     this._containerDimensions = builder.containerDimensions;
-    console.log('%c⧭', 'color: #607339', builder.containerDimensions);
     this._containerLocation = builder.containerLocation;
-    console.log('%c⧭', 'color: #33cc99',  builder.containerLocation);
+    this._scaledSize = builder.scaledSize;
     this._ratio = this.calcRatio(
       this._naturalSize.width,
       this._naturalSize.height
     );
-    this._scaledSize = builder.scaledSize;
   }
 
   get naturalSize(): Dimensions {
@@ -141,15 +142,15 @@ export class ImageElement extends PageElement implements ImageElementInterface {
         this.constructStyle('background-color', siteColours.surface)
       );
       this.addStyle(this.constructStyle('color', siteColours.textOnSurface));
-      this.addStyle(this.constructStyle('background-size', '100px 200px'));
+      this.addStyle(this.constructStyle('background-size', `${this.scaledSize.width}px ${this.scaledSize.height}px`));
       this.addStyle(this.constructStyle('background-repeat', 'no-repeat'));
       this.addStyle(
         this.constructStyle('background-image', `url(${this.content})`)
       );
       this.addStyle(this.constructStyle('background-position-x', '0px'));
       this.addStyle(this.constructStyle('background-position-y', '0px'));
-      this.addStyle(this.constructStyle('width', '100px'));
-      this.addStyle(this.constructStyle('height', '200px'));
+      this.addStyle(this.constructStyle('width', `${this.scaledSize.width}px`));
+      this.addStyle(this.constructStyle('height', `${this.scaledSize.height}px`));
     }
   }
 
@@ -163,7 +164,6 @@ export class ImageElement extends PageElement implements ImageElementInterface {
     }
     this._naturalSize = image.naturalSize;
     this._ratio = image.ratio;
-    this._scaledSize = image.scaledSize;
     this._maintainRatio = image.maintainRatio;
     this.addStyle(
       this.constructStyle('background-image', `url(${this.content})`)
