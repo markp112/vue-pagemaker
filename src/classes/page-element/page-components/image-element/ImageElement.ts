@@ -18,7 +18,10 @@ export class ImageElement extends PageElement implements ImageElementInterface {
   private _ratio: number;
   private _maintainRatio: boolean;
   private _containerDimensions: Dimensions;
-  private _containerLocation: Location;
+  private _containerLocation: Location = {
+    top: 0,
+    left: 0
+  };
   private _location: Location = {
     top: 0,
     left: 0

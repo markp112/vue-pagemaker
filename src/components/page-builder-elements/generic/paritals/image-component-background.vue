@@ -41,7 +41,7 @@ import {
   MousePosition
 } from '../mixins/generic-components-mixin';
 import { PageModule } from '@/store/page/page';
-import { ClientCoordinates } from '@/models/components/components';
+import { ClientCoordinates, Location } from '@/models/components/components';
 import {
   ImageManipulator,
 } from '@/classes/images/image-manipulation/imageManipulation';
@@ -165,7 +165,7 @@ export default class ImageComponentBackground extends mixins(
     const currentMousePosition: MousePosition = { x: event.pageX, y: event.pageY };
     const deltaX = currentMousePosition.x - this.lastMousePosition.x;
     const deltaY = currentMousePosition.y - this.lastMousePosition.y;
-    const containerLocation = (this.$props.thisComponent as ImageElement).containerLocation;
+    const containerLocation: Location = (this.$props.thisComponent as ImageElement).containerLocation;
     containerLocation.top += deltaY;
     containerLocation.left += deltaX;
     this.parentContainer.style.left = containerLocation.left + 'px';
@@ -181,6 +181,7 @@ export default class ImageComponentBackground extends mixins(
       event.pageX,
       event.pageY,
     );
+      console.log('%c⧭', 'color: #408059', currentMousePosition)
     const style = this.imageManipulator.pan(currentMousePosition);
     PageModule.updateEditedComponentStyles(style);
   }

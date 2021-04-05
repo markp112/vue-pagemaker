@@ -28,7 +28,7 @@ import { deleteAPageElement } from '@/utils/helpers/deleteFromNestedArray';
 export interface PageStateInterface {
   _pageId: string;
   _pageElements: PageElementClasses[];
-  _editedComponentRef: PageContainer | PageElement | undefined;
+  _editedComponentRef: PageElementClasses;
   _showEditDelete: boolean;
   _selectedComponent: string;
   _selectedComponentType: ComponentTypesString;

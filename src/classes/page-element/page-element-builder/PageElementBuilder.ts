@@ -42,7 +42,7 @@ export class PageElementBuilder {
   private _naturalSize!: Dimensions;
   private _scaledSize!: Dimensions;
   private _containerDimensions!: Dimensions;
-  private _containerLocation!: Location;
+  private _containerLocation: Location = { top: 0, left: 0 };
   private _isAbsolute = false;
 
   setName(name: string) {

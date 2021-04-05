@@ -2,7 +2,7 @@
   <section>
     <span
       ref='resize-div'
-      class="triangle top-right z-50"
+      class="triangle top-right"
       :class="getClass"
       @mousedown.stop.prevent="handleDown($event)"
       @mouseup="handleMouseUp($event)"
@@ -102,34 +102,40 @@ export default class Resize extends Vue {
 <style lang="postcss" scoped>
 .triangle {
   box-sizing: border-box;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
+  
   z-index: 1;
+  filter: invert(1);
+  mix-blend-mode: difference;
+  background-image: url('../../../assets/icons/triangle-top-left-24.png');
+
 }
 
 .bottom-right {
   right: -1px;
   bottom: -6px;
   cursor: nwse-resize;
+
 }
 
 .top-right {
   right: -1px;
   top: -6px;
   cursor: nesw-resize;
+  transform: rotate(315deg);
 }
 
 .bottom-left {
   left: -1px;
   bottom: -6px;
   cursor: nesw-resize;
+  transform: rotate(135deg);
 }
 
 .top-left {
   left: -1px;
   top: -6px;
   cursor: nwse-resize;
+  transform: rotate(225deg);
 }
 
 .active {
