@@ -4,6 +4,7 @@
       class="handle object-contain"
       :id="$props.thisComponent.ref"
       @click.prevent="onClick($event)"
+      :style="getDimensions()"
     >
       <img
         ref="image-element"
@@ -12,7 +13,8 @@
         style="resize: both"
         :class="{ 'cursor-pan': draggingStarted }"
         @mousedown="onDraggingStarted($event)"
-        @mouseup="onDraggingStop()"
+        @mousemove="panImage($event)"
+        @mouseup="onDraggingStop($event)"
       />
       <resizeable
         :isActive="isActive"
@@ -27,6 +29,8 @@
           class="controlIcon -bottom-3 block mr-auto ml-auto select-none"
           @mousedown="startDragImage($event)"
           @mousemove="dragImage($event)"
+          @mouseup="stopDragImage($event)"
+
         />
       </div>
     </div>
@@ -109,9 +113,18 @@ export default class ImageComponentBackground extends mixins(
     return (this.component as ImageElement).getStyles();
   }
 
+  getDimensions(): string {
+    const image: ImageElement = this.$props.thisComponent;
+    const style = `height:${image.containerDimensions.height}px;
+      width:${image.containerDimensions.width}px`;
+    console.log('%c%s', 'color: #cc0036', style)
+    return style;
+  }
+
   onClick(event: Event) {
-    console.log('%c%s', 'color: #e57373', 'onClick')
     event.stopPropagation();
+    if (this.draggingStarted) this.draggingStarted = false;
+    if (this.isDragging) this.isDragging = false;
     /**
      * @important - dont change order of execution
      */
@@ -121,6 +134,7 @@ export default class ImageComponentBackground extends mixins(
   }
 
   onDraggingStarted(event: MouseEvent) {
+    event.stopPropagation();
     const parent = this.$refs[this.HTML_IMAGE_PARENT] as HTMLDivElement;
     this.draggingStarted = true;
     const lastMousePosition = {
@@ -128,14 +142,11 @@ export default class ImageComponentBackground extends mixins(
       y: event.pageY - parent.offsetTop
     };
     this.imageManipulator.lastMousePosition = lastMousePosition;
-    window.addEventListener('mousemove', this.panImage);
-    window.addEventListener('mouseup', this.onDraggingStop);
   }
 
-  onDraggingStop() {
+  onDraggingStop(event: MouseEvent) {
+    event.stopPropagation();
     this.draggingStarted = false;
-    window.removeEventListener('mousemove', this.panImage);
-    window.removeEventListener('mouseup', this.onDraggingStop);
   }
 
   /**
@@ -146,6 +157,7 @@ export default class ImageComponentBackground extends mixins(
   // }
 
   startDragImage(event: MouseEvent) {
+    event.stopPropagation();
     const componentToDrag = this.$refs[this.HTML_IMAGE_PARENT] as HTMLDivElement;
     this.startDrag(event, componentToDrag);
     window.addEventListener('mousemove', this.dragImage);
@@ -153,6 +165,8 @@ export default class ImageComponentBackground extends mixins(
   }
 
   stopDragImage(event: MouseEvent) {
+    event.stopPropagation();
+    this.isDragging = false;
     const componentToDrag = this.$refs[this.HTML_IMAGE_PARENT] as HTMLDivElement;
     this.stopDrag(event, componentToDrag);
     window.removeEventListener('mousemove', this.dragImage);
@@ -161,6 +175,7 @@ export default class ImageComponentBackground extends mixins(
 
   dragImage(event: MouseEvent) {
     if (!this.isDragging) return;
+    console.log('%c%s', 'color: #73998c', this.isDragging)
     event.stopPropagation;
     const currentMousePosition: MousePosition = { x: event.pageX, y: event.pageY };
     const deltaX = currentMousePosition.x - this.lastMousePosition.x;
@@ -174,6 +189,7 @@ export default class ImageComponentBackground extends mixins(
   }
 
   panImage(event: MouseEvent) {
+    event.stopPropagation();
     if (!this.draggingStarted) {
       return false;
     }
@@ -181,12 +197,12 @@ export default class ImageComponentBackground extends mixins(
       event.pageX,
       event.pageY,
     );
-      console.log('%c⧭', 'color: #408059', currentMousePosition)
     const style = this.imageManipulator.pan(currentMousePosition);
     PageModule.updateEditedComponentStyles(style);
   }
 
   resizeStarted(event: MouseEvent) {
+    event.stopPropagation();
     const lastMousePosition = {
       x: event.screenX,
       y: event.screenY,

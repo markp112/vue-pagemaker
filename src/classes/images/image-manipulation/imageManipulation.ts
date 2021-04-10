@@ -10,7 +10,16 @@ export interface MousePostion {
   y: number;
 }
 
-export type ZoomDirection = 'in' | 'out' | '100' | '50' | 'zoomToFit';
+export type ZoomDirection = 
+| 'in'
+| 'out'
+| '100'
+| '50'
+| '48'
+| '32'
+| '24'
+| '16'
+| 'zoomToFit';
 export type StretchDirection = 'horizontal' | 'vertical';
 
 export class ImageManipulator {
@@ -82,6 +91,10 @@ export class ImageManipulator {
     this._imageElement.scaledSize.height = dimensionLocation.dimensions.height;
     this._imageElement.scaledSize.width = dimensionLocation.dimensions.width;
     this._imageElement.location = {...dimensionLocation.location };
+    this._imageElement.containerDimensions = {...dimensionLocation.containerDimensions};
+    console.log('%c⧭', 'color: #514080', dimensionLocation.containerDimensions);
+    this.applySizeStyles();
+    console.log('%c⧭', 'color: #8c0038', this.getStyles());
     return this.getStyles();
   }
 
@@ -98,7 +111,6 @@ export class ImageManipulator {
 
   public pan(currentMousePosition: MousePosition): Style {
     const deltaMouse: MousePosition = this.getDeltaChange(currentMousePosition);
-    console.log('%c⧭', 'color: #99adcc', deltaMouse);
     this._lastMousePosition = currentMousePosition;
     const pan = new Pan();
     this._imageElement.location = pan.pan(
@@ -125,6 +137,11 @@ export class ImageManipulator {
         `${this._imageElement.location.left}px ${this._imageElement.location.top}px`
       )
     );
+    console.log('%c%s', 'color: #00736b', this._imageElement.containerDimensions.height === this.imageElement.scaledSize.height);
+    if (this._imageElement.containerDimensions.height === this.imageElement.scaledSize.height) {
+      this.constructStyle('height', `${this.imageElement.scaledSize.height}px`);
+      this.constructStyle('width', `${this.imageElement.scaledSize.width}px`);
+    }
     return styles;
   }
 

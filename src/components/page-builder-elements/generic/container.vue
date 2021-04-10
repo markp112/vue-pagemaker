@@ -8,6 +8,9 @@
     @dragover.prevent
     @drop.prevent="onDrop($event)"
     @click.prevent="onClick($event)"
+    @mousedown="startDragContainer($event)"
+    @mousemove="dragElement($event)"
+    @mouseup="stopDragContainer($event)"
   >
     <component
       :is="getComponent(pageElement.type)"
@@ -118,6 +121,18 @@ export default class Container extends mixins(GenericComponentMixins) {
     SidebarModule.updateSidebarEditor(false);
     PageModule.updateShowEditDelete(true);
     this.showBorder = !this.showBorder;
+  }
+
+  stopDragContainer(event: MouseEvent) {
+    event.stopPropagation();
+    const componentToDrag = this.$refs[this.$props.thisComponent.ref] as HTMLDivElement;
+    this.stopDrag(event, componentToDrag);
+  }
+  
+  startDragContainer(event: MouseEvent) {
+    event.stopPropagation();
+    const componentToDrag = this.$refs[this.$props.thisComponent.ref] as HTMLDivElement;
+    this.startDrag(event, componentToDrag);
   }
 
   componentClick(event: Event) {

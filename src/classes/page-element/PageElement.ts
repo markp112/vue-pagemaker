@@ -15,6 +15,8 @@ import {
 } from "@/classes/page-element/models/pageElements/PageElementModel";
 import { PageElementBuilder } from "@/classes/page-element/page-element-builder/PageElementBuilder";
 import { PageContainer } from "./PageContainer/PageContainer";
+import { ImageElement } from './page-components/image-element/ImageElement';
+import { Image } from '@/models/components/components';
 
 export type StyleTypes = "border";
 

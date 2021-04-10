@@ -240,11 +240,11 @@ export class PageElementBuilder {
         height: NATURAL_HEIGHT,
         units: Units.px
       };
-      this._containerDimensions = {
-        width: NATURAL_WIDTH,
-        height: NATURAL_HEIGHT,
-        units: Units.px
-      };
+      // this._containerDimensions = {
+      //   width: NATURAL_WIDTH,
+      //   height: NATURAL_HEIGHT,
+      //   units: Units.px
+      // };
       this._containerLocation = {
         left: 0,
         top: 0,

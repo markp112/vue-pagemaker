@@ -73,11 +73,13 @@ export default class TextComponent extends mixins(GenericComponentMixins) {
   }
 
   stopDragText(event: MouseEvent) {
+    event.stopPropagation();
     const componentToDrag = this.$refs[this.$props.thisComponent.ref] as HTMLDivElement;
     this.stopDrag(event, componentToDrag);
   }
   
   startDragText(event: MouseEvent) {
+    event.stopPropagation();
     const componentToDrag = this.$refs[this.$props.thisComponent.ref] as HTMLDivElement;
     this.startDrag(event, componentToDrag);
   }

@@ -149,11 +149,15 @@ export class PageElementFactory {
     ref: string,
     parent: PageContainer
   ): ImageElement {
+    if (component.boxDimensions.height.value > parent.boxDimensions.height.value) {
+      component.boxDimensions.height.value = parent.boxDimensions.height.value;
+    }
     const imageElement: ImageElement = new PageElementBuilder()
       .setName(component.componentName)
       .setParent(parent)
       .setIsContainer(false)
       .setBoxDimensions(this.getBoxDimensions(component.boxDimensions))
+      .setContainerDimensions({height: component.boxDimensions.height.value, width: component.boxDimensions.width.value, units: Units.px })
       .setComponentHtmlTag(component.componentRef)
       .setClassDefintion(component.class)
       .setRef(ref)

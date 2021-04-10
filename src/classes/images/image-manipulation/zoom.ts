@@ -26,7 +26,7 @@ export class Zoom {
 
   zoom(
     direction: ZoomDirection
-  ): { dimensions: Dimensions; location: Location } {
+  ): { dimensions: Dimensions; location: Location, containerDimensions: Dimensions } {
     const scale = 1.1 as const;
     const scaledDimensions: Dimensions = {
       height: 0,
@@ -56,6 +56,34 @@ export class Zoom {
         this._location.left = -scaledDimensions.width / 2;
         this._location.top = -scaledDimensions.height / 2;
         break;
+      case '48':
+        scaledDimensions.height = 48;
+        scaledDimensions.width = 48;
+        this._imageContainer.height = 48;
+        this._imageContainer.width = 48;
+        this._location.left = 0;
+        this._location.top = 0;
+        break;
+      case '32':
+        scaledDimensions.height = 32;
+        scaledDimensions.width = 32;
+        this._imageContainer.height = 32;
+        this._imageContainer.width = 32;
+        this._location.left = 0;
+        this._location.top = 0;
+        break;
+      case '24':
+        scaledDimensions.height = 24;
+        scaledDimensions.width = 24;
+        this._location.left = 0;
+        this._location.top = 0;
+        break;
+      case '16':
+        scaledDimensions.height = 16;
+        scaledDimensions.width = 16;
+        this._location.left = 0;
+        this._location.top = 0;
+        break;
       case 'zoomToFit':
         scaledDimensions.height = this._imageContainer.height;
         scaledDimensions.width = this._imageContainer.width;
@@ -63,7 +91,11 @@ export class Zoom {
         this._location.top = 0;
         break;
     }
-    return { dimensions: scaledDimensions, location: this._location };
+    return {
+      dimensions: scaledDimensions,
+      location: this._location,
+      containerDimensions: this._imageContainer
+    };
   }
 
   private calcLocation(scaledDimensions: Dimensions) {
