@@ -5,7 +5,7 @@
       <div class="relative flex-row flex justify-start  ">
         <input
           v-model="selectedItem"
-          class="min-w-12 w-auto text-sm mb-3 ml-2 app-input-field p-1"
+          class="min-w-12 w-auto text-sm mb-3 ml-2 bg-siteSurface text-onSurface p-1"
           placeholder="enter external URL or select from list"
         />
         <img
@@ -14,7 +14,7 @@
           @click="show()"
         />
         <ul
-          class="dropdown-menu-background flex flex-col items-center absolute top-0 right-0 w-24 shadow-lg max-h-32"
+          class="dropdown-menu-background flex flex-col items-center absolute top-0 left-0 w-48 z-10 shadow-lg max-h-32"
           v-if="toggleSelectOptions"
           @mouseleave="show"
           @blur="show"

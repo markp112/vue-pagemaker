@@ -117,7 +117,6 @@ export default class ImageComponentBackground extends mixins(
     const image: ImageElement = this.$props.thisComponent;
     const style = `height:${image.containerDimensions.height}px;
       width:${image.containerDimensions.width}px`;
-    console.log('%c%s', 'color: #cc0036', style)
     return style;
   }
 
