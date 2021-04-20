@@ -22,6 +22,7 @@ import { PageContainer } from "../PageContainer/PageContainer";
 import { ButtonElement } from "../page-components/button-element/ButtonElement";
 import { ImageElement } from "../page-components/image-element/ImageElement";
 import { TextElement } from "../page-components/text-element/TextElement";
+import { ADimension } from '@/classes/dimensions/adimensions';
 
 export type FirebasePageDataTypes =
   | PageContainerFirebaseData
@@ -252,10 +253,10 @@ export class FirebaseDataBuilder {
       .setRef(item.ref)
       .setIsContainer(item.isContainer)
       .setName(item.name)
-      .setNaturalSize(item.naturalSize)
-      .setScaledSize(item.scaledSize)
+      .setNaturalSize(new ADimension(item.naturalSize.height, item.naturalSize.width, item.naturalSize.units))
+      .setScaledSize(new ADimension(item.scaledSize.height, item.scaledSize.width, item.scaledSize.units))
       .setParent(parentComponent)
-      .setContainerDimensions(item.containerDimensions)
+      .setContainerDimensions(new ADimension(item.containerDimensions.height, item.containerDimensions.width, item.containerDimensions.units))
       .setParentRef(item.parentRef)
       .setStyles(item.styles)
       .setType(item.type)

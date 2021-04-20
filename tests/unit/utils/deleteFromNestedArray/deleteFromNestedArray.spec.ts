@@ -1,3 +1,4 @@
+import { ALocation } from '@/classes/a-location/aLocation';
 import { PageElementClasses } from '@/classes/page-element/factory/page-element-factory';
 import { ImageElement } from '@/classes/page-element/page-components/image-element/ImageElement';
 import { TextElement } from '@/classes/page-element/page-components/text-element/TextElement';
@@ -19,6 +20,7 @@ describe('deleteAPageElement', () => {
     const image1: ImageElement = new PageElementBuilder()
       .setRef('Image:1')
       .setParentRef('ROOT')
+      .setImageLocation(new ALocation(0,0))
       .setName('image:1')
       .buildAnImage();
     const text1: TextElement = new PageElementBuilder()
@@ -29,12 +31,14 @@ describe('deleteAPageElement', () => {
     const text2: TextElement = new PageElementBuilder()
       .setRef('Text:2')
       .setParentRef('ROOT')
+      
       .setName('Text:2')
       .buildAnImage();
       const image2: ImageElement = new PageElementBuilder()
         .setRef('Image:2')
         .setParentRef('ROOT')
         .setName('Image:2')
+        .setImageLocation(new ALocation(0,0))
         .buildAnImage();
     pageElements.push(container1);
     pageElements.push(image1);
@@ -55,7 +59,6 @@ describe('deleteAPageElement', () => {
       const container: PageContainer = (pageElements.filter(element => element.ref === 'ROOT')[0] as PageContainer);
     expect(pageElements.length).toEqual(3);
     expect(container.elements.length).toEqual(2);
-    console.log('%c⧭', 'color: #8c0038', container.elements.length);
     pageElements = deleteAPageElement(pageElements, 'Image:2');
     expect(container.elements.length).toEqual(1);
     expect(container.elements.filter(element => element.ref === 'Image:2').length).toEqual(0);

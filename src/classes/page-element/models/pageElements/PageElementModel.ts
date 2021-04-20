@@ -7,7 +7,8 @@ import {
   BoxDimensions,
   BoxDimensionsInterface
 } from "@/models/components/box-dimension";
-import { Dimensions, Location } from "@/models/components/components";
+import { Dimensions } from '@/models/Dimensions/Dimensions';
+import { Location } from '@/models/location/location';
 import { Style } from "@/models/styles/styles";
 //interface for an html Style
 

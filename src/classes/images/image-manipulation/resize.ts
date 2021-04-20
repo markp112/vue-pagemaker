@@ -1,11 +1,11 @@
+import { ADimension } from '@/classes/dimensions/adimensions';
 import { ImageElement } from "@/classes/page-element/page-components/image-element/ImageElement";
-import { Dimensions } from "@/models/components/components";
-import { Units } from "@/models/enums/units/units";
+import { Dimensions } from "@/models/Dimensions/Dimensions";
 import { MousePostion } from "./imageManipulation";
 
 export class ResizeImage {
   private _imageElement: ImageElement;
-  private _imageContainer: Dimensions;
+  private _imageContainer: ADimension;
 
   constructor(imageElement: ImageElement) {
     this._imageElement = imageElement;
@@ -23,15 +23,11 @@ export class ResizeImage {
     this._imageElement.scaledSize.width
     this._imageElement.scaledSize.width += deltaChange.x;
     this._imageElement.scaledSize.height += deltaChange.y;
-    this._imageElement.containerDimensions = { ...this._imageContainer };
+    this._imageElement.containerDimensions = this._imageContainer;
   }
 
-  private containWithinParentElement(): Dimensions {
-    const checkedDimensions: Dimensions = {
-      height: this._imageContainer.height,
-      width: this._imageContainer.width,
-      units: Units.px
-    };
+  private containWithinParentElement(): ADimension {
+    const checkedDimensions = this._imageContainer;
     if (checkedDimensions.height < 0) {
       checkedDimensions.height = 0;
     }

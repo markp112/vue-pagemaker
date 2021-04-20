@@ -1,12 +1,16 @@
 <template>
   <div class="sidebar-panel">
-    <p class="flex flex-row justify-between text-siteSurface mb-2">
-      Save Page
+    <p 
+      class="flex flex-row w-8/12 justify-evenly p-2 rounded-md text-siteSurface mb-2 border border-onPrimary cursor-pointer hover:bg-gray-600"
+      @click="onSaveClick()"
+      >
       <img
         :src="getPath('floppy_disk-32.png')"
-        class="text-accent-600 cursor-pointer hover:bg-gray-600"
-        @click="onSaveClick()"
+        class="text-accent-600 "
+        
       />
+      Save Page
+      
     </p>
     <p class=" mt-3 text-lg">Containers</p>
     <ul

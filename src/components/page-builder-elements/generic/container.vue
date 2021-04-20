@@ -35,6 +35,7 @@
 <script lang="ts">
 import Component, { mixins } from "vue-class-component";
 import ImageComponentBackground from './paritals/image-component-background.vue';
+import ImageComponent from './paritals/image/image-component.vue';
 import TextComponent from './paritals/text-component/text-component.vue';
 import ButtonComponent from './paritals/button-component/button-component.vue';
 import { Emit } from "vue-property-decorator";
@@ -57,7 +58,7 @@ import {
 
 @Component({
   components: {
-    'image-component': ImageComponentBackground,
+    'image-component': ImageComponent,
     'text-component': TextComponent,
     'button-component': ButtonComponent,
     resizeable: Resize

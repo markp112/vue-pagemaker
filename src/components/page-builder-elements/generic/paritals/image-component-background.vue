@@ -45,12 +45,13 @@ import {
   MousePosition
 } from '../mixins/generic-components-mixin';
 import { PageModule } from '@/store/page/page';
-import { ClientCoordinates, Location } from '@/models/components/components';
+import { ClientCoordinates } from '@/models/components/components';
 import {
   ImageManipulator,
 } from '@/classes/images/image-manipulation/imageManipulation';
 import { PageElementBuilder } from '@/classes/page-element/page-element-builder/PageElementBuilder';
 import { SidebarModule } from '@/store/sidebar/sidebar';
+import { ALocation } from '@/classes/a-location/aLocation';
 
 @Component({
   props: {
@@ -90,11 +91,11 @@ export default class ImageComponentBackground extends mixins(
   mounted() {
     this.parentContainer = this.$refs[this.HTML_IMAGE_PARENT] as HTMLDivElement;
     this.image = this.$refs[this.HTML_IMAGE_ELEMENT] as HTMLImageElement;
-    let styles: string = this.component.getContainerStyles();
-    this.parentContainer.setAttribute('style', styles);
+    // let styles: string = this.component.getContainerStyles();
+    // this.parentContainer.setAttribute('style', styles);
     this.imageManipulator = new ImageManipulator(this.component);
-    styles = this.getImageStyles();
-    this.image.setAttribute('style', styles);
+    // styles = this.getImageStyles();
+    // this.image.setAttribute('style', styles);
   }
 
   get getData(): string {
@@ -110,7 +111,7 @@ export default class ImageComponentBackground extends mixins(
   }
 
   getImageStyles(): string {
-    return (this.component as ImageElement).getStyles();
+    return (this.component as ImageElement).getImageStyle();
   }
 
   getDimensions(): string {
@@ -179,7 +180,7 @@ export default class ImageComponentBackground extends mixins(
     const currentMousePosition: MousePosition = { x: event.pageX, y: event.pageY };
     const deltaX = currentMousePosition.x - this.lastMousePosition.x;
     const deltaY = currentMousePosition.y - this.lastMousePosition.y;
-    const containerLocation: Location = (this.$props.thisComponent as ImageElement).containerLocation;
+    const containerLocation: ALocation = (this.$props.thisComponent as ImageElement).containerLocation;
     containerLocation.top += deltaY;
     containerLocation.left += deltaX;
     this.parentContainer.style.left = containerLocation.left + 'px';
@@ -196,8 +197,8 @@ export default class ImageComponentBackground extends mixins(
       event.pageX,
       event.pageY,
     );
-    const style = this.imageManipulator.pan(currentMousePosition);
-    PageModule.updateEditedComponentStyles(style);
+    this.imageManipulator.pan(currentMousePosition);
+    // PageModule.updateEditedComponentStyles(style);
   }
 
   resizeStarted(event: MouseEvent) {

@@ -1,37 +1,19 @@
-import { Units } from "../enums/units/units";
+import { ADimension } from '@/classes/dimensions/adimensions';
 
 export type ImageScaleDirection = "width" | "height";
 
-export interface Dimensions {
-  height: number;
-  width: number;
-  units: Units;
-}
 
-export const initDimensions = {
-  height: 0,
-  width: 0,
-  units: Units.px
-};
-
-/**
- * @description used for storing the location of an object(images) in their wrapper element
- */
-export interface Location {
-  top: number;
-  left: number;
-}
 
 export interface Content {
   content: string;
 }
 
 export interface ImageInterface extends Content {
-  naturalSize: Dimensions /** @description natural size of imgage */;
-  scaledSize: Dimensions /** @description image size after user resizing */;
+  naturalSize: ADimension /** @description natural size of imgage */;
+  scaledSize: ADimension /** @description image size after user resizing */;
   ratio: number;
   maintainRatio: boolean;
-  parentDimensions: Dimensions;
+  parentDimensions: ADimension;
 }
 
 export interface TextInterface extends Content {
@@ -51,24 +33,22 @@ export interface ClientCoordinates {
 
 export class Image implements ImageInterface {
   private _content: string;
-  private _naturalSize: Dimensions;
-  private _scaledSize: Dimensions;
+  private _naturalSize: ADimension;
+  private _scaledSize: ADimension;
   private _ratio: number;
   private _maintainRatio: boolean;
-  private _parentDimensions: Dimensions;
+  private _parentDimensions: ADimension;
 
   constructor() {
-    this._naturalSize = this._naturalSize = {
-      width: 300,
-      height: 200,
-      units: Units.px
-    };
-    this._scaledSize = initDimensions;
+    const HEIGHT = 300;
+    const WIDTH = 200;
+    this._naturalSize = new ADimension(HEIGHT, WIDTH, 'px');
+    this._scaledSize = new ADimension(HEIGHT, WIDTH, 'px');
     this._content =
       "https://firebasestorage.googleapis.com/v0/b/page-maker-69fb1.appspot.com/o/assets%2Fimages%2Fimageplaceholder.png?alt=media&token=149d3e60-0fc4-49de-9e23-5fea91458240";
     this._ratio = this.naturalSize.width / this.naturalSize.height;
     this._maintainRatio = true;
-    this._parentDimensions = initDimensions;
+    this._parentDimensions = new ADimension(HEIGHT, WIDTH, 'px');
   }
 
   get content(): string {
@@ -79,11 +59,11 @@ export class Image implements ImageInterface {
     this._content = url;
   }
 
-  get naturalSize(): Dimensions {
+  get naturalSize(): ADimension {
     return this._naturalSize;
   }
 
-  set naturalSize(size: Dimensions) {
+  set naturalSize(size: ADimension) {
     this._naturalSize = size;
     this._scaledSize = size; /** @description when image size changes the scaled size should be reset */
     this._ratio = this._naturalSize.width / this._naturalSize.height;
@@ -105,11 +85,11 @@ export class Image implements ImageInterface {
     this._maintainRatio = maintainRatio;
   }
 
-  get parentDimensions(): Dimensions {
+  get parentDimensions(): ADimension {
     return this._parentDimensions;
   }
 
-  set parentDimensions(dimensions: Dimensions) {
+  set parentDimensions(dimensions: ADimension) {
     this._parentDimensions = dimensions;
   }
 }

@@ -1,13 +1,22 @@
-import { Dimensions, Location } from "@/models/components/components";
+import { ADimension } from '@/classes/dimensions/adimensions';
+import { ALocation } from '@/classes/a-location/aLocation';
 import { PageElementFirebaseData, PageElementInterface } from "./PageElementModel";
+import { Dimensions } from '@/models/Dimensions/Dimensions';
+import { Location } from '@/models/location/location'
 
 export interface ImageElementInterface extends PageElementInterface {
-  naturalSize: Dimensions;
-  scaledSize: Dimensions;
   ratio: number;
   maintainRatio: boolean;
-  // parentDimensions: Dimensions;
-  location: Location;
+  container: {
+    location: ALocation,
+    dimensions: ADimension,
+  };
+  image: {
+    location: ALocation,
+    naturalSize: ADimension,
+    scaledSize: ADimension
+  };
+  toString(): string
 }
 
 export interface ImageElementFirebaseData extends PageElementFirebaseData {

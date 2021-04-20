@@ -145,6 +145,8 @@ export class GenericComponentMixins extends Vue {
 
   dragElement(event: MouseEvent) {
     if (!this.isDragging) return;
+    console.log('%c%s', 'color: #878f77', 'dragElement');
+
     event.stopPropagation;
     const currentMousePosition: MousePosition = { x: event.pageX, y: event.pageY };
     const deltaX = currentMousePosition.x - this.lastMousePosition.x;

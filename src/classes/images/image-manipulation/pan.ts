@@ -1,12 +1,13 @@
+import { ALocation } from '@/classes/a-location/aLocation';
 import { MousePosition } from "@/components/page-builder-elements/generic/mixins/generic-components-mixin";
-import { Location } from "@/models/components/components";
 
 export class Pan {
-  pan(deltaMouse: MousePosition, location: Location): Location {
-    const newLocation: Location = {
-      left: location.left + deltaMouse.x,
-      top: location.top + deltaMouse.y
-    };
+  pan(deltaMouse: MousePosition, location: ALocation): ALocation {
+    const newLocation = new ALocation(
+      location.top + deltaMouse.y,
+      location.left + deltaMouse.x,
+      location.units
+    );
     return newLocation;
   }
 }

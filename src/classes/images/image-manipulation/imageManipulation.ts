@@ -20,6 +20,7 @@ export type ZoomDirection =
 | '24'
 | '16'
 | 'zoomToFit';
+
 export type StretchDirection = 'horizontal' | 'vertical';
 
 export class ImageManipulator {
@@ -59,89 +60,80 @@ export class ImageManipulator {
 
   private applySizeStyles() {
     const styles: Style[] = [];
-    const backgroundSize = `${this._imageElement.scaledSize.width}px ${this._imageElement.scaledSize.height}px`;
-    styles.push(
-      this._imageElement.constructStyle('background-size', backgroundSize)
-    );
-    styles.push(
-      this._imageElement.constructStyle(
-        'height',
-        `${this.imageElement.containerDimensions.height}px`
-      )
-    );
-    styles.push(
-      this._imageElement.constructStyle(
-        'width',
-        `${this.imageElement.containerDimensions.width}px`
-        )
-        );
-    styles.forEach(style => {
-      this._imageElement.addStyle(style);
-    });
+    // const backgroundSize = `${this._imageElement.scaledSize.width}px ${this._imageElement.scaledSize.height}px`;
+    // styles.push(
+    //   this._imageElement.constructStyle('background-size', backgroundSize)
+    // );
+    // styles.push(
+    //   this._imageElement.constructStyle(
+    //     'height',
+    //     `${this.imageElement.containerDimensions.height}px`
+    //   )
+    // );
+    // styles.push(
+    //   this._imageElement.constructStyle(
+    //     'width',
+    //     `${this.imageElement.containerDimensions.width}px`
+    //     )
+    //     );
+    // styles.forEach(style => {
+    //   this._imageElement.addStyle(style);
+    // });
   }
 
   public zoom(direction: ZoomDirection): Style[] {
     const zoom: Zoom = new Zoom(
-      this._imageElement.scaledSize,
-      this._imageElement.naturalSize,
-      this._imageElement.location,
-      this._imageElement.containerDimensions
+      this._imageElement.image,
+      this._imageElement.container
       );
     const dimensionLocation = zoom.zoom(direction);
-    this._imageElement.scaledSize.height = dimensionLocation.dimensions.height;
-    this._imageElement.scaledSize.width = dimensionLocation.dimensions.width;
-    this._imageElement.location = {...dimensionLocation.location };
-    this._imageElement.containerDimensions = {...dimensionLocation.containerDimensions};
-    console.log('%c⧭', 'color: #514080', dimensionLocation.containerDimensions);
+    this._imageElement.image.scaledSize = dimensionLocation.dimensions;
+    this._imageElement.image.location = dimensionLocation.location ;
+    // this._imageElement.containerDimensions = {...dimensionLocation.containerDimensions};
     this.applySizeStyles();
-    console.log('%c⧭', 'color: #8c0038', this.getStyles());
     return this.getStyles();
   }
 
   public stretch(direction: 'horizontal' | 'vertical'): Style[] {
     if (direction === 'horizontal') {
-      this._imageElement.location.left = 0;
-      this._imageElement.scaledSize.width = this.imageElement.containerDimensions.width;
+      this._imageElement.image.location.left = 0;
+      this._imageElement.image.scaledSize.width = this.imageElement.containerDimensions.width;
     } else {
-      this._imageElement.location.top = 0;
-      this._imageElement.scaledSize.height = this.imageElement.containerDimensions.height;
+      this._imageElement.image.location.top = 0;
+      this._imageElement.image.scaledSize.height = this.imageElement.containerDimensions.height;
     }
     return this.getStyles();
   }
 
-  public pan(currentMousePosition: MousePosition): Style {
+  public pan(currentMousePosition: MousePosition) {
     const deltaMouse: MousePosition = this.getDeltaChange(currentMousePosition);
     this._lastMousePosition = currentMousePosition;
     const pan = new Pan();
-    this._imageElement.location = pan.pan(
+    this._imageElement.image.location = pan.pan(
       deltaMouse,
-      this._imageElement.location
-    );
-    return this.constructStyle(
-      'background-position',
-      `${this._imageElement.location.left}px ${this._imageElement.location.top}px`
+      this._imageElement.image.location
     );
   }
 
   public getStyles(): Style[] {
     const styles: Style[] = [];
-    styles.push(
-      this.constructStyle(
-        'background-size',
-        `${this._imageElement.scaledSize.width}px ${this._imageElement.scaledSize.height}px`
-      )
-    );
-    styles.push(
-      this.constructStyle(
-        'background-position',
-        `${this._imageElement.location.left}px ${this._imageElement.location.top}px`
-      )
-    );
-    console.log('%c%s', 'color: #00736b', this._imageElement.containerDimensions.height === this.imageElement.scaledSize.height);
-    if (this._imageElement.containerDimensions.height === this.imageElement.scaledSize.height) {
-      this.constructStyle('height', `${this.imageElement.scaledSize.height}px`);
-      this.constructStyle('width', `${this.imageElement.scaledSize.width}px`);
-    }
+    // styles.push(
+    //   this.constructStyle(
+    //     'background-size',
+    //     `${this._imageElement.scaledSize.width}px ${this._imageElement.scaledSize.height}px`
+    //   )
+    // );
+    // styles.push(
+    //   this.constructStyle(
+    //     'background-position',
+    //     `${this._imageElement.location.left}px ${this._imageElement.location.top}px`
+    //   )
+    // );
+    // console.log('%c%s', 'color: #00736b', this._imageElement.containerDimensions.height === this.imageElement.scaledSize.height);
+    // if (this._imageElement.containerDimensions.height === this.imageElement.scaledSize.height) {
+    //   this.constructStyle('height', `${this.imageElement.scaledSize.height}px`);
+    //   this.constructStyle('width', `${this.imageElement.scaledSize.width}px`);
+    // }
     return styles;
   }
 

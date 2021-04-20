@@ -13,6 +13,8 @@ import {
   BoxDimensionsInterface
 } from "@/models/components/box-dimension";
 import { Units } from "@/models/enums/units/units";
+import { ADimension } from '@/classes/dimensions/adimensions';
+import { ALocation } from '@/classes/a-location/aLocation';
 
 export type PageElementClasses =
   | ButtonElement
@@ -157,13 +159,15 @@ export class PageElementFactory {
       .setParent(parent)
       .setIsContainer(false)
       .setBoxDimensions(this.getBoxDimensions(component.boxDimensions))
-      .setContainerDimensions({height: component.boxDimensions.height.value, width: component.boxDimensions.width.value, units: Units.px })
+      .setContainerDimensions(new ADimension(83, 100 , 'px'))
+      .setContainerLocation(new ALocation(0, 0))
       .setComponentHtmlTag(component.componentRef)
       .setClassDefintion(component.class)
       .setRef(ref)
       .setType(component.type)
-      .setNaturalSize({ width: 300, height: 200, units: Units.px })
-      .setScaledSize({ width: 300, height: 200, units: Units.px })
+      .setNaturalSize(new ADimension(250, 300, 'px'))
+      .setScaledSize(new ADimension(83, 100, 'px'))
+      .setImageLocation(new ALocation(0, 0))
       .buildAnImage();
     imageElement.parentRef = imageElement.parent.ref;
     return imageElement;
@@ -174,11 +178,7 @@ export class PageElementFactory {
       .setRef(ref)
       .setIsContainer(true)
       .setName(ROOT)
-      .setContainerDimensions({
-        height: 1080,
-        width: 1920,
-        units: Units.px,
-      })
+      .setContainerDimensions(new ADimension(1080, 1920, 'px'))
       .buildAContainer();
     container.parentRef = container.ref;
     return container;

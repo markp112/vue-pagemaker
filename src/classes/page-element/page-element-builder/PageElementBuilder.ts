@@ -13,8 +13,6 @@ import {
 } from "@/models/components/box-dimension";
 import {
   ComponentTypes,
-  Dimensions,
-  Location,
   LOREMIPSUM
 } from "@/models/components/components";
 import { Style } from "@/models/styles/styles";
@@ -22,8 +20,9 @@ import { ButtonElement } from "../page-components/button-element/ButtonElement";
 import { PageContainer } from "../PageContainer/PageContainer";
 import { PageElement } from "../PageElement";
 import { TextElement } from "../page-components/text-element/TextElement";
-import { ImageElement } from "../page-components/image-element/ImageElement";
-import { Units } from "@/models/enums/units/units";
+import { ContainerProps, ImageElement, ImageProps } from "../page-components/image-element/ImageElement";
+import { ADimension } from '@/classes/dimensions/adimensions';
+import { ALocation } from '@/classes/a-location/aLocation';
 
 export class PageElementBuilder {
   private _name = ""; //name of the component
@@ -39,11 +38,16 @@ export class PageElementBuilder {
   private _boxDimensions: BoxDimensions = new BoxDimensions({ width, height, top, left });
   private _actionEvent: ActionEvent = new ActionEvent("Navigation", "");
   private _content = "";
-  private _naturalSize!: Dimensions;
-  private _scaledSize!: Dimensions;
-  private _containerDimensions!: Dimensions;
-  private _containerLocation: Location = { top: 0, left: 0 };
   private _isAbsolute = false;
+  private _image: ImageProps = {
+    location: new ALocation(0, 0),
+    naturalSize: new ADimension(0, 0),
+    scaledSize: new ADimension(0, 0),
+  };
+  private _container: ContainerProps = {
+    location: new ALocation(0, 0),
+    dimensions: new ADimension(0,0),
+  };
 
   setName(name: string) {
     this._name = name;
@@ -113,23 +117,28 @@ export class PageElementBuilder {
     return this;
   }
 
-  setNaturalSize(naturalSize: Dimensions) {
-    this._naturalSize = naturalSize;
+  setNaturalSize(naturalSize: ADimension) {
+    this._image.naturalSize = naturalSize;
     return this;
   }
 
-  setScaledSize(scaledSize: Dimensions) {
-    this._scaledSize = { ...scaledSize }
+  setScaledSize(scaledSize: ADimension) {
+    this._image.scaledSize = scaledSize
     return this;
   }
 
-  setContainerDimensions(dimensions: Dimensions) {
-    this._containerDimensions = { ...dimensions };
+  setImageLocation(location: ALocation) {
+    this._image.location = location;
+    return this;
+  }
+
+  setContainerDimensions(dimensions: ADimension) {
+    this._container.dimensions = dimensions;
     return this;
   }
   
-  setContainerLocation(location: Location) {
-    this._containerLocation = { ...location };
+  setContainerLocation(location: ALocation) {
+    this._container.location = location;
     return this;
   }
   
@@ -190,20 +199,24 @@ export class PageElementBuilder {
     return this._content;
   }
 
-  public get naturalSize(): Dimensions {
-    return this._naturalSize;
+  public get naturalSize(): ADimension {
+    return this._image.naturalSize;
   }
 
-  public get scaledSize(): Dimensions {
-    return this._scaledSize;
+  public get scaledSize(): ADimension {
+    return this._image.scaledSize;
   }
 
-  public get containerDimensions(): Dimensions {
-    return this._containerDimensions;
+  public get imageLocation(): ALocation {
+    return this._image.location;
+  }
+
+  public get containerDimensions(): ADimension {
+    return this._container.dimensions;
   }
   
-  public get containerLocation(): Location {
-    return this._containerLocation;
+  public get containerLocation(): ALocation {
+    return this._container.location;
   }
 
   public get isAbsolute(): boolean {
@@ -235,25 +248,14 @@ export class PageElementBuilder {
     if (this._content === "") {
       this._content =
         "https://firebasestorage.googleapis.com/v0/b/page-maker-69fb1.appspot.com/o/assets%2Fimages%2Fimageplaceholder.png?alt=media&token=149d3e60-0fc4-49de-9e23-5fea91458240";
-      this._naturalSize = {
-        width: NATURAL_WIDTH,
-        height: NATURAL_HEIGHT,
-        units: Units.px
-      };
-      // this._containerDimensions = {
-      //   width: NATURAL_WIDTH,
-      //   height: NATURAL_HEIGHT,
-      //   units: Units.px
-      // };
-      this._containerLocation = {
-        left: 0,
-        top: 0,
-      };
-      this._scaledSize = {
-        width: NATURAL_WIDTH,
-        height: NATURAL_HEIGHT,
-        units: Units.px
-      };
+      
+        console.log('%c⧭', 'color: #cc7033',   this._image);
+        this._image.naturalSize = new ADimension(NATURAL_HEIGHT, NATURAL_WIDTH);
+      this._image.scaledSize = new ADimension(NATURAL_HEIGHT, NATURAL_WIDTH);
+      this._image.location = new ALocation(0, 0);
+      this._container.location = new ALocation(0, 0);
+      console.log('%c⧭', 'color: #86bf60', this._container );
+      this._container.dimensions = new ADimension(NATURAL_HEIGHT, NATURAL_WIDTH)
     }
     return new ImageElement(this);
   }

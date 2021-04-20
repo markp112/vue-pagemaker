@@ -1,9 +1,5 @@
 import { PageElementBuilder } from '@/classes/page-element/page-element-builder/PageElementBuilder';
 import { PageElement } from '../../PageElement';
-import {
-  Dimensions,
-  Location
-} from '@/models/components/components';
 import { Image } from '@/models/components/components';
 import {
   ImageElementFirebaseData,
@@ -11,53 +7,78 @@ import {
 } from '../../models/pageElements/ImageElementModel';
 import { Style } from '@/models/styles/styles';
 import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
+import { ADimension } from '@/classes/dimensions/adimensions';
+import { ALocation } from '@/classes/a-location/aLocation';
+
+export interface ContainerProps {
+  location: ALocation;
+  dimensions: ADimension;
+};
+
+export interface ImageProps {
+  location: ALocation;
+  naturalSize: ADimension;
+  scaledSize: ADimension;
+}
 
 export class ImageElement extends PageElement implements ImageElementInterface {
-  private _naturalSize: Dimensions;
-  private _scaledSize: Dimensions;
   private _ratio: number;
   private _maintainRatio: boolean;
-  private _containerDimensions: Dimensions;
-  private _containerLocation: Location = {
-    top: 0,
-    left: 0
+  private _container: ContainerProps = {
+    location: new ALocation(0, 0),
+    dimensions: new ADimension(0,0),
   };
-  private _location: Location = {
-    top: 0,
-    left: 0
-  };
+  private _image: ImageProps = {
+    location: new ALocation(0, 0),
+    naturalSize: new ADimension(0, 0),
+    scaledSize: new ADimension(0, 0),
+  };;
 
   constructor(builder: PageElementBuilder) {
     super(builder);
     this._maintainRatio = true;
-    this._naturalSize = builder.naturalSize;
-    this._containerDimensions = builder.containerDimensions;
-    this._containerLocation = builder.containerLocation;
-    this._scaledSize = builder.scaledSize;
+    console.log('%c⧭', 'color: #ace2e6', this._image, "hi");
+    this._image.location = builder.imageLocation;
+    this._image.naturalSize = builder.naturalSize;
+    this._image.scaledSize = builder.scaledSize;
+    this._container.location = builder.containerLocation;
+    this._container.dimensions = builder.containerDimensions;
     this._ratio = this.calcRatio(
-      this._naturalSize.width,
-      this._naturalSize.height
+      this._image.naturalSize.width,
+      this._image.naturalSize.height
     );
   }
 
-  get naturalSize(): Dimensions {
-    return this._naturalSize;
+  toString(): string {
+    throw new Error('Method not implemented.');
   }
 
-  set naturalSize(size: Dimensions) {
-    this._naturalSize = size;
+  get image(): ImageProps {
+    return this._image;
+  }
+
+  get container(): ContainerProps {
+    return this._container;
+  }
+
+  get naturalSize(): ADimension {
+    return this._image.naturalSize;
+  }
+
+  set naturalSize(size: ADimension) {
+    this._image.naturalSize = size;
     this._ratio = this.calcRatio(
-      this._naturalSize.width,
-      this._naturalSize.height
+      this._image.naturalSize.width,
+      this._image.naturalSize.height
     );
   }
 
-  get scaledSize(): Dimensions {
-    return this._scaledSize;
+  get scaledSize(): ADimension {
+    return this._image.scaledSize;
   }
 
-  set scaledSize(dimensions: Dimensions) {
-    this._scaledSize = dimensions;
+  set scaledSize(dimensions: ADimension) {
+    this._image.scaledSize = dimensions;
   }
 
   get ratio(): number {
@@ -72,65 +93,70 @@ export class ImageElement extends PageElement implements ImageElementInterface {
     this._maintainRatio = maintainRatio;
   }
 
-  get containerDimensions(): Dimensions {
-    return this._containerDimensions;
+  get containerDimensions(): ADimension {
+    return this._container.dimensions;
   }
 
-  set containerDimensions(dimensions: Dimensions) {
-    this._containerDimensions = dimensions;
+  set containerDimensions(dimensions: ADimension) {
+    if (dimensions.width > this.scaledSize.width) this.scaledSize.width = dimensions.width;
+    console.log('%c%s', 'color: #917399', this.scaledSize.width);
+    console.log('%c%s', 'color: #0088cc', dimensions.width);
+    this._container.dimensions = dimensions;
   }
 
-  set containerLocation(location: Location) {
-    this._containerLocation = location;
+  set containerLocation(location: ALocation) {
+    this._container.location = location;
   }
 
-  get containerLocation(): Location {
-    return this._containerLocation;
+  get containerLocation(): ALocation {
+    return this._container.location;
   }
 
-  get location(): Location {
-    return this._location;
+  get imageLocation(): ALocation {
+    return this._image.location;
   }
 
-  set location(location: Location) {
-    this._location = location;
+  set imageLocation(location: ALocation) {
+    this._image.location = location;
   }
 
-  public getStyles(): string {
+  public getContainerStyles(): string {
     let style = '';
+    style += this._container.dimensions.toStyle();
+    style += this._container.location.toStyle();
     const styles: Style[] = this.styles;
     if (styles.length > 0) {
       styles.forEach(element => {
         style += `${element.style}:${element.value};`;
       });
-      style += `width:${this.containerDimensions.width}px;height:${this.containerDimensions.height}px;`;
     }
     return style;
   }
+  
 
-  public getContainerStyles(): string {
+  public getImageStyle(): string {
     let style = '';
+    style += this._image.scaledSize.toStyle();
+    style += this._image.location.toStyle();
     const styles: Style[] = this.styles;
     if (styles.length > 0) {
       styles.forEach(element => {
-        if (element.style === 'background-size') {
-          style += `${element.style}:${this.containerDimensions.width}px ${this.containerDimensions.height}px;`;
-          style += `width:${this.containerDimensions.width}px;height:${this.containerDimensions.height}px;`;
-        }
+        style += `${element.style}:${element.value};`;
       });
     }
+    console.log('%c%s', 'color: #ff6600', style);
     return style;
   }
 
   public getElementContent(): ImageElementFirebaseData {
     return Object.assign(this.getBaseElementContent(), {
-      naturalSize: this._naturalSize,
-      scaledSize: this._scaledSize,
+      naturalSize: this._image.naturalSize.toStringObject(),
+      scaledSize: this._image.scaledSize.toStringObject(),
       ratio: this._ratio,
       maintainRatio: this._maintainRatio,
-      containerDimensions: this._containerDimensions,
-      containerLocation: this._containerLocation,
-      location: this._location
+      containerDimensions: this._container.dimensions.toStringObject(),
+      containerLocation: this._container.location.toStringObject(),
+      location: this._image.location.toStringObject(),
     });
   }
 
@@ -138,17 +164,7 @@ export class ImageElement extends PageElement implements ImageElementInterface {
     if (this.styles.length === 0) {
       const siteDefaults = SiteDefaults.getInstance();
       const siteColours = siteDefaults.colours;
-      this.addStyle(
-        this.constructStyle('background-color', siteColours.surface)
-      );
       this.addStyle(this.constructStyle('color', siteColours.textOnSurface));
-      this.addStyle(this.constructStyle('background-size', `${this.scaledSize.width}px ${this.scaledSize.height}px`));
-      this.addStyle(this.constructStyle('background-repeat', 'no-repeat'));
-      this.addStyle(
-        this.constructStyle('background-image', `url(${this.content})`)
-      );
-      this.addStyle(this.constructStyle('background-position-x', '0px'));
-      this.addStyle(this.constructStyle('background-position-y', '0px'));
       this.addStyle(this.constructStyle('width', `${this.scaledSize.width}px`));
       this.addStyle(this.constructStyle('height', `${this.scaledSize.height}px`));
     }
@@ -162,12 +178,9 @@ export class ImageElement extends PageElement implements ImageElementInterface {
     if (image.naturalSize.height === 0) {
       image.naturalSize.height = 250;
     }
-    this._naturalSize = image.naturalSize;
+    this._image.naturalSize = image.naturalSize;
     this._ratio = image.ratio;
     this._maintainRatio = image.maintainRatio;
-    this.addStyle(
-      this.constructStyle('background-image', `url(${this.content})`)
-    );
   }
 
   private calcRatio(width: number, height: number): number {

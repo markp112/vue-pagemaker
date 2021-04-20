@@ -1,3 +1,5 @@
-export enum Units {
-  px = "px"
-}
+export type Units =
+  | 'px'
+  | 'rem'
+  | 'em'
+  | '%';
