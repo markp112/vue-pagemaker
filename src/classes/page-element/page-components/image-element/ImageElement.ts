@@ -9,6 +9,7 @@ import { Style } from '@/models/styles/styles';
 import { SiteDefaults } from '@/classes/settings/site-defaults/site-defaults';
 import { ADimension } from '@/classes/dimensions/adimensions';
 import { ALocation } from '@/classes/a-location/aLocation';
+import { MousePosition } from '@/components/page-builder-elements/generic/mixins/generic-components-mixin';
 
 export interface ContainerProps {
   location: ALocation;
@@ -20,6 +21,8 @@ export interface ImageProps {
   naturalSize: ADimension;
   scaledSize: ADimension;
 }
+
+type ImageOrContainer = 'container' | 'image';
 
 export class ImageElement extends PageElement implements ImageElementInterface {
   private _ratio: number;
@@ -37,7 +40,6 @@ export class ImageElement extends PageElement implements ImageElementInterface {
   constructor(builder: PageElementBuilder) {
     super(builder);
     this._maintainRatio = true;
-    console.log('%c⧭', 'color: #ace2e6', this._image, "hi");
     this._image.location = builder.imageLocation;
     this._image.naturalSize = builder.naturalSize;
     this._image.scaledSize = builder.scaledSize;
@@ -99,8 +101,7 @@ export class ImageElement extends PageElement implements ImageElementInterface {
 
   set containerDimensions(dimensions: ADimension) {
     if (dimensions.width > this.scaledSize.width) this.scaledSize.width = dimensions.width;
-    console.log('%c%s', 'color: #917399', this.scaledSize.width);
-    console.log('%c%s', 'color: #0088cc', dimensions.width);
+    if (dimensions.height > this.scaledSize.height) this.scaledSize.height = dimensions.height;
     this._container.dimensions = dimensions;
   }
 
@@ -144,7 +145,6 @@ export class ImageElement extends PageElement implements ImageElementInterface {
         style += `${element.style}:${element.value};`;
       });
     }
-    console.log('%c%s', 'color: #ff6600', style);
     return style;
   }
 
@@ -185,5 +185,16 @@ export class ImageElement extends PageElement implements ImageElementInterface {
 
   private calcRatio(width: number, height: number): number {
     return Math.min(width / height, height / width);
+  }
+
+  public pan(deltaMouse: MousePosition, itemToPan: ImageOrContainer) {
+    if (itemToPan === 'image') {
+      this.imageLocation.left += deltaMouse.x;
+      this.imageLocation.top += deltaMouse.y;
+    }
+    else if (itemToPan === 'container') {
+      this.containerLocation.left += deltaMouse.x;
+      this.containerLocation.top += deltaMouse.y;
+    }
   }
 }

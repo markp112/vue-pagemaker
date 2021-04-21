@@ -2,18 +2,21 @@
   <div
     :ref="$props.thisComponent.ref"
     :id="$props.thisComponent.ref"
-    class="handle select-none "
+    class="handle select-none overflow-hidden"
     :style="getContainerStyles"
     @click="onImageClick($event)"
+    @mousedown="startDragImage($event)"
+    @mousemove="dragImageContainer($event)"
+    @mouseup="stopDragImage($event)"
   >
       <img
         ref="image-element"
+        class="absolute"
         :src="getImage()"
         :style="getImageStyles()"
-
-        @mousedown="startDragImage($event)"
-        @mousemove="dragElement($event)"
-        @mouseup="stopDragImage($event)"
+        @mousedown="startPanImage($event)"
+        @mousemove="panImage($event)"
+        @mouseup="stopPanImage($event)"
       />
       <resizeable
         :isActive="isActive()"
@@ -30,7 +33,7 @@ import Component from 'vue-class-component';
 import Resize from '@/components/base/resizeable/resize.vue';
 import { ImageElement } from '@/classes/page-element/page-components/image-element/ImageElement';
 import { PageElementBuilder } from '@/classes/page-element/page-element-builder/PageElementBuilder';
-import { GenericComponentMixins } from '../../mixins/generic-components-mixin';
+import { GenericComponentMixins, MousePosition } from '../../mixins/generic-components-mixin';
 import { PageModule } from '@/store/page/page';
 import { SidebarModule } from '@/store/sidebar/sidebar';
 import { BoxDimensionsInterface, BoxProperties } from '@/models/components/box-dimension';
@@ -51,6 +54,8 @@ import { ClientCoordinates } from '@/models/components/components';
 })
 export default class ImageComponent extends GenericComponentMixins {
   name = "imageComponent";
+
+  isPanImage = true;
   
   getImageStyles(): string {
     const image = this.$props.thisComponent as ImageElement;
@@ -89,7 +94,6 @@ export default class ImageComponent extends GenericComponentMixins {
     return PageModule.selectedComponent === this.$props.thisComponent.ref;
   }
 
-  
   onResizeImage(boxProperties: ClientCoordinates) {
     if (this.isDragging) return;
     const thisComponent = this.$props.thisComponent;
@@ -112,6 +116,50 @@ export default class ImageComponent extends GenericComponentMixins {
       const dimension: ADimension = new ADimension(boxDimensions.height.value, boxDimensions.width.value, 'px');
       const image = this.$props.thisComponent as ImageElement;
       image.containerDimensions = dimension;
+    }
+  }
+
+  public dragImageContainer(event: MouseEvent) {
+    if (!this.isDragging) return;
+    const currentMousePosition: MousePosition = { x: event.pageX, y: event.pageY };
+    const deltaX = currentMousePosition.x - this.lastMousePosition.x;
+    const deltaY = currentMousePosition.y - this.lastMousePosition.y;
+
+    const image = this.$props.thisComponent as ImageElement;
+
+    image.containerLocation.top += deltaY;
+    image.containerLocation.left += deltaX;
+    this.lastMousePosition.x = event.pageX;
+    this.lastMousePosition.y = event.pageY;
+  }
+
+  private startPanImage(event: MouseEvent) {
+    event.stopPropagation();
+    this.lastMousePosition = { x: event.pageX, y: event.pageY };
+    this.isPanImage = true;
+  }
+
+  private stopPanImage(event: MouseEvent) {
+    event.stopPropagation();
+    this.isPanImage = false;
+
+  }
+
+  panImage(event: MouseEvent) {
+    if (!this.isPanImage) return;
+      const deltaChange = this.calcDeltaMouseChange(event);
+      const image = this.$props.thisComponent as ImageElement;
+      image.pan(deltaChange, 'image');   
+      this.lastMousePosition = {
+        x: event.pageX,
+        y: event.pageY
+      };
+  }
+
+  private calcDeltaMouseChange(event: MouseEvent): MousePosition {
+    return {
+      x: event.pageX - this.lastMousePosition.x,
+      y:  event.pageY - this.lastMousePosition.y
     }
   }
 
